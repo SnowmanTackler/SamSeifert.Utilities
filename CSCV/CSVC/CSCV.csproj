@@ -1,0 +1,500 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{9C52524B-2D29-44C9-AC82-4E1DA235A8BF}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ImageToolbox</RootNamespace>
+    <AssemblyName>Image Processing Simulation Environment</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\LenaIcon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Tools\ControlDeque.cs" />
+    <Compile Include="Tools\HoughFootOfNormal.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\Gradient.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\HoughRhoTheta.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\SplitHSL.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\SplitHSL.Designer.cs">
+      <DependentUpon>SplitHSL.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\SplitHSV.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\SplitHSV.Designer.cs">
+      <DependentUpon>SplitHSV.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\Tool.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\Tool.Designer.cs">
+      <DependentUpon>Tool.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\AbsoluteValue.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\Multiply.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\Multiplication.Designer.cs">
+      <DependentUpon>Multiply.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\ErodeDilateFull.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\ErodeDilateFull.Designer.cs">
+      <DependentUpon>ErodeDilateFull.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\Grayscale.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\SplitPN.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\SplitPN.Designer.cs">
+      <DependentUpon>SplitPN.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\Switch.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\ToolSwitch.Designer.cs">
+      <DependentUpon>Switch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\SplitRGB.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\ToolRGBSplitter.Designer.cs">
+      <DependentUpon>SplitRGB.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\Noise.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\ColorFilter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\Colormap.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\Convolute.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\ErodeDilate.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\Add.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\Add.Designer.cs">
+      <DependentUpon>Add.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NodeHandleOut.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeHandleOut.Designer.cs">
+      <DependentUpon>NodeHandleOut.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NodeHandleIn.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeHandleIn.Designer.cs">
+      <DependentUpon>NodeHandleIn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\Gain.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\Sink.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\Source.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeHandle.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeHandle.Designer.cs">
+      <DependentUpon>NodeHandle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ToolButtonDefault.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ToolButtonDefault.Designer.cs">
+      <DependentUpon>ToolButtonDefault.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\BitsPerPixel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\ColorFilterFull.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\ColorFilterFull.Designer.cs">
+      <DependentUpon>ColorFilterFull.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\HistogramEqualizer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\ConvoluteFull.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\ToolConvoluteFull.Designer.cs">
+      <DependentUpon>ConvoluteFull.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\ToolDetails.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\ToolDetails.Designer.cs">
+      <DependentUpon>ToolDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\ToolDefault.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\ToolDefault.Designer.cs">
+      <DependentUpon>ToolDefault.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\Resize.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\BlackWhite.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <EmbeddedResource Include="Tools\SplitHSL.resx">
+      <DependentUpon>SplitHSL.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\SplitHSV.resx">
+      <DependentUpon>SplitHSV.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\Tool.resx">
+      <DependentUpon>Tool.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\Multiplication.resx">
+      <DependentUpon>Multiply.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\ColorFilterFull.resx">
+      <DependentUpon>ColorFilterFull.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\ErodeDilateFull.resx">
+      <DependentUpon>ErodeDilateFull.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\SplitPN.resx">
+      <DependentUpon>SplitPN.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\ToolSwitch.resx">
+      <DependentUpon>Switch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\ToolRGBSplitter.resx">
+      <DependentUpon>SplitRGB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\Add.resx">
+      <DependentUpon>Add.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NodeHandleOut.resx">
+      <DependentUpon>NodeHandleOut.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NodeHandleIn.resx">
+      <DependentUpon>NodeHandleIn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NodeHandle.resx">
+      <DependentUpon>NodeHandle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ToolButtonDefault.resx">
+      <DependentUpon>ToolButtonDefault.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\ToolConvoluteFull.resx">
+      <DependentUpon>ConvoluteFull.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\ToolDetails.resx">
+      <DependentUpon>ToolDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\ToolDefault.resx">
+      <DependentUpon>ToolDefault.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\backImg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\backImgSmall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SamSeifert.GlobalEvent\SamSeifert.GlobalEvent\SamSeifert.GlobalEvents.csproj">
+      <Project>{9B8D2FBB-0305-4DF6-A090-DB590DA3659A}</Project>
+      <Name>SamSeifert.GlobalEvents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SamSeifert.HueChooser\SamSeifert.HueChooser\SamSeifert.HueChooser.csproj">
+      <Project>{549EEBCD-5E5B-42C0-83A9-E471C7D316DC}</Project>
+      <Name>SamSeifert.HueChooser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SamSeifert.Imaging\SamSeifert.Imaging.csproj">
+      <Project>{A52E8045-E20A-4898-8D14-44885524EA05}</Project>
+      <Name>SamSeifert.Imaging</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Lena.bmp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddCellResize.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddCellBPP.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddCellGray.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddCellRBGIsolater.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddCellConvolute.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddCellHistogram.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddCellColorFilter.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Lena128.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Sum.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\In.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Switch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Gain.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddCellColormap.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddCellTwoTone.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddCellErodeDialate.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddCellGaussian.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LenaIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SplitRGB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ArrowB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ArrowG.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ArrowR.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ArrowRB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SplitPN.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toolSwitch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toolAbs.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Startup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toolMult.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\AddCellGradient.bmp" />
+    <Content Include="Resources\Gear.jpg" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
