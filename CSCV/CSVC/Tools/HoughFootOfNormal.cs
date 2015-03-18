@@ -41,10 +41,10 @@ namespace ImageToolbox.Tools
             this.checkBoxName.Text = name;
         }
 
-        public override ImageData SpecialBitmapUpdateDefault(ref ImageData d)
+        public override Sect SpecialBitmapUpdateDefault(ref Sect d)
         {
-            ImageData o = null;
-            HoughTransform.FootOfNormal_O(ref d, out o);
+            Sect o = null;
+//            HoughTransform.FootOfNormal_O(ref d, out o);
             return o;
         }    
     }

@@ -79,7 +79,7 @@ namespace ImageToolbox.Tools
             this.ToolStrip_Edit.Enabled = true;
         }
 
-        private ImageData _ImageDataLast = null;
+        private Sect _ImageDataLast = null;
         public override void MenuEdit()
         {
             new ConvoluteFull(this, this.filt).ShowDialog(this._ImageDataLast);
@@ -232,11 +232,11 @@ namespace ImageToolbox.Tools
             this.setFilter(f);
         }
 
-        public override ImageData SpecialBitmapUpdateDefault(ref ImageData d)
+        public override Sect SpecialBitmapUpdateDefault(ref Sect d)
         {
             this._ImageDataLast = d;
 
-            ImageData o = null;
+            Sect o = null;
 
             var h = this.filt.GetLength(0);
             var w = this.filt.GetLength(1);
@@ -247,7 +247,7 @@ namespace ImageToolbox.Tools
                 for (int j = 0; j < w; j++)
                     vals[i, j] = (float)(this.filt[i, j]);
 
-            ImageAlgorithms.Convolute_O(ref d, vals, out o);
+            IA_Single.Convolute(d, vals, ref o);
 
             return o;
         }

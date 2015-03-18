@@ -17,7 +17,7 @@ namespace ImageToolbox.Tools
         private Boolean[] signs = new Boolean[0];
         private List<NodeHandleIn> nhis = new List<NodeHandleIn>();
         private NodeHandleOut nho = null;
-        private ImageData _SpecialBitmap;
+        private Sect _SpecialBitmap;
 
 
         public Add()
@@ -136,14 +136,14 @@ namespace ImageToolbox.Tools
             return true;
         }
 
-        public override ImageData SpecialBitmapGet(NodeHandleOut sender)
+        public override Sect SpecialBitmapGet(NodeHandleOut sender)
         {
             return this._SpecialBitmap;
         }
 
         public override void SpecialBitmapUpdate()
         {
-            var indata = new List<ImageData>();
+            var indata = new List<Sect>();
             var indataB = new List<Boolean>();
 
             for (int i = 0; i < this.nhis.Count; i++)
@@ -151,7 +151,7 @@ namespace ImageToolbox.Tools
                 NodeHandleIn nhi = this.nhis[i];
                 if (nhi.nho != null)
                 {
-                    ImageData t = nhi.nho.getSpecialBitmap();
+                    Sect t = nhi.nho.getSpecialBitmap();
                     if (t != null)
                     {
                         indata.Add(t);
@@ -160,11 +160,7 @@ namespace ImageToolbox.Tools
                 }
             }
 
-            ImageAlgorithms.Add_O(
-                indata.ToArray(),
-                indataB.ToArray(),
-                out this._SpecialBitmap);
-
+            IA_Multiple.Add(indata.ToArray(), indataB.ToArray(), ref this._SpecialBitmap);
             this.UpdateThumb();
         }
 

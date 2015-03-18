@@ -42,7 +42,7 @@ namespace ImageToolbox
             return null;
         }*/
 
-        internal SamSeifert.ImageProcessing.ImageData getSpecialBitmap()
+        internal SamSeifert.ImageProcessing.Sect getSpecialBitmap()
         {
             if (this.nho != null) return this.nho.getSpecialBitmap();
             return null;

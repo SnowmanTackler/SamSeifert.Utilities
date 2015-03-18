@@ -125,18 +125,6 @@
     <Compile Include="Tools\HoughRhoTheta.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Tools\SplitHSL.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tools\SplitHSL.Designer.cs">
-      <DependentUpon>SplitHSL.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tools\SplitHSV.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tools\SplitHSV.Designer.cs">
-      <DependentUpon>SplitHSV.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tools\Tool.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -161,23 +149,11 @@
     <Compile Include="Tools\Grayscale.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Tools\SplitPN.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tools\SplitPN.Designer.cs">
-      <DependentUpon>SplitPN.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tools\Switch.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Tools\ToolSwitch.Designer.cs">
       <DependentUpon>Switch.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tools\SplitRGB.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tools\ToolRGBSplitter.Designer.cs">
-      <DependentUpon>SplitRGB.cs</DependentUpon>
     </Compile>
     <Compile Include="Tools\Noise.cs">
       <SubType>UserControl</SubType>
@@ -282,12 +258,6 @@
     <Compile Include="Tools\BlackWhite.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <EmbeddedResource Include="Tools\SplitHSL.resx">
-      <DependentUpon>SplitHSL.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tools\SplitHSV.resx">
-      <DependentUpon>SplitHSV.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Tools\Tool.resx">
       <DependentUpon>Tool.cs</DependentUpon>
     </EmbeddedResource>
@@ -300,14 +270,8 @@
     <EmbeddedResource Include="Tools\ErodeDilateFull.resx">
       <DependentUpon>ErodeDilateFull.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tools\SplitPN.resx">
-      <DependentUpon>SplitPN.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Tools\ToolSwitch.resx">
       <DependentUpon>Switch.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tools\ToolRGBSplitter.resx">
-      <DependentUpon>SplitRGB.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\Add.resx">
       <DependentUpon>Add.cs</DependentUpon>

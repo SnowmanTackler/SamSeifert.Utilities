@@ -129,7 +129,7 @@ namespace ImageToolbox.Tools
             this.UpdateThumb();
         }
 
-        public override ImageData SpecialBitmapGet(NodeHandleOut sender)
+        public override Sect SpecialBitmapGet(NodeHandleOut sender)
         {
             if (this.nhi != null)
                 if (this.nhi.nho != null)

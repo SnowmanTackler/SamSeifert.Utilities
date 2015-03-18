@@ -13,8 +13,8 @@ namespace ImageToolbox.Tools
 {
     public partial class ToolDetails : UserControl
     {
-        private ImageData _SpecialBitmapIn;
-        private ImageData _SpecialBitmapOut;
+        private Sect _SpecialBitmapIn;
+        private Sect _SpecialBitmapOut;
 
         private Form _Form;
         private Boolean startup = true;
@@ -33,7 +33,7 @@ namespace ImageToolbox.Tools
 
         }
 
-        public void ShowDialog(ImageData input)
+        public void ShowDialog(Sect input)
         {
             this._SpecialBitmapIn = input;
             if (this._SpecialBitmapIn != null) this.pictureBoxIn.Image = this._SpecialBitmapIn.getImage();
@@ -100,7 +100,7 @@ namespace ImageToolbox.Tools
             this.pictureBoxOut.Image = i;
         }
 
-        public virtual ImageData updateOverride(ImageData indata) { return null; }
+        public virtual Sect updateOverride(Sect indata) { return null; }
 
         private void panel1_Resize(object sender, EventArgs e)
         {

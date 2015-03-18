@@ -24,17 +24,19 @@ namespace ImageToolbox.Tools
             this.hueChooser1.setInitialValues(colorFilterOptions);
         }
 
-        public override ImageData updateOverride(ImageData indata)
+        public override Sect updateOverride(Sect indata)
         {
             if (indata == null) return null;
             return this.modifySpecialBitmap(indata); ;
         }
 
-        public unsafe ImageData modifySpecialBitmap(ImageData indata)
+        public unsafe Sect modifySpecialBitmap(Sect indata)
         {
-            ImageData o = indata.Clone();
+            return indata.Clone();
+/*            Sect o = indata.Clone();
 
-            float[,] r, g, b;
+            Sect r, g, b;
+
             o.getRGB(out r, out g, out b, DataType.ReadWrite);
 
             for (int y = 0; y < o.Height; y++)
@@ -45,7 +47,7 @@ namespace ImageToolbox.Tools
                         ref b[y, x],
                         this._ColorFilterOptions);
 
-            return o;
+            return o;*/
         }
 
         public void hueChooser1_ValueChanged(object sender, EventArgs e)

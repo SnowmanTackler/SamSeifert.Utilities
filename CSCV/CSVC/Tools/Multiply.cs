@@ -16,7 +16,7 @@ namespace ImageToolbox.Tools
         private const int count = 2;
         private NodeHandleIn[] nhis = new NodeHandleIn[count];
         private NodeHandleOut nho = null;
-        private ImageData _SpecialBitmap;
+        private Sect _SpecialBitmap;
 
         public Multiply()
         {
@@ -80,7 +80,7 @@ namespace ImageToolbox.Tools
             return true;
         }
 
-        public override ImageData SpecialBitmapGet(NodeHandleOut sender)
+        public override Sect SpecialBitmapGet(NodeHandleOut sender)
         {
             return this._SpecialBitmap;
         }
@@ -89,8 +89,8 @@ namespace ImageToolbox.Tools
         {
             try
             {
-                var list = new List<ImageData>();
-                ImageData a, b;
+                var list = new List<Sect>();
+                Sect a, b;
 
                 a = this.nhis[0].getSpecialBitmap();
                 if (a == null) return;
@@ -100,7 +100,7 @@ namespace ImageToolbox.Tools
                 if (b == null) return;
                 list.Add(b);
 
-                ImageAlgorithms.Multiply_O(list.ToArray(), out this._SpecialBitmap);
+                IA_Multiple.Mult(list.ToArray(), ref this._SpecialBitmap);
 
             }
             finally

@@ -7,9 +7,9 @@ using System.Text;
 namespace SamSeifert.ImageProcessing
 {
     public static class HoughTransform
-    {
+    {/*
         /// Creates a new ImageData class
-        public static ToolboxReturn FootOfNormal_O(ref ImageData inp, out ImageData outp)
+        public static ToolboxReturn FootOfNormal_O(ref SectHolder inp, out SectHolder outp)
         {
             if (inp == null)
             {
@@ -19,12 +19,12 @@ namespace SamSeifert.ImageProcessing
             else
             {
                 var sz = new Size(inp.Size.Width * 2 - 1, inp.Size.Height * 2 - 1);
-                outp = new ImageData(sz, inp.Size);
+                outp = new SectHolder(sz, inp.Size);
                 return HoughTransform.FootOfNormal_R(ref inp, ref outp);
             }
         }
         /// Modifies an existing ImageData class
-        public static ToolboxReturn FootOfNormal_R(ref ImageData inp, ref ImageData outp)
+        public static ToolboxReturn FootOfNormal_R(ref SectHolder inp, ref SectHolder outp)
         {
             if (inp == null) return ToolboxReturn.NullInput;
             else if (outp == null) return HoughTransform.FootOfNormal_O(ref inp, out outp);
@@ -120,7 +120,7 @@ namespace SamSeifert.ImageProcessing
             }
         }
         /// Modifies an input ImageData
-        public static ToolboxReturn FootOfNormal_S(ref ImageData inp)
+        public static ToolboxReturn FootOfNormal_S(ref SectHolder inp)
         {
             return HoughTransform.FootOfNormal_R(ref inp, ref inp);
         }
@@ -137,7 +137,7 @@ namespace SamSeifert.ImageProcessing
         }
 
         /// Creates a new ImageData class
-        public static ToolboxReturn RhoTheta_O(ref ImageData inp, out ImageData outp)
+        public static ToolboxReturn RhoTheta_O(ref SectHolder inp, out SectHolder outp)
         {
             if (inp == null)
             {
@@ -147,12 +147,12 @@ namespace SamSeifert.ImageProcessing
             else
             {
                 var sz = rhoThetaSizeForSize(inp.Size);
-                outp = new ImageData(sz, sz);
+                outp = new SectHolder(sz, sz);
                 return HoughTransform.RhoTheta_R(ref inp, ref outp);
             }
         }
         /// Modifies an existing ImageData class
-        public static ToolboxReturn RhoTheta_R(ref ImageData inp, ref ImageData outp)
+        public static ToolboxReturn RhoTheta_R(ref SectHolder inp, ref SectHolder outp)
         {
             if (inp == null) return ToolboxReturn.NullInput;
             else if (outp == null) return HoughTransform.RhoTheta_O(ref inp, out outp);
@@ -254,9 +254,9 @@ namespace SamSeifert.ImageProcessing
             }
         }
         /// Modifies an input ImageData
-        public static ToolboxReturn RhoTheta_S(ref ImageData inp)
+        public static ToolboxReturn RhoTheta_S(ref SectHolder inp)
         {
             return HoughTransform.FootOfNormal_R(ref inp, ref inp);
-        }
+        }*/
     }
 }

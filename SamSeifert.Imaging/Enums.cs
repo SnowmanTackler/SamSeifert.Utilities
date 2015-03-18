@@ -6,41 +6,52 @@ using System.Text;
 namespace SamSeifert.ImageProcessing
 {
     public enum SectType
-    { 
-        RGB_Red,
-        RGB_Green, 
-        RGB_Blue, 
-        
-        Gray, 
-        
-        Hue,
+    {
+        RGB_R,
+        RGB_G,
+        RGB_B,
 
-        HSL_H = Hue, 
-        HSL_S, 
+        Gray,
+
+        HSL_H,
+        HSL_S,
         HSL_L,
 
-        HSV_H = Hue, 
-        HSV_S, 
+        HSV_H,
+        HSV_S,
         HSV_V,
 
         Hough_Foot_Of_Normal,
         Hough_Rho_Theta,
 
-        NaN 
+        NaN,
+        Holder
     };
 
-    public enum DataType
-    {
-        Read,
-        Write,
-        ReadWrite,
+    public enum ResizeType
+    { 
+        NearestNeighbor,
+        Bilinear 
     };
 
-    public static class Extensions
+    public enum NoiseType 
     {
-        public static bool isWrite(this DataType t)
-        {
-            return t == DataType.ReadWrite || t == DataType.Write;
-        }
+        Gaussian,
+        Uniform,
+        SaltAndPepper
+    };
+
+    public enum ColorMapType 
+    { 
+        Cold_Hot, 
+        Hue
     }
+
+    public enum GrayScaleType
+    { 
+        Mean, 
+        Maximum, 
+        Minimum 
+    };
+
 }

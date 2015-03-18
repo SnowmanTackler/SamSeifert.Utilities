@@ -32,7 +32,7 @@ namespace ImageToolbox.Tools
         }
 
 
-        public override ImageData SpecialBitmapUpdateDefault(ref ImageData d)
+        public override Sect SpecialBitmapUpdateDefault(ref Sect d)
         {
             FormMain.get().updateWithData(d);
             return d;

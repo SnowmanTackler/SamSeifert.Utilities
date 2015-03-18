@@ -17,7 +17,7 @@ namespace ImageToolbox.Tools
         private NodeHandleOut nhoTD = null;
         private NodeHandleIn nhiTD = null;
 
-        public ImageData _SpecialBitmap;
+        public Sect _SpecialBitmap;
 
         private ToolDefault()
         {
@@ -148,7 +148,7 @@ namespace ImageToolbox.Tools
 
 
 
-        public virtual ImageData SpecialBitmapUpdateDefault(ref ImageData d)
+        public virtual Sect SpecialBitmapUpdateDefault(ref Sect d)
         {
             return d;
         }
@@ -179,7 +179,7 @@ namespace ImageToolbox.Tools
             return true;
         }
 
-        public override ImageData SpecialBitmapGet(NodeHandleOut sender)
+        public override Sect SpecialBitmapGet(NodeHandleOut sender)
         {
             return this._SpecialBitmap;
         }

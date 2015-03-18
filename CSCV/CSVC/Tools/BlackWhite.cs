@@ -58,10 +58,10 @@ namespace ImageToolbox.Tools
             this.StatusChanged();
         }
 
-        public override ImageData SpecialBitmapUpdateDefault(ref ImageData d)
+        public override Sect SpecialBitmapUpdateDefault(ref Sect d)
         {
-            ImageData o = null;
-            ImageAlgorithms.TwoTone_O(ref d, this.inud, out o);
+            Sect o = null;
+            IA_Single.TwoTone(d, this.inud, ref o);
             return o;
         }
     }

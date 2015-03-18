@@ -16,7 +16,7 @@ namespace ImageToolbox.Tools
     {
         private OpenFileDialog _OpenFileDialog = new OpenFileDialog();
         private ComboBox cb;
-        private ImageData _SpecialBitmapSource;
+        private Sect _SpecialBitmapSource;
         private Image OriginalImage;
 
         private static readonly String[] AcceptableFileExtensions = new String[]
@@ -155,12 +155,12 @@ namespace ImageToolbox.Tools
             if (FormMain._BoolAutoSizeSourceImages &&
                 r.Width < this.OriginalImage.Width &&
                 r.Height < this.OriginalImage.Height)
-            {
-                this._SpecialBitmapSource = new ImageData(this.OriginalImage, r.Width, r.Height);
+            {               
+                this._SpecialBitmapSource =  SectHolder.SectHoldeFromImage(this.OriginalImage, r.Width, r.Height);
             }
             else
             {
-                this._SpecialBitmapSource = new ImageData(this.OriginalImage);
+                this._SpecialBitmapSource =  SectHolder.SectHoldeFromImage(this.OriginalImage);
             }
 
             this.StatusChanged();

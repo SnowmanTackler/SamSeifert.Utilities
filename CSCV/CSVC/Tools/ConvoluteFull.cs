@@ -42,11 +42,11 @@ namespace ImageToolbox.Tools
             this._ToolConvolute = mama;
         }
 
-        public override ImageData updateOverride(ImageData indata)
+        public override Sect updateOverride(Sect indata)
         {
             if (indata == null) return null;
-            ImageData o = null;
-            ImageAlgorithms.Convolute_O(ref indata, this.getFiltF(), out o);
+            Sect o = null;
+            IA_Single.Convolute(indata, this.getFiltF(), ref o);
             return o;
         }
 

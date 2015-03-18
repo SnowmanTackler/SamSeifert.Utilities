@@ -13,7 +13,7 @@ namespace ImageToolbox.Tools
 {
     public partial class Grayscale : ToolDefault
     {
-        private volatile ImageAlgorithms.GrayScaleType t = ImageAlgorithms.GrayScaleType.Mean;
+        private volatile GrayScaleType t = GrayScaleType.Mean;
         private ComboBox cb;
         private static string name = "Grayscale";
 
@@ -44,9 +44,9 @@ namespace ImageToolbox.Tools
 
             this.cb = ControlDeque.ComboBox();
             this.cb.Items.AddRange(new object[] {
-                ImageAlgorithms.GrayScaleType.Mean,
-                ImageAlgorithms.GrayScaleType.Maximum,
-                ImageAlgorithms.GrayScaleType.Minimum
+                GrayScaleType.Mean,
+                GrayScaleType.Maximum,
+                GrayScaleType.Minimum
             });
             this.cb.SelectedItem = this.t;
             this.cb.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
@@ -57,14 +57,14 @@ namespace ImageToolbox.Tools
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.t = (ImageAlgorithms.GrayScaleType)this.cb.SelectedItem;
+            this.t = (GrayScaleType)this.cb.SelectedItem;
             this.StatusChanged();
         }
 
-        public override ImageData SpecialBitmapUpdateDefault(ref ImageData d)
+        public override Sect SpecialBitmapUpdateDefault(ref Sect d)
         {
-            ImageData o = null;
-            ImageAlgorithms.GrayScale_O(ref d, this.t, out o);
+            Sect o = null;
+            IA_Single.GrayScale(d, this.t, ref o);
             return o;
         }
 

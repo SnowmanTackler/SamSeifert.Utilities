@@ -318,11 +318,11 @@ namespace ImageToolbox.Tools
                 this.pictureBoxThumb.Image = null;
             }
 
-            ImageData id = this.SpecialBitmapGet(null);
+            Sect id = this.SpecialBitmapGet(null);
 
             if (id != null)
             {
-                var sz = Sizing.fitAinB(id.Size, this.pictureBoxThumb.Size).Size;
+                var sz = Sizing.fitAinB(id.getPrefferedSize(), this.pictureBoxThumb.Size).Size;
                 this.pictureBoxThumb.Image = id.getImage(sz.Width, sz.Height, !FormMain._BoolAutoZeroColor);
             }
         }
@@ -380,7 +380,7 @@ namespace ImageToolbox.Tools
         /// </summary>
         /// <param name="sender"></param>
         /// <returns></returns>
-        public virtual ImageData SpecialBitmapGet(NodeHandleOut sender)
+        public virtual Sect SpecialBitmapGet(NodeHandleOut sender)
         {
             return null;
         }

@@ -54,21 +54,21 @@ namespace SamSeifert.ImageProcessing
 
         public delegate Byte getRegionType(Single[][,] data, int y, int x);
 
-        public static bool getBlobFor(ImageData id, SectType[] sTypes, Blob.getRegionType rm, ref Blob b)
+        public static bool getBlobFor(SectHolder id, SectType[] sTypes, Blob.getRegionType rm, ref Blob b)
         {
             if (id == null) return false;
             else if (sTypes == null) return false;
 
             Single[][,] data = new Single[sTypes.Length][,];
 
-            for (int i = 0; i < sTypes.Length; i++) data[i] = id.getSect(sTypes[i], DataType.Read)._Data;
+//            for (int i = 0; i < sTypes.Length; i++) data[i] = id.getSect(sTypes[i]);
 
             bool createNew = false;
 
             if (b == null) createNew = true;
-            else if (b.Size != id.Size) createNew = true;
+//            else if (b.Size != id.Size) createNew = true;
             
-            if (createNew) b = new Blob(id.Size);
+//            if (createNew) b = new Blob(id.Size);
 
 
             UInt16 pmatchy = 0;

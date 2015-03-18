@@ -26,7 +26,7 @@ namespace ImageToolbox
             NodeHandleOut.allOuts.Add(this);
         }
 
-        internal ImageData getSpecialBitmap()
+        internal Sect getSpecialBitmap()
         {
             return this.getTool.SpecialBitmapGet(this);
         }

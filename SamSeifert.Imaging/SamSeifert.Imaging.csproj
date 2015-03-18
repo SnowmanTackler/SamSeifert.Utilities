@@ -91,6 +91,9 @@
     <Compile Include="Enums.cs" />
     <Compile Include="HistogramViewer.cs" />
     <Compile Include="HoughTransform.cs" />
+    <Compile Include="IA_Helpers.cs" />
+    <Compile Include="IA_Multiple.cs" />
+    <Compile Include="IA_Single.cs" />
     <Compile Include="ImageAlgorithms.cs" />
     <Compile Include="PointD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,8 +103,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Sect.cs" />
+    <Compile Include="SectArray.cs" />
+    <Compile Include="SectConstant.cs" />
+    <Compile Include="SectMask.cs" />
     <Compile Include="Sizing.cs" />
-    <Compile Include="ImageData.cs" />
+    <Compile Include="SectHolder.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\HeatmapHotCold.bmp" />

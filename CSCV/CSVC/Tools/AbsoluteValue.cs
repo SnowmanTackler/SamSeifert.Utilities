@@ -15,10 +15,10 @@ namespace ImageToolbox.Tools
             this.checkBoxName.Text = "Absolute Value";
         }
 
-        public override ImageData SpecialBitmapUpdateDefault(ref ImageData d)
+        public override Sect SpecialBitmapUpdateDefault(ref Sect d)
         {
-            ImageData o = null;
-            ImageAlgorithms.Abs_O(ref d, out o);
+            Sect o = null;
+            IA_Single.Abs(d, ref o);
             return o;
         }
     }

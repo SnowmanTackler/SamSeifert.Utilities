@@ -1,5 +1,6 @@
-﻿
-using System;
+﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,258 +9,321 @@ namespace SamSeifert.ImageProcessing
 {
     public class Sect
     {
-        public Single[,] _Data = null;
-        public SectType _Type;
-        public int _Width;
-        public int _Height;
-        public System.Drawing.Size _Size { get { return new System.Drawing.Size(this._Width, this._Height); } }
+        public readonly SectType _Type;
 
-        public Sect(SectType t, int w, int h) : this(new Single[h, w], t)
+        public Sect(SectType t)
         {
-        }
-
-        public Sect(Single[,] data, SectType t)
-        {
-            this._Data = data;
             this._Type = t;
-            this._Height = data.GetLength(0);
-            this._Width = data.GetLength(1);
         }
 
-        public Sect Clone()
+        public virtual Boolean isSquishy()
         {
-            /*                
-                            int w = this._Width;
-                            int h = this._Height;
-
-                            Stopwatch st = new Stopwatch();
-
-                            st.Restart();
-                            var jar = this._Data.Select(a => a.ToArray()).ToArray();
-                            Console.WriteLine("Elapsed 1: " + st.Elapsed.TotalSeconds.ToString());
-                            st.Restart();
-                            var gar = new float[h, ];
-                            for (int y = 0; y < w; y++)
-                            {
-                                gar[y] = new float[w];
-
-                                for (int x = 0; x < w; x++)
-                                {
-                                    gar[y, x] = this._Data[y, x];
-                                }
-                            }
-                            Console.WriteLine("Elapsed 2: " + st.Elapsed.TotalSeconds.ToString());
-                            st.Restart();
-                            var har = new float[h, ];
-                            for (int y = 0; y < h; y++)
-                            {
-                                har[y] = new float[w];
-                                Array.Copy(this._Data[y], har[y], w);
-                            }
-                            Console.WriteLine("Elapsed 3: " + st.Elapsed.TotalSeconds.ToString());
-             */
-
-            var ret = new Single[this._Height, this._Width];
-
-            Array.Copy(this._Data, ret, this._Width * this._Height);
-
-            Sect s = new Sect(ret, this._Type);
-
-            if (!this.setMinMaxAvg)
-            {
-                s.setMinMaxAvg = false;
-                s.min = this.min;
-                s.max = this.max;
-                s.avg = this.avg;
-            }
-
-            return s;
+            throw new NotImplementedException();
         }
 
-
-
-        internal void CopyTo(Sect s)
+        public virtual Size getPrefferedSize()
         {
-            s.setMinMaxAvg = true;
-            Array.Copy(this._Data, s._Data, this._Width * this._Height);
+            throw new NotImplementedException();
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        internal void setValue(Single v)
-        {
-            this.setMinMaxAvg = true;
-
-            for (int y = 0; y < this._Height; y++)
-            {
-                for (int x = 0; x < this._Width; x++)
-                {
-                    this._Data[y, x] = v;
-                }
-            }
-        }
-        internal void add(Single v)
-        {
-            this.setMinMaxAvg = true;
-
-            for (int y = 0; y < this._Height; y++)
-            {
-                for (int x = 0; x < this._Width; x++)
-                {
-                    this._Data[y, x] += v;
-                }
-            }
-        }
-        internal void multiply(Single v)
-        {
-            this.setMinMaxAvg = true;
-
-            for (int y = 0; y < this._Height; y++)
-            {
-                for (int x = 0; x < this._Width; x++)
-                {
-                    this._Data[y, x] *= v;
-                }
-            }
-        }
-
-
-
-
-        private Single _min, _max, _avg;
-        public Single min
+        public virtual Single this[int x, int y]
         {
             get
             {
-                if (this.setMinMaxAvg) this.statsSet(); 
-                return this._min;
+                throw new NotImplementedException();
             }
-            private set
+            set
             {
-                this._min = value;
+                throw new NotImplementedException();
             }
         }
-        public Single max
+
+        public virtual Sect Clone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual Single min
         {
             get
             {
-                if (this.setMinMaxAvg) this.statsSet();
-                return this._max;
-            }
-            private set
-            {
-                this._max = value;
+                throw new NotImplementedException();
             }
         }
-        public Single avg
+
+        public virtual Single max
         {
             get
             {
-                if (this.setMinMaxAvg) this.statsSet();
-                return this._avg;
-            }
-            private set
-            {
-                this._avg = value;
+                throw new NotImplementedException();
             }
         }
 
-        internal void resetStats()
+        public virtual Single avg
         {
-            this.setMinMaxAvg = true;
-            this._std = -1;
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
 
-        private Boolean setMinMaxAvg = true;
-
-        private void statsSet()
+        public virtual void reset()
         {
-            this._min = Single.MaxValue;
-            this._max = Single.MinValue;
-            this._avg = 0;
+            throw new NotImplementedException();
+        }
 
-            Single val = 0;
 
-            for (int y = 0; y < this._Height; y++)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public unsafe Bitmap getImage(bool forceZero = true)
+        {
+            var sz = this.getPrefferedSize();
+
+            Bitmap newB = new Bitmap(sz.Width, sz.Height, PixelFormat.Format24bppRgb);
+
+            this.refreshImage(ref newB, forceZero);
+
+            return newB;
+        }
+
+        public unsafe Bitmap getImage(int w, int h, bool forceZero = true)
+        {
+            Bitmap newB = new Bitmap(w, h, PixelFormat.Format24bppRgb);
+
+            this.refreshImage(ref newB, forceZero);
+
+            return newB;
+        }
+
+        public virtual void getRGB(int y, int x, out float r, out float g, out float b)
+        {
+            var val = this[y, x];
+
+            switch (this._Type)
             {
-                for (int x = 0; x < this._Width; x++)
+                case SectType.RGB_R:
+                    r = val;
+                    g = 0;
+                    b = 0;
+                    break;
+                case SectType.RGB_G:
+                    r = 0;
+                    g = val;
+                    b = 0;
+                    break;
+                case SectType.RGB_B:
+                    r = 0;
+                    g = 0;
+                    b = val;
+                    break;
+                default:
+                    r = val;
+                    g = val;
+                    b = val;
+                    break;
+            }
+        }
+
+        public unsafe void refreshImage(ref Bitmap bmp, bool forceZero = true)
+        {
+            if (bmp == null) bmp = this.getImage(forceZero);
+            else
+            {
+                var sz = this.getPrefferedSize();
+                
+                Single mult, offset;
+
+                if (forceZero)
                 {
-                    val = this._Data[y, x];
-                    this._min = Math.Min(val, this._min);
-                    this._max = Math.Max(val, this._max);
-                    this._avg += val;
+                    mult = 255.0f;
+                    offset = 0;
                 }
-            }
-
-            this._avg /= (this._Width * this._Height);
-
-            this.setMinMaxAvg = false;
-        }
-
-        private Single _std = -1;
-        public Single std
-        {
-            get
-            {
-                if (this._std < 0)
+                else
                 {
-                    Single f = 0, st = 0;
+                    Boolean p = this.min >= 0;
+                    Boolean n = this.max <= 0;
+                    mult = n ? -255.0f : 255.0f;
+                    offset = (p || n) ? 0 : 128;
+                }
 
-                    for (int y = 0; y < this._Height; y++)
+                if (bmp.Size != sz)
+                {
+                    Rectangle rect = Sizing.fitAinB(new Size(sz.Width, sz.Height), bmp.Size);
+
+                    BitmapData bmdNew = bmp.LockBits(
+                        new Rectangle(0, 0, bmp.Width, bmp.Height),
+                        System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                        PixelFormat.Format24bppRgb);
+
+                    byte* row;
+                    int xx = 0, x;
+
+                    float yAdj;
+                    float xAdj;
+                    
+                    // Nearest Neighbor [Expansion]
+                    if (rect.Width > sz.Width || rect.Height > sz.Height)
                     {
-                        for (int x = 0; x < this._Width; x++)
+                        int yA, xA;
+                        Single r, g, b;
+
+                        for (int y = 0; y < bmp.Height; y++)
                         {
-                            f = this._Data[y, x] - this.avg;
-                            st += (f * f);
+                            yAdj = y * (sz.Height - 1);
+                            yAdj /= (bmp.Height - 1);
+                            yA = (int)Math.Round(yAdj, 0);
+
+                            row = (Byte*)bmdNew.Scan0 + (y * bmdNew.Stride);
+
+                            for (x = 0, xx = 0; x < bmp.Width; x++, xx += 3)
+                            {
+                                xAdj = x * (sz.Width - 1);
+                                xAdj /= (bmp.Width - 1);
+                                xA = (int)Math.Round(xAdj, 0);
+
+                                this.getRGB(yA, xA, out r, out g, out b);
+                                row[xx + 2] = IA_Helpers.castByte(r * mult + offset);
+                                row[xx + 1] = IA_Helpers.castByte(g * mult + offset);
+                                row[xx + 0] = IA_Helpers.castByte(b * mult + offset);
+                            }
+                        }
+                    }
+                    // Bilinear [Compression]
+                    else
+                    {
+                        Single rYuXu, gYuXu, bYuXu;
+                        Single rYuXd, gYuXd, bYuXd;
+                        Single rYdXd, gYdXd, bYdXd;
+                        Single rYdXu, gYdXu, bYdXu;
+
+                        int yUp, yDown;
+                        int xUp, xDown;
+
+                        Single fR = 0;
+                        Single fG = 0;
+                        Single fB = 0;
+                        Single yAdj2 = 0;
+                        Single xAdj2 = 0;
+
+                        for (int y = 0; y < bmp.Height; y++)
+                        {
+                            yAdj = y * (sz.Height - 1);
+                            yAdj /= (bmp.Height - 1);
+                            yAdj2 = yAdj % 1;
+
+                            yUp = (int)Math.Ceiling((double)yAdj);
+                            yDown = (int)yAdj;
+
+                            row = (Byte*)bmdNew.Scan0 + (y * bmdNew.Stride);
+
+                            for (x = 0, xx = 0; x < bmp.Width; x++, xx += 3)
+                            {
+                                xAdj = x * (sz.Width - 1);
+                                xAdj /= (bmp.Width - 1);
+                                xAdj2 = xAdj % 1;
+                                xUp = (int)Math.Ceiling((double)xAdj);
+                                xDown = (int)xAdj;
+
+                                if (xUp == xDown && yUp == yDown)
+                                {
+                                    this.getRGB(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
+                                    fR = rYuXu;
+                                    fG = gYuXu;
+                                    fB = bYuXu;
+                                }
+                                else if (xUp == xDown)
+                                {
+                                    this.getRGB(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
+                                    this.getRGB(yDown, xUp, out rYdXu, out gYdXu, out bYdXu);
+                                    fR = SectHolder.getLinearEstimate(rYdXu, rYuXu, yAdj2);
+                                    fG = SectHolder.getLinearEstimate(gYdXu, gYuXu, yAdj2);
+                                    fB = SectHolder.getLinearEstimate(bYdXu, bYuXu, yAdj2);
+                                }
+                                else if (yUp == yDown)
+                                {
+                                    this.getRGB(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
+                                    this.getRGB(yUp, xDown, out rYuXd, out gYuXd, out bYuXd);
+                                    fR = SectHolder.getLinearEstimate(rYuXd, rYuXu, xAdj2);
+                                    fG = SectHolder.getLinearEstimate(gYuXd, gYuXu, xAdj2);
+                                    fB = SectHolder.getLinearEstimate(bYuXd, bYuXu, xAdj2);
+                                }
+                                else
+                                {
+                                    this.getRGB(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
+                                    this.getRGB(yUp, xDown, out rYuXd, out gYuXd, out bYuXd);
+                                    this.getRGB(yDown, xDown, out rYdXd, out gYdXd, out bYdXd);
+                                    this.getRGB(yDown, xUp, out rYdXu, out gYdXu, out bYdXu);
+
+                                    fR = SectHolder.getLinearEstimate(
+                                         SectHolder.getLinearEstimate(rYdXd, rYuXd, yAdj2),
+                                         SectHolder.getLinearEstimate(rYdXu, rYuXu, yAdj2),
+                                         xAdj2);
+                                    fG = SectHolder.getLinearEstimate(
+                                         SectHolder.getLinearEstimate(gYdXd, gYuXd, yAdj2),
+                                         SectHolder.getLinearEstimate(gYdXu, gYuXu, yAdj2),
+                                         xAdj2);
+                                    fB = SectHolder.getLinearEstimate(
+                                         SectHolder.getLinearEstimate(bYdXd, bYuXd, yAdj2),
+                                         SectHolder.getLinearEstimate(bYdXu, bYuXu, yAdj2),
+                                         xAdj2);
+                                }
+
+                                row[xx + 2] = IA_Helpers.castByte(fR * mult + offset);
+                                row[xx + 1] = IA_Helpers.castByte(fG * mult + offset);
+                                row[xx + 0] = IA_Helpers.castByte(fB * mult + offset);
+                            }
                         }
                     }
 
-                    st /= this._Height * this._Width;
-                    this._std = (Single)Math.Sqrt(st);
+                    bmp.UnlockBits(bmdNew);
                 }
-
-                return this._std;
-            }
-        }
-
-
-        /// <summary>
-        /// UNSAFE.  Make sure non null and matching dims
-        /// </summary>
-        /// <param name="s"></param>
-        internal void add(Sect s)
-        {
-            for (int y = 0; y < this._Height; y++)
-            {
-                for (int x = 0; x < this._Width; x++)
+                else
                 {
-                    this._Data[y, x] += s._Data[y, x];
-                }
-            }
-        }
-        /// <summary>
-        /// UNSAFE.  Make sure non null and matching dims
-        /// </summary>
-        /// <param name="s"></param>
-        internal void sub(Sect s)
-        {
-            for (int y = 0; y < this._Height; y++)
-            {
-                for (int x = 0; x < this._Width; x++)
-                {
-                    this._Data[y, x] -= s._Data[y, x];
+
+                    BitmapData bmd = bmp.LockBits(
+                    new Rectangle(0, 0, sz.Width, sz.Height),
+                    System.Drawing.Imaging.ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+
+                    Single r, g, b;
+
+                    Byte* rowNew;
+                    for (int y = 0; y < sz.Height; y++)
+                    {
+                        rowNew = (byte*)bmd.Scan0 + (y * bmd.Stride);
+
+                        for (int x = 0, xx = 0; x < sz.Width; x++, xx += 3)
+                        {
+                            this.getRGB(y, x, out r, out g, out b);
+                            rowNew[xx + 2] = IA_Helpers.castByte(r * mult + offset);
+                            rowNew[xx + 1] = IA_Helpers.castByte(g * mult + offset);
+                            rowNew[xx + 0] = IA_Helpers.castByte(b * mult + offset);
+                        }
+                    }
+
+                    bmp.UnlockBits(bmd);
                 }
             }
         }

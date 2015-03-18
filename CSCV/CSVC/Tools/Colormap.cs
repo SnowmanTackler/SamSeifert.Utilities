@@ -13,7 +13,7 @@ namespace ImageToolbox.Tools
 {
     public partial class Colormap : ToolDefault
     {
-        private volatile ImageAlgorithms.ColorMapType t = ImageAlgorithms.ColorMapType.Cold_Hot;
+        private volatile ColorMapType t = ColorMapType.Cold_Hot;
 
         private static string name = "Color Map";
 
@@ -38,10 +38,10 @@ namespace ImageToolbox.Tools
             this.checkBoxName.Text = name;
         }
 
-        public override ImageData SpecialBitmapUpdateDefault(ref ImageData d)
+        public override Sect SpecialBitmapUpdateDefault(ref Sect d)
         {
-            ImageData o = null;
-            ImageAlgorithms.Colormap_O(ref d, t, out o);
+            Sect o = null;
+            IA_Single.Colormap(d, t, ref o);
             return o;
         }
     } 

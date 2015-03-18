@@ -15,7 +15,7 @@ namespace ImageToolbox.Tools
     {
         private volatile float inud = 0.5f;
         private NumericUpDown nud;
-        private volatile ImageAlgorithms.NoiseType t = ImageAlgorithms.NoiseType.Gaussian;
+        private volatile NoiseType t = NoiseType.Gaussian;
         private ComboBox cb;
 
         private static string name = "Noise";
@@ -52,9 +52,9 @@ namespace ImageToolbox.Tools
 
             this.cb = ControlDeque.ComboBox();
             this.cb.Items.AddRange(new object[] {
-                ImageAlgorithms.NoiseType.Gaussian,
-                ImageAlgorithms.NoiseType.Uniform,
-                ImageAlgorithms.NoiseType.SaltAndPepper
+                NoiseType.Gaussian,
+                NoiseType.Uniform,
+                NoiseType.SaltAndPepper
             });
 
             this.cb.SelectedItem = this.t;
@@ -79,14 +79,14 @@ namespace ImageToolbox.Tools
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.t = (ImageAlgorithms.NoiseType)this.cb.SelectedItem;
+            this.t = (NoiseType)this.cb.SelectedItem;
             this.StatusChanged();
         }
 
-        public override ImageData SpecialBitmapUpdateDefault(ref ImageData d)
+        public override Sect SpecialBitmapUpdateDefault(ref Sect d)
         {
-            ImageData o = null;
-            ImageAlgorithms.Noise_O(ref d, this.t, inud, out o);
+            Sect o = null;
+            IA_Single.Noise(d, this.t, inud, ref o);
             return o;
         }
     }

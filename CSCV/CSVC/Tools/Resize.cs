@@ -17,7 +17,7 @@ namespace ImageToolbox.Tools
     {
         private volatile float inud = 0.5f;
         private NumericUpDown nud;
-        private volatile ImageAlgorithms.ResizeType t = ImageAlgorithms.ResizeType.NearestNeighbor;
+        private volatile ResizeType t = ResizeType.NearestNeighbor;
         private ComboBox cb;
 
         public const string name = "Resize";
@@ -55,8 +55,8 @@ namespace ImageToolbox.Tools
 
             this.cb = ControlDeque.ComboBox();
             this.cb.Items.AddRange(new object[] {
-                ImageAlgorithms.ResizeType.NearestNeighbor,
-                ImageAlgorithms.ResizeType.Bilinear
+                ResizeType.NearestNeighbor,
+                ResizeType.Bilinear
             });
             this.cb.SelectedItem = this.t;
             this.cb.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
@@ -80,17 +80,17 @@ namespace ImageToolbox.Tools
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.t = (ImageAlgorithms.ResizeType)this.cb.SelectedItem;
+            this.t = (ResizeType)this.cb.SelectedItem;
             this.StatusChanged();
         }
 
-        public override ImageData SpecialBitmapUpdateDefault(ref ImageData d)
+        public override Sect SpecialBitmapUpdateDefault(ref Sect d)
         {
-            Size s = d.SizeOriginal;
+            Size s = d.getPrefferedSize();
             s.Width = (int)(s.Width * this.inud);
             s.Height = (int)(s.Height * this.inud);
-            ImageData o = null;
-            ImageAlgorithms.Resize_O(ref d, s, t, out o);
+            Sect o = null;
+            IA_Single.Resize(d, s, t, ref o);
             return o;
         }
     }

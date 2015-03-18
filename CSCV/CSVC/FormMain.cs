@@ -143,16 +143,28 @@ namespace ImageToolbox
 
 
 
-        private ImageData _SpecialBitmap;
+        private Sect _SpecialBitmap;
+        private Bitmap _ImageHist = null;
+        public Image Histogram()
+        {
+            HistogramViewer.histogram(
+                this._SpecialBitmap,
+                this.pictureBoxHist.Height,
+                this.checkBoxAutoscaleHistogramBool, ref this._ImageHist);
 
-        internal void updateWithData(ImageData indata)
+            return this._ImageHist;
+        }
+
+
+
+
+        internal void updateWithData(Sect indata)
         {
             if (indata != null)
             {
                 this._SpecialBitmap = indata;
 
-                Image h = this._SpecialBitmap.Histogram(this.pictureBoxHist.Height, this.checkBoxAutoscaleHistogramBool);
-
+                Image h = this.Histogram();
                 Image i = this._SpecialBitmap.getImage(!FormMain._BoolAutoZeroColor);
 
                 this.pictureBoxOuput.Image = i;
@@ -177,15 +189,39 @@ namespace ImageToolbox
             const string format = "0.#";
             const string nan = "-";
 
-            var ts = this._SpecialBitmap.getImageSectTypes();
+            Sect sectR = null;
+            Sect sectG = null;
+            Sect sectB = null;
 
-            if (ts.r != SectType.NaN)
+            switch (this._SpecialBitmap._Type)
             {
-                var s = this._SpecialBitmap.getSect(ts.r, DataType.Read);
+                case SectType.RGB_R:
+                    sectR = this._SpecialBitmap;
+                    break;
+                case SectType.RGB_G:
+                    sectG = this._SpecialBitmap;
+                    break;
+                case SectType.RGB_B:
+                    sectB = this._SpecialBitmap;
+                    break;
+                case SectType.Holder:
+                    {
+                        var sh = this._SpecialBitmap as SectHolder;
+                        sh.Sects.TryGetValue(SectType.RGB_R, out sectR);
+                        sh.Sects.TryGetValue(SectType.RGB_G, out sectG);
+                        sh.Sects.TryGetValue(SectType.RGB_B, out sectB);
+                    }
+                    break;
+            }
+
+            if (sectR != null)
+            {
+                var s = sectR;
                 this.labelMinR.Text = (255 * s.min).ToString(format);
                 this.labelMaxR.Text = (255 * s.max).ToString(format);
                 this.labelAvgR.Text = (255 * s.avg).ToString(format);
-                this.labelSDR.Text = (255 * s.std).ToString(format);
+                if (s is SectArray) this.labelSDR.Text = (255 * (s as SectArray).std).ToString(format);
+                else this.labelSDR.Text = nan;
             }
             else
             {
@@ -195,13 +231,14 @@ namespace ImageToolbox
                 this.labelSDR.Text = nan;
             }
 
-            if (ts.g != SectType.NaN)
+            if (sectG != null)
             {
-                var s = this._SpecialBitmap.getSect(ts.g, DataType.Read);
+                var s = sectG;
                 this.labelMinG.Text = (255 * s.min).ToString(format);
                 this.labelMaxG.Text = (255 * s.max).ToString(format);
                 this.labelAvgG.Text = (255 * s.avg).ToString(format);
-                this.labelSDG.Text = (255 * s.std).ToString(format);
+                if (s is SectArray) this.labelSDG.Text = (255 * (s as SectArray).std).ToString(format);
+                else this.labelSDG.Text = nan;
             }
             else
             {
@@ -211,13 +248,14 @@ namespace ImageToolbox
                 this.labelSDG.Text = nan;
             }
 
-            if (ts.b != SectType.NaN)
+            if (sectB != null)
             {
-                var s = this._SpecialBitmap.getSect(ts.b, DataType.Read);
+                var s = sectB;
                 this.labelMinB.Text = (255 * s.min).ToString(format);
                 this.labelMaxB.Text = (255 * s.max).ToString(format);
                 this.labelAvgB.Text = (255 * s.avg).ToString(format);
-                this.labelSDB.Text = (255 * s.std).ToString(format);
+                if (s is SectArray) this.labelSDB.Text = (255 * (s as SectArray).std).ToString(format);
+                else this.labelSDB.Text = nan;
             }
             else
             {
@@ -570,14 +608,10 @@ namespace ImageToolbox
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-                this._addCell(new SplitRGB());
         }
 
         private void pictureBox2_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-                this._addCell(new SplitPN());
         }
 
         private void pictureBox3_MouseDown(object sender, MouseEventArgs e)
@@ -594,15 +628,10 @@ namespace ImageToolbox
 
         private void pictureBox2_MouseDown_1(object sender, MouseEventArgs e)
         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-                this._addCell(new SplitHSV());
-
         }
 
         private void pictureBox3_MouseDown_1(object sender, MouseEventArgs e)
         {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-                this._addCell(new SplitHSL());
         }
 
         private void pictureBoxOuput_Click(object sender, EventArgs e)

@@ -11,17 +11,24 @@ namespace SamSeifert.ImageProcessing
 {
     public partial class HistogramViewer
     {
-        internal static unsafe Bitmap histogram(ImageData indata, int testHeight, Boolean autoscale)
-        {
+        public static unsafe void histogram(Sect inpt, int imh, Boolean autoscale, ref Bitmap bmp)
+        {        
+            if (imh < 1) return;
+
             int[,] histogram;
 
-            HistogramViewer.fillHistogram(indata, out histogram);
+            HistogramViewer.fillHistogram(inpt, out histogram);
 
             int x;
             const int picWidth = 511;
 
-            testHeight = Math.Max(1, testHeight);
-            Bitmap _Bitmap = new Bitmap(picWidth, testHeight, PixelFormat.Format24bppRgb);
+            Boolean remake = bmp == null;;
+            if (!remake) remake = bmp.Height != imh;
+            if (remake)
+            {
+                if (bmp != null) bmp.Dispose();
+                bmp = new Bitmap(picWidth, imh, PixelFormat.Format24bppRgb);
+            }
 
             int max = 1;
 
@@ -31,15 +38,21 @@ namespace SamSeifert.ImageProcessing
                     for (x = 0; x < picWidth; x++)
                         max = Math.Max(max, histogram[c, x]);
             }
-            else max = Math.Max(max, indata.Width * indata.Height * 10 / 255);
+            else
+            {
+                var sz = inpt.getPrefferedSize();
+                int w = sz.Width;
+                int h = sz.Height;
+                max = Math.Max(max, w * h * 10 / 255);
+            }
             
             for (int c = 0; c < 3; c++)
                 for (x = 0; x < picWidth; x++)
-                    histogram[c, x] = ((histogram[c, x]) * testHeight) / max;
+                    histogram[c, x] = ((histogram[c, x]) * imh) / max;
 
-            BitmapData bmd = _Bitmap.LockBits(
-                new Rectangle(0, 0, _Bitmap.Width, _Bitmap.Height),
-                System.Drawing.Imaging.ImageLockMode.ReadWrite, _Bitmap.PixelFormat);
+            BitmapData bmd = bmp.LockBits(
+                new Rectangle(0, 0, bmp.Width, bmp.Height),
+                System.Drawing.Imaging.ImageLockMode.ReadWrite, bmp.PixelFormat);
 
             byte* row;
             int xx = 0;
@@ -58,46 +71,31 @@ namespace SamSeifert.ImageProcessing
                 }
             }
 
-            _Bitmap.UnlockBits(bmd);
+            bmp.UnlockBits(bmd);
 
-            _Bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-
-            return _Bitmap;
+            bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
         }
 
-        private static void fillHistogram(ImageData indata, out int[, ] counts)
+        private static void fillHistogram(Sect inpt, out int[,] counts)
         {
             int x, y;
-            int w = indata.Width;
-            int h = indata.Height;
+
+            var sz = inpt.getPrefferedSize();
+            int w = sz.Width;
+            int h = sz.Height;
 
             counts = new int[3, 511];
 
-            var ts = indata.getImageSectTypes();
+            Single r, g, b;
 
-            if (!ts.valid) return;
-
-            Single[,] r = null;
-            Single[,] g = null;
-            Single[,] b = null;
-
-            indata.getImageSect(ts.r, ref r);
-            indata.getImageSect(ts.g, ref g);
-            indata.getImageSect(ts.b, ref b);
-
-            for (int c = 0; c < 3; c++)
+            for (y = 0; y < h; y++)
             {
-                var inpArray = (c == 0) ? r : (c == 1) ? g : b;
-
-                if (inpArray != null)
+                for (x = 0; x < w; x++)
                 {
-                    for (y = 0; y < h; y++)
-                    {
-                        for (x = 0; x < w; x++)
-                        {
-                            counts[c, 255 + ImageAlgorithms.cast(inpArray[y, x] * 255.0f)]++;
-                        }
-                    }
+                    inpt.getRGB(y, x, out r, out g, out b);
+                    counts[0, 255 + IA_Helpers.Cast(r * 255.0f)]++;
+                    counts[1, 255 + IA_Helpers.Cast(g * 255.0f)]++;
+                    counts[2, 255 + IA_Helpers.Cast(b * 255.0f)]++;
                 }
             }
         }

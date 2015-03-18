@@ -81,7 +81,7 @@ namespace ImageToolbox.Tools
             return grid;
         }
 
-        public override ImageData updateOverride(ImageData indata)
+        public override Sect updateOverride(Sect indata)
         {
             if (indata == null) return null;
 

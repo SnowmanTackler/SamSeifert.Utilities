@@ -52,14 +52,14 @@ namespace ImageToolbox.Tools
         }
 
 
-        private ImageData _ImageDataLast = null;
-        public override ImageData SpecialBitmapUpdateDefault(ref ImageData d)
+        private Sect _ImageDataLast = null;
+        public override Sect SpecialBitmapUpdateDefault(ref Sect d)
         {
             this._ImageDataLast = d;
 
-            ImageData o = d.Clone();
+            Sect o = d.Clone();
 
-            float[,] r, g, b;
+/*            float[,] r, g, b;
             o.getRGB(out r, out g, out b, DataType.ReadWrite);
 
             for (int y = 0; y < o.Height; y++)
@@ -68,7 +68,7 @@ namespace ImageToolbox.Tools
                         ref r[y,x],
                         ref g[y,x],
                         ref b[y,x],
-                        this._ColorFilterOptions);
+                        this._ColorFilterOptions);*/
 
             return o;
         }

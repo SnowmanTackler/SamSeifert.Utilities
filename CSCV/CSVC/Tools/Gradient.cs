@@ -36,10 +36,10 @@ namespace ImageToolbox.Tools
             this.checkBoxName.Text = name;
         }
 
-        public override ImageData SpecialBitmapUpdateDefault(ref ImageData d)
+        public override Sect SpecialBitmapUpdateDefault(ref Sect d)
         {
-            ImageData o = null;
-            ImageAlgorithms.Gradient_O(ref d, out o);
+            Sect o = null;
+            IA_Single.Gradient(d, ref o);
             return o;
         }
     }
