@@ -116,6 +116,7 @@ namespace ImageToolbox
                 ,Tools.Gradient.getAddCellButton()
                 ,Tools.HoughFootOfNormal.getAddCellButton()
                 ,Tools.HoughRhoTheta.getAddCellButton()
+                ,Tools.MeanShift.getAddCellButton()
             };
 
             int gap = 10;

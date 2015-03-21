@@ -26,7 +26,7 @@ namespace SamSeifert.ImageProcessing
             throw new NotImplementedException();
         }
 
-        public virtual Single this[int x, int y]
+        public virtual Single this[int y, int x]
         {
             get
             {

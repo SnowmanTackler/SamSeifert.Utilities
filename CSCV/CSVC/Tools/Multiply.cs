@@ -22,6 +22,8 @@ namespace ImageToolbox.Tools
         {
             InitializeComponent();
 
+            if (this.DesignMode) return;
+
             this.pictureBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(base.dragStart);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(base.dragAction);
             this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(base.dragEnd);

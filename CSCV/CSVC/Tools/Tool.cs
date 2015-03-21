@@ -19,6 +19,9 @@ namespace ImageToolbox.Tools
         public Tool()
         {
             InitializeComponent();
+
+            if (this.DesignMode) return;
+
             this._Controls.Add(this);
         }
 
