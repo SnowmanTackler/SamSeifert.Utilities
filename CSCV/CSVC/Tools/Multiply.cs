@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-using SamSeifert.ImageProcessing;
+using SamSeifert.CSCV;
 
-namespace ImageToolbox.Tools
+namespace CSCV_IDE.Tools
 {
     public partial class Multiply : Tool
     {
@@ -92,13 +92,12 @@ namespace ImageToolbox.Tools
             try
             {
                 var list = new List<Sect>();
-                Sect a, b;
-
-                a = this.nhis[0].getSpecialBitmap();
+                Sect a = null, b = null; 
+ //                a = this.nhis[0].getSpecialBitmap();
                 if (a == null) return;
                 list.Add(a);
 
-                b = this.nhis[1].getSpecialBitmap();
+  //              b = this.nhis[1].getSpecialBitmap();
                 if (b == null) return;
                 list.Add(b);
 
@@ -116,7 +115,8 @@ namespace ImageToolbox.Tools
 
         public override List<NodeHandleIn> getOutputs()
         {
-            return this.nho.nhis;
+            return null;
+//            return this.nho.nhis;
         }
     }
 }

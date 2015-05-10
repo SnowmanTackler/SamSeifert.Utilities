@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-using SamSeifert.ImageProcessing;
+using SamSeifert.CSCV;
 
-namespace ImageToolbox.Tools
+namespace CSCV_IDE.Tools
 {
     public partial class ErodeDilateFull : ToolDetails
     {

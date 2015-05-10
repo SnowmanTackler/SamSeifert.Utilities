@@ -1,4 +1,4 @@
-﻿namespace ImageToolbox
+﻿namespace CSCV_IDE
 {
     partial class NodeHandleIn
     {
@@ -28,15 +28,37 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImage = global::CSCV_IDE.Properties.Resources.Arrow;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // NodeHandleIn
             // 
+            this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.pictureBox1);
+            this.MaximumSize = new System.Drawing.Size(18, 18);
+            this.MinimumSize = new System.Drawing.Size(18, 18);
             this.Name = "NodeHandleIn";
+            this.Size = new System.Drawing.Size(18, 18);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

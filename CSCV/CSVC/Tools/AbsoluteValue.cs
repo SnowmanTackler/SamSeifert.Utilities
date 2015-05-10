@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SamSeifert.ImageProcessing;
+using SamSeifert.CSCV;
 using System.Windows.Forms;
 
-namespace ImageToolbox.Tools
+namespace CSCV_IDE.Tools
 {
     public class AbsoluteValue : ToolDefault
     {

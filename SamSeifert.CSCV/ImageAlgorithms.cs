@@ -6,7 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 
-namespace SamSeifert.ImageProcessing
+namespace SamSeifert.CSCV
 {
     public enum ToolboxReturn { Good, NullInput, ImageSizeMismatch, SpecialError };
 

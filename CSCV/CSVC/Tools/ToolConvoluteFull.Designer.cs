@@ -1,4 +1,4 @@
-﻿namespace ImageToolbox.Tools
+﻿namespace CSCV_IDE.Tools
 {
     partial class ConvoluteFull
     {

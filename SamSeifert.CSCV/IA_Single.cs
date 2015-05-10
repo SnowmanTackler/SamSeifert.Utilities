@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 
-namespace SamSeifert.ImageProcessing
+namespace SamSeifert.CSCV
 {
     public class IA_Single
     {
@@ -212,7 +212,7 @@ namespace SamSeifert.ImageProcessing
                 int w = sz.Width;
                 int h = sz.Height;
 
-                if (inpt is SectHolder)
+                if (inpt._Type == SectType.Holder)
                 {
                     var sh = inpt as SectHolder;
                     switch (t)

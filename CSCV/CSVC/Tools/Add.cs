@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-using SamSeifert.ImageProcessing;
-using ImageToolbox;
+using SamSeifert.CSCV;
+using CSCV_IDE;
 
-namespace ImageToolbox.Tools
+namespace CSCV_IDE.Tools
 {
     public partial class Add : Tool
     {
@@ -149,9 +149,9 @@ namespace ImageToolbox.Tools
             for (int i = 0; i < this.nhis.Count; i++)
             {
                 NodeHandleIn nhi = this.nhis[i];
-                if (nhi.nho != null)
+//                if (nhi.nho != null)
                 {
-                    Sect t = nhi.nho.getSpecialBitmap();
+                    Sect t = null;// nhi.nho.getSpecialBitmap();
                     if (t != null)
                     {
                         indata.Add(t);
@@ -164,9 +164,5 @@ namespace ImageToolbox.Tools
             this.UpdateThumb();
         }
 
-        public override List<NodeHandleIn> getOutputs()
-        {
-            return this.nho.nhis;
-        }
     }
 }

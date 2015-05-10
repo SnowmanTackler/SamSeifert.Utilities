@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-using SamSeifert.ImageProcessing;
+using SamSeifert.CSCV;
 
-namespace ImageToolbox.Tools
+namespace CSCV_IDE.Tools
 {
     public partial class Tool : UserControl
     {
@@ -126,11 +126,11 @@ namespace ImageToolbox.Tools
             {
                 foreach (var nhi in this.getOutputs())
                 {
-                    Tool t = nhi.getTool;
-                    Tool.isUpdating.Remove(t);
-                    Tool.isUpdating.Add(t);
+//                    Tool t = nhi._Block;
+//                    Tool.isUpdating.Remove(t);
+//                    Tool.isUpdating.Add(t);
 
-                    if (t.ClearFutures(i, nhi)) return true;
+//                    if (t.ClearFutures(i, nhi)) return true;
                 }
             }
             return false;
@@ -181,7 +181,7 @@ namespace ImageToolbox.Tools
             {
                 NodeHandle nh = c as NodeHandle;
                 if (nh == null) c.Dispose();
-                else nh.Dispose();
+//                else nh.Dispose();
             }
         }
 

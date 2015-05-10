@@ -1,4 +1,4 @@
-﻿namespace ImageToolbox
+﻿namespace CSCV_IDE
 {
     partial class FormMain
     {
@@ -68,11 +68,9 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBoxAbs = new System.Windows.Forms.PictureBox();
             this.pictureBoxSplitPN = new System.Windows.Forms.PictureBox();
-            this.pictureBoxSplitRGB = new System.Windows.Forms.PictureBox();
             this.pictureBoxGain = new System.Windows.Forms.PictureBox();
             this.pictureBoxSwitch = new System.Windows.Forms.PictureBox();
             this.pictureBoxButtonAdd = new System.Windows.Forms.PictureBox();
-            this.pictureBoxButtonSink = new System.Windows.Forms.PictureBox();
             this.pictureBoxButtonSource = new System.Windows.Forms.PictureBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -88,11 +86,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAbs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSplitPN)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSplitRGB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGain)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSwitch)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxButtonAdd)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxButtonSink)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxButtonSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -159,7 +155,7 @@
             // pictureBoxOuput
             // 
             this.pictureBoxOuput.BackColor = System.Drawing.Color.RoyalBlue;
-            this.pictureBoxOuput.BackgroundImage = global::ImageToolbox.Properties.Resources.backImg;
+            this.pictureBoxOuput.BackgroundImage = global::CSCV_IDE.Properties.Resources.backImg;
             this.pictureBoxOuput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxOuput.Location = new System.Drawing.Point(0, 0);
             this.pictureBoxOuput.Name = "pictureBoxOuput";
@@ -517,11 +513,9 @@
             this.panelToolbarTop.Controls.Add(this.pictureBox1);
             this.panelToolbarTop.Controls.Add(this.pictureBoxAbs);
             this.panelToolbarTop.Controls.Add(this.pictureBoxSplitPN);
-            this.panelToolbarTop.Controls.Add(this.pictureBoxSplitRGB);
             this.panelToolbarTop.Controls.Add(this.pictureBoxGain);
             this.panelToolbarTop.Controls.Add(this.pictureBoxSwitch);
             this.panelToolbarTop.Controls.Add(this.pictureBoxButtonAdd);
-            this.panelToolbarTop.Controls.Add(this.pictureBoxButtonSink);
             this.panelToolbarTop.Controls.Add(this.pictureBoxButtonSource);
             this.panelToolbarTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelToolbarTop.Location = new System.Drawing.Point(0, 0);
@@ -533,9 +527,9 @@
             // 
             // pictureBox3
             // 
-            this.pictureBox3.BackgroundImage = global::ImageToolbox.Properties.Resources.toolSplitPN;
+            this.pictureBox3.BackgroundImage = global::CSCV_IDE.Properties.Resources.toolSplitPN;
             this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox3.Location = new System.Drawing.Point(455, 5);
+            this.pictureBox3.Location = new System.Drawing.Point(365, 5);
             this.pictureBox3.Margin = new System.Windows.Forms.Padding(5, 5, 0, 5);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(40, 40);
@@ -546,9 +540,9 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.BackgroundImage = global::ImageToolbox.Properties.Resources.toolSplitPN;
+            this.pictureBox2.BackgroundImage = global::CSCV_IDE.Properties.Resources.toolSplitPN;
             this.pictureBox2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox2.Location = new System.Drawing.Point(410, 5);
+            this.pictureBox2.Location = new System.Drawing.Point(320, 5);
             this.pictureBox2.Margin = new System.Windows.Forms.Padding(5, 5, 0, 5);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(40, 40);
@@ -559,9 +553,9 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.BackgroundImage = global::ImageToolbox.Properties.Resources.toolMult;
+            this.pictureBox1.BackgroundImage = global::CSCV_IDE.Properties.Resources.toolMult;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBox1.Location = new System.Drawing.Point(185, 5);
+            this.pictureBox1.Location = new System.Drawing.Point(140, 5);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(5, 5, 0, 5);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(40, 40);
@@ -572,9 +566,9 @@
             // 
             // pictureBoxAbs
             // 
-            this.pictureBoxAbs.BackgroundImage = global::ImageToolbox.Properties.Resources.toolAbs;
+            this.pictureBoxAbs.BackgroundImage = global::CSCV_IDE.Properties.Resources.toolAbs;
             this.pictureBoxAbs.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBoxAbs.Location = new System.Drawing.Point(230, 5);
+            this.pictureBoxAbs.Location = new System.Drawing.Point(185, 5);
             this.pictureBoxAbs.Margin = new System.Windows.Forms.Padding(5, 5, 0, 5);
             this.pictureBoxAbs.Name = "pictureBoxAbs";
             this.pictureBoxAbs.Size = new System.Drawing.Size(40, 40);
@@ -585,9 +579,9 @@
             // 
             // pictureBoxSplitPN
             // 
-            this.pictureBoxSplitPN.BackgroundImage = global::ImageToolbox.Properties.Resources.toolSplitPN;
+            this.pictureBoxSplitPN.BackgroundImage = global::CSCV_IDE.Properties.Resources.toolSplitPN;
             this.pictureBoxSplitPN.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBoxSplitPN.Location = new System.Drawing.Point(365, 5);
+            this.pictureBoxSplitPN.Location = new System.Drawing.Point(275, 5);
             this.pictureBoxSplitPN.Margin = new System.Windows.Forms.Padding(5, 5, 0, 5);
             this.pictureBoxSplitPN.Name = "pictureBoxSplitPN";
             this.pictureBoxSplitPN.Size = new System.Drawing.Size(40, 40);
@@ -596,24 +590,11 @@
             this.toolTip1.SetToolTip(this.pictureBoxSplitPN, "Positive Negative Splitter");
             this.pictureBoxSplitPN.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox2_MouseDown);
             // 
-            // pictureBoxSplitRGB
-            // 
-            this.pictureBoxSplitRGB.BackgroundImage = global::ImageToolbox.Properties.Resources.toolSplitRGB;
-            this.pictureBoxSplitRGB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBoxSplitRGB.Location = new System.Drawing.Point(320, 5);
-            this.pictureBoxSplitRGB.Margin = new System.Windows.Forms.Padding(5, 5, 0, 5);
-            this.pictureBoxSplitRGB.Name = "pictureBoxSplitRGB";
-            this.pictureBoxSplitRGB.Size = new System.Drawing.Size(40, 40);
-            this.pictureBoxSplitRGB.TabIndex = 5;
-            this.pictureBoxSplitRGB.TabStop = false;
-            this.toolTip1.SetToolTip(this.pictureBoxSplitRGB, "RGB Splitter");
-            this.pictureBoxSplitRGB.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseDown);
-            // 
             // pictureBoxGain
             // 
-            this.pictureBoxGain.BackgroundImage = global::ImageToolbox.Properties.Resources.toolGain;
+            this.pictureBoxGain.BackgroundImage = global::CSCV_IDE.Properties.Resources.toolGain;
             this.pictureBoxGain.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBoxGain.Location = new System.Drawing.Point(140, 5);
+            this.pictureBoxGain.Location = new System.Drawing.Point(95, 5);
             this.pictureBoxGain.Margin = new System.Windows.Forms.Padding(5, 5, 0, 5);
             this.pictureBoxGain.Name = "pictureBoxGain";
             this.pictureBoxGain.Size = new System.Drawing.Size(40, 40);
@@ -626,7 +607,7 @@
             // 
             this.pictureBoxSwitch.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pictureBoxSwitch.BackgroundImage")));
             this.pictureBoxSwitch.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBoxSwitch.Location = new System.Drawing.Point(275, 5);
+            this.pictureBoxSwitch.Location = new System.Drawing.Point(230, 5);
             this.pictureBoxSwitch.Margin = new System.Windows.Forms.Padding(5, 5, 0, 5);
             this.pictureBoxSwitch.Name = "pictureBoxSwitch";
             this.pictureBoxSwitch.Size = new System.Drawing.Size(40, 40);
@@ -637,9 +618,9 @@
             // 
             // pictureBoxButtonAdd
             // 
-            this.pictureBoxButtonAdd.BackgroundImage = global::ImageToolbox.Properties.Resources.toolSum;
+            this.pictureBoxButtonAdd.BackgroundImage = global::CSCV_IDE.Properties.Resources.toolSum;
             this.pictureBoxButtonAdd.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBoxButtonAdd.Location = new System.Drawing.Point(95, 5);
+            this.pictureBoxButtonAdd.Location = new System.Drawing.Point(50, 5);
             this.pictureBoxButtonAdd.Margin = new System.Windows.Forms.Padding(5, 5, 0, 5);
             this.pictureBoxButtonAdd.Name = "pictureBoxButtonAdd";
             this.pictureBoxButtonAdd.Size = new System.Drawing.Size(40, 40);
@@ -648,23 +629,9 @@
             this.toolTip1.SetToolTip(this.pictureBoxButtonAdd, "Sum");
             this.pictureBoxButtonAdd.MouseDown += new System.Windows.Forms.MouseEventHandler(this.addToolAdder);
             // 
-            // pictureBoxButtonSink
-            // 
-            this.pictureBoxButtonSink.BackgroundImage = global::ImageToolbox.Properties.Resources.toolOut;
-            this.pictureBoxButtonSink.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.pictureBoxButtonSink.Location = new System.Drawing.Point(50, 5);
-            this.pictureBoxButtonSink.Margin = new System.Windows.Forms.Padding(5, 5, 0, 5);
-            this.pictureBoxButtonSink.Name = "pictureBoxButtonSink";
-            this.pictureBoxButtonSink.Size = new System.Drawing.Size(40, 40);
-            this.pictureBoxButtonSink.TabIndex = 1;
-            this.pictureBoxButtonSink.TabStop = false;
-            this.pictureBoxButtonSink.Tag = "";
-            this.toolTip1.SetToolTip(this.pictureBoxButtonSink, "Image Sink");
-            this.pictureBoxButtonSink.MouseDown += new System.Windows.Forms.MouseEventHandler(this.addToolSink);
-            // 
             // pictureBoxButtonSource
             // 
-            this.pictureBoxButtonSource.BackgroundImage = global::ImageToolbox.Properties.Resources.toolIn;
+            this.pictureBoxButtonSource.BackgroundImage = global::CSCV_IDE.Properties.Resources.toolIn;
             this.pictureBoxButtonSource.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.pictureBoxButtonSource.Location = new System.Drawing.Point(5, 5);
             this.pictureBoxButtonSource.Margin = new System.Windows.Forms.Padding(5, 5, 0, 5);
@@ -721,11 +688,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAbs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSplitPN)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSplitRGB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGain)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSwitch)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxButtonAdd)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxButtonSink)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxButtonSource)).EndInit();
             this.ResumeLayout(false);
 
@@ -749,10 +714,8 @@
         private System.Windows.Forms.PictureBox pictureBoxGain;
         private System.Windows.Forms.PictureBox pictureBoxSwitch;
         private System.Windows.Forms.PictureBox pictureBoxButtonAdd;
-        private System.Windows.Forms.PictureBox pictureBoxButtonSink;
         private System.Windows.Forms.PictureBox pictureBoxButtonSource;
         private System.Windows.Forms.Splitter splitter1;
-        private System.Windows.Forms.PictureBox pictureBoxSplitRGB;
         private System.Windows.Forms.Panel panelOutputText;
         private System.Windows.Forms.Label labelMin;
         private System.Windows.Forms.Label labelSDB;

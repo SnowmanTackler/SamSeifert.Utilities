@@ -8,9 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 
 using SamSeifert.HueChooser;
-using SamSeifert.ImageProcessing;
+using SamSeifert.CSCV;
 
-namespace ImageToolbox.Tools
+namespace CSCV_IDE.Tools
 {
     public class ColorFilter : ToolDefault
     {

@@ -8,11 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-using SamSeifert.ImageProcessing;
+using SamSeifert.CSCV;
 
-namespace ImageToolbox.Tools
+namespace CSCV_IDE.Tools
 {
-    public partial class Source : ToolDefault
+    public partial class Source : BlockDefault
     {
         private OpenFileDialog _OpenFileDialog = new OpenFileDialog();
         private ComboBox cb;
@@ -30,11 +30,9 @@ namespace ImageToolbox.Tools
 
 
         public Source()
-            : base(true, false)
         {
             this.checkBoxName.Text = "Source";
             this.ToolStrip_Edit.Enabled = true;
-
 
             String _Filter = "Image Files|";
             bool first = true;
@@ -46,10 +44,11 @@ namespace ImageToolbox.Tools
 
             this._OpenFileDialog.Filter = _Filter;
             this._OpenFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
+            this.checkBoxName.CheckedChanged += new EventHandler(this.checkBoxName_CheckedChanged);
             FormMain.OutputWindowResized += new EventHandler(this.FormMain_OutputWindowResized);
         }
 
-        protected override List<Control> getStartControls()
+        public override List<Control> getStartControls()
         {
             var l = base.getStartControls();
 
@@ -64,10 +63,17 @@ namespace ImageToolbox.Tools
         }
 
         public override void MenuEdit()
-        { 
+        {
+            base.MenuEdit();
             this._OpenFileDialog.ShowDialog();
         }
 
+        public override void MenuDelete()
+        {
+            FormMain.OutputWindowResized -= new EventHandler(this.FormMain_OutputWindowResized);
+            base.MenuDelete();
+        }
+        
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
             this.loadImages(this._OpenFileDialog.FileName);
@@ -163,20 +169,42 @@ namespace ImageToolbox.Tools
                 this._SpecialBitmapSource =  SectHolder.SectHoldeFromImage(this.OriginalImage);
             }
 
-            this.StatusChanged();
+            this.refreshImage();
         }
 
-        public override void SpecialBitmapUpdate()
+        public override void UpdateAddedToWorkspace()
         {
-            if (this.checkBoxName.Checked)
+            base.UpdateAddedToWorkspace();
+            this.refreshImage();
+        }
+
+        private void checkBoxName_CheckedChanged(object sender, EventArgs e)
+        {
+            this.refreshImage();
+        }
+
+        public void refreshImage()
+        {
+            if (this._AddedToWorkspace)
             {
-                this._SpecialBitmap = this._SpecialBitmapSource;
-                this.UpdateThumb();
+                this.ClearFutures();
+
+                var dc = new Dictionary<NodeData.DataType, NodeData>();
+
+                if (this.checkBoxName.Checked)
+                {
+                    dc[NodeData.DataType.Sect] = new NodeDataSect(this._SpecialBitmapSource);
+                    dc[NodeData.DataType.Size] = new NodeDataSize(this._SpecialBitmapSource.getPrefferedSize());
+                }
+
+                this.UpdateCompleteWithOutputs(dc);
             }
-            else
-            {
-                this._SpecialBitmap = null;
-            }
+        }
+
+
+        public override bool usesStandardNodeHandelIn()
+        {
+            return false;
         }
     }
 }

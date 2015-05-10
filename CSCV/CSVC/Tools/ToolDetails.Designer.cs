@@ -1,4 +1,4 @@
-﻿namespace ImageToolbox.Tools
+﻿namespace CSCV_IDE.Tools
 {
     partial class ToolDetails
     {
@@ -106,7 +106,7 @@
             // 
             this.pictureBoxOut.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.pictureBoxOut.BackgroundImage = global::ImageToolbox.Properties.Resources.backImg;
+            this.pictureBoxOut.BackgroundImage = global::CSCV_IDE.Properties.Resources.backImg;
             this.pictureBoxOut.Location = new System.Drawing.Point(270, 10);
             this.pictureBoxOut.Margin = new System.Windows.Forms.Padding(10, 10, 0, 10);
             this.pictureBoxOut.Name = "pictureBoxOut";
@@ -119,7 +119,7 @@
             // 
             this.pictureBoxIn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.pictureBoxIn.BackgroundImage = global::ImageToolbox.Properties.Resources.backImg;
+            this.pictureBoxIn.BackgroundImage = global::CSCV_IDE.Properties.Resources.backImg;
             this.pictureBoxIn.Location = new System.Drawing.Point(10, 10);
             this.pictureBoxIn.Margin = new System.Windows.Forms.Padding(10, 10, 0, 10);
             this.pictureBoxIn.Name = "pictureBoxIn";

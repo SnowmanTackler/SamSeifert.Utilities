@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamSeifert.HueChooser", "..
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamSeifert.GlobalEvents", "..\SamSeifert.GlobalEvent\SamSeifert.GlobalEvent\SamSeifert.GlobalEvents.csproj", "{9B8D2FBB-0305-4DF6-A090-DB590DA3659A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamSeifert.Imaging", "..\SamSeifert.Imaging\SamSeifert.Imaging.csproj", "{A52E8045-E20A-4898-8D14-44885524EA05}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamSeifert.CSCV", "..\SamSeifert.CSCV\SamSeifert.CSCV.csproj", "{A52E8045-E20A-4898-8D14-44885524EA05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

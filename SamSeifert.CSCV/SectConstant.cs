@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace SamSeifert.ImageProcessing
+namespace SamSeifert.CSCV
 {
     public class SectConstant : Sect
     {

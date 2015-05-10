@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-using ImageToolbox;
-using SamSeifert.ImageProcessing;
+using CSCV_IDE;
+using SamSeifert.CSCV;
 
-namespace ImageToolbox.Tools
+namespace CSCV_IDE.Tools
 {
     public partial class ToolDefault : Tool
     {
@@ -122,10 +122,6 @@ namespace ImageToolbox.Tools
             this.Refresh();
         }
 
-        protected internal void checkBoxName_CheckedChanged(object sender, EventArgs e)
-        {
-            this.StatusChanged();
-        }
 
 
 
@@ -155,6 +151,7 @@ namespace ImageToolbox.Tools
 
         public override void SpecialBitmapUpdate()
         {
+            /*
             this._SpecialBitmap = null;
 
             var im = this.nhiTD.getSpecialBitmap();
@@ -168,7 +165,7 @@ namespace ImageToolbox.Tools
                 else this._SpecialBitmap = im;
             }
 
-            this.UpdateThumb();
+            this.UpdateThumb();*/
         }
 
 
@@ -184,10 +181,5 @@ namespace ImageToolbox.Tools
             return this._SpecialBitmap;
         }
 
-        public override List<NodeHandleIn> getOutputs()
-        {
-            if (this.nhoTD != null) return this.nhoTD.nhis;
-            return new List<NodeHandleIn>();
-        }
     }
 }

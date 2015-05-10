@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-namespace SamSeifert.ImageProcessing
+namespace SamSeifert.CSCV
 {
     public class SectHolder : Sect
     {

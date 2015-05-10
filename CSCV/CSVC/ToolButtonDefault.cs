@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace ImageToolbox
+namespace CSCV_IDE
 {
     public partial class ToolButtonDefault : UserControl
     {

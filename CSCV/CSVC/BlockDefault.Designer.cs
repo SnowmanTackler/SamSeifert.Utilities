@@ -1,6 +1,6 @@
-﻿namespace CSCV_IDE.Tools
+﻿namespace CSCV_IDE
 {
-    partial class ToolDefault
+    partial class BlockDefault
     {
         /// <summary> 
         /// Required designer variable.
@@ -47,35 +47,37 @@
             this.checkBoxName.Name = "checkBoxName";
             this.checkBoxName.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
             this.checkBoxName.Size = new System.Drawing.Size(128, 25);
-            this.checkBoxName.TabIndex = 13;
+            this.checkBoxName.TabIndex = 14;
             this.checkBoxName.Text = "Name";
+            this.checkBoxName.CheckedChanged += new System.EventHandler(this.checkBoxName_CheckedChanged);
             this.checkBoxName.UseVisualStyleBackColor = false;
             // 
-            // pictureBoxThumb
+            // pictureBox1
             // 
+            this.pictureBox1.BackColor = System.Drawing.Color.RoyalBlue;
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.pictureBox1.Location = new System.Drawing.Point(0, 25);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBox1.MaximumSize = new System.Drawing.Size(128, 128);
             this.pictureBox1.MinimumSize = new System.Drawing.Size(128, 128);
-            this.pictureBox1.Name = "pictureBoxThumb";
+            this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(128, 128);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.pictureBox1.TabIndex = 14;
+            this.pictureBox1.TabIndex = 15;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.DoubleClick += new System.EventHandler(this.pictureBox1_DoubleClick);
             // 
-            // ToolDefualt
+            // BlockDefault
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.BackColor = System.Drawing.Color.RoyalBlue;
-            this.Controls.Add(this.checkBoxName);
             this.Controls.Add(this.pictureBox1);
-            this.Name = "ToolDefualt";
+            this.Controls.Add(this.checkBoxName);
+            this.MaximumSize = new System.Drawing.Size(128, 0);
+            this.MinimumSize = new System.Drawing.Size(128, 0);
+            this.Name = "BlockDefault";
             this.Size = new System.Drawing.Size(128, 153);
-            this.Load += new System.EventHandler(this.ToolDefualt_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 

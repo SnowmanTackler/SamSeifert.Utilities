@@ -1,4 +1,4 @@
-﻿namespace ImageToolbox
+﻿namespace CSCV_IDE
 {
     partial class ToolButtonDefault
     {
@@ -48,7 +48,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::ImageToolbox.Properties.Resources.Lena;
+            this.pictureBox1.Image = global::CSCV_IDE.Properties.Resources.Lena;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBox1.Name = "pictureBox1";

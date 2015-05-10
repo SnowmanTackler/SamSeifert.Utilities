@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-using SamSeifert.ImageProcessing;
-using ImageToolbox;
+using SamSeifert.CSCV;
+using CSCV_IDE;
 
-namespace ImageToolbox.Tools
+namespace CSCV_IDE.Tools
 {
     public partial class ToolSwitch : Tool
     {
@@ -54,7 +54,7 @@ namespace ImageToolbox.Tools
             top -= ToolDefault.HandleGap;
             top = (this.Height - top) / 2;
 
-            foreach (NodeHandle n in this.nhis) n.Top -= top;
+//            foreach (NodeHandle n in this.nhis) n.Top -= top;
 
             FormMain.InvalidateWorkspace();
         }
@@ -131,16 +131,17 @@ namespace ImageToolbox.Tools
 
         public override Sect SpecialBitmapGet(NodeHandleOut sender)
         {
-            if (this.nhi != null)
-                if (this.nhi.nho != null)
-                    return this.nhi.nho.getSpecialBitmap();
+//            if (this.nhi != null)
+  //              if (this.nhi.nho != null)
+    //                return this.nhi.nho.getSpecialBitmap();
 
             return null;
         }
 
         public override List<NodeHandleIn> getOutputs()
         {
-            return this.nho.nhis;
+            return null;
+//            return this.nho.nhis;
         }
     }
 }

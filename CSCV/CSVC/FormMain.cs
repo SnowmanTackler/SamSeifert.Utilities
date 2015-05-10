@@ -11,10 +11,10 @@ using System.Windows.Forms;
 using System.Resources;
 
 using SamSeifert.GlobalEvents;
-using SamSeifert.ImageProcessing;
-using ImageToolbox.Tools;
+using SamSeifert.CSCV;
+using CSCV_IDE.Tools;
 
-namespace ImageToolbox
+namespace CSCV_IDE
 {
     public partial class FormMain : Form
     {
@@ -310,19 +310,30 @@ namespace ImageToolbox
 
 
 
-        private ImageToolbox.Tools.Tool DragToolView = null;
+        private Tool DragToolView = null;
+        private Block DraggingBlock = null;
 
-        public static void addCell(ImageToolbox.Tools.Tool _ToolView)
+        public static void addCell(Control _ToolView)
         {
             FormMain.get()._addCell(_ToolView);
         }
 
-        private void _addCell(ImageToolbox.Tools.Tool _ToolView)
+        private void _addCell(Control c)
         {
-            this.DragToolView = _ToolView;
-            this.DragToolView.addTo(this.Controls);
-            this.DragToolView.BringToFront();
-            this.DragToolView.moveTo(FormMain.get().PointToClient(MousePosition));
+            if (c is Tool)
+            {
+                this.DragToolView = c as Tool;
+                this.DragToolView.addTo(this.Controls);
+                this.DragToolView.BringToFront();
+                this.DragToolView.moveTo(FormMain.get().PointToClient(MousePosition));
+            }
+            else if (c is Block)
+            {
+                this.DraggingBlock = c as Block;
+                this.Controls.Add(this.DraggingBlock);
+                this.DraggingBlock.BringToFront();
+                this.DraggingBlock.moveTo(FormMain.get().PointToClient(MousePosition));
+            }
         }
 
         private Point getWorkspaceCoordOfMouse()
@@ -363,25 +374,50 @@ namespace ImageToolbox
                 this.DragToolView = null;
             }
 
+            if (this.DraggingBlock != null)
+            {
+                this.Controls.Remove(this.DraggingBlock);
+
+                if (p.X > 0 && p.X < this.panelWorkspace.Width && p.Y > 0 && p.Y < this.panelWorkspace.Height)
+                {
+                    this.panelWorkspace.Controls.Add(this.DraggingBlock);
+                    this.DraggingBlock.moveTo(p.X, p.Y);
+                    this.DraggingBlock.BringToFront();
+                    this.DraggingBlock.UpdateAddedToWorkspace();
+                }
+
+                this.DraggingBlock = null;
+            }
+
             if (this.NodeHandleClicked != null)
             {
                 try
                 {
-                    if (this.NodeHandleClicked.IsInput)
+                    foreach (Control c in this.panelWorkspace.Controls)
                     {
-                        foreach (NodeHandle n in NodeHandleOut.allOuts) if (n.Contains(p))
+                        if (c is NodeHandle)
+                        {
+                            var n = c as NodeHandle;
+                            if (n.Contains(p))
                             {
-                                this.NodeHandleClicked.setInputNode(n);
-                                return;
+                                if (this.NodeHandleClicked is NodeHandleIn)
+                                {
+                                    if (n is NodeHandleOut)
+                                    {
+                                        (this.NodeHandleClicked as NodeHandleIn).Connect(n as NodeHandleOut);
+                                        return;
+                                    }
+                                }
+                                if (n is NodeHandleIn)
+                                {
+                                    if (this.NodeHandleClicked is NodeHandleOut)
+                                    {
+                                        (n as NodeHandleIn).Connect(this.NodeHandleClicked as NodeHandleOut);
+                                        return;
+                                    }
+                                }
                             }
-                    }
-                    else
-                    {
-                        foreach (NodeHandle n in NodeHandleIn.allIns) if (n.Contains(p))
-                            {
-                                n.setInputNode(this.NodeHandleClicked);
-                                return;
-                            }
+                        }
                     }
                 }
                 finally
@@ -400,19 +436,19 @@ namespace ImageToolbox
 
             if (p.X < this.panelWorkspace.Width && p.Y < this.panelWorkspace.Height)
             {
-                foreach (NodeHandle n in NodeHandleOut.allOuts) if (n.Contains(p))
+                foreach (Control c in this.panelWorkspace.Controls)
+                {
+                    if (c is NodeHandle)
                     {
-                        this.NodeHandleClicked = n;
-                        this.panelWorkspace.Invalidate();
-                        return;
+                        var n = c as NodeHandle;
+                        if (n.Contains(p))
+                        {
+                            this.NodeHandleClicked = n;
+                            this.panelWorkspace.Invalidate();
+                            return;
+                        }
                     }
-
-                foreach (NodeHandle n in NodeHandleIn.allIns) if (n.Contains(p))
-                    {
-                        this.NodeHandleClicked = n;
-                        this.panelWorkspace.Invalidate();
-                        return;
-                    }
+                }
             }
         }
 
@@ -425,6 +461,10 @@ namespace ImageToolbox
             if (NodeHandleClicked != null)
             {
                 this.panelWorkspace.Invalidate();
+            }
+            if (this.DraggingBlock != null)
+            {
+                this.DraggingBlock.move(e.X, e.Y);
             }
         }
 
@@ -460,21 +500,21 @@ namespace ImageToolbox
             if (NodeHandleClicked != null)
             {
                 if (this.NodeHandleClicked as NodeHandleIn == null)
-                    this.paintLine(e.Graphics, p, this.NodeHandleClicked.LocationCustom);
+                    this.paintLine(e.Graphics, p, this.NodeHandleClicked.LocationCustom());
                 else
-                    this.paintLine(e.Graphics, this.NodeHandleClicked.LocationCustom, p);
+                    this.paintLine(e.Graphics, this.NodeHandleClicked.LocationCustom(), p);
 
             }
 
             foreach (Control c in this.panelWorkspace.Controls)
             {
-                NodeHandleIn nh = c as NodeHandleIn;
 
-                if (nh != null)
+                if (c is NodeHandleIn)
                 {
-                    if (nh.nho != null)
+                    NodeHandleIn nh = c as NodeHandleIn;
+                    foreach (var nho in nh._PreviousLevels)
                     {
-                        this.paintLine(e.Graphics, nh.LocationCustom, nh.nho.LocationCustom);
+                        this.paintLine(e.Graphics, nh.LocationCustom(), nho.LocationCustom());
                     }
                 }
             }
@@ -581,12 +621,6 @@ namespace ImageToolbox
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
                 this._addCell(new Source());
-        }
-
-        private void addToolSink(object sender, MouseEventArgs e)
-        {
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-                this._addCell(new Sink());
         }
 
         private void addToolAdder(object sender, MouseEventArgs e)

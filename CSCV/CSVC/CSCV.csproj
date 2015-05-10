@@ -8,7 +8,7 @@
     <ProjectGuid>{9C52524B-2D29-44C9-AC82-4E1DA235A8BF}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ImageToolbox</RootNamespace>
+    <RootNamespace>CSCV_IDE</RootNamespace>
     <AssemblyName>Image Processing Simulation Environment</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -115,6 +115,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Block.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BlockDefault.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BlockDefault.Designer.cs">
+      <DependentUpon>BlockDefault.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NodeData.cs" />
+    <Compile Include="NodeHandle.cs" />
+    <Compile Include="NodeHandleIn.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeHandleIn.Designer.cs">
+      <DependentUpon>NodeHandleIn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NodeHandleOut.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NodeHandleOut.Designer.cs">
+      <DependentUpon>NodeHandleOut.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\MeanShift.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -179,32 +202,11 @@
     <Compile Include="Tools\Add.Designer.cs">
       <DependentUpon>Add.cs</DependentUpon>
     </Compile>
-    <Compile Include="NodeHandleOut.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="NodeHandleOut.Designer.cs">
-      <DependentUpon>NodeHandleOut.cs</DependentUpon>
-    </Compile>
-    <Compile Include="NodeHandleIn.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="NodeHandleIn.Designer.cs">
-      <DependentUpon>NodeHandleIn.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tools\Gain.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Tools\Sink.cs">
+    <Compile Include="Blocks\Source.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tools\Source.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="NodeHandle.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="NodeHandle.Designer.cs">
-      <DependentUpon>NodeHandle.cs</DependentUpon>
     </Compile>
     <Compile Include="ToolButtonDefault.cs">
       <SubType>UserControl</SubType>
@@ -255,12 +257,21 @@
     <Compile Include="Tools\ToolDefault.Designer.cs">
       <DependentUpon>ToolDefault.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tools\Resize.cs">
+    <Compile Include="Blocks\Resize.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Tools\BlackWhite.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <EmbeddedResource Include="BlockDefault.resx">
+      <DependentUpon>BlockDefault.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NodeHandleIn.resx">
+      <DependentUpon>NodeHandleIn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NodeHandleOut.resx">
+      <DependentUpon>NodeHandleOut.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\Tool.resx">
       <DependentUpon>Tool.cs</DependentUpon>
     </EmbeddedResource>
@@ -278,15 +289,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\Add.resx">
       <DependentUpon>Add.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NodeHandleOut.resx">
-      <DependentUpon>NodeHandleOut.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NodeHandleIn.resx">
-      <DependentUpon>NodeHandleIn.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NodeHandle.resx">
-      <DependentUpon>NodeHandle.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ToolButtonDefault.resx">
       <DependentUpon>ToolButtonDefault.cs</DependentUpon>
@@ -332,10 +334,6 @@
     <ProjectReference Include="..\..\SamSeifert.HueChooser\SamSeifert.HueChooser\SamSeifert.HueChooser.csproj">
       <Project>{549EEBCD-5E5B-42C0-83A9-E471C7D316DC}</Project>
       <Name>SamSeifert.HueChooser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SamSeifert.Imaging\SamSeifert.Imaging.csproj">
-      <Project>{A52E8045-E20A-4898-8D14-44885524EA05}</Project>
-      <Name>SamSeifert.Imaging</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -9,11 +9,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-using SamSeifert.ImageProcessing;
+using SamSeifert.CSCV;
 
-namespace ImageToolbox.Tools
+namespace CSCV_IDE.Tools
 {
-    public partial class Resize : ToolDefault
+    public partial class Resize : BlockDefault
     {
         private volatile float inud = 0.5f;
         private NumericUpDown nud;
@@ -44,12 +44,11 @@ namespace ImageToolbox.Tools
       
 
         public Resize()
-            : base (true, true)
         {
             this.checkBoxName.Text = name;
         }
 
-        protected override List<Control> getStartControls()
+        public override List<Control> getStartControls()
         {
             var l = base.getStartControls();
 
@@ -75,23 +74,54 @@ namespace ImageToolbox.Tools
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             this.inud = (float)this.nud.Value;
-            this.StatusChanged();
+            this.ClearFutures();
+            this.UpdateNewData();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             this.t = (ResizeType)this.cb.SelectedItem;
-            this.StatusChanged();
+            this.ClearFutures();
+            this.UpdateNewData();
         }
 
-        public override Sect SpecialBitmapUpdateDefault(ref Sect d)
+
+        public override void UpdateNewData()
         {
-            Size s = d.getPrefferedSize();
-            s.Width = (int)(s.Width * this.inud);
-            s.Height = (int)(s.Height * this.inud);
-            Sect o = null;
-            IA_Single.Resize(d, s, t, ref o);
-            return o;
+            base.UpdateNewData();
+
+            if (this.checkBoxName.Checked)
+            {
+                var inp = this.StandardNodeHandelIn.getData();
+
+                Size sz;
+                Sect s;
+                NodeData ask;
+                if (inp == null)
+                {
+                    this.UpdateCompleteWithOutputs(null);
+                }
+                else if (inp.TryGetValue(NodeData.DataType.Sect, out ask))
+                {
+                    s = (ask as NodeDataSect)._Sect;
+
+                    if (inp.TryGetValue(NodeData.DataType.Size, out ask)) sz = (ask as NodeDataSize)._Size;
+                    else sz = s.getPrefferedSize();
+
+                    sz.Width = (int)(sz.Width * this.inud);
+                    sz.Height = (int)(sz.Height * this.inud);
+
+                    Sect o = null;
+                    IA_Single.Resize(s, sz, t, ref o);
+
+                    var dc = new Dictionary<NodeData.DataType, NodeData>();
+                    dc[NodeData.DataType.Sect] = new NodeDataSect(o);
+                    dc[NodeData.DataType.Size] = new NodeDataSize(sz);
+                    this.UpdateCompleteWithOutputs(dc);
+                }
+                else this.UpdateCompleteWithOutputs(null);
+            }
+            else this.UpdateCompleteWithOutputs(this.StandardNodeHandelIn.getData());
         }
     }
 }

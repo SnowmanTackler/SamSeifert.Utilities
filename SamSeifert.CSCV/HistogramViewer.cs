@@ -7,7 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace SamSeifert.ImageProcessing
+namespace SamSeifert.CSCV
 {
     public partial class HistogramViewer
     {
@@ -88,6 +88,8 @@ namespace SamSeifert.ImageProcessing
 
             Single r, g, b;
 
+            int total_count = 0;
+
             for (y = 0; y < h; y++)
             {
                 for (x = 0; x < w; x++)
@@ -96,8 +98,12 @@ namespace SamSeifert.ImageProcessing
                     counts[0, 255 + IA_Helpers.Cast(r * 255.0f)]++;
                     counts[1, 255 + IA_Helpers.Cast(g * 255.0f)]++;
                     counts[2, 255 + IA_Helpers.Cast(b * 255.0f)]++;
+                    total_count++;
                 }
             }
+
+            for (int i1 = 0; i1 < 3; i1++)
+                if (counts[i1, 255] == total_count) counts[i1, 255] = 0;
         }
     }
 }

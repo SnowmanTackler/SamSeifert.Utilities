@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace ImageToolbox
+namespace CSCV_IDE
 {
     static class Program
     {
