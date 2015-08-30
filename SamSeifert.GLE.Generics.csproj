@@ -62,6 +62,9 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OpenTK">
+      <HintPath>..\OpenTK\Binaries\OpenTK\Debug\OpenTK.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -73,7 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Draw.cs" />
-    <Compile Include="Color_GL.cs" />
+    <Compile Include="ColorGL.cs" />
     <Compile Include="HeightMap.cs" />
     <Compile Include="HeightMapCircle.cs" />
     <Compile Include="HeightMapRectangle.cs" />
@@ -83,11 +86,7 @@
     <Compile Include="Textures.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\OpenTK\Source\OpenTK\OpenTK.csproj">
-      <Project>{A37A7E14-0000-0000-0000-000000000000}</Project>
-      <Name>OpenTK</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\SamSeifert.ComplexFileParser\SamSeifert.ComplexFileParser.csproj">
+    <ProjectReference Include="..\SamSeifert.ComplexFileParser\SamSeifert.ComplexFileParser.csproj">
       <Project>{2414f4dd-734e-4a0b-9c95-c24b2cee25f7}</Project>
       <Name>SamSeifert.ComplexFileParser</Name>
     </ProjectReference>

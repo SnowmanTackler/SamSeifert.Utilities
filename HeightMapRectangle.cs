@@ -360,7 +360,7 @@ namespace SamSeifert.GLE
             GL.EnableClientState(ArrayCap.NormalArray);
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IntIndicesBufferID);
-            GL.DrawElements(BeginMode.Triangles, _IntElementCount, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.DrawElements(PrimitiveType.Triangles, _IntElementCount, DrawElementsType.UnsignedInt, IntPtr.Zero);
 
             if (this._BoolUseText)
             {
