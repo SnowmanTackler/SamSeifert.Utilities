@@ -569,7 +569,9 @@ namespace SamSeifert.GLE
 
         private static Vector3 fm(double a, double b, double c)
         {
-            return new Vector3((float)a, (float)b, (float)c);
+            var v = new Vector3((float)a, (float)b, (float)c);
+            v.Normalize();
+            return v;
         }
 
 
