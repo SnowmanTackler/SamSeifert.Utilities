@@ -228,329 +228,329 @@ namespace SamSeifert.GLE
 
 
 
-        private static Triangle[] _Sphere = null;
+        private static TriangleForSphere[] _Sphere = null;
         public static void Sphere(float radius)
         {
             if (_Sphere == null)
             {
-                _Sphere = new Triangle[] {
-                  new Triangle(
+                _Sphere = new TriangleForSphere[] {
+                  new TriangleForSphere(
                     fm(-0.27639,0.85065,0.44721),
                     fm(0.26287,0.80902,0.52573),
                     fm(6.5257e-17,1,-3.2629e-17)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.26287,0.80902,0.52573),
                     fm(0.72361,0.52573,0.44721),
                     fm(0.58779,0.80902,-3.2629e-17)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(6.5257e-17,1,-3.2629e-17),
                     fm(0.26287,0.80902,0.52573),
                     fm(0.58779,0.80902,-3.2629e-17)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(6.5257e-17,1,-3.2629e-17),
                     fm(0.58779,0.80902,-3.2629e-17),
                     fm(0.27639,0.85065,-0.44721)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.72361,0.52573,-0.44721),
                     fm(-0.58779,0.80902,0),
                     fm(-0.26287,0.80902,-0.52573)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.58779,0.80902,0),
                     fm(-0.27639,0.85065,0.44721),
                     fm(6.5257e-17,1,-3.2629e-17)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.26287,0.80902,-0.52573),
                     fm(-0.58779,0.80902,0),
                     fm(6.5257e-17,1,-3.2629e-17)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.26287,0.80902,-0.52573),
                     fm(6.5257e-17,1,-3.2629e-17),
                     fm(0.27639,0.85065,-0.44721)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.89443,1.0954e-16,0.44721),
                     fm(-0.68819,0.5,0.52573),
                     fm(-0.95106,0.30902,0)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.68819,0.5,0.52573),
                     fm(-0.27639,0.85065,0.44721),
                     fm(-0.58779,0.80902,0)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.95106,0.30902,0),
                     fm(-0.68819,0.5,0.52573),
                     fm(-0.58779,0.80902,0)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.95106,0.30902,0),
                     fm(-0.58779,0.80902,0),
                     fm(-0.72361,0.52573,-0.44721)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.72361,-0.52573,-0.44721),
                     fm(-0.95106,-0.30902,0),
                     fm(-0.85065,1.3051e-16,-0.52573)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.95106,-0.30902,0),
                     fm(-0.89443,1.0954e-16,0.44721),
                     fm(-0.95106,0.30902,0)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.85065,1.3051e-16,-0.52573),
                     fm(-0.95106,-0.30902,0),
                     fm(-0.95106,0.30902,0)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.85065,1.3051e-16,-0.52573),
                     fm(-0.95106,0.30902,0),
                     fm(-0.72361,0.52573,-0.44721)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.27639,-0.85065,0.44721),
                     fm(-0.68819,-0.5,0.52573),
                     fm(-0.58779,-0.80902,3.2629e-17)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.68819,-0.5,0.52573),
                     fm(-0.89443,1.0954e-16,0.44721),
                     fm(-0.95106,-0.30902,0)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.58779,-0.80902,3.2629e-17),
                     fm(-0.68819,-0.5,0.52573),
                     fm(-0.95106,-0.30902,0)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.58779,-0.80902,3.2629e-17),
                     fm(-0.95106,-0.30902,0),
                     fm(-0.72361,-0.52573,-0.44721)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.27639,-0.85065,-0.44721),
                     fm(-1.9577e-16,-1,3.2629e-17),
                     fm(-0.26287,-0.80902,-0.52573)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-1.9577e-16,-1,3.2629e-17),
                     fm(-0.27639,-0.85065,0.44721),
                     fm(-0.58779,-0.80902,3.2629e-17)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.26287,-0.80902,-0.52573),
                     fm(-1.9577e-16,-1,3.2629e-17),
                     fm(-0.58779,-0.80902,3.2629e-17)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.26287,-0.80902,-0.52573),
                     fm(-0.58779,-0.80902,3.2629e-17),
                     fm(-0.72361,-0.52573,-0.44721)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.72361,-0.52573,0.44721),
                     fm(0.26287,-0.80902,0.52573),
                     fm(0.58779,-0.80902,0)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.26287,-0.80902,0.52573),
                     fm(-0.27639,-0.85065,0.44721),
                     fm(-1.9577e-16,-1,3.2629e-17)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.58779,-0.80902,0),
                     fm(0.26287,-0.80902,0.52573),
                     fm(-1.9577e-16,-1,3.2629e-17)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.58779,-0.80902,0),
                     fm(-1.9577e-16,-1,3.2629e-17),
                     fm(0.27639,-0.85065,-0.44721)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.89443,-2.1907e-16,-0.44721),
                     fm(0.95106,-0.30902,0),
                     fm(0.68819,-0.5,-0.52573)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.95106,-0.30902,0),
                     fm(0.72361,-0.52573,0.44721),
                     fm(0.58779,-0.80902,0)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.68819,-0.5,-0.52573),
                     fm(0.95106,-0.30902,0),
                     fm(0.58779,-0.80902,0)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.68819,-0.5,-0.52573),
                     fm(0.58779,-0.80902,0),
                     fm(0.27639,-0.85065,-0.44721)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.72361,0.52573,0.44721),
                     fm(0.85065,-1.9577e-16,0.52573),
                     fm(0.95106,0.30902,3.2629e-17)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.85065,-1.9577e-16,0.52573),
                     fm(0.72361,-0.52573,0.44721),
                     fm(0.95106,-0.30902,0)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.95106,0.30902,3.2629e-17),
                     fm(0.85065,-1.9577e-16,0.52573),
                     fm(0.95106,-0.30902,0)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.95106,0.30902,3.2629e-17),
                     fm(0.95106,-0.30902,0),
                     fm(0.89443,-2.1907e-16,-0.44721)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.27639,0.85065,-0.44721),
                     fm(0.58779,0.80902,0),
                     fm(0.68819,0.5,-0.52573)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.58779,0.80902,0),
                     fm(0.72361,0.52573,0.44721),
                     fm(0.95106,0.30902,3.2629e-17)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.68819,0.5,-0.52573),
                     fm(0.58779,0.80902,0),
                     fm(0.95106,0.30902,3.2629e-17)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.68819,0.5,-0.52573),
                     fm(0.95106,0.30902,3.2629e-17),
                     fm(0.89443,-2.1907e-16,-0.44721)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.89443,1.0954e-16,0.44721),
                     fm(-0.68819,-0.5,0.52573),
                     fm(-0.52573,6.4383e-17,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.68819,-0.5,0.52573),
                     fm(-0.27639,-0.85065,0.44721),
                     fm(-0.16246,-0.5,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.52573,6.4383e-17,0.85065),
                     fm(-0.68819,-0.5,0.52573),
                     fm(-0.16246,-0.5,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.52573,6.4383e-17,0.85065),
                     fm(-0.16246,-0.5,0.85065),
                     fm(0,0,1)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.27639,-0.85065,0.44721),
                     fm(0.26287,-0.80902,0.52573),
                     fm(-0.16246,-0.5,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.26287,-0.80902,0.52573),
                     fm(0.72361,-0.52573,0.44721),
                     fm(0.42533,-0.30902,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.16246,-0.5,0.85065),
                     fm(0.26287,-0.80902,0.52573),
                     fm(0.42533,-0.30902,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.16246,-0.5,0.85065),
                     fm(0.42533,-0.30902,0.85065),
                     fm(0,0,1)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.72361,-0.52573,0.44721),
                     fm(0.85065,-1.9577e-16,0.52573),
                     fm(0.42533,-0.30902,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.85065,-1.9577e-16,0.52573),
                     fm(0.72361,0.52573,0.44721),
                     fm(0.42533,0.30902,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.42533,-0.30902,0.85065),
                     fm(0.85065,-1.9577e-16,0.52573),
                     fm(0.42533,0.30902,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.42533,-0.30902,0.85065),
                     fm(0.42533,0.30902,0.85065),
                     fm(0,0,1)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.72361,0.52573,0.44721),
                     fm(0.26287,0.80902,0.52573),
                     fm(0.42533,0.30902,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.26287,0.80902,0.52573),
                     fm(-0.27639,0.85065,0.44721),
                     fm(-0.16246,0.5,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.42533,0.30902,0.85065),
                     fm(0.26287,0.80902,0.52573),
                     fm(-0.16246,0.5,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.42533,0.30902,0.85065),
                     fm(-0.16246,0.5,0.85065),
                     fm(0,0,1)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.27639,0.85065,0.44721),
                     fm(-0.68819,0.5,0.52573),
                     fm(-0.16246,0.5,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.68819,0.5,0.52573),
                     fm(-0.89443,3.2861e-16,0.44721),
                     fm(-0.52573,1.9315e-16,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.16246,0.5,0.85065),
                     fm(-0.68819,0.5,0.52573),
                     fm(-0.52573,1.9315e-16,0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.16246,0.5,0.85065),
                     fm(-0.52573,1.9315e-16,0.85065),
                     fm(0,0,1)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.72361,-0.52573,-0.44721),
                     fm(-0.85065,1.3051e-16,-0.52573),
                     fm(-0.42533,-0.30902,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.85065,1.3051e-16,-0.52573),
                     fm(-0.72361,0.52573,-0.44721),
                     fm(-0.42533,0.30902,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.42533,-0.30902,-0.85065),
                     fm(-0.85065,1.3051e-16,-0.52573),
                     fm(-0.42533,0.30902,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.42533,-0.30902,-0.85065),
                     fm(-0.42533,0.30902,-0.85065),
                     fm(0,0,-1)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.27639,-0.85065,-0.44721),
                     fm(-0.26287,-0.80902,-0.52573),
                     fm(0.16246,-0.5,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.26287,-0.80902,-0.52573),
                     fm(-0.72361,-0.52573,-0.44721),
                     fm(-0.42533,-0.30902,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.16246,-0.5,-0.85065),
                     fm(-0.26287,-0.80902,-0.52573),
                     fm(-0.42533,-0.30902,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.16246,-0.5,-0.85065),
                     fm(-0.42533,-0.30902,-0.85065),
                     fm(0,0,-1)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.89443,-2.1907e-16,-0.44721),
                     fm(0.68819,-0.5,-0.52573),
                     fm(0.52573,-1.2877e-16,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.68819,-0.5,-0.52573),
                     fm(0.27639,-0.85065,-0.44721),
                     fm(0.16246,-0.5,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.52573,-1.2877e-16,-0.85065),
                     fm(0.68819,-0.5,-0.52573),
                     fm(0.16246,-0.5,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.52573,-1.2877e-16,-0.85065),
                     fm(0.16246,-0.5,-0.85065),
                     fm(0,0,-1)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.27639,0.85065,-0.44721),
                     fm(0.68819,0.5,-0.52573),
                     fm(0.16246,0.5,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.68819,0.5,-0.52573),
                     fm(0.89443,-2.1907e-16,-0.44721),
                     fm(0.52573,-1.2877e-16,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.16246,0.5,-0.85065),
                     fm(0.68819,0.5,-0.52573),
                     fm(0.52573,-1.2877e-16,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(0.16246,0.5,-0.85065),
                     fm(0.52573,-1.2877e-16,-0.85065),
                     fm(0,0,-1)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.72361,0.52573,-0.44721),
                     fm(-0.26287,0.80902,-0.52573),
                     fm(-0.42533,0.30902,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.26287,0.80902,-0.52573),
                     fm(0.27639,0.85065,-0.44721),
                     fm(0.16246,0.5,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.42533,0.30902,-0.85065),
                     fm(-0.26287,0.80902,-0.52573),
                     fm(0.16246,0.5,-0.85065)),
-                  new Triangle(
+                  new TriangleForSphere(
                     fm(-0.42533,0.30902,-0.85065),
                     fm(0.16246,0.5,-0.85065),
                     fm(0,0,-1)) };
@@ -576,11 +576,11 @@ namespace SamSeifert.GLE
 
 
 
-        private struct Triangle
+        private struct TriangleForSphere
         {
             Vector3 v1, v2, v3;
 
-            public Triangle(Vector3 vv1, Vector3 vv2, Vector3 vv3)
+            public TriangleForSphere(Vector3 vv1, Vector3 vv2, Vector3 vv3)
             {
                 this.v1 = vv1;
                 this.v2 = vv2;
