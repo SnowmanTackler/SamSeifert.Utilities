@@ -43,6 +43,39 @@ namespace SamSeifert.GLE
             this.setColor(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f);
         }
 
+        public static bool CheckMatch(ColorGL a, ColorGL b)
+        {
+            if ((a == null) && (b == null)) return true;
+            else if (a == null)
+            {
+                for (int i = 0; i < 4; i++) if (b._Ambient[i] != 0) return false;
+                for (int i = 0; i < 4; i++) if (b._Diffuse[i] != 0) return false;
+                for (int i = 0; i < 4; i++) if (b._Emission[i] != 0) return false;
+                for (int i = 0; i < 4; i++) if (b._Specular[i] != 0) return false;
+                if (b._Shininess[0] != 0) return false;
+                return true;
+            }
+            else if (b == null)
+            {
+                for (int i = 0; i < 4; i++) if (a._Ambient[i] != 0) return false;
+                for (int i = 0; i < 4; i++) if (a._Diffuse[i] != 0) return false;
+                for (int i = 0; i < 4; i++) if (a._Emission[i] != 0) return false;
+                for (int i = 0; i < 4; i++) if (a._Specular[i] != 0) return false;
+                if (a._Shininess[0] != 0) return false;
+                return true;
+            }
+            else if (a == b) return true;
+            else
+            {
+                for (int i = 0; i < 4; i++) if (a._Ambient[i] != b._Ambient[i]) return false;
+                for (int i = 0; i < 4; i++) if (a._Diffuse[i] != b._Diffuse[i]) return false;
+                for (int i = 0; i < 4; i++) if (a._Emission[i] != b._Emission[i]) return false;
+                for (int i = 0; i < 4; i++) if (a._Specular[i] != b._Specular[i]) return false;
+                if (a._Shininess[0] != b._Shininess[0]) return false;
+                return true;
+            }
+        }
+
         public void setColor(float r, float g, float b, float a = 0.4f, float d = 1.0f, float e = 0, float s = 0)
         {
             this._Ambient[0] = a * r;
