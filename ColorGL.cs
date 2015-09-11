@@ -43,7 +43,7 @@ namespace SamSeifert.GLE
             this.setColor(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f);
         }
 
-        public void setColor(float r, float g, float b, float a = 0.4f, float d = 0.7f, float e = 0, float s = 0)
+        public void setColor(float r, float g, float b, float a = 0.4f, float d = 1.0f, float e = 0, float s = 0)
         {
             this._Ambient[0] = a * r;
             this._Ambient[1] = a * g;
