@@ -9,6 +9,7 @@ namespace SamSeifert.GLE
 {
     public class ColorGL
     {
+        private float r, g, b;
         public float[] _Ambient = new float[] { 0f, 0f, 0f, 1.0f };
         public float[] _Diffuse = new float[] { 0f, 0f, 0f, 1.0f };
         public float[] _Emission = new float[] { 0f, 0f, 0f, 1.0f };
@@ -26,10 +27,13 @@ namespace SamSeifert.GLE
 
         public ColorGL(float r, float g, float b)
         {
-            this.setColor(r, g, b);
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            this.setColorParams();
         }
 
-        public void SendToGL()
+        public void sendToGL()
         {
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, this._Ambient);
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, this._Diffuse);
@@ -40,7 +44,10 @@ namespace SamSeifert.GLE
 
         public void setColor(System.Drawing.Color c)
         {
-            this.setColor(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f);
+            this.r = c.R / 255.0f;
+            this.g = c.G / 255.0f;
+            this.b = c.B / 255.0f;
+            this.setColorParams();
         }
 
         public static bool CheckMatch(ColorGL a, ColorGL b)
@@ -76,24 +83,23 @@ namespace SamSeifert.GLE
             }
         }
 
-        public void setColor(float r, float g, float b, float a = 0.4f, float d = 1.0f, float e = 0, float s = 0)
+        public void setColorParams(float a = 0.5f, float d = 1.2f, float e = 0, float s = 0)
         {
-            this._Ambient[0] = a * r;
-            this._Ambient[1] = a * g;
-            this._Ambient[2] = a * b;
+            this._Ambient[0] = a * this.r;
+            this._Ambient[1] = a * this.g;
+            this._Ambient[2] = a * this.b;
 
-            this._Diffuse[0] = d * r;
-            this._Diffuse[1] = d * g;
-            this._Diffuse[2] = d * b;
+            this._Diffuse[0] = d * this.r;
+            this._Diffuse[1] = d * this.g;
+            this._Diffuse[2] = d * this.b;
 
-            this._Emission[0] = e * r;
-            this._Emission[1] = e * g;
-            this._Emission[2] = e * b;
+            this._Emission[0] = e * this.r;
+            this._Emission[1] = e * this.g;
+            this._Emission[2] = e * this.b;
 
-            this._Specular[0] = s * r;
-            this._Specular[1] = s * g;
-            this._Specular[2] = s * b;
+            this._Specular[0] = s * this.r;
+            this._Specular[1] = s * this.g;
+            this._Specular[2] = s * this.b;
         }
-
     }
 }
