@@ -42,6 +42,15 @@ namespace SamSeifert.GLE
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Shininess, this._Shininess);
         }
 
+        public System.Drawing.Color Color()
+        {
+            return System.Drawing.Color.FromArgb(
+                (int)(this.r * 255),
+                (int)(this.g * 255),
+                (int)(this.b * 255)
+                );
+        }
+
         public void setColor(System.Drawing.Color c)
         {
             this.r = c.R / 255.0f;
