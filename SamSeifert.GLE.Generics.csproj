@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="Draw.cs" />
     <Compile Include="ColorGL.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="HeightMap.cs" />
     <Compile Include="HeightMapCircle.cs" />
     <Compile Include="HeightMapRectangle.cs" />
