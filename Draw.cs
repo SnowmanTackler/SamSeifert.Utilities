@@ -29,7 +29,7 @@ namespace SamSeifert.GLE
             _PrismVector3[6] = new Vector3(-x, -y, -z);
             _PrismVector3[7] = new Vector3(x, -y, -z);
 
-            GL.Begin(BeginMode.Quads);
+            GL.Begin(PrimitiveType.Quads);
             {
                 GL.Normal3(Vector3.UnitZ);
                 GL.Vertex3(_PrismVector3[0]);
@@ -87,7 +87,7 @@ namespace SamSeifert.GLE
             _PrismVector3[6] = new Vector3(-x, -y, -z);
             _PrismVector3[7] = new Vector3(x, -y, -z);
 
-            GL.Begin(BeginMode.Lines);
+            GL.Begin(PrimitiveType.Lines);
             {
                 GL.Vertex3(_PrismVector3[0]); GL.Vertex3(_PrismVector3[1]);
                 GL.Vertex3(_PrismVector3[1]); GL.Vertex3(_PrismVector3[2]);
@@ -151,7 +151,7 @@ namespace SamSeifert.GLE
             bot[CylCount] = bot[0];
             nor[CylCount] = nor[0];
 
-            GL.Begin(BeginMode.TriangleFan);
+            GL.Begin(PrimitiveType.TriangleFan);
             {
                 GL.Normal3(Vector3.UnitX);
                 GL.Vertex3(x, 0, 0);
@@ -159,7 +159,7 @@ namespace SamSeifert.GLE
             }
             GL.End();
 
-            GL.Begin(BeginMode.TriangleFan);
+            GL.Begin(PrimitiveType.TriangleFan);
             {
                 GL.Normal3(-Vector3.UnitX);
                 GL.Vertex3(-x, 0, 0);
@@ -168,7 +168,7 @@ namespace SamSeifert.GLE
             GL.End();
 
 
-            GL.Begin(BeginMode.Quads);
+            GL.Begin(PrimitiveType.Quads);
             {
                 Vector3 norm = Vector3.Zero;
 
@@ -202,7 +202,7 @@ namespace SamSeifert.GLE
                 top[i] = new Vector3(x, cosA, sinA);
             }
 
-            GL.Begin(BeginMode.Lines);
+            GL.Begin(PrimitiveType.Lines);
             {
                 for (int i = 0; i < CylCount; i++)
                 {
@@ -556,7 +556,7 @@ namespace SamSeifert.GLE
                     fm(0,0,-1)) };
             }
 
-            GL.Begin(BeginMode.Triangles);
+            GL.Begin(PrimitiveType.Triangles);
             {
                 foreach (var t in _Sphere)
                 {

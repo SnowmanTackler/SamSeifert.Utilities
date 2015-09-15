@@ -79,7 +79,7 @@ namespace SamSeifert.GLE
 
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IntIndicesBufferID);
 
-                GL.DrawElements(BeginMode.Triangles, this._IntNumTriangles * 3, DrawElementsType.UnsignedInt, 0);
+                GL.DrawElements(PrimitiveType.Triangles, this._IntNumTriangles * 3, DrawElementsType.UnsignedInt, 0);
             }
             else this.GenerateHeightMap();
         }
@@ -114,7 +114,7 @@ namespace SamSeifert.GLE
                     if (did + dAngle2 < 360)
                     {
                         GL.DrawRangeElements(
-                            BeginMode.Triangles,
+                            PrimitiveType.Triangles,
                             0,
                             this._IntNumTriangles * 3,
                             stripL * (dAngle2 / this.incDegrees),
@@ -128,7 +128,7 @@ namespace SamSeifert.GLE
                         lens *= this.incDegrees;
 
                         GL.DrawRangeElements(
-                            BeginMode.Triangles,
+                            PrimitiveType.Triangles,
                             0,
                             this._IntNumTriangles * 3,
                             stripL * (lens / this.incDegrees),
@@ -136,7 +136,7 @@ namespace SamSeifert.GLE
                             new IntPtr(0));
 
                         GL.DrawRangeElements(
-                            BeginMode.Triangles,
+                            PrimitiveType.Triangles,
                             0,
                             this._IntNumTriangles * 3,
                             stripL * ((dAngle2 - lens) / this.incDegrees),
@@ -150,7 +150,7 @@ namespace SamSeifert.GLE
                     for (int i = 0; i < countDegrees; i += 2)
                     {
                         GL.DrawRangeElements(
-                            BeginMode.Triangles,
+                            PrimitiveType.Triangles,
                             0,
                             this._IntNumTriangles * 3,
                             stripL,

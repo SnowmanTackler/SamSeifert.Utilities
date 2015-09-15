@@ -173,7 +173,7 @@ namespace SamSeifert.GLE
                     if (tex != 0)
                     {
                         GL.BindTexture(TextureTarget.Texture2D, tex);
-                        GL.Begin(BeginMode.Quads);
+                        GL.Begin(PrimitiveType.Quads);
                         {
                             GL.TexCoord2(0, 0);
                             GL.Vertex3(-distance, distance * scale, -distance);
@@ -192,7 +192,7 @@ namespace SamSeifert.GLE
                     if (tex != 0)
                     {
                         GL.BindTexture(TextureTarget.Texture2D, tex);
-                        GL.Begin(BeginMode.Quads);
+                        GL.Begin(PrimitiveType.Quads);
                         {
                             GL.TexCoord2(0, 0); GL.Vertex3(-distance, 0, distance);
                             GL.TexCoord2(1, 0); GL.Vertex3(distance, 0, distance);
@@ -207,7 +207,7 @@ namespace SamSeifert.GLE
                     if (tex != 0)
                     {
                         GL.BindTexture(TextureTarget.Texture2D, tex);
-                        GL.Begin(BeginMode.Quads);
+                        GL.Begin(PrimitiveType.Quads);
                         {
                             GL.TexCoord2(0, 0);
                             GL.Vertex3(distance, 0, -distance);
@@ -226,7 +226,7 @@ namespace SamSeifert.GLE
                     if (tex != 0)
                     {
                         GL.BindTexture(TextureTarget.Texture2D, tex);
-                        GL.Begin(BeginMode.Quads);
+                        GL.Begin(PriativeType.Quads);
                         {
                             GL.TexCoord2(0, 0);
                             GL.Vertex3(-distance, 0, distance);
@@ -245,7 +245,7 @@ namespace SamSeifert.GLE
                     if (tex != 0)
                     {
                         GL.BindTexture(TextureTarget.Texture2D, tex);
-                        GL.Begin(BeginMode.Quads);
+                        GL.Begin(PrimitiveType.Quads);
                         {
                             GL.TexCoord2(0, 0);
                             GL.Vertex3(-distance, 0, -distance);
@@ -265,7 +265,7 @@ namespace SamSeifert.GLE
 
                     {
                         GL.BindTexture(TextureTarget.Texture2D, tex);
-                        GL.Begin(BeginMode.Quads);
+                        GL.Begin(PrimitiveType.Quads);
                         {
                             GL.TexCoord2(0, 0);
                             GL.Vertex3(distance, 0, distance);
