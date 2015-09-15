@@ -226,7 +226,7 @@ namespace SamSeifert.GLE
                     if (tex != 0)
                     {
                         GL.BindTexture(TextureTarget.Texture2D, tex);
-                        GL.Begin(PriativeType.Quads);
+                        GL.Begin(PrimitiveType.Quads);
                         {
                             GL.TexCoord2(0, 0);
                             GL.Vertex3(-distance, 0, distance);
