@@ -114,7 +114,7 @@ namespace SamSeifert.GLE
                     if (did + dAngle2 < 360)
                     {
                         GL.DrawRangeElements(
-                            PrimitiveType.Triangles,
+                            BeginMode.Triangles,
                             0,
                             this._IntNumTriangles * 3,
                             stripL * (dAngle2 / this.incDegrees),
@@ -128,7 +128,7 @@ namespace SamSeifert.GLE
                         lens *= this.incDegrees;
 
                         GL.DrawRangeElements(
-                            PrimitiveType.Triangles,
+                            BeginMode.Triangles,
                             0,
                             this._IntNumTriangles * 3,
                             stripL * (lens / this.incDegrees),
@@ -136,7 +136,7 @@ namespace SamSeifert.GLE
                             new IntPtr(0));
 
                         GL.DrawRangeElements(
-                            PrimitiveType.Triangles,
+                            BeginMode.Triangles,
                             0,
                             this._IntNumTriangles * 3,
                             stripL * ((dAngle2 - lens) / this.incDegrees),
@@ -150,7 +150,7 @@ namespace SamSeifert.GLE
                     for (int i = 0; i < countDegrees; i += 2)
                     {
                         GL.DrawRangeElements(
-                            PrimitiveType.Triangles,
+                            BeginMode.Triangles,
                             0,
                             this._IntNumTriangles * 3,
                             stripL,

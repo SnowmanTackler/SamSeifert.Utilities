@@ -8,14 +8,14 @@ namespace SamSeifert.GLE
 {
     public static class Extensions
     {
-        public static Quaternion QuaternionFromEulerAnglesDegrees(float heading, float attitude, float bank)
+/*        public static Quaternion QuaternionFromEulerAnglesDegrees(float heading, float attitude, float bank)
         {
             return new Quaternion(
                 MathHelper.DegreesToRadians(attitude),
                 MathHelper.DegreesToRadians(heading),
                 MathHelper.DegreesToRadians(bank)
                 );
-        }
+        }*/
 
         public static Quaternion QuaternionFromTaitBrynDegrees(float yaw, float pitch, float roll)
         {
