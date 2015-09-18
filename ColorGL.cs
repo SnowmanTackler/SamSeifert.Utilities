@@ -33,6 +33,14 @@ namespace SamSeifert.GLE
             this.setColorParams();
         }
 
+        public void setAlpha(float alpha)
+        {
+            this._Ambient[3] = alpha;
+            this._Diffuse[3] = alpha;
+            this._Emission[3] = alpha;
+            this._Specular[3] = alpha;
+        }
+
         public void sendToGL()
         {
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, this._Ambient);
