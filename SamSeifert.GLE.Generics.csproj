@@ -50,7 +50,6 @@
   <ItemGroup>
     <Compile Include="Draw.cs" />
     <Compile Include="ColorGL.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="HeightMap.cs" />
     <Compile Include="HeightMapCircle.cs" />
     <Compile Include="HeightMapRectangle.cs" />
@@ -63,10 +62,6 @@
     <ProjectReference Include="..\OpenTK\Source\OpenTK\OpenTK.csproj">
       <Project>{a37a7e14-0000-0000-0000-000000000000}</Project>
       <Name>OpenTK</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SamSeifert.ComplexFileParser\SamSeifert.ComplexFileParser.csproj">
-      <Project>{2414f4dd-734e-4a0b-9c95-c24b2cee25f7}</Project>
-      <Name>SamSeifert.ComplexFileParser</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
