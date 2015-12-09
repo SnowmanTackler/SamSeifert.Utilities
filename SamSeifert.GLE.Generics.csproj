@@ -8,7 +8,7 @@
     <ProjectGuid>{FB6E9B5D-7A20-45F2-9ADA-DDD12E70A967}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SamSeifert.GLE.Generics</RootNamespace>
+    <RootNamespace>SamSeifert.GLE</RootNamespace>
     <AssemblyName>SamSeifert.GLE.Generics</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -50,6 +50,9 @@
   <ItemGroup>
     <Compile Include="Draw.cs" />
     <Compile Include="ColorGL.cs" />
+    <Compile Include="GLR.cs" />
+    <Compile Include="GLR_Matrix.cs" />
+    <Compile Include="GLR_Simple.cs" />
     <Compile Include="HeightMap.cs" />
     <Compile Include="HeightMapCircle.cs" />
     <Compile Include="HeightMapRectangle.cs" />

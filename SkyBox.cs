@@ -8,7 +8,7 @@ using System.Text;
 using SamSeifert.ComplexFileParser;
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL; using GL = SamSeifert.GLE.GLR;
 
 namespace SamSeifert.GLE
 {

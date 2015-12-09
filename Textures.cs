@@ -5,7 +5,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-using OpenTK.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL; using GL = SamSeifert.GLE.GLR;
+using TextureUnit = OpenTK.Graphics.OpenGL.TextureUnit;
+using MaterialFace = OpenTK.Graphics.OpenGL.MaterialFace;
 
 namespace SamSeifert.GLE
 {

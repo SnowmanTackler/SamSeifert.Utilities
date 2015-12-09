@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL; using GL = SamSeifert.GLE.GLR;
 
 namespace SamSeifert.GLE
 {

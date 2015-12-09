@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
+
+using OpenTK.Graphics.OpenGL; using GL = SamSeifert.GLE.GLR;
+using PrimitiveType = OpenTK.Graphics.OpenGL.PrimitiveType;
 
 namespace SamSeifert.GLE
 {
@@ -28,6 +30,7 @@ namespace SamSeifert.GLE
             _PrismVector3[5] = new Vector3(-x, y, -z);
             _PrismVector3[6] = new Vector3(-x, -y, -z);
             _PrismVector3[7] = new Vector3(x, -y, -z);
+
 
             GL.Begin(PrimitiveType.Quads);
             {
