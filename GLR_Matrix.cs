@@ -44,8 +44,6 @@ namespace SamSeifert.GLE
 
         public static void MatrixMode(OpenTK.Graphics.OpenGL.MatrixMode m)
         {
-            if (m == OpenTK.Graphics.OpenGL.MatrixMode.Projection) throw new Exception("NOT ALLOWED1");
-
             GL.MatrixMode(m);
             GLR._MatrixMode = m;
         }
@@ -115,6 +113,21 @@ namespace SamSeifert.GLE
         }
 
 
+
+
+        public static float Projection_zNear { get; private set; }
+        public static float Projection_zFar { get; private set; }
+
+        /// <summary>
+        /// Vertical Field Of View (Radians)
+        /// </summary>
+        public static float Projection_vFOV { get; private set; }
+
+        /// <summary>
+        /// Horizontal Field Of View (Radians)
+        /// </summary>
+        public static float Projection_hFOV { get; private set; }
+
         public static Matrix4 setProjection(
             int viewport_width,
             int viewport_height,
@@ -124,18 +137,41 @@ namespace SamSeifert.GLE
             int viewport_x = 0,
             int viewport_y = 0)
         {
-            //            Matrix4.CreatePerspectiveFieldOfView();
             float aspect = viewport_width;
             aspect /= viewport_height;
 
+            GLR.Projection_vFOV = MathHelper.DegreesToRadians(vertical_fov_degrees);
+            GLR.Projection_hFOV = GLR.Projection_vFOV * aspect;
+            GLR.Projection_zFar = zFar;
+            GLR.Projection_zNear = zNear;
+
             GL.MatrixMode(OpenTK.Graphics.OpenGL.MatrixMode.Projection);
-            Matrix4 p = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(vertical_fov_degrees), aspect, 0.1f, 1000.0f);
+            Matrix4 p = Matrix4.CreatePerspectiveFieldOfView(GLR.Projection_vFOV, aspect, zNear, zFar);
             GL.LoadMatrix(ref p);
             GL.MatrixMode(GLR._MatrixMode);
 
             GL.Viewport(viewport_x, viewport_y, viewport_width, viewport_height);
 
             return p;
+        }
+
+        public static void loadProjection(ref Matrix4 p, float vertical_fov_degrees, float horizontal_fov_degrees, float zNear, float zFar)
+        {
+            GLR.Projection_vFOV = MathHelper.DegreesToRadians(vertical_fov_degrees);
+            GLR.Projection_hFOV = MathHelper.DegreesToRadians(horizontal_fov_degrees);
+            GLR.Projection_zFar = zFar;
+            GLR.Projection_zNear = zNear;
+
+            GL.MatrixMode(OpenTK.Graphics.OpenGL.MatrixMode.Projection);
+            GL.LoadMatrix(ref p);
+            GL.MatrixMode(GLR._MatrixMode);
+        }
+
+        public static void loadProjectionOrtho(ref Matrix4 p)
+        {
+            GL.MatrixMode(OpenTK.Graphics.OpenGL.MatrixMode.Projection);
+            GL.LoadMatrix(ref p);
+            GL.MatrixMode(GLR._MatrixMode);
         }
 
     }
