@@ -12,6 +12,6 @@ using OpenTK.Graphics.OpenGL;
 namespace SamSeifert.GLE
 {
     public static partial class GLR
-    {  
+    {
     }
 }

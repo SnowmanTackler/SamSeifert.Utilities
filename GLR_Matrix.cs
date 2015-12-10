@@ -44,8 +44,16 @@ namespace SamSeifert.GLE
 
         public static void MatrixMode(OpenTK.Graphics.OpenGL.MatrixMode m)
         {
+            if (m == OpenTK.Graphics.OpenGL.MatrixMode.Projection) throw new Exception("NOT ALLOWED1");
+
             GL.MatrixMode(m);
             GLR._MatrixMode = m;
+        }
+
+        public static void LoadIdentity()
+        {
+            Matrix4 eye = Matrix4.Identity;
+            GLR.LoadMatrix(ref eye);
         }
 
         public static void LoadMatrix(ref Matrix4 m)
@@ -100,12 +108,35 @@ namespace SamSeifert.GLE
             GLR.MultMatrix(ref m);
         }
 
-        public static void LoadIdentity()
+        public static Matrix4 getMatrix(OpenTK.Graphics.OpenGL.MatrixMode m)
         {
-            Matrix4 eye = Matrix4.Identity;
-            GLR.LoadMatrix(ref eye);
+            var ls = GLR._MatrixDict[m];
+            return ls[ls.Count - 1];
         }
 
+
+        public static Matrix4 setProjection(
+            int viewport_width,
+            int viewport_height,
+            float vertical_fov_degrees,
+            float zNear,
+            float zFar,
+            int viewport_x = 0,
+            int viewport_y = 0)
+        {
+            //            Matrix4.CreatePerspectiveFieldOfView();
+            float aspect = viewport_width;
+            aspect /= viewport_height;
+
+            GL.MatrixMode(OpenTK.Graphics.OpenGL.MatrixMode.Projection);
+            Matrix4 p = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(vertical_fov_degrees), aspect, 0.1f, 1000.0f);
+            GL.LoadMatrix(ref p);
+            GL.MatrixMode(GLR._MatrixMode);
+
+            GL.Viewport(viewport_x, viewport_y, viewport_width, viewport_height);
+
+            return p;
+        }
 
     }
 }
