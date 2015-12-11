@@ -94,13 +94,13 @@ namespace SamSeifert.GLE
             Matrix4 m = Matrix4.Identity;
 
             m.M11 = x * x * (1 - c) + c;
-            m.M12 = x * y * (1 - c) - z * s;
-            m.M13 = x * z * (1 - c) + y * s;
-            m.M21 = y * x * (1 - c) + z * s;
+            m.M21 = x * y * (1 - c) - z * s;
+            m.M31 = x * z * (1 - c) + y * s;
+            m.M12 = y * x * (1 - c) + z * s;
             m.M22 = y * y * (1 - c) + c;
-            m.M23 = y * z * (1 - c) - x * s;
-            m.M31 = z * x * (1 - c) - y * s;
-            m.M32 = z * y * (1 - c) + x * s;
+            m.M32 = y * z * (1 - c) - x * s;
+            m.M13 = z * x * (1 - c) - y * s;
+            m.M23 = z * y * (1 - c) + x * s;
             m.M33 = z * z * (1 - c) + c;
 
             GLR.MultMatrix(ref m);
