@@ -261,9 +261,9 @@ namespace SamSeifert.GLE
             GL.Viewport(x, y, w, h);
         }
 
-        public static void VertexPointer(int v, VertexPointerType vpt, int stride, IntPtr zero)
+        public static void VertexPointer(int size, VertexPointerType vpt, int stride, IntPtr zero)
         {
-            GL.VertexPointer(v, vpt, stride, zero);
+            GL.VertexPointer(size, vpt, stride, zero);
         }
 
         public static void Clear(ClearBufferMask cbm)
