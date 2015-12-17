@@ -7,7 +7,6 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-
 namespace SamSeifert.GLE
 {
     public static partial class GLR
@@ -17,9 +16,9 @@ namespace SamSeifert.GLE
             GL.ActiveTexture(tu);
         }
 
-        public static void Color4(float v1, float v2, float v3, float v4)
+        public static void Color4(float red, float green, float blue, float alpha)
         {
-            GL.Color4(v1, v2, v3, v4);
+            GL.Color4(red, green, blue, alpha);
         }
 
         public static void ClearColor(Color c)
