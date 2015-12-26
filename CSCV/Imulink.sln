@@ -1,7 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSCV", "CSVC\CSCV.csproj", "{9C52524B-2D29-44C9-AC82-4E1DA235A8BF}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Imulink", "CSVC\Imulink.csproj", "{9C52524B-2D29-44C9-AC82-4E1DA235A8BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamSeifert.HueChooser", "..\SamSeifert.HueChooser\SamSeifert.HueChooser\SamSeifert.HueChooser.csproj", "{549EEBCD-5E5B-42C0-83A9-E471C7D316DC}"
 EndProject

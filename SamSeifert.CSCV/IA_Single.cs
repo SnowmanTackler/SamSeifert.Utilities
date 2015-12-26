@@ -1201,7 +1201,7 @@ namespace SamSeifert.CSCV
         private static unsafe Single[,] getColdHot()
         {
             if (arrayColdHot == null)
-            {
+            {                
                 var im = Properties.Resources.HeatmapHotCold;
 
                 int w = im.Size.Width;
