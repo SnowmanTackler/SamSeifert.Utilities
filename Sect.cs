@@ -109,9 +109,51 @@ namespace SamSeifert.CSCV
             return newB;
         }
 
-        public unsafe Bitmap getImage(int w, int h, bool forceZero = true)
+        public unsafe Bitmap getImageForSize(Size s, bool forceZero = true)
+        {
+            return this.getImageForSize(s.Width, s.Height, forceZero);
+        }
+
+        public unsafe Bitmap getImageForSize(int w, int h, bool forceZero = true)
         {
             Bitmap newB = new Bitmap(w, h, PixelFormat.Format24bppRgb);
+
+            this.refreshImage(ref newB, forceZero);
+
+            return newB;
+        }
+
+        /// <summary>
+        /// Shrinks or Enlarges
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="forceZero"></param>
+        /// <returns></returns>
+        public unsafe Bitmap getImageForSizeShrinkEnlarge(Size s, bool forceZero = true)
+        {
+            var ns = Sizing.fitAinB(this.getPrefferedSize(), new Size(s.Width, s.Height));
+
+            Bitmap newB = new Bitmap(ns.Width, ns.Height, PixelFormat.Format24bppRgb);
+
+            this.refreshImage(ref newB, forceZero);
+
+            return newB;
+        }
+
+        /// <summary>
+        /// Just Shrink
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="forceZero"></param>
+        /// <returns></returns>
+        public unsafe Bitmap getImageForSizeShrinkOnly(Size s, bool forceZero = true)
+        {
+            var p = this.getPrefferedSize();
+
+            var ns = Sizing.fitAinB(p, s);
+            if ((ns.Width < p.Width) || (ns.Height < p.Height)) p = ns.Size;
+
+            Bitmap newB = new Bitmap(p.Width, p.Height, PixelFormat.Format24bppRgb);
 
             this.refreshImage(ref newB, forceZero);
 
