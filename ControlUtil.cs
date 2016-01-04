@@ -35,14 +35,23 @@ namespace SamSeifert.Utilities
 
         public static void DecascadeContextMenuStrip(this Control parent)
         {
-            parent.CascadeContextMenuStrip(null);
+            parent.DeascadeContextMenuStrip(parent.ContextMenuStrip);
         }
 
         private static void CascadeContextMenuStrip(this Control parent, ContextMenuStrip cms)
         {
             foreach (Control child in parent.Controls)
             {
-                child.ContextMenuStrip = cms;
+                if (child.ContextMenuStrip == cms) child.ContextMenuStrip = null;
+                if (child.HasChildren) child.CascadeContextMenuStrip(cms);
+            }
+        }
+
+        private static void DeascadeContextMenuStrip(this Control parent, ContextMenuStrip cms)
+        {
+            foreach (Control child in parent.Controls)
+            {
+                if (child.ContextMenuStrip == null) child.ContextMenuStrip = cms;
                 if (child.HasChildren) child.CascadeContextMenuStrip(cms);
             }
         }
