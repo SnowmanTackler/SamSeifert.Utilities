@@ -9,7 +9,7 @@ namespace SamSeifert.Utilities
 {
     public class GlobalEvents : IMessageFilter
     {
-        private static GlobalEvents _GlobalMouseHandler = new GlobalEvents();
+        private static GlobalEvents Instance = new GlobalEvents();
 
         private GlobalEvents()
         {
@@ -19,19 +19,125 @@ namespace SamSeifert.Utilities
         private bool clickedL = false;
         private Point pointL = new Point();
 
-        public static event MouseEventHandler LMouseDown;
-        public static event MouseEventHandler LMouseUp;
-        public static event MouseEventHandler LMouseDrag;
-        public static event MouseEventHandler LMouseMove;
+        private event MouseEventHandler _LMouseDown;
+        public static event MouseEventHandler LMouseDown
+        {
+            add
+            {
+                lock (Instance)
+                {
+                    Instance._LMouseDown += value;
+                }
+            }
+            remove
+            {
+                lock (Instance)
+                {
+                    Instance._LMouseDown -= value;
+                }
+            }
+        }
 
-        public static event EventHandler KeyDown;
-        public static event EventHandler KeyUp;
+        private event MouseEventHandler _LMouseUp;
+        public static event MouseEventHandler LMouseUp
+        {
+            add
+            {
+                lock (Instance)
+                {
+                    Instance._LMouseUp += value;
+                }
+            }
+            remove
+            {
+                lock (Instance)
+                {
+                    Instance._LMouseUp -= value;
+                }
+            }
+        }
+
+        private event MouseEventHandler _LMouseDrag;
+        public static event MouseEventHandler LMouseDrag
+        {
+            add
+            {
+                lock (Instance)
+                {
+                    Instance._LMouseDrag += value;
+                }
+            }
+            remove
+            {
+                lock (Instance)
+                {
+                    Instance._LMouseDrag -= value;
+                }
+            }
+        }
+
+        private event MouseEventHandler _LMouseMove;
+        public static event MouseEventHandler LMouseMove
+        {
+            add
+            {
+                lock (Instance)
+                {
+                    Instance._LMouseMove += value;
+                }
+            }
+            remove
+            {
+                lock (Instance)
+                {
+                    Instance._LMouseMove -= value;
+                }
+            }
+        }
+
+        private event EventHandler _KeyDown;
+        public static event EventHandler KeyDown
+        {
+            add
+            {
+                lock (Instance)
+                {
+                    Instance._KeyDown += value;
+                }
+            }
+            remove
+            {
+                lock (Instance)
+                {
+                    Instance._KeyDown -= value;
+                }
+            }
+        }
+
+        private event EventHandler _KeyUp;
+        public static event EventHandler KeyUp
+        {
+            add
+            {
+                lock (Instance)
+                {
+                    Instance._KeyUp += value;
+                }
+            }
+            remove
+            {
+                lock (Instance)
+                {
+                    Instance._KeyUp -= value;
+                }
+            }
+        }
 
         public static Point MouseLocation
         {
             get
             {
-                return _GlobalMouseHandler.pointL;
+                return Instance.pointL;
             }
         }
 
@@ -42,57 +148,59 @@ namespace SamSeifert.Utilities
 
         public bool PreFilterMessage(ref Message m)
         {
-
-            if (m.Msg == WM_LBUTTONDOWN)
+            lock (this)
             {
-                if (GlobalEvents.LMouseDown != null) GlobalEvents.LMouseDown(null, this.getMouseEventArgs());
-                this.pointL = Cursor.Position;
-                this.clickedL = true;
-            }
-            else if (m.Msg == WM_LBUTTONUP)
-            {
-                if (GlobalEvents.LMouseUp != null) GlobalEvents.LMouseUp(null, this.getMouseEventArgs());
-                this.clickedL = false;
-            }
-            else if (m.Msg == WM_MOUSEMOVE)
-            {
-                Point drag = new Point(Cursor.Position.X - this.pointL.X, Cursor.Position.Y - this.pointL.Y);
-
-                if (this.clickedL)
+                if (m.Msg == WM_LBUTTONDOWN)
                 {
-                    if (GlobalEvents.LMouseDrag != null)
-                        GlobalEvents.LMouseDrag(this, new MouseEventArgs(MouseButtons.Left, 1, drag.X, drag.Y, 0));
+                    if (this._LMouseDown != null) this._LMouseDown(null, this.getMouseEventArgs());
+                    this.pointL = Cursor.Position;
+                    this.clickedL = true;
                 }
-
-                if (GlobalEvents.LMouseMove != null)
-                    GlobalEvents.LMouseMove(this, this.getMouseEventArgs());
-
-                this.pointL = Cursor.Position;
-            }
-            else if (m.Msg == WM_KEYDOWN)
-            {
-                Keys ks = (Keys)(m.WParam);
-
-                lock (GlobalEvents.keyTable)
+                else if (m.Msg == WM_LBUTTONUP)
                 {
-                    GlobalEvents.keyTable[ks] = true;
+                    if (this._LMouseUp != null) this._LMouseUp(null, this.getMouseEventArgs());
+                    this.clickedL = false;
                 }
-
-//                if (!this.isKeyPressed(ks))
+                else if (m.Msg == WM_MOUSEMOVE)
                 {
-                    if (GlobalEvents.KeyDown != null) GlobalEvents.KeyDown(null, EventArgs.Empty);
-                }
-            }
-            else if (m.Msg == WM_KEYUP)
-            {
-                lock (GlobalEvents.keyTable)
-                {
-                    GlobalEvents.keyTable[(Keys)m.WParam] = false;
-                }
+                    Point drag = new Point(Cursor.Position.X - this.pointL.X, Cursor.Position.Y - this.pointL.Y);
 
-                if (GlobalEvents.KeyUp != null) GlobalEvents.KeyUp(null, EventArgs.Empty);
+                    if (this.clickedL)
+                    {
+                        if (this._LMouseDrag != null)
+                            this._LMouseDrag(this, new MouseEventArgs(MouseButtons.Left, 1, drag.X, drag.Y, 0));
+                    }
+
+                    if (this._LMouseMove != null)
+                        this._LMouseMove(this, this.getMouseEventArgs());
+
+                    this.pointL = Cursor.Position;
+                }
+                else if (m.Msg == WM_KEYDOWN)
+                {
+                    Keys ks = (Keys)(m.WParam);
+
+                    lock (GlobalEvents.keyTable)
+                    {
+                        GlobalEvents.keyTable[ks] = true;
+                    }
+
+                    //                if (!this.isKeyPressed(ks))
+                    {
+                        if (this._KeyDown != null) this._KeyDown(null, EventArgs.Empty);
+                    }
+                }
+                else if (m.Msg == WM_KEYUP)
+                {
+                    lock (GlobalEvents.keyTable)
+                    {
+                        GlobalEvents.keyTable[(Keys)m.WParam] = false;
+                    }
+
+                    if (this._KeyUp != null) this._KeyUp(null, EventArgs.Empty);
+                }
+                return false;
             }
-            return false;
         }
 
 
