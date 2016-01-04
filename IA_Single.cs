@@ -1291,7 +1291,7 @@ namespace SamSeifert.CSCV
             else
             {
                 match(ref outp, inpt.getPrefferedSize(), new SectType[] { 
-                    SectType.HSL_H,
+                    SectType.Hue,
                     SectType.HSL_S, 
                     SectType.HSL_L, 
                 });
@@ -1304,7 +1304,7 @@ namespace SamSeifert.CSCV
                 var g = (inpt as SectHolder).Sects[SectType.RGB_G];
                 var b = (inpt as SectHolder).Sects[SectType.RGB_B];
 
-                Single[,] hue = ((outp as SectHolder).Sects[SectType.HSL_H] as SectArray).Data;
+                Single[,] hue = ((outp as SectHolder).Sects[SectType.Hue] as SectArray).Data;
                 Single[,] sat = ((outp as SectHolder).Sects[SectType.HSL_S] as SectArray).Data;
                 Single[,] lum = ((outp as SectHolder).Sects[SectType.HSL_L] as SectArray).Data;
 
@@ -1351,7 +1351,7 @@ namespace SamSeifert.CSCV
             else
             {
                 match(ref outp, inpt.getPrefferedSize(), new SectType[] { 
-                    SectType.HSV_H,
+                    SectType.Hue,
                     SectType.HSV_S, 
                     SectType.HSV_V, 
                 });
@@ -1364,7 +1364,7 @@ namespace SamSeifert.CSCV
                 var g = (inpt as SectHolder).Sects[SectType.RGB_G];
                 var b = (inpt as SectHolder).Sects[SectType.RGB_B];
 
-                Single[,] hue = ((outp as SectHolder).Sects[SectType.HSV_H] as SectArray).Data;
+                Single[,] hue = ((outp as SectHolder).Sects[SectType.Hue] as SectArray).Data;
                 Single[,] sat = ((outp as SectHolder).Sects[SectType.HSV_S] as SectArray).Data;
                 Single[,] val = ((outp as SectHolder).Sects[SectType.HSV_V] as SectArray).Data;
 
