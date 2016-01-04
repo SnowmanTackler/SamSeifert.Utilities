@@ -76,21 +76,24 @@ namespace SamSeifert.Utilities
             }
         }
 
-        private event MouseEventHandler _LMouseMove;
-        public static event MouseEventHandler LMouseMove
+        private event MouseEventHandler _MouseMove;
+        /// <summary>
+        /// Move includes movement with mouse down and mouse up!
+        /// </summary>
+        public static event MouseEventHandler MouseMove
         {
             add
             {
                 lock (Instance)
                 {
-                    Instance._LMouseMove += value;
+                    Instance._MouseMove += value;
                 }
             }
             remove
             {
                 lock (Instance)
                 {
-                    Instance._LMouseMove -= value;
+                    Instance._MouseMove -= value;
                 }
             }
         }
@@ -171,8 +174,8 @@ namespace SamSeifert.Utilities
                             this._LMouseDrag(this, new MouseEventArgs(MouseButtons.Left, 1, drag.X, drag.Y, 0));
                     }
 
-                    if (this._LMouseMove != null)
-                        this._LMouseMove(this, this.getMouseEventArgs());
+                    if (this._MouseMove != null)
+                        this._MouseMove(this, this.getMouseEventArgs());
 
                     this.pointL = Cursor.Position;
                 }
@@ -180,10 +183,7 @@ namespace SamSeifert.Utilities
                 {
                     Keys ks = (Keys)(m.WParam);
 
-                    lock (GlobalEvents.keyTable)
-                    {
-                        GlobalEvents.keyTable[ks] = true;
-                    }
+                    GlobalEvents.keyTable[ks] = true;
 
                     //                if (!this.isKeyPressed(ks))
                     {
@@ -192,11 +192,7 @@ namespace SamSeifert.Utilities
                 }
                 else if (m.Msg == WM_KEYUP)
                 {
-                    lock (GlobalEvents.keyTable)
-                    {
-                        GlobalEvents.keyTable[(Keys)m.WParam] = false;
-                    }
-
+                    GlobalEvents.keyTable[(Keys)m.WParam] = false;
                     if (this._KeyUp != null) this._KeyUp(null, EventArgs.Empty);
                 }
                 return false;
@@ -208,7 +204,7 @@ namespace SamSeifert.Utilities
 
         public static bool isKeyPressed(Keys k)
         {
-            lock (keyTable)
+            lock (Instance)
             {
                 bool pressed = false;
                 GlobalEvents.keyTable.TryGetValue(k, out pressed);
