@@ -39,7 +39,7 @@ namespace SamSeifert.CSCV
         Hough_Foot_Of_Normal,
         Hough_Rho_Theta,
 
-        [Description("All")]
+        [Description("Holder")]
         Holder
     };
 

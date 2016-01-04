@@ -98,7 +98,7 @@ namespace SamSeifert.CSCV
 
 
 
-        public unsafe Bitmap getImage(bool forceZero = true)
+        public Bitmap getImage(bool forceZero = true)
         {
             var sz = this.getPrefferedSize();
 
@@ -109,12 +109,12 @@ namespace SamSeifert.CSCV
             return newB;
         }
 
-        public unsafe Bitmap getImageForSize(Size s, bool forceZero = true)
+        public Bitmap getImageForSize(Size s, bool forceZero = true)
         {
             return this.getImageForSize(s.Width, s.Height, forceZero);
         }
 
-        public unsafe Bitmap getImageForSize(int w, int h, bool forceZero = true)
+        public Bitmap getImageForSize(int w, int h, bool forceZero = true)
         {
             Bitmap newB = new Bitmap(w, h, PixelFormat.Format24bppRgb);
 
@@ -123,13 +123,7 @@ namespace SamSeifert.CSCV
             return newB;
         }
 
-        /// <summary>
-        /// Shrinks or Enlarges
-        /// </summary>
-        /// <param name="s"></param>
-        /// <param name="forceZero"></param>
-        /// <returns></returns>
-        public unsafe Bitmap getImageForSizeShrinkEnlarge(Size s, bool forceZero = true)
+        public Bitmap getImageForSizeShrinkEnlarge(Size s, bool forceZero = true)
         {
             var ns = Sizing.fitAinB(this.getPrefferedSize(), new Size(s.Width, s.Height));
 
@@ -140,16 +134,9 @@ namespace SamSeifert.CSCV
             return newB;
         }
 
-        /// <summary>
-        /// Just Shrink
-        /// </summary>
-        /// <param name="s"></param>
-        /// <param name="forceZero"></param>
-        /// <returns></returns>
-        public unsafe Bitmap getImageForSizeShrinkOnly(Size s, bool forceZero = true)
+        public Bitmap getImageForSizeShrinkOnly(Size s, bool forceZero = true)
         {
             var p = this.getPrefferedSize();
-
             var ns = Sizing.fitAinB(p, s);
             if ((ns.Width < p.Width) || (ns.Height < p.Height)) p = ns.Size;
 
