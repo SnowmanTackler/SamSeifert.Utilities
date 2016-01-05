@@ -28,6 +28,37 @@ namespace SamSeifert.Utilities
             foreach (Control child in parent.Controls) child.ToggleAll_MouseDown(eh, add);
         }
 
+
+
+
+
+        public static void WireAllControls_MouseDoubleClick(this Control parent, MouseEventHandler eh)
+        {
+            parent.ToggleAll_MouseDoubleClick(eh, true);
+        }
+
+        public static void UnwireAllControls_MouseDoubleClick(this Control parent, MouseEventHandler eh)
+        {
+            parent.ToggleAll_MouseDoubleClick(eh, false);
+        }
+
+        private static void ToggleAll_MouseDoubleClick(this Control parent, MouseEventHandler eh, bool add)
+        {
+            if (add) parent.MouseDoubleClick += eh;
+            else parent.MouseDoubleClick -= eh;
+            foreach (Control child in parent.Controls) child.ToggleAll_MouseDoubleClick(eh, add);
+        }
+
+
+
+
+
+
+
+
+
+
+
         public static void CascadeContextMenuStrip(this Control parent)
         {
             parent.CascadeContextMenuStrip(parent.ContextMenuStrip);
@@ -55,6 +86,18 @@ namespace SamSeifert.Utilities
                 if (child.HasChildren) child.CascadeContextMenuStrip(cms);
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
 
         public static bool ContainsScreenPoint(this Control c, Point p)
         {
