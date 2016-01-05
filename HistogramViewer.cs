@@ -95,9 +95,9 @@ namespace SamSeifert.CSCV
                 for (x = 0; x < w; x++)
                 {
                     inpt.getRGB(y, x, out r, out g, out b);
-                    counts[0, 255 + IA_Helpers.Cast(r * 255.0f)]++;
-                    counts[1, 255 + IA_Helpers.Cast(g * 255.0f)]++;
-                    counts[2, 255 + IA_Helpers.Cast(b * 255.0f)]++;
+                    counts[0, 255 + Helpers.Cast(r * 255.0f)]++;
+                    counts[1, 255 + Helpers.Cast(g * 255.0f)]++;
+                    counts[2, 255 + Helpers.Cast(b * 255.0f)]++;
                     total_count++;
                 }
             }

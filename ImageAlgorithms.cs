@@ -10,7 +10,7 @@ namespace SamSeifert.CSCV
 {
     public enum ToolboxReturn { Good, NullInput, ImageSizeMismatch, SpecialError };
 
-    public static class ImageAlgorithms
+    public static partial class ImageAlgorithms
     {
 
 

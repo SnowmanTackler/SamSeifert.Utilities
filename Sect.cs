@@ -234,9 +234,9 @@ namespace SamSeifert.CSCV
                                 xA = (int)Math.Round(xAdj, 0);
 
                                 this.getRGB(yA, xA, out r, out g, out b);
-                                row[xx + 2] = IA_Helpers.castByte(r * mult + offset);
-                                row[xx + 1] = IA_Helpers.castByte(g * mult + offset);
-                                row[xx + 0] = IA_Helpers.castByte(b * mult + offset);
+                                row[xx + 2] = Helpers.castByte(r * mult + offset);
+                                row[xx + 1] = Helpers.castByte(g * mult + offset);
+                                row[xx + 0] = Helpers.castByte(b * mult + offset);
                             }
                         }
                     }
@@ -287,17 +287,17 @@ namespace SamSeifert.CSCV
                                 {
                                     this.getRGB(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
                                     this.getRGB(yDown, xUp, out rYdXu, out gYdXu, out bYdXu);
-                                    fR = SectHolder.getLinearEstimate(rYdXu, rYuXu, yAdj2);
-                                    fG = SectHolder.getLinearEstimate(gYdXu, gYuXu, yAdj2);
-                                    fB = SectHolder.getLinearEstimate(bYdXu, bYuXu, yAdj2);
+                                    fR = Helpers.getLinearEstimate(rYdXu, rYuXu, yAdj2);
+                                    fG = Helpers.getLinearEstimate(gYdXu, gYuXu, yAdj2);
+                                    fB = Helpers.getLinearEstimate(bYdXu, bYuXu, yAdj2);
                                 }
                                 else if (yUp == yDown)
                                 {
                                     this.getRGB(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
                                     this.getRGB(yUp, xDown, out rYuXd, out gYuXd, out bYuXd);
-                                    fR = SectHolder.getLinearEstimate(rYuXd, rYuXu, xAdj2);
-                                    fG = SectHolder.getLinearEstimate(gYuXd, gYuXu, xAdj2);
-                                    fB = SectHolder.getLinearEstimate(bYuXd, bYuXu, xAdj2);
+                                    fR = Helpers.getLinearEstimate(rYuXd, rYuXu, xAdj2);
+                                    fG = Helpers.getLinearEstimate(gYuXd, gYuXu, xAdj2);
+                                    fB = Helpers.getLinearEstimate(bYuXd, bYuXu, xAdj2);
                                 }
                                 else
                                 {
@@ -306,23 +306,23 @@ namespace SamSeifert.CSCV
                                     this.getRGB(yDown, xDown, out rYdXd, out gYdXd, out bYdXd);
                                     this.getRGB(yDown, xUp, out rYdXu, out gYdXu, out bYdXu);
 
-                                    fR = SectHolder.getLinearEstimate(
-                                         SectHolder.getLinearEstimate(rYdXd, rYuXd, yAdj2),
-                                         SectHolder.getLinearEstimate(rYdXu, rYuXu, yAdj2),
+                                    fR = Helpers.getLinearEstimate(
+                                         Helpers.getLinearEstimate(rYdXd, rYuXd, yAdj2),
+                                         Helpers.getLinearEstimate(rYdXu, rYuXu, yAdj2),
                                          xAdj2);
-                                    fG = SectHolder.getLinearEstimate(
-                                         SectHolder.getLinearEstimate(gYdXd, gYuXd, yAdj2),
-                                         SectHolder.getLinearEstimate(gYdXu, gYuXu, yAdj2),
+                                    fG = Helpers.getLinearEstimate(
+                                         Helpers.getLinearEstimate(gYdXd, gYuXd, yAdj2),
+                                         Helpers.getLinearEstimate(gYdXu, gYuXu, yAdj2),
                                          xAdj2);
-                                    fB = SectHolder.getLinearEstimate(
-                                         SectHolder.getLinearEstimate(bYdXd, bYuXd, yAdj2),
-                                         SectHolder.getLinearEstimate(bYdXu, bYuXu, yAdj2),
+                                    fB = Helpers.getLinearEstimate(
+                                         Helpers.getLinearEstimate(bYdXd, bYuXd, yAdj2),
+                                         Helpers.getLinearEstimate(bYdXu, bYuXu, yAdj2),
                                          xAdj2);
                                 }
 
-                                row[xx + 2] = IA_Helpers.castByte(fR * mult + offset);
-                                row[xx + 1] = IA_Helpers.castByte(fG * mult + offset);
-                                row[xx + 0] = IA_Helpers.castByte(fB * mult + offset);
+                                row[xx + 2] = Helpers.castByte(fR * mult + offset);
+                                row[xx + 1] = Helpers.castByte(fG * mult + offset);
+                                row[xx + 0] = Helpers.castByte(fB * mult + offset);
                             }
                         }
                     }
@@ -346,9 +346,9 @@ namespace SamSeifert.CSCV
                         for (int x = 0, xx = 0; x < sz.Width; x++, xx += 3)
                         {
                             this.getRGB(y, x, out r, out g, out b);
-                            rowNew[xx + 2] = IA_Helpers.castByte(r * mult + offset);
-                            rowNew[xx + 1] = IA_Helpers.castByte(g * mult + offset);
-                            rowNew[xx + 0] = IA_Helpers.castByte(b * mult + offset);
+                            rowNew[xx + 2] = Helpers.castByte(r * mult + offset);
+                            rowNew[xx + 1] = Helpers.castByte(g * mult + offset);
+                            rowNew[xx + 0] = Helpers.castByte(b * mult + offset);
                         }
                     }
 

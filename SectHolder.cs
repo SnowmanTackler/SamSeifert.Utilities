@@ -287,17 +287,5 @@ namespace SamSeifert.CSCV
 
 
 
-        /// <summary>
-        /// Gets the linear estimate of y for an x value between 0 and 1
-        /// </summary>
-        /// <param name="y0">Value of function at x = 0</param>
-        /// <param name="y1">Value of function at x = 1</param>
-        /// <param name="x">X value between 0 and 1</param>
-        /// <returns></returns>
-        internal static float getLinearEstimate(float y0, float y1, float x)
-        {
-            return y0 + x * (y1 - y0);
-        }
-
     }
 }

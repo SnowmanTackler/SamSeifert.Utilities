@@ -7,119 +7,8 @@ using System.Text;
 
 namespace SamSeifert.CSCV
 {
-    public class IA_Single
-    {
-        private static void match(Sect inpt, ref Sect outp)
-        {
-            Boolean remake = outp == null;
-            if (!remake) remake = (inpt._Type != outp._Type) || (inpt.getPrefferedSize() != outp.getPrefferedSize());
-            if (!remake)
-            {
-                switch (inpt._Type)
-                {
-                    case SectType.Holder:
-                        {
-                            var k1 = (inpt as SectHolder).Sects.Keys;
-                            var k2 = (outp as SectHolder).Sects.Keys;
-                            remake = (k1.Count != k2.Count) || (k1.Except(k2).Any());
-                            foreach (var val in (outp as SectHolder).Sects.Values)
-                            {
-                                if (remake) break;
-                                else remake = !(val is SectArray);
-                            }
-                        }
-                        break;
-                    default:
-                        remake = !(outp is SectArray);
-                        break;
-                }
-            }
-            if (remake)
-            {
-                Size sz = inpt.getPrefferedSize();
-                switch (inpt._Type)
-                {
-                    case SectType.Holder:
-                        outp = new SectHolder((inpt as SectHolder).getSectTypes(), sz);
-                        break;
-                    default:
-                        outp = new SectArray(inpt._Type, sz.Width, sz.Height);
-                        break;
-                }
-            }
-            else outp.reset();
-        }
-
-        private static void match(ref Sect outp, Size sz, SectType[] sts)
-        {
-            Boolean remake = outp == null;
-            if (!remake) remake = sz != outp.getPrefferedSize();
-            switch (sts.Length)
-            {
-                case 1:
-                    {
-                        if (!remake) remake = sts.First() != outp._Type;
-                        if (remake) outp = new SectArray(SectType.Gray, sz.Width, sz.Height);
-                        else outp.reset();
-                    }
-                    break;
-                default:
-                    {
-                        if (!remake) remake = SectType.Holder != outp._Type;
-                        if (!remake)
-                        {
-                            SectHolder sh = outp as SectHolder;
-                            if (sh.Sects.Count == sts.Length)
-                            {
-                                foreach (var st in sts)
-                                {
-                                    if (sh.Sects.ContainsKey(st))
-                                    {
-                                        var sa = sh.Sects[st];
-                                        if (!(sa is SectArray))
-                                        {
-                                            remake = true;
-                                            break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        remake = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            else remake = true;
-                        }
-                        if (remake) outp = new SectHolder(sts, sz);
-                        else outp.reset();
-                    }
-                    break;
-            }
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public static partial class ImageAlgorithms
+    { 
         public static ToolboxReturn Convolute(Sect inpt, Single[,] vals, ref Sect outp)
         {
             if (inpt == null)
@@ -197,107 +86,6 @@ namespace SamSeifert.CSCV
 
 
 
-        public static ToolboxReturn GrayScale(Sect inpt, GrayScaleType t, ref Sect outp)
-        {
-            if (inpt == null)
-            {
-                outp = null;
-                return ToolboxReturn.NullInput;
-            }
-            else
-            {
-                match(ref outp, inpt.getPrefferedSize(), new SectType[] { SectType.Gray });
-
-                var sz = outp.getPrefferedSize();
-                int w = sz.Width;
-                int h = sz.Height;
-
-                if (inpt._Type == SectType.Holder)
-                {
-                    var sh = inpt as SectHolder;
-                    switch (t)
-                    {
-                        case GrayScaleType.Maximum:
-                            {
-                                bool first = true;
-
-                                foreach (var inp in sh.Sects.Values)
-                                {
-                                    if (first)
-                                    {
-                                        first = false;
-                                        for (int y = 0; y < h; y++)
-                                            for (int x = 0; x < w; x++)
-                                                outp[y, x] = inp[y, x];
-                                    }
-                                    else
-                                    {
-                                        for (int y = 0; y < h; y++)
-                                            for (int x = 0; x < w; x++)
-                                                outp[y, x] = Math.Max(outp[y, x], inp[y, x]);
-                                    }
-                                }
-
-                                return ToolboxReturn.Good;
-                            }
-                        case GrayScaleType.Minimum:
-                            {
-                                bool first = true;
-
-                                foreach (var inp in sh.Sects.Values)
-                                {
-                                    if (first)
-                                    {
-                                        first = false;
-                                        for (int y = 0; y < h; y++)
-                                            for (int x = 0; x < w; x++)
-                                                outp[y, x] = inp[y, x];
-                                    }
-                                    else
-                                    {
-                                        for (int y = 0; y < h; y++)
-                                            for (int x = 0; x < w; x++)
-                                                outp[y, x] = Math.Min(outp[y, x], inp[y, x]);
-                                    }
-                                }
-
-                                return ToolboxReturn.Good;
-                            }
-                        case GrayScaleType.Mean:
-                            {
-                                Single mult = 1.0f / sh.Sects.Count;
-                                bool first = true;
-                                foreach (var inp in sh.Sects.Values)
-                                {
-                                    if (first)
-                                    {
-                                        first = false;
-                                        for (int y = 0; y < h; y++)
-                                            for (int x = 0; x < w; x++)
-                                                outp[y, x] = inp[y, x] * mult;
-                                    }
-                                    else
-                                    {
-                                        for (int y = 0; y < h; y++)
-                                            for (int x = 0; x < w; x++)
-                                                outp[y, x] += inp[y, x] * mult;
-                                    }
-                                }
-
-                                return ToolboxReturn.Good;
-                            }
-                        default: return ToolboxReturn.SpecialError;
-                    }
-                }
-                else
-                {
-                    for (int y = 0; y < h; y++)
-                        for (int x = 0; x < w; x++)
-                            outp[y, x] = inpt[y, x];
-                    return ToolboxReturn.Good;
-                }
-            }
-        }
 
 
 
@@ -316,154 +104,6 @@ namespace SamSeifert.CSCV
 
 
 
-        public static ToolboxReturn Resize(Sect inpt, Size res, ResizeType t, ref Sect outp)
-        {
-            if (inpt == null)
-            {
-                outp = null;
-                return ToolboxReturn.NullInput;
-            }
-            else
-            {
-                Boolean remake = outp == null;
-                if (!remake) remake = (inpt._Type != outp._Type) || (res != outp.getPrefferedSize());
-                if (!remake)
-                {
-                    switch (inpt._Type)
-                    {
-                        case SectType.Holder:
-                            {
-                                var k1 = (inpt as SectHolder).Sects.Keys;
-                                var k2 = (outp as SectHolder).Sects.Keys;
-                                remake = (k1.Count != k2.Count) || (k1.Except(k2).Any());
-                                foreach (var val in (outp as SectHolder).Sects.Values)
-                                {
-                                    if (remake) break;
-                                    else remake = !(val is SectArray);
-                                }
-                            }
-                            break;
-                        default:
-                            remake = !(outp is SectArray);
-                            break;
-                    }
-                }
-                if (remake)
-                {
-                    switch (inpt._Type)
-                    {
-                        case SectType.Holder:
-                            outp = new SectHolder((inpt as SectHolder).getSectTypes(), res);
-                            break;
-                        default:
-                            outp = new SectArray(inpt._Type, res.Width, res.Height);
-                            break;
-                    }
-                }
-                else outp.reset();
-
-                switch (inpt._Type)
-                {
-                    case SectType.Holder:
-                        {
-                            var sh1 = inpt as SectHolder;
-                            var sh2 = outp as SectHolder;
-                            foreach (var st in sh1.getSectTypes())
-                                Resize_(sh1.getSect(st), res, t, sh2.getSect(st) as SectArray);
-                        }
-                        return ToolboxReturn.Good;
-                    default:
-                        Resize_(inpt, res, t, outp as SectArray);
-                        return ToolboxReturn.Good;
-                }
-            }
-        }
-
-        private static void Resize_(Sect inpt, Size res, ResizeType t, SectArray outp)
-        {
-            int h = res.Height;
-            int w = res.Width;
-
-            int xUp, xDown, yUp, yDown;
-            float xAdj, yAdj;
-
-            Size sz = inpt.getPrefferedSize();
-            int refH = sz.Height;
-            int refW = sz.Width;
-
-            switch (t)
-            {
-                case ResizeType.NearestNeighbor:
-                    {
-                        for (int y = 0; y < h; y++)
-                        {
-                            yAdj = y * (refH - 1);
-                            yAdj /= (h - 1);
-                            yUp = (int)Math.Round(yAdj, 0);
-
-                            for (int x = 0; x < w; x++)
-                            {
-                                xAdj = x * (refW - 1);
-                                xAdj /= (w - 1);
-                                xUp = (int)Math.Round(xAdj, 0);
-                                outp[y, x] = inpt[yUp, xUp];
-                            }
-                        }
-                        break;
-                    }
-                case ResizeType.Bilinear:
-                    {
-                        for (int y = 0; y < h; y++)
-                        {
-                            yAdj = y * (refH - 1);
-                            yAdj /= (h - 1);
-                            yUp = (int)Math.Ceiling((double)yAdj);
-                            yDown = (int)yAdj;
-
-                            for (int x = 0; x < w; x++)
-                            {
-                                xAdj = x * (refW - 1);
-                                xAdj /= Math.Max(1, (w - 1));
-                                xUp = (int)Math.Ceiling((double)xAdj);
-                                xDown = (int)xAdj;
-
-                                if (xUp == xDown && yUp == yDown)
-                                {
-                                    outp[y, x] = inpt[yUp, xUp];
-                                }
-                                else if (xUp == xDown)
-                                {
-                                    outp[y, x] = SectHolder.getLinearEstimate(
-                                        inpt[yDown, xUp],
-                                        inpt[yUp, xUp],
-                                        yAdj % 1);
-                                }
-                                else if (yUp == yDown)
-                                {
-                                    outp[y, x] = SectHolder.getLinearEstimate(
-                                        inpt[yUp, xDown],
-                                        inpt[yUp, xUp],
-                                        xAdj % 1);
-                                }
-                                else
-                                {
-                                    outp[y, x] = SectHolder.getLinearEstimate(
-                                        SectHolder.getLinearEstimate(
-                                            inpt[yDown, xDown],
-                                            inpt[yUp, xDown],
-                                            yAdj % 1),
-                                        SectHolder.getLinearEstimate(
-                                            inpt[yDown, xUp],
-                                            inpt[yUp, xUp],
-                                            yAdj % 1),
-                                        xAdj % 1);
-                                }
-                            }
-                        }
-                        break;
-                    }
-            }
-        }
 
 
 
@@ -476,83 +116,6 @@ namespace SamSeifert.CSCV
 
 
 
-
-
-
-        public static ToolboxReturn HistogramEqualize(Sect inpt, ref Sect outp)
-        {
-            if (inpt == null)
-            {
-                outp = null;
-                return ToolboxReturn.NullInput;
-            }
-            else
-            {
-                match(inpt, ref outp);
-
-                switch (inpt._Type)
-                {
-                    case SectType.Holder:
-                        {
-                            var sh1 = inpt as SectHolder;
-                            var sh2 = outp as SectHolder;
-                            foreach (var st in sh1.getSectTypes())
-                                HistogramEqualize_(sh1.getSect(st), sh2.getSect(st) as SectArray);
-                        }
-                        return ToolboxReturn.Good;
-                    default:
-                        HistogramEqualize_(inpt, outp as SectArray);
-                        return ToolboxReturn.Good;
-                }
-            }
-        }
-
-        private static void HistogramEqualize_(Sect inpt, SectArray outp)
-        {
-            var sz = outp.getPrefferedSize();
-            int w = sz.Width;
-            int h = sz.Height;
-
-            int[] counts = new int[511];
-            Byte[] _Bytes = new Byte[511];
-
-            for (int i = 0; i < counts.Length; i++) counts[i] = 0;
-
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    counts[255 + IA_Helpers.Cast(inpt[y, x] * 255)]++;
-                }
-            }
-
-            int sum = 0, sumLast = 0, temp;
-            for (int i = 0; i < counts.Length; i++)
-            {
-                temp = counts[i];
-                if (temp != 0)
-                {
-                    sumLast = sum;
-                    sum += temp;
-                }
-            }
-
-            sum = 0;
-            sumLast = Math.Max(1, sumLast);
-            for (int i = 0; i < counts.Length; i++)
-            {
-                _Bytes[i] = (Byte)((255 * sum) / (sumLast));
-                sum += counts[i];
-            }
-
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    outp[y, x] = _Bytes[255 + IA_Helpers.Cast(inpt[y, x] * 255)] / 255.0f;
-                }
-            }
-        }
 
 
 
@@ -660,44 +223,6 @@ namespace SamSeifert.CSCV
 
 
 
-        public static ToolboxReturn TwoTone(Sect inpt, Single thres, ref Sect outp)
-        {
-            if (inpt == null)
-            {
-                outp = null;
-                return ToolboxReturn.NullInput;
-            }
-            else
-            {
-                match(inpt, ref outp);
-
-                switch (inpt._Type)
-                {
-                    case SectType.Holder:
-                        {
-                            var sh1 = inpt as SectHolder;
-                            var sh2 = outp as SectHolder;
-                            foreach (var st in sh1.getSectTypes())
-                                TwoTone_(sh1.getSect(st), thres, sh2.getSect(st) as SectArray);
-                        }
-                        return ToolboxReturn.Good;
-                    default:
-                        TwoTone_(inpt, thres, outp as SectArray);
-                        return ToolboxReturn.Good;
-                }
-            }
-        }
-
-        private static void TwoTone_(Sect inpt, Single thresh, SectArray outp)
-        {
-            var sz = outp.getPrefferedSize();
-            int w = sz.Width;
-            int h = sz.Height;
-            for (int y = 0; y < h; y++)
-                for (int x = 0; x < w; x++)
-                    outp[y, x] = inpt[y, x] < thresh ? 0 : 1;
-
-        }
 
         public static ToolboxReturn Multiply(Sect inpt, Single val, ref Sect outp)
         {
@@ -896,56 +421,6 @@ namespace SamSeifert.CSCV
 
 
 
-        public static ToolboxReturn BitPerPixel(Sect inpt, int bpp, ref Sect outp)
-        {
-            if (inpt == null)
-            {
-                outp = null;
-                return ToolboxReturn.NullInput;
-            }
-            else if ((bpp < 1) || (bpp > 8))
-            {
-                outp = null;
-                return ToolboxReturn.SpecialError;
-            }
-            else
-            {
-                match(inpt, ref outp);
-
-                switch (inpt._Type)
-                {
-                    case SectType.Holder:
-                        {
-                            var sh1 = inpt as SectHolder;
-                            var sh2 = outp as SectHolder;
-                            foreach (var st in sh1.getSectTypes())
-                                BitPerPixel_(sh1.getSect(st), bpp, sh2.getSect(st) as SectArray);
-                        }
-                        return ToolboxReturn.Good;
-                    default:
-                        BitPerPixel_(inpt, bpp, outp as SectArray);
-                        return ToolboxReturn.Good;
-                }
-            }
-        }
-
-        private static void BitPerPixel_(Sect inpt, int bpp, SectArray outp)
-        {
-            var sz = outp.getPrefferedSize();
-            int w = sz.Width;
-            int h = sz.Height;
-
-            float mult = (float)Math.Pow(2, bpp);
-            float div = mult - 1;
-
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    outp[y, x] = IA_Helpers.Clamp(((Single)Math.Round(inpt[y, x] * mult - 0.5f)) / div, 0, 1);
-                }
-            }
-        }
 
 
 
@@ -998,7 +473,7 @@ namespace SamSeifert.CSCV
 
             for (int y = 0; y < h; y++)
                 for (int x = 0; x < w; x++)
-                    outp[y, x] = IA_Helpers.Clamp(inpt[y, x], min, max);
+                    outp[y, x] = Helpers.Clamp(inpt[y, x], min, max);
         }
 
 
@@ -1020,19 +495,6 @@ namespace SamSeifert.CSCV
 
 
 
-        private static float nextGaussian(Single std, Random rand)
-        {
-            double u1 = rand.NextDouble(); //these are uniform(0,1) random doubles
-            double u2 = rand.NextDouble();
-            double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
-            return std * (float)randStdNormal;
-            //            double randNormal = mean + stdDev * randStdNormal;
-        }
-
-        private static float nextNormal(Single std, Random rand)
-        {
-            return std * (1 - 2 * ((float)(rand.NextDouble())));
-        }
 
 
         public static ToolboxReturn Noise(Sect inpt, NoiseType t, Single p, ref Sect outp)
@@ -1044,7 +506,7 @@ namespace SamSeifert.CSCV
             }
             else
             {
-                Random r = new Random();
+                Random r = new Random(Environment.TickCount);
                 match(inpt, ref outp);
 
                 switch (inpt._Type)
@@ -1078,7 +540,7 @@ namespace SamSeifert.CSCV
                         {
                             for (int x = 0; x < w; x++)
                             {
-                                outp[y, x] = inpt[y, x] + nextGaussian(p, r);
+                                outp[y, x] = inpt[y, x] + Helpers.nextGaussian(p, r);
                             }
                         }
                         break;
@@ -1089,7 +551,7 @@ namespace SamSeifert.CSCV
                         {
                             for (int x = 0; x < w; x++)
                             {
-                                outp[y, x] = inpt[y, x] + nextNormal(p, r);
+                                outp[y, x] = inpt[y, x] + Helpers.nextNormal(p, r);
                             }
                         }
                         break;
@@ -1542,7 +1004,7 @@ namespace SamSeifert.CSCV
                 {
                     for (int x = 0; x < w; x++)
                     {
-                        var re = IA_Single.getMappingFrom(
+                        var re = ImageAlgorithms.getMappingFrom(
                             location_data[input_locs[y, x]],
                             prop_count,
                             radius_cut2,
@@ -1602,7 +1064,7 @@ namespace SamSeifert.CSCV
                 Single cf = c * 255.0f;
                 var pd_next = new point_data(n1 / cf, n2 / cf, n3 / cf, bin_count);
                 if (pd.loc == pd_next.loc) ret = pd.getOutput();
-                else ret = IA_Single.getMappingFrom(
+                else ret = ImageAlgorithms.getMappingFrom(
                     pd_next, 
                     prop_count,
                     radius2_cut, 
@@ -1730,7 +1192,7 @@ namespace SamSeifert.CSCV
                     for (int x = 0; x < w; x++)
                     {
                         var ip = inp_tuples[y, x];
-                        var re = IA_Single.getMappingFrom(point_bins, point_map, ip, radius_255, radius_cutt, ref res);
+                        var re = ImageAlgorithms.getMappingFrom(point_bins, point_map, ip, radius_255, radius_cutt, ref res);
                         rout[y, x] = re.Item1 / 255.0f;
                         gout[y, x] = re.Item2 / 255.0f;
                         bout[y, x] = re.Item3 / 255.0f;
@@ -1814,7 +1276,7 @@ namespace SamSeifert.CSCV
                 }
                 else
                 {
-                    value_next = IA_Single.getMappingFrom(point_bins, point_map, value_next, radius_255, radius_cuttoff, ref reused);
+                    value_next = ImageAlgorithms.getMappingFrom(point_bins, point_map, value_next, radius_255, radius_cuttoff, ref reused);
                     point_map[loc] = value_next;
                     return value_next;
                 }                

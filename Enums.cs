@@ -42,15 +42,6 @@ namespace SamSeifert.CSCV
         Holder
     };
 
-    public enum ResizeType
-    {
-        [Description("Nearest Neighbor")]
-        NearestNeighbor,
-
-        [Description("Bilinear")]
-        Bilinear
-    };
-
     public enum NoiseType 
     {
         Gaussian,
@@ -64,11 +55,5 @@ namespace SamSeifert.CSCV
         Hue
     }
 
-    public enum GrayScaleType
-    { 
-        Mean, 
-        Maximum, 
-        Minimum 
-    };
 
 }
