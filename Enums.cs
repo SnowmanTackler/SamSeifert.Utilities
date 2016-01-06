@@ -25,14 +25,14 @@ namespace SamSeifert.CSCV
         [Description("Hue")]
         Hue,
 
-        [Description("HSL Saturation")]
+        [Description("Saturation")]
         HSL_S,
-        [Description("HSL Ligtness")]
+        [Description("Ligtness")]
         HSL_L,
 
-        [Description("HSV Saturation")]
+        [Description("Saturation")]
         HSV_S,
-        [Description("HSV Value")]
+        [Description("Value")]
         HSV_V,
 
         Hough_Foot_Of_Normal,

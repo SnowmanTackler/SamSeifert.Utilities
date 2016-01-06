@@ -24,7 +24,7 @@ namespace SamSeifert.CSCV
             get { return this._Size.Width; }
         }
 
-        public SectHolder(SectType[] sects, Size sz)
+        public SectHolder(Size sz, params SectType[] sects)
             : base(SectType.Holder)
         {
             this._Size = sz;
@@ -34,13 +34,19 @@ namespace SamSeifert.CSCV
 
         }
 
-        public SectHolder(Sect[] sects)
+        public SectHolder(params Sect[] sects)
             : base(SectType.Holder)
         {
             this._Sects = new Dictionary<SectType, Sect>();
             bool first = true;
             foreach (var s in sects)
             {
+                if (s == null)
+                    throw new Exception("SectHolder: public SectHolder(Sect[] sects) : base(SectType.Holder) - Null Input");
+
+                if (s._Type == SectType.Holder)
+                    throw new Exception("SectHolder: public SectHolder(Sect[] sects) : base(SectType.Holder) - Sectype mismatch");
+
                 this._Sects[s._Type] = s;
                 var ss = s.getPrefferedSize();
 
@@ -62,10 +68,6 @@ namespace SamSeifert.CSCV
                     throw new Exception("SectHolder: public SectHolder(Sect[] sects) : base(SectType.Holder) - Size mistmatch");
                 }
 
-                if (s._Type == SectType.Holder)
-                {
-                    throw new Exception("SectHolder: public SectHolder(Sect[] sects) : base(SectType.Holder) - Sectype mismatch");
-                }
             }
         }
 

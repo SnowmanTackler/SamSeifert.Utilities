@@ -57,7 +57,7 @@ namespace SamSeifert.CSCV
                     switch (inpt._Type)
                     {
                         case SectType.Holder:
-                            outp = new SectHolder((inpt as SectHolder).getSectTypes(), res);
+                            outp = new SectHolder(res, (inpt as SectHolder).getSectTypes());
                             break;
                         default:
                             outp = new SectArray(inpt._Type, res.Width, res.Height);

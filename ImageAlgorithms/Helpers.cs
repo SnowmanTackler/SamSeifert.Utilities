@@ -40,7 +40,7 @@ namespace SamSeifert.CSCV
                 switch (inpt._Type)
                 {
                     case SectType.Holder:
-                        outp = new SectHolder((inpt as SectHolder).getSectTypes(), sz);
+                        outp = new SectHolder(sz, (inpt as SectHolder).getSectTypes());
                         break;
                     default:
                         outp = new SectArray(inpt._Type, sz.Width, sz.Height);
@@ -91,7 +91,7 @@ namespace SamSeifert.CSCV
                             }
                             else remake = true;
                         }
-                        if (remake) outp = new SectHolder(sts, sz);
+                        if (remake) outp = new SectHolder(sz, sts);
                         else outp.reset();
                     }
                     break;

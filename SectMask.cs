@@ -6,13 +6,15 @@ using System.Text;
 
 namespace SamSeifert.CSCV
 {
-    class SectMask : Sect
+    public class SectMask : Sect
     {
         private readonly Sect _Sect;
 
         public SectMask(SectType t, Sect s)
             : base(t)
         {
+            if (s == null) throw new Exception("Null Input");
+            if (s._Type == SectType.Holder) throw new Exception("SectMask can't hold a SectHolder");
             if (t == SectType.Holder) throw new Exception("SectMask can't hold a SectHolder");
             this._Sect = s;
         }

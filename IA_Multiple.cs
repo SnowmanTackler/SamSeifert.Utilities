@@ -86,7 +86,7 @@ namespace SamSeifert.CSCV
                         }
                     }
 
-                    if (remake) outp = new SectHolder(sh.getSectTypes(), sz);
+                    if (remake) outp = new SectHolder(sz, sh.getSectTypes());
                     return ToolboxReturn.Good;
                 }
                 else
