@@ -105,6 +105,8 @@
     <Compile Include="ImageAlgorithms\Grayscale.cs" />
     <Compile Include="ImageAlgorithms\Helpers.cs" />
     <Compile Include="ImageAlgorithms\HistogramFlatten.cs" />
+    <Compile Include="ImageAlgorithms\HSL.cs" />
+    <Compile Include="ImageAlgorithms\HSV.cs" />
     <Compile Include="ImageAlgorithms\Resize.cs" />
     <Compile Include="ImageAlgorithms.cs" />
     <Compile Include="ImageAlgorithms\Threshold.cs" />

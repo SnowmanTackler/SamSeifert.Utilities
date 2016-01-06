@@ -10,7 +10,7 @@ namespace SamSeifert.CSCV
     public static class ColorMethods
     {
         /// <summary>
-        /// HSL all on scale of 0 to 1
+        /// HSL and RGB both on scale of 0 to 1.
         /// </summary>
         /// <param name="h"></param>
         /// <param name="s"></param>
@@ -81,7 +81,7 @@ namespace SamSeifert.CSCV
 
 
         /// <summary>
-        /// HSL scale 0 to 1, RGB scale 0 to 1
+        /// HSL on scale 0 to 1
         /// </summary>
         /// <param name="c"></param>
         /// <param name="h"></param>
@@ -91,8 +91,9 @@ namespace SamSeifert.CSCV
         {
             ColorMethods.rgb2hsl(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, out h, out s, out l);
         }
+
         /// <summary>
-        /// HSL scale 0 to 1, RGB scale 0 to 1
+        /// HSL and RGB both on scale of 0 to 1.
         /// </summary>
         /// <param name="r"></param>
         /// <param name="g"></param>
@@ -100,16 +101,16 @@ namespace SamSeifert.CSCV
         /// <param name="h"></param>
         /// <param name="s"></param>
         /// <param name="v"></param>
-        public static void rgb2hsl(float fr, float fg, float fb, out float h, out float s, out float l)
+        public static void rgb2hsl(float r, float g, float b, out float h, out float s, out float l)
         {
             const float PIF = (float)Math.PI;
             const float PIF2 = PIF * 2;
 
-            float hh = (float)(Math.Atan2(1.73205080757f * (fg - fb), 2 * fr - fg - fb) / PIF2);
+            float hh = (float)(Math.Atan2(1.73205080757f * (g - b), 2 * r - g - b) / PIF2);
             if (hh < 0) hh = 1 + hh;
 
-            float mx = Math.Max(fr, Math.Max(fg, fb));
-            float mn = Math.Min(fr, Math.Min(fg, fb));
+            float mx = Math.Max(r, Math.Max(g, b));
+            float mn = Math.Min(r, Math.Min(g, b));
 
             float ll = (mx + mn) / 2;
             float delta = mx - mn;
@@ -128,7 +129,7 @@ namespace SamSeifert.CSCV
 
 
         /// <summary>
-        /// HSV scale 0 to 1, RGB scale 0 to 1
+        /// HSV on scale of 0 to 1.
         /// </summary>
         /// <param name="h"></param>
         /// <param name="s"></param>
@@ -140,8 +141,9 @@ namespace SamSeifert.CSCV
             ColorMethods.hsv2rgb(h, s, v, out c);
             return c;
         }
+
         /// <summary>
-        /// HSV scale 0 to 1, RGB scale 0 to 1
+        /// HSV and RGB both on scale of 0 to 1.
         /// </summary>
         /// <param name="h"></param>
         /// <param name="s"></param>
@@ -209,7 +211,7 @@ namespace SamSeifert.CSCV
 
 
         /// <summary>
-        /// HSV scale 0 to 1, RGB scale 0 to 1
+        /// HSV on scale of 0 to 1.
         /// </summary>
         /// <param name="c"></param>
         /// <param name="h"></param>
@@ -219,8 +221,9 @@ namespace SamSeifert.CSCV
         {
             ColorMethods.rgb2hsv(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, out h, out s, out v);
         }
+
         /// <summary>
-        /// HSV scale 0 to 1, RGB scale 0 to 1
+        /// HSV and RGB both on scale of 0 to 1.
         /// </summary>
         /// <param name="r"></param>
         /// <param name="g"></param>

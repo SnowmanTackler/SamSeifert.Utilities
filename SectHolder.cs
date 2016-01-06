@@ -32,9 +32,6 @@ namespace SamSeifert.CSCV
             foreach (var st in sects) 
                 this._Sects[st] = new SectArray(st, sz.Width, sz.Height);
 
-            this._Sects.TryGetValue(SectType.RGB_R, out this._SectR);
-            this._Sects.TryGetValue(SectType.RGB_G, out this._SectG);
-            this._Sects.TryGetValue(SectType.RGB_B, out this._SectB);
         }
 
         public SectHolder(Sect[] sects)
@@ -70,10 +67,6 @@ namespace SamSeifert.CSCV
                     throw new Exception("SectHolder: public SectHolder(Sect[] sects) : base(SectType.Holder) - Sectype mismatch");
                 }
             }
-
-            this._Sects.TryGetValue(SectType.RGB_R, out this._SectR);
-            this._Sects.TryGetValue(SectType.RGB_G, out this._SectG);
-            this._Sects.TryGetValue(SectType.RGB_B, out this._SectB);
         }
 
         public override Boolean isSquishy()
@@ -208,12 +201,28 @@ namespace SamSeifert.CSCV
         {
         }
 
-        private bool hasRGB()
+        public bool hasRGB()
         {
-            return
-                this.has(SectType.RGB_R) &&
-                this.has(SectType.RGB_G) &&
-                this.has(SectType.RGB_B);
+            return this.has(SectType.RGB_R, SectType.RGB_G, SectType.RGB_B);
+        }
+
+        public bool hasHSV()
+        {
+            return this.has(SectType.Hue, SectType.HSV_S, SectType.HSV_V);
+        }
+
+        public bool hasHSL()
+        {
+            return this.has(SectType.Hue, SectType.HSL_S, SectType.HSL_L);
+        }
+
+        public bool has(params SectType[] ss)
+        {
+            foreach (var s in ss)
+                if (!this._Sects.ContainsKey(s)) 
+                    return false;
+
+            return true;
         }
 
 
@@ -224,6 +233,54 @@ namespace SamSeifert.CSCV
 
 
 
+
+        internal override ColorFiller getColorFiller()
+        {
+            if (this.hasRGB())
+            {
+                var R = this._Sects[SectType.RGB_R];
+                var G = this._Sects[SectType.RGB_G];
+                var B = this._Sects[SectType.RGB_B];
+
+                return delegate (int y, int x, out float r, out float g, out float b)
+                {
+                    r = R[y, x];
+                    g = G[y, x];
+                    b = B[y, x];
+                };
+            }
+
+            if (this.hasHSV())
+            {
+                var H = this._Sects[SectType.Hue];
+                var S = this._Sects[SectType.HSV_S];
+                var V = this._Sects[SectType.HSV_V];
+
+                return delegate (int y, int x, out float r, out float g, out float b)
+                {
+                    ColorMethods.hsv2rgb(H[y, x], S[y, x], V[y, x], out r, out g, out b);
+                };
+            }
+
+            if (this.hasHSL())
+            {
+                var H = this._Sects[SectType.Hue];
+                var S = this._Sects[SectType.HSL_S];
+                var L = this._Sects[SectType.HSL_L];
+
+                return delegate (int y, int x, out float r, out float g, out float b)
+                {
+                    ColorMethods.hsl2rgb(H[y, x], S[y, x], L[y, x], out r, out g, out b);
+                };
+            }
+
+            return delegate (int y, int x, out float r, out float g, out float b)
+            {
+                r = 0;
+                g = 0;
+                b = 0;
+            };
+        }
 
 
 
@@ -244,48 +301,6 @@ namespace SamSeifert.CSCV
         {
             return this._Sects.Keys.ToArray();
         }
-
-        public Boolean has(SectType st) 
-        {
-            return this._Sects.ContainsKey(st);
-        }
-
-
-
-
-
-
-
-
-
-
-
-        private readonly Sect _SectR;
-        private readonly Sect _SectG;
-        private readonly Sect _SectB;
-
-
-        public override void getRGB(int y, int x, out float r, out float g, out float b)
-        {
-            if (this._SectR == null) r = 0;
-            else r = this._SectR[y, x];
-
-            if (this._SectG == null) g = 0;
-            else g = this._SectG[y, x];
-
-            if (this._SectB == null) b = 0;
-            else b = this._SectB[y, x];
-
-        }
-
-
-
-
-
-
-        
-
-
 
     }
 }

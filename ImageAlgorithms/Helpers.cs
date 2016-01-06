@@ -50,7 +50,7 @@ namespace SamSeifert.CSCV
             else outp.reset();
         }
 
-        private static void match(ref Sect outp, Size sz, SectType[] sts)
+        private static void match(ref Sect outp, Size sz, params SectType[] sts)
         {
             Boolean remake = outp == null;
             if (!remake) remake = sz != outp.getPrefferedSize();

@@ -98,43 +98,43 @@ namespace SamSeifert.CSCV
 
 
 
-        public Bitmap getImage(bool forceZero = true)
+        public Bitmap getImage()
         {
             var sz = this.getPrefferedSize();
 
             Bitmap newB = new Bitmap(sz.Width, sz.Height, PixelFormat.Format24bppRgb);
 
-            this.refreshImage(ref newB, forceZero);
+            this.refreshImage(ref newB);
 
             return newB;
         }
 
-        public Bitmap getImageForSize(Size s, bool forceZero = true)
+        public Bitmap getImageForSize(Size s)
         {
-            return this.getImageForSize(s.Width, s.Height, forceZero);
+            return this.getImageForSize(s.Width, s.Height);
         }
 
-        public Bitmap getImageForSize(int w, int h, bool forceZero = true)
+        public Bitmap getImageForSize(int w, int h)
         {
             Bitmap newB = new Bitmap(w, h, PixelFormat.Format24bppRgb);
 
-            this.refreshImage(ref newB, forceZero);
+            this.refreshImage(ref newB);
 
             return newB;
         }
 
-        public Bitmap getImageForSizeShrinkEnlarge(Size s, bool forceZero = true)
+        public Bitmap getImageForSizeShrinkEnlarge(Size s)
         {
             var ns = Sizing.fitAinB(this.getPrefferedSize(), new Size(s.Width, s.Height));
 
             Bitmap newB = new Bitmap(ns.Width, ns.Height, PixelFormat.Format24bppRgb);
 
-            this.refreshImage(ref newB, forceZero);
+            this.refreshImage(ref newB);
 
             return newB;
         }
 
-        public Bitmap getImageForSizeShrinkOnly(Size s, bool forceZero = true)
+        public Bitmap getImageForSizeShrinkOnly(Size s)
         {
             var p = this.getPrefferedSize();
             var ns = Sizing.fitAinB(p, s);
@@ -142,63 +142,83 @@ namespace SamSeifert.CSCV
 
             Bitmap newB = new Bitmap(p.Width, p.Height, PixelFormat.Format24bppRgb);
 
-            this.refreshImage(ref newB, forceZero);
+            this.refreshImage(ref newB);
 
             return newB;
         }
 
-        public virtual void getRGB(int y, int x, out float r, out float g, out float b)
+        
+        internal delegate void ColorFiller(int y, int x, out float r, out float g, out float b);
+        internal virtual ColorFiller getColorFiller()
         {
-            var val = this[y, x];
-
             switch (this._Type)
             {
+                case SectType.Holder: // OVERRIDDEN IN SECT HOLDER
+                    throw new NotImplementedException();
                 case SectType.RGB_R:
-                    r = val;
-                    g = 0;
-                    b = 0;
-                    break;
+                    return delegate (int y, int x, out float r, out float g, out float b)
+                    {
+                        r = this[y, x];
+                        g = 0;
+                        b = 0;
+                    };
                 case SectType.RGB_G:
-                    r = 0;
-                    g = val;
-                    b = 0;
-                    break;
+                    return delegate (int y, int x, out float r, out float g, out float b)
+                    {
+                        r = 0;
+                        g = this[y, x];
+                        b = 0;
+                    };
                 case SectType.RGB_B:
-                    r = 0;
-                    g = 0;
-                    b = val;
-                    break;
+                    return delegate (int y, int x, out float r, out float g, out float b)
+                    {
+                        r = 0;
+                        g = 0;
+                        b = this[y, x];
+                    };
                 default:
-                    r = val;
-                    g = val;
-                    b = val;
-                    break;
+                    return delegate (int y, int x, out float r, out float g, out float b)
+                    {
+                        r = this[y, x];
+                        g = this[y, x];
+                        b = this[y, x];
+                    };
             }
         }
 
-        public unsafe void refreshImage(ref Bitmap bmp, bool forceZero = true)
+        public unsafe void refreshImage(ref Bitmap bmp)
         {
-            if (bmp == null) bmp = this.getImage(forceZero);
+            if (bmp == null) bmp = this.getImage();
             else
             {
                 var sz = this.getPrefferedSize();
-                
-                Single mult, offset;
 
-                if (forceZero)
+                ColorFiller anonFunc = this.getColorFiller();
+
+                if (bmp.Size == sz)
                 {
-                    mult = 255.0f;
-                    offset = 0;
+                    BitmapData bmd = bmp.LockBits(
+                    new Rectangle(0, 0, sz.Width, sz.Height),
+                    System.Drawing.Imaging.ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+
+                    Single r, g, b;
+                    Byte* row;
+                    for (int y = 0; y < sz.Height; y++)
+                    {
+                        row = (byte*)bmd.Scan0 + (y * bmd.Stride);
+
+                        for (int x = 0, xx = 0; x < sz.Width; x++, xx += 3)
+                        {
+                            anonFunc(y, x, out r, out g, out b);
+                            row[xx + 2] = Helpers.castByte(r * 255);
+                            row[xx + 1] = Helpers.castByte(g * 255);
+                            row[xx + 0] = Helpers.castByte(b * 255);
+                        }
+                    }
+
+                    bmp.UnlockBits(bmd);
                 }
                 else
-                {
-                    Boolean p = this.min >= 0;
-                    Boolean n = this.max <= 0;
-                    mult = n ? -255.0f : 255.0f;
-                    offset = (p || n) ? 0 : 128;
-                }
-
-                if (bmp.Size != sz)
                 {
                     Rectangle rect = Sizing.fitAinB(new Size(sz.Width, sz.Height), bmp.Size);
 
@@ -233,10 +253,10 @@ namespace SamSeifert.CSCV
                                 xAdj /= (bmp.Width - 1);
                                 xA = (int)Math.Round(xAdj, 0);
 
-                                this.getRGB(yA, xA, out r, out g, out b);
-                                row[xx + 2] = Helpers.castByte(r * mult + offset);
-                                row[xx + 1] = Helpers.castByte(g * mult + offset);
-                                row[xx + 0] = Helpers.castByte(b * mult + offset);
+                                anonFunc(yA, xA, out r, out g, out b);
+                                row[xx + 2] = Helpers.castByte(r * 255);
+                                row[xx + 1] = Helpers.castByte(g * 255);
+                                row[xx + 0] = Helpers.castByte(b * 255);
                             }
                         }
                     }
@@ -278,33 +298,33 @@ namespace SamSeifert.CSCV
 
                                 if (xUp == xDown && yUp == yDown)
                                 {
-                                    this.getRGB(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
+                                    anonFunc(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
                                     fR = rYuXu;
                                     fG = gYuXu;
                                     fB = bYuXu;
                                 }
                                 else if (xUp == xDown)
                                 {
-                                    this.getRGB(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
-                                    this.getRGB(yDown, xUp, out rYdXu, out gYdXu, out bYdXu);
+                                    anonFunc(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
+                                    anonFunc(yDown, xUp, out rYdXu, out gYdXu, out bYdXu);
                                     fR = Helpers.getLinearEstimate(rYdXu, rYuXu, yAdj2);
                                     fG = Helpers.getLinearEstimate(gYdXu, gYuXu, yAdj2);
                                     fB = Helpers.getLinearEstimate(bYdXu, bYuXu, yAdj2);
                                 }
                                 else if (yUp == yDown)
                                 {
-                                    this.getRGB(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
-                                    this.getRGB(yUp, xDown, out rYuXd, out gYuXd, out bYuXd);
+                                    anonFunc(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
+                                    anonFunc(yUp, xDown, out rYuXd, out gYuXd, out bYuXd);
                                     fR = Helpers.getLinearEstimate(rYuXd, rYuXu, xAdj2);
                                     fG = Helpers.getLinearEstimate(gYuXd, gYuXu, xAdj2);
                                     fB = Helpers.getLinearEstimate(bYuXd, bYuXu, xAdj2);
                                 }
                                 else
                                 {
-                                    this.getRGB(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
-                                    this.getRGB(yUp, xDown, out rYuXd, out gYuXd, out bYuXd);
-                                    this.getRGB(yDown, xDown, out rYdXd, out gYdXd, out bYdXd);
-                                    this.getRGB(yDown, xUp, out rYdXu, out gYdXu, out bYdXu);
+                                    anonFunc(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
+                                    anonFunc(yUp, xDown, out rYuXd, out gYuXd, out bYuXd);
+                                    anonFunc(yDown, xDown, out rYdXd, out gYdXd, out bYdXd);
+                                    anonFunc(yDown, xUp, out rYdXu, out gYdXu, out bYdXu);
 
                                     fR = Helpers.getLinearEstimate(
                                          Helpers.getLinearEstimate(rYdXd, rYuXd, yAdj2),
@@ -320,39 +340,14 @@ namespace SamSeifert.CSCV
                                          xAdj2);
                                 }
 
-                                row[xx + 2] = Helpers.castByte(fR * mult + offset);
-                                row[xx + 1] = Helpers.castByte(fG * mult + offset);
-                                row[xx + 0] = Helpers.castByte(fB * mult + offset);
+                                row[xx + 2] = Helpers.castByte(fR * 255);
+                                row[xx + 1] = Helpers.castByte(fG * 255);
+                                row[xx + 0] = Helpers.castByte(fB * 255);
                             }
                         }
                     }
 
                     bmp.UnlockBits(bmdNew);
-                }
-                else
-                {
-
-                    BitmapData bmd = bmp.LockBits(
-                    new Rectangle(0, 0, sz.Width, sz.Height),
-                    System.Drawing.Imaging.ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
-
-                    Single r, g, b;
-
-                    Byte* rowNew;
-                    for (int y = 0; y < sz.Height; y++)
-                    {
-                        rowNew = (byte*)bmd.Scan0 + (y * bmd.Stride);
-
-                        for (int x = 0, xx = 0; x < sz.Width; x++, xx += 3)
-                        {
-                            this.getRGB(y, x, out r, out g, out b);
-                            rowNew[xx + 2] = Helpers.castByte(r * mult + offset);
-                            rowNew[xx + 1] = Helpers.castByte(g * mult + offset);
-                            rowNew[xx + 0] = Helpers.castByte(b * mult + offset);
-                        }
-                    }
-
-                    bmp.UnlockBits(bmd);
                 }
             }
         }
