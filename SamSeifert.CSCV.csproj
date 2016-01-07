@@ -101,6 +101,7 @@
     <Compile Include="HoughTransform.cs" />
     <Compile Include="IA_Multiple.cs" />
     <Compile Include="IA_Single.cs" />
+    <Compile Include="ImageAlgorithms\Anonymous.cs" />
     <Compile Include="ImageAlgorithms\BitsPerPixel.cs" />
     <Compile Include="ImageAlgorithms\Grayscale.cs" />
     <Compile Include="ImageAlgorithms\Helpers.cs" />

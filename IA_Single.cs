@@ -342,74 +342,7 @@ namespace SamSeifert.CSCV
                     outp[y, x] = Math.Abs(inpt[y, x]);
 
         }
-
-
-
-
-        public static ToolboxReturn SplitPositiveNegative(Sect inpt, ref Sect pos, ref Sect neg)
-        {
-            if (inpt == null)
-            {
-                pos = null;
-                neg = null;
-                return ToolboxReturn.NullInput;
-            }
-            else
-            {
-                MatchOutputToInput(inpt, ref pos);
-                MatchOutputToInput(inpt, ref neg);
-
-                switch (inpt._Type)
-                {
-                    case SectType.Holder:
-                        {
-                            var sh1 = inpt as SectHolder;
-                            var shp = pos as SectHolder;
-                            var shn = neg as SectHolder;
-                            foreach (var st in sh1.getSectTypes())
-                                SplitPositiveNegative_(
-                                    sh1.getSect(st), 
-                                    shp.getSect(st) as SectArray, 
-                                    shn.getSect(st) as SectArray);
-                        }
-                        return ToolboxReturn.Good;
-                    default:
-                        SplitPositiveNegative_(inpt, pos as SectArray, neg as SectArray);
-                        return ToolboxReturn.Good;
-                }
-            }
-        }
-
-        private static void SplitPositiveNegative_(Sect inpt, SectArray pos, SectArray neg)
-        {
-            var sz = inpt.getPrefferedSize();
-            int w = sz.Width;
-            int h = sz.Height;
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    Single val = inpt[y, x];
-                    if (val > 0)
-                    {
-                        neg[y, x] = 0;
-                        pos[y, x] = val;
-                    }
-                    else if (val < 0)
-                    {
-                        neg[y, x] = -val;
-                        pos[y, x] = 0;
-                    }
-                    else
-                    {
-                        neg[y, x] = 0;
-                        pos[y, x] = 0;
-                    }
-                }
-            }
-        }
-
-
+     
 
 
 
