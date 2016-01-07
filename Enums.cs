@@ -42,13 +42,6 @@ namespace SamSeifert.CSCV
         Holder
     };
 
-    public enum NoiseType 
-    {
-        Gaussian,
-        Uniform,
-        SaltAndPepper
-    };
-
     public enum ColorMapType 
     { 
         Cold_Hot, 
