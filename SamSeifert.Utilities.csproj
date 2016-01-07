@@ -62,16 +62,16 @@
     </Compile>
     <Compile Include="EnumUtil.cs" />
     <Compile Include="GlobalEvents.cs" />
-    <Compile Include="CustomControls\HueChooser.cs">
+    <Compile Include="CustomControls\HueFilter.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="CustomControls\HueChooser.Designer.cs">
-      <DependentUpon>HueChooser.cs</DependentUpon>
+    <Compile Include="CustomControls\HueFilter.Designer.cs">
+      <DependentUpon>HueFilter.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScreenCapture.cs" />
-    <EmbeddedResource Include="CustomControls\HueChooser.resx">
-      <DependentUpon>HueChooser.cs</DependentUpon>
+    <EmbeddedResource Include="CustomControls\HueFilter.resx">
+      <DependentUpon>HueFilter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -9,6 +9,17 @@ namespace SamSeifert.Utilities
 {
     public static class ColorMethods
     {
+        private static float FloatModGaraunteePostive(float x, float m)
+        {
+            return (x % m + m) % m;
+        }
+
+        public static Boolean CheckHue(float hue, float BandCenter, float BandWidth)
+        {
+            hue = ColorMethods.FloatModGaraunteePostive(hue, 1.0f);
+            return Math.Min(1 + BandCenter - hue, Math.Min(Math.Abs(BandCenter - hue), 1 + hue - BandCenter)) < BandWidth / 2;
+        }
+
         /// <summary>
         /// HSL and RGB both on scale of 0 to 1.
         /// </summary>
@@ -20,7 +31,7 @@ namespace SamSeifert.Utilities
         /// <param name="b"></param>
         public static void hsl2rgb(float h, float s, float l, out float r, out float g, out float b)
         {
-            h = 6 * fmod(h, 1);
+            h = 6 * FloatModGaraunteePostive(h, 1);
             float c = s * (1 - Math.Abs(2 * l - 1));
             float x = c * (1 - Math.Abs(h % 2 - 1));
             float m = l - c / 2;
@@ -156,10 +167,6 @@ namespace SamSeifert.Utilities
             c = Color.FromArgb((int)(r * 255), (int)(g * 255), (int)(b * 255));
         }
 
-        private static float fmod(float x, float m)
-        {
-            return (x % m + m) % m;
-        }
         /// <summary>
         /// HSV scale 0 to 1, RGB scale 0 to 1
         /// </summary>
@@ -180,7 +187,7 @@ namespace SamSeifert.Utilities
                 b = v;
                 return;
             }
-            h = 6 * fmod(h, 1);
+            h = 6 * FloatModGaraunteePostive(h, 1);
             i = (int)Math.Floor(h);
             f = h - i;          // factorial part of h
             p = v * (1 - s);
