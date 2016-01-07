@@ -6,6 +6,8 @@ using System.Drawing.Imaging;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using SamSeifert.Utilities;
+
 
 namespace SamSeifert.CSCV
 {

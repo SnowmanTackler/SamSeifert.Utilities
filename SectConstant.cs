@@ -8,9 +8,9 @@ namespace SamSeifert.CSCV
 {
     public class SectConstant : Sect
     {
-        private readonly int value;
+        private readonly Single value;
 
-        public SectConstant(int v, SectType t) : base(t)
+        public SectConstant(Single v, SectType t) : base(t)
         {
             this.value = v;
         }

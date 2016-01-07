@@ -5,6 +5,8 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 
+using SamSeifert.Utilities;
+
 namespace SamSeifert.CSCV
 {
     public static partial class ImageAlgorithms

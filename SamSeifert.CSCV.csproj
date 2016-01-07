@@ -71,6 +71,7 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
     <Prefer32Bit>false</Prefer32Bit>
+    <Optimize>true</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
@@ -94,7 +95,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Blob.cs" />
-    <Compile Include="ColorMethods.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="HistogramViewer.cs" />
@@ -133,6 +133,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SamSeifert.Utilities\SamSeifert.Utilities.csproj">
+      <Project>{a9446cbe-818f-45f6-8894-068693da47ca}</Project>
+      <Name>SamSeifert.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
