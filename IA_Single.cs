@@ -20,7 +20,7 @@ namespace SamSeifert.CSCV
             }
             else
             {
-                match(inpt, ref outp);
+                MatchOutputToInput(inpt, ref outp);
                 switch (inpt._Type)
                 {
                     case SectType.Holder:
@@ -134,7 +134,7 @@ namespace SamSeifert.CSCV
             }
             else
             {
-                match(inpt, ref outp);
+                MatchOutputToInput(inpt, ref outp);
 
                 switch (inpt._Type)
                 {
@@ -235,7 +235,7 @@ namespace SamSeifert.CSCV
             }
             else
             {
-                match(inpt, ref outp);
+                MatchOutputToInput(inpt, ref outp);
 
                 switch (inpt._Type)
                 {
@@ -274,7 +274,7 @@ namespace SamSeifert.CSCV
             }
             else
             {
-                match(inpt, ref outp);
+                MatchOutputToInput(inpt, ref outp);
 
                 switch (inpt._Type)
                 {
@@ -313,7 +313,7 @@ namespace SamSeifert.CSCV
             }
             else
             {
-                match(inpt, ref outp);
+                MatchOutputToInput(inpt, ref outp);
 
                 switch (inpt._Type)
                 {
@@ -356,8 +356,8 @@ namespace SamSeifert.CSCV
             }
             else
             {
-                match(inpt, ref pos);
-                match(inpt, ref neg);
+                MatchOutputToInput(inpt, ref pos);
+                MatchOutputToInput(inpt, ref neg);
 
                 switch (inpt._Type)
                 {
@@ -448,7 +448,7 @@ namespace SamSeifert.CSCV
             }
             else
             {
-                match(inpt, ref outp);
+                MatchOutputToInput(inpt, ref outp);
 
                 switch (inpt._Type)
                 {
@@ -509,7 +509,7 @@ namespace SamSeifert.CSCV
             else
             {
                 Random r = new Random(Environment.TickCount);
-                match(inpt, ref outp);
+                MatchOutputToInput(inpt, ref outp);
 
                 switch (inpt._Type)
                 {
@@ -614,7 +614,7 @@ namespace SamSeifert.CSCV
                     return ToolboxReturn.SpecialError;
                 }
 
-                match(ref outp, inpt.getPrefferedSize(), new SectType[] { 
+                MatchOutputToSizeAndSectTypes(ref outp, inpt.getPrefferedSize(), new SectType[] { 
                     SectType.RGB_R,
                     SectType.RGB_G, 
                     SectType.RGB_B, 
@@ -821,7 +821,7 @@ namespace SamSeifert.CSCV
 
                 Single r2 = radius * radius;
 
-                match(ref outp, inpt.getPrefferedSize(), new SectType[] { 
+                MatchOutputToSizeAndSectTypes(ref outp, inpt.getPrefferedSize(), new SectType[] { 
                     SectType.RGB_R,
                     SectType.RGB_G, 
                     SectType.RGB_B, 
@@ -990,7 +990,7 @@ namespace SamSeifert.CSCV
 
                 Single r2 = radius * radius;
 
-                match(ref outp, inpt.getPrefferedSize(), new SectType[] { 
+                MatchOutputToSizeAndSectTypes(ref outp, inpt.getPrefferedSize(), new SectType[] { 
                     SectType.RGB_R,
                     SectType.RGB_G, 
                     SectType.RGB_B, 

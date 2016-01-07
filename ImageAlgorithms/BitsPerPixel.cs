@@ -22,40 +22,28 @@ namespace SamSeifert.CSCV
             }
             else
             {
-                match(inpt, ref outp);
+                float mult = (float)Math.Pow(2, bpp);
+                float div = mult - 1;
 
-                switch (inpt._Type)
+                Action<Sect, SectArray> act = (Sect anon_inpt, SectArray anon_outp) =>
                 {
-                    case SectType.Holder:
+                    var sz = anon_outp.getPrefferedSize();
+                    int w = sz.Width;
+                    int h = sz.Height;
+
+                    for (int y = 0; y < h; y++)
+                    {
+                        for (int x = 0; x < w; x++)
                         {
-                            var sh1 = inpt as SectHolder;
-                            var sh2 = outp as SectHolder;
-                            foreach (var st in sh1.getSectTypes())
-                                BitPerPixel_(sh1.getSect(st), bpp, sh2.getSect(st) as SectArray);
+                            anon_outp[y, x] = Helpers.Clamp(((Single)Math.Round(anon_inpt[y, x] * mult - 0.5f)) / div, 0, 1);
                         }
-                        return ToolboxReturn.Good;
-                    default:
-                        BitPerPixel_(inpt, bpp, outp as SectArray);
-                        return ToolboxReturn.Good;
-                }
-            }
-        }
+                    }
+                };
 
-        private static void BitPerPixel_(Sect inpt, int bpp, SectArray outp)
-        {
-            var sz = outp.getPrefferedSize();
-            int w = sz.Width;
-            int h = sz.Height;
+                ImageAlgorithms.MatchOutputToInput(inpt, ref outp);
+                ImageAlgorithms.Do1v1Action(inpt, ref outp, act);
 
-            float mult = (float)Math.Pow(2, bpp);
-            float div = mult - 1;
-
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    outp[y, x] = Helpers.Clamp(((Single)Math.Round(inpt[y, x] * mult - 0.5f)) / div, 0, 1);
-                }
+                return ToolboxReturn.Good;
             }
         }
     }

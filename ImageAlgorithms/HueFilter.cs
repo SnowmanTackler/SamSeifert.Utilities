@@ -21,7 +21,7 @@ namespace SamSeifert.CSCV
             }
             else
             {
-                match(ref outp, inpt.getPrefferedSize(), new SectType[] { SectType.Gray });
+                MatchOutputToSizeAndSectTypes(ref outp, inpt.getPrefferedSize(), new SectType[] { SectType.Gray });
 
                 var sz = outp.getPrefferedSize();
                 int w = sz.Width;

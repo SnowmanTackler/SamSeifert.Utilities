@@ -9,10 +9,14 @@ namespace SamSeifert.CSCV
 {
     public static partial class ImageAlgorithms
     {
-        private static void match(Sect inpt, ref Sect outp)
+        private static void MatchOutputToInput(Sect inpt, ref Sect outp)
+        {
+            MatchOutputToInput(inpt, ref outp, inpt.getPrefferedSize());
+        }
+        private static void MatchOutputToInput(Sect inpt, ref Sect outp, Size sz_out)
         {
             Boolean remake = outp == null;
-            if (!remake) remake = (inpt._Type != outp._Type) || (inpt.getPrefferedSize() != outp.getPrefferedSize());
+            if (!remake) remake = (inpt._Type != outp._Type) || (sz_out != outp.getPrefferedSize());
             if (!remake)
             {
                 switch (inpt._Type)
@@ -36,21 +40,20 @@ namespace SamSeifert.CSCV
             }
             if (remake)
             {
-                Size sz = inpt.getPrefferedSize();
                 switch (inpt._Type)
                 {
                     case SectType.Holder:
-                        outp = new SectHolder(sz, (inpt as SectHolder).getSectTypes());
+                        outp = new SectHolder(sz_out, (inpt as SectHolder).getSectTypes());
                         break;
                     default:
-                        outp = new SectArray(inpt._Type, sz.Width, sz.Height);
+                        outp = new SectArray(inpt._Type, sz_out.Width, sz_out.Height);
                         break;
                 }
             }
             else outp.reset();
         }
 
-        private static void match(ref Sect outp, Size sz, params SectType[] sts)
+        private static void MatchOutputToSizeAndSectTypes(ref Sect outp, Size sz, params SectType[] sts)
         {
             Boolean remake = outp == null;
             if (!remake) remake = sz != outp.getPrefferedSize();
@@ -95,6 +98,26 @@ namespace SamSeifert.CSCV
                         else outp.reset();
                     }
                     break;
+            }
+        }
+
+        private static void Do1v1Action(Sect inpt, ref Sect outp, Action<Sect, SectArray> act)
+        {
+            if (inpt._Type == SectType.Holder)
+            {
+                var sh_inpt = inpt as SectHolder;
+                var sh_outp = outp as SectHolder;
+
+                foreach (var kvp in sh_inpt.Sects)
+                {
+                    var sout = sh_outp.getSect(kvp.Key);
+                    var sin = kvp.Value;
+                    act(sin, sout as SectArray);
+                }
+            }
+            else
+            {
+                act(inpt, outp as SectArray);
             }
         }
     }

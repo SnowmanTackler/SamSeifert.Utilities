@@ -38,7 +38,7 @@ namespace SamSeifert.CSCV
                 var G = sh_in.Sects[SectType.RGB_G];
                 var B = sh_in.Sects[SectType.RGB_B];
 
-                match(ref outp, sz, SectType.Hue, SectType.HSL_S, SectType.HSL_L);
+                MatchOutputToSizeAndSectTypes(ref outp, sz, SectType.Hue, SectType.HSL_S, SectType.HSL_L);
 
                 int w = sz.Width;
                 int h = sz.Height;
@@ -95,7 +95,7 @@ namespace SamSeifert.CSCV
                 var S = sh_in.Sects[SectType.HSL_S];
                 var L = sh_in.Sects[SectType.HSL_L];
 
-                match(ref outp, sz, SectType.RGB_R, SectType.RGB_G, SectType.RGB_B);
+                MatchOutputToSizeAndSectTypes(ref outp, sz, SectType.RGB_R, SectType.RGB_G, SectType.RGB_B);
 
                 int w = sz.Width;
                 int h = sz.Height;

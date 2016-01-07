@@ -17,34 +17,21 @@ namespace SamSeifert.CSCV
             }
             else
             {
-                match(inpt, ref outp);
-
-                switch (inpt._Type)
+                Action<Sect, SectArray> act = (Sect anon_inpt, SectArray anon_outp) =>
                 {
-                    case SectType.Holder:
-                        {
-                            var sh1 = inpt as SectHolder;
-                            var sh2 = outp as SectHolder;
-                            foreach (var st in sh1.getSectTypes())
-                                Threshold_(sh1.getSect(st), thresh, sh2.getSect(st) as SectArray);
-                        }
-                        return ToolboxReturn.Good;
-                    default:
-                        Threshold_(inpt, thresh, outp as SectArray);
-                        return ToolboxReturn.Good;
-                }
+                    var sz = anon_outp.getPrefferedSize();
+                    int w = sz.Width;
+                    int h = sz.Height;
+                    for (int y = 0; y < h; y++)
+                        for (int x = 0; x < w; x++)
+                            anon_outp[y, x] = anon_inpt[y, x] < thresh ? 0 : 1;
+                };
+
+                ImageAlgorithms.MatchOutputToInput(inpt, ref outp);
+                ImageAlgorithms.Do1v1Action(inpt, ref outp, act);
+
+                return ToolboxReturn.Good;
             }
-        }
-
-        private static void Threshold_(Sect inpt, Single thresh, SectArray outp)
-        {
-            var sz = outp.getPrefferedSize();
-            int w = sz.Width;
-            int h = sz.Height;
-            for (int y = 0; y < h; y++)
-                for (int x = 0; x < w; x++)
-                    outp[y, x] = inpt[y, x] < thresh ? 0 : 1;
-
         }
     }
 }

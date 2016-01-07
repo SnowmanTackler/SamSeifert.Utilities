@@ -17,69 +17,57 @@ namespace SamSeifert.CSCV
             }
             else
             {
-                match(inpt, ref outp);
-
-                switch (inpt._Type)
+                Action<Sect, SectArray> act = (Sect anon_inpt, SectArray anon_outp) =>
                 {
-                    case SectType.Holder:
+                    var sz = anon_outp.getPrefferedSize();
+                    int w = sz.Width;
+                    int h = sz.Height;
+
+                    int[] counts = new int[511];
+                    Byte[] _Bytes = new Byte[511];
+
+                    for (int i = 0; i < counts.Length; i++) counts[i] = 0;
+
+                    for (int y = 0; y < h; y++)
+                    {
+                        for (int x = 0; x < w; x++)
                         {
-                            var sh1 = inpt as SectHolder;
-                            var sh2 = outp as SectHolder;
-                            foreach (var st in sh1.getSectTypes())
-                                HistogramFlatten(sh1.getSect(st), sh2.getSect(st) as SectArray);
+                            counts[255 + Helpers.Cast(anon_inpt[y, x] * 255)]++;
                         }
-                        return ToolboxReturn.Good;
-                    default:
-                        HistogramFlatten(inpt, outp as SectArray);
-                        return ToolboxReturn.Good;
-                }
-            }
-        }
+                    }
 
-        private static void HistogramFlatten(Sect inpt, SectArray outp)
-        {
-            var sz = outp.getPrefferedSize();
-            int w = sz.Width;
-            int h = sz.Height;
+                    int sum = 0, sumLast = 0, temp;
+                    for (int i = 0; i < counts.Length; i++)
+                    {
+                        temp = counts[i];
+                        if (temp != 0)
+                        {
+                            sumLast = sum;
+                            sum += temp;
+                        }
+                    }
 
-            int[] counts = new int[511];
-            Byte[] _Bytes = new Byte[511];
+                    sum = 0;
+                    sumLast = Math.Max(1, sumLast);
+                    for (int i = 0; i < counts.Length; i++)
+                    {
+                        _Bytes[i] = (Byte)((255 * sum) / (sumLast));
+                        sum += counts[i];
+                    }
 
-            for (int i = 0; i < counts.Length; i++) counts[i] = 0;
+                    for (int y = 0; y < h; y++)
+                    {
+                        for (int x = 0; x < w; x++)
+                        {
+                            anon_outp[y, x] = _Bytes[255 + Helpers.Cast(anon_inpt[y, x] * 255)] / 255.0f;
+                        }
+                    }
+                };
 
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    counts[255 + Helpers.Cast(inpt[y, x] * 255)]++;
-                }
-            }
+                ImageAlgorithms.MatchOutputToInput(inpt, ref outp);
+                ImageAlgorithms.Do1v1Action(inpt, ref outp, act);
 
-            int sum = 0, sumLast = 0, temp;
-            for (int i = 0; i < counts.Length; i++)
-            {
-                temp = counts[i];
-                if (temp != 0)
-                {
-                    sumLast = sum;
-                    sum += temp;
-                }
-            }
-
-            sum = 0;
-            sumLast = Math.Max(1, sumLast);
-            for (int i = 0; i < counts.Length; i++)
-            {
-                _Bytes[i] = (Byte)((255 * sum) / (sumLast));
-                sum += counts[i];
-            }
-
-            for (int y = 0; y < h; y++)
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    outp[y, x] = _Bytes[255 + Helpers.Cast(inpt[y, x] * 255)] / 255.0f;
-                }
+                return ToolboxReturn.Good;
             }
         }
     }

@@ -20,152 +20,110 @@ namespace SamSeifert.CSCV
 
     public static partial class ImageAlgorithms
     {
-        public static ToolboxReturn Resize(Sect inpt, Size res, ResizeType t, ref Sect outp)
+        public static ToolboxReturn Resize(Sect inpt, Size sz_out, ResizeType t, ref Sect outp)
         {
             if (inpt == null)
             {
                 outp = null;
                 return ToolboxReturn.NullInput;
             }
+            else if ((sz_out.Width <= 0) || (sz_out.Height <= 0))
+            {
+                outp = null;
+                return ToolboxReturn.SpecialError;
+            }
             else
             {
-                Boolean remake = outp == null;
-                if (!remake) remake = (inpt._Type != outp._Type) || (res != outp.getPrefferedSize());
-                if (!remake)
+                Action<Sect, SectArray> act = (Sect anon_inpt, SectArray anon_outp) =>
                 {
-                    switch (inpt._Type)
+                    int h = sz_out.Height;
+                    int w = sz_out.Width;
+
+                    int xUp, xDown, yUp, yDown;
+                    float xAdj, yAdj;
+
+                    Size sz_in = anon_inpt.getPrefferedSize();
+                    int refH = sz_in.Height;
+                    int refW = sz_in.Width;
+
+                    switch (t)
                     {
-                        case SectType.Holder:
+                        case ResizeType.NearestNeighbor:
                             {
-                                var k1 = (inpt as SectHolder).Sects.Keys;
-                                var k2 = (outp as SectHolder).Sects.Keys;
-                                remake = (k1.Count != k2.Count) || (k1.Except(k2).Any());
-                                foreach (var val in (outp as SectHolder).Sects.Values)
+                                for (int y = 0; y < h; y++)
                                 {
-                                    if (remake) break;
-                                    else remake = !(val is SectArray);
+                                    yAdj = y * (refH - 1);
+                                    yAdj /= (h - 1);
+                                    yUp = (int)Math.Round(yAdj, 0);
+
+                                    for (int x = 0; x < w; x++)
+                                    {
+                                        xAdj = x * (refW - 1);
+                                        xAdj /= (w - 1);
+                                        xUp = (int)Math.Round(xAdj, 0);
+                                        anon_outp[y, x] = anon_inpt[yUp, xUp];
+                                    }
                                 }
+                                break;
                             }
-                            break;
-                        default:
-                            remake = !(outp is SectArray);
-                            break;
-                    }
-                }
-                if (remake)
-                {
-                    switch (inpt._Type)
-                    {
-                        case SectType.Holder:
-                            outp = new SectHolder(res, (inpt as SectHolder).getSectTypes());
-                            break;
-                        default:
-                            outp = new SectArray(inpt._Type, res.Width, res.Height);
-                            break;
-                    }
-                }
-                else outp.reset();
-
-                switch (inpt._Type)
-                {
-                    case SectType.Holder:
-                        {
-                            var sh1 = inpt as SectHolder;
-                            var sh2 = outp as SectHolder;
-                            foreach (var st in sh1.getSectTypes())
-                                Resize_(sh1.getSect(st), res, t, sh2.getSect(st) as SectArray);
-                        }
-                        return ToolboxReturn.Good;
-                    default:
-                        Resize_(inpt, res, t, outp as SectArray);
-                        return ToolboxReturn.Good;
-                }
-            }
-        }
-
-        private static void Resize_(Sect inpt, Size res, ResizeType t, SectArray outp)
-        {
-            int h = res.Height;
-            int w = res.Width;
-
-            int xUp, xDown, yUp, yDown;
-            float xAdj, yAdj;
-
-            Size sz = inpt.getPrefferedSize();
-            int refH = sz.Height;
-            int refW = sz.Width;
-
-            switch (t)
-            {
-                case ResizeType.NearestNeighbor:
-                    {
-                        for (int y = 0; y < h; y++)
-                        {
-                            yAdj = y * (refH - 1);
-                            yAdj /= (h - 1);
-                            yUp = (int)Math.Round(yAdj, 0);
-
-                            for (int x = 0; x < w; x++)
+                        case ResizeType.Bilinear:
                             {
-                                xAdj = x * (refW - 1);
-                                xAdj /= (w - 1);
-                                xUp = (int)Math.Round(xAdj, 0);
-                                outp[y, x] = inpt[yUp, xUp];
-                            }
-                        }
-                        break;
-                    }
-                case ResizeType.Bilinear:
-                    {
-                        for (int y = 0; y < h; y++)
-                        {
-                            yAdj = y * (refH - 1);
-                            yAdj /= (h - 1);
-                            yUp = (int)Math.Ceiling((double)yAdj);
-                            yDown = (int)yAdj;
+                                for (int y = 0; y < h; y++)
+                                {
+                                    yAdj = y * (refH - 1);
+                                    yAdj /= (h - 1);
+                                    yUp = (int)Math.Ceiling((double)yAdj);
+                                    yDown = (int)yAdj;
 
-                            for (int x = 0; x < w; x++)
-                            {
-                                xAdj = x * (refW - 1);
-                                xAdj /= Math.Max(1, (w - 1));
-                                xUp = (int)Math.Ceiling((double)xAdj);
-                                xDown = (int)xAdj;
+                                    for (int x = 0; x < w; x++)
+                                    {
+                                        xAdj = x * (refW - 1);
+                                        xAdj /= Math.Max(1, (w - 1));
+                                        xUp = (int)Math.Ceiling((double)xAdj);
+                                        xDown = (int)xAdj;
 
-                                if (xUp == xDown && yUp == yDown)
-                                {
-                                    outp[y, x] = inpt[yUp, xUp];
+                                        if (xUp == xDown && yUp == yDown)
+                                        {
+                                            anon_outp[y, x] = anon_inpt[yUp, xUp];
+                                        }
+                                        else if (xUp == xDown)
+                                        {
+                                            anon_outp[y, x] = Helpers.getLinearEstimate(
+                                                anon_inpt[yDown, xUp],
+                                                anon_inpt[yUp, xUp],
+                                                yAdj % 1);
+                                        }
+                                        else if (yUp == yDown)
+                                        {
+                                            anon_outp[y, x] = Helpers.getLinearEstimate(
+                                                anon_inpt[yUp, xDown],
+                                                anon_inpt[yUp, xUp],
+                                                xAdj % 1);
+                                        }
+                                        else
+                                        {
+                                            anon_outp[y, x] = Helpers.getLinearEstimate(
+                                                Helpers.getLinearEstimate(
+                                                    anon_inpt[yDown, xDown],
+                                                    anon_inpt[yUp, xDown],
+                                                    yAdj % 1),
+                                                Helpers.getLinearEstimate(
+                                                    anon_inpt[yDown, xUp],
+                                                    anon_inpt[yUp, xUp],
+                                                    yAdj % 1),
+                                                xAdj % 1);
+                                        }
+                                    }
                                 }
-                                else if (xUp == xDown)
-                                {
-                                    outp[y, x] = Helpers.getLinearEstimate(
-                                        inpt[yDown, xUp],
-                                        inpt[yUp, xUp],
-                                        yAdj % 1);
-                                }
-                                else if (yUp == yDown)
-                                {
-                                    outp[y, x] = Helpers.getLinearEstimate(
-                                        inpt[yUp, xDown],
-                                        inpt[yUp, xUp],
-                                        xAdj % 1);
-                                }
-                                else
-                                {
-                                    outp[y, x] = Helpers.getLinearEstimate(
-                                        Helpers.getLinearEstimate(
-                                            inpt[yDown, xDown],
-                                            inpt[yUp, xDown],
-                                            yAdj % 1),
-                                        Helpers.getLinearEstimate(
-                                            inpt[yDown, xUp],
-                                            inpt[yUp, xUp],
-                                            yAdj % 1),
-                                        xAdj % 1);
-                                }
+                                break;
                             }
-                        }
-                        break;
                     }
+                };
+
+                ImageAlgorithms.MatchOutputToInput(inpt, ref outp, sz_out);
+                ImageAlgorithms.Do1v1Action(inpt, ref outp, act);
+
+                return ToolboxReturn.Good;
             }
         }
     }
