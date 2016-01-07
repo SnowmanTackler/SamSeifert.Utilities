@@ -729,68 +729,7 @@ namespace SamSeifert.CSCV
 
 
 
-
-        /// Modifies an existing ImageData class
-        public static ToolboxReturn HSL(Sect inpt, ref Sect outp)
-        {
-            if (inpt == null)
-            {
-                outp = null;
-                return ToolboxReturn.NullInput;
-            }
-            else if (inpt._Type != SectType.Holder)
-            {
-                outp = null;
-                return ToolboxReturn.SpecialError;
-            }
-            else if (!(
-                (inpt as SectHolder).Sects.ContainsKey(SectType.RGB_R) &&
-                (inpt as SectHolder).Sects.ContainsKey(SectType.RGB_G) &&
-                (inpt as SectHolder).Sects.ContainsKey(SectType.RGB_B)
-                ))
-            {
-                outp = null;
-                return ToolboxReturn.SpecialError;
-            }
-            else
-            {
-                match(ref outp, inpt.getPrefferedSize(), new SectType[] { 
-                    SectType.Hue,
-                    SectType.HSL_S, 
-                    SectType.HSL_L, 
-                });
-
-                Size sz = inpt.getPrefferedSize();
-                int w = sz.Width;
-                int h = sz.Height;
-
-                var r = (inpt as SectHolder).Sects[SectType.RGB_R];
-                var g = (inpt as SectHolder).Sects[SectType.RGB_G];
-                var b = (inpt as SectHolder).Sects[SectType.RGB_B];
-
-                Single[,] hue = ((outp as SectHolder).Sects[SectType.Hue] as SectArray).Data;
-                Single[,] sat = ((outp as SectHolder).Sects[SectType.HSL_S] as SectArray).Data;
-                Single[,] lum = ((outp as SectHolder).Sects[SectType.HSL_L] as SectArray).Data;
-
-                for (int y = 0; y < h; y++)
-                {
-                    for (int x = 0; x < w; x++)
-                    {
-                        ColorMethods.rgb2hsl(
-                            Math.Max(0, Math.Min(1, r[y, x])),
-                            Math.Max(0, Math.Min(1, g[y, x])),
-                            Math.Max(0, Math.Min(1, b[y, x])),
-                            out hue[y, x],
-                            out sat[y, x],
-                            out lum[y, x]);
-                    }
-                }
-
-                return ToolboxReturn.Good;
-            }
-        }
-
-
+        
 
 
 
