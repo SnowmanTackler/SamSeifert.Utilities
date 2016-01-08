@@ -17,7 +17,12 @@ namespace SamSeifert.Utilities
         public static Boolean CheckHue(float hue, float BandCenter, float BandWidth)
         {
             hue = ColorMethods.FloatModGaraunteePostive(hue, 1.0f);
-            return Math.Min(1 + BandCenter - hue, Math.Min(Math.Abs(BandCenter - hue), 1 + hue - BandCenter)) < BandWidth / 2;
+            return ColorMethods.GetDistanceWithRollOver(hue, BandCenter) < BandWidth / 2;
+        }
+
+        public static float GetDistanceWithRollOver(float v1, float v2)
+        {
+            return Math.Min(1 + v1 - v2, Math.Min(Math.Abs(v1 - v2), 1 + v2 - v1));
         }
 
         /// <summary>

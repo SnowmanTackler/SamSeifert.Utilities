@@ -68,6 +68,7 @@
     <Compile Include="CustomControls\HueFilter.Designer.cs">
       <DependentUpon>HueFilter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScreenCapture.cs" />
     <EmbeddedResource Include="CustomControls\HueFilter.resx">
