@@ -9,6 +9,12 @@ namespace SamSeifert.CSCV
 {
     public static partial class MultipleImages
     {
+        /// <summary>
+        /// All non squishy inputs should be same size.  Bad return if they aren't.
+        /// </summary>
+        /// <param name="inpt"></param>
+        /// <param name="outp"></param>
+        /// <returns></returns>
         private static ToolboxReturn MatchSectTypes(Sect[] inpt, ref Sect outp)
         {
             if (inpt == null)
@@ -23,29 +29,11 @@ namespace SamSeifert.CSCV
             }
             else
             {
-                var holders = new List<SectHolder>();
-                var nonholders = new List<Sect>();
-
-
                 Size sz_out = Size.Empty;
                 Boolean first_size = true;
-                Boolean first_single = true;
-                SectType single_type = SectType.NaN;
 
                 foreach (var inp in inpt)
                 {
-                    if (inp._Type == SectType.Holder) holders.Add(inp as SectHolder);
-                    else
-                    {
-                        if (first_single)
-                        {
-                            single_type = inp._Type;
-                            first_single = false;
-                        }
-                        else if (inp._Type != single_type) single_type = SectType.NaN;
-                        nonholders.Add(inp);
-                    }
-
                     // Make Sure Inputs All Same Size
                     Size tsz = inp.getPrefferedSize();
                     if (!inp.isSquishy())
@@ -65,6 +53,52 @@ namespace SamSeifert.CSCV
                     {
                         sz_out.Height = Math.Max(sz_out.Height, tsz.Height);
                         sz_out.Width = Math.Max(sz_out.Width, tsz.Width);
+                    }
+                }
+
+                return MatchSectTypes(inpt, ref outp, sz_out);
+            }
+        }
+
+        /// <summary>
+        /// Used directly in Convolute.  Used indirectly in Add and Multiply.
+        /// </summary>
+        /// <param name="inpt"></param>
+        /// <param name="outp"></param>
+        /// <param name="sz_out"></param>
+        /// <returns></returns>
+        private static ToolboxReturn MatchSectTypes(Sect[] inpt, ref Sect outp, Size sz_out)
+        {
+            if (inpt == null)
+            {
+                outp = null;
+                return ToolboxReturn.NullInput;
+            }
+            if (inpt.Length == 0)
+            {
+                outp = null;
+                return ToolboxReturn.NullInput;
+            }
+            else
+            {
+                var holders = new List<SectHolder>();
+                var nonholders = new List<Sect>();
+
+                Boolean first_single = true;
+                SectType single_type = SectType.NaN;
+
+                foreach (var inp in inpt)
+                {
+                    if (inp._Type == SectType.Holder) holders.Add(inp as SectHolder);
+                    else
+                    {
+                        if (first_single)
+                        {
+                            single_type = inp._Type;
+                            first_single = false;
+                        }
+                        else if (inp._Type != single_type) single_type = SectType.NaN;
+                        nonholders.Add(inp);
                     }
                 }
 

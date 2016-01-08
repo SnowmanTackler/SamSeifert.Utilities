@@ -152,5 +152,46 @@ namespace SamSeifert.CSCV
                 return this._std;
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public static SectArray Gaussian(SectType t, Single sigma, int span)
+        {
+            SectArray sa = new SectArray(t, span, span);
+            Single sum = 0;
+            float center = (span - 1.0f) / 2;
+            for (int i = 0; i < span; i++)
+            {
+                for (int j = 0; j < span; j++)
+                {
+                    Single x = j - center;
+                    Single y = i - center;
+                    Single val = (Single)Math.Pow(Math.E, -(x * x + y * y) / (2 * sigma));
+                    sum += val;
+                    sa.Data[i, j] = val;
+                }
+            }
+            for (int i = 0; i < span; i++)
+            {
+                for (int j = 0; j < span; j++)
+                {
+                    sa.Data[i, j] /= sum;
+                }
+            }
+            return sa;
+        }
     }
 }

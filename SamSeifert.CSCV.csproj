@@ -101,6 +101,7 @@
     <Compile Include="HoughTransform.cs" />
     <Compile Include="IA_Single.cs" />
     <Compile Include="MultipleImages\Add.cs" />
+    <Compile Include="MultipleImages\Convolute.cs" />
     <Compile Include="MultipleImages\Helpers.cs" />
     <Compile Include="MultipleImages\Multiply.cs" />
     <Compile Include="SingleImage\Anonymous.cs" />
@@ -125,7 +126,6 @@
     <Compile Include="Sect.cs" />
     <Compile Include="SectArray.cs" />
     <Compile Include="SectConstant.cs" />
-    <Compile Include="SectGaussian.cs" />
     <Compile Include="SectMask.cs" />
     <Compile Include="Sizing.cs" />
     <Compile Include="SectHolder.cs" />
