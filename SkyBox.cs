@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using SamSeifert.ComplexFileParser;
+using SamSeifert.Utilities.FileParsing;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL; using GL = SamSeifert.GLE.GLR;
