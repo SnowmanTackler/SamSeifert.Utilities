@@ -6,6 +6,39 @@ using System.Text;
 
 namespace SamSeifert.CSCV
 {
+    /*
+    public delegate float RegionPropsComparator(float mvalue, SpecialBitmap.RegionProps rp);
+    public static SpecialBitmap RegionPropsModify(SpecialBitmap indata, RegionPropsComparator func)
+    {
+        int w = indata.Width;
+        int h = indata.Height;
+
+        SpecialBitmap _SpecialBitmap = new SpecialBitmap();
+        _SpecialBitmap.CopyTraits(indata);
+        _SpecialBitmap.CreateNonNullArrays(indata);
+
+        var sourceList = indata.getNonNullArrays();
+        var targetList = _SpecialBitmap.getNonNullArrays();
+
+        int x, y;
+
+        for (int index = 0; index < sourceList.Count; index++)
+        {
+            var inpArray = sourceList[index];
+            var outArray = targetList[index];
+
+            for (y = 0; y < h; y++)
+            {
+                for (x = 0; x < w; x++)
+                {
+                    outArray[y, x] = func(inpArray[y, x], indata._RegionProps[indata._IntRegions[y, x]]);
+                }
+            }
+        }
+
+        return _SpecialBitmap;
+    }*/
+
     public class Blob
     {
         public Size Size = new Size(0, 0);

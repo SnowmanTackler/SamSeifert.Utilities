@@ -105,7 +105,9 @@
     <Compile Include="MultipleImages\Helpers.cs" />
     <Compile Include="MultipleImages\Multiply.cs" />
     <Compile Include="SingleImage\Anonymous.cs" />
+    <Compile Include="SingleImage\AnonymousExtensions.cs" />
     <Compile Include="SingleImage\BitsPerPixel.cs" />
+    <Compile Include="SingleImage\Gradient.cs" />
     <Compile Include="SingleImage\Grayscale.cs" />
     <Compile Include="SingleImage\Helpers.cs" />
     <Compile Include="SingleImage\HistogramFlatten.cs" />
@@ -115,7 +117,6 @@
     <Compile Include="SingleImage\Noise.cs" />
     <Compile Include="SingleImage\Resize.cs" />
     <Compile Include="ImageAlgorithms.cs" />
-    <Compile Include="SingleImage\Threshold.cs" />
     <Compile Include="PointD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -131,9 +132,6 @@
     <Compile Include="SectHolder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\HeatmapHotCold.bmp" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -144,6 +142,9 @@
       <Project>{a9446cbe-818f-45f6-8894-068693da47ca}</Project>
       <Name>SamSeifert.Utilities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
