@@ -91,16 +91,16 @@ namespace SamSeifert.CSCV
             {
                 Size sz = inpt.getPrefferedSize();
 
-                var H = sh_in.Sects[SectType.Hue];
-                var S = sh_in.Sects[SectType.HSV_S];
-                var V = sh_in.Sects[SectType.HSV_V];
-
                 MatchOutputToSizeAndSectTypes(ref outp, sz, SectType.RGB_R, SectType.RGB_G, SectType.RGB_B);
 
                 int w = sz.Width;
                 int h = sz.Height;
 
                 var sh_out = outp as SectHolder;
+
+                var H = sh_in.Sects[SectType.Hue];
+                var S = sh_in.Sects[SectType.HSV_S];
+                var V = sh_in.Sects[SectType.HSV_V];
 
                 var R = (sh_out.Sects[SectType.RGB_R] as SectArray).Data;
                 var G = (sh_out.Sects[SectType.RGB_G] as SectArray).Data;
@@ -111,7 +111,7 @@ namespace SamSeifert.CSCV
                     for (int x = 0; x < w; x++)
                     {
                         ColorMethods.hsv2rgb(
-                            Math.Max(0, Math.Min(1, H[y, x])),
+                            H[y, x],
                             Math.Max(0, Math.Min(1, S[y, x])),
                             Math.Max(0, Math.Min(1, V[y, x])),
                             out R[y, x],
