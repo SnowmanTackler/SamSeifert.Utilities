@@ -9,7 +9,7 @@ using SamSeifert.Utilities;
 
 namespace SamSeifert.CSCV
 {
-    public static partial class ImageAlgorithms
+    public static partial class SingleImage
     { 
         public static ToolboxReturn Convolute(Sect inpt, Single[,] vals, ref Sect outp)
         {
@@ -745,7 +745,7 @@ namespace SamSeifert.CSCV
                 {
                     for (int x = 0; x < w; x++)
                     {
-                        var re = ImageAlgorithms.getMappingFrom(
+                        var re = SingleImage.getMappingFrom(
                             location_data[input_locs[y, x]],
                             prop_count,
                             radius_cut2,
@@ -805,7 +805,7 @@ namespace SamSeifert.CSCV
                 Single cf = c * 255.0f;
                 var pd_next = new point_data(n1 / cf, n2 / cf, n3 / cf, bin_count);
                 if (pd.loc == pd_next.loc) ret = pd.getOutput();
-                else ret = ImageAlgorithms.getMappingFrom(
+                else ret = SingleImage.getMappingFrom(
                     pd_next, 
                     prop_count,
                     radius2_cut, 
@@ -933,7 +933,7 @@ namespace SamSeifert.CSCV
                     for (int x = 0; x < w; x++)
                     {
                         var ip = inp_tuples[y, x];
-                        var re = ImageAlgorithms.getMappingFrom(point_bins, point_map, ip, radius_255, radius_cutt, ref res);
+                        var re = SingleImage.getMappingFrom(point_bins, point_map, ip, radius_255, radius_cutt, ref res);
                         rout[y, x] = re.Item1 / 255.0f;
                         gout[y, x] = re.Item2 / 255.0f;
                         bout[y, x] = re.Item3 / 255.0f;
@@ -1017,7 +1017,7 @@ namespace SamSeifert.CSCV
                 }
                 else
                 {
-                    value_next = ImageAlgorithms.getMappingFrom(point_bins, point_map, value_next, radius_255, radius_cuttoff, ref reused);
+                    value_next = SingleImage.getMappingFrom(point_bins, point_map, value_next, radius_255, radius_cuttoff, ref reused);
                     point_map[loc] = value_next;
                     return value_next;
                 }                

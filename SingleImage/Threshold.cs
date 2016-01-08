@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SamSeifert.CSCV
 {
-    public static partial class ImageAlgorithms
+    public static partial class SingleImage
     {
         public static ToolboxReturn Threshold(Sect inpt, Single thresh, ref Sect outp)
         {
@@ -27,8 +27,8 @@ namespace SamSeifert.CSCV
                             anon_outp[y, x] = anon_inpt[y, x] < thresh ? 0 : 1;
                 };
 
-                ImageAlgorithms.MatchOutputToInput(inpt, ref outp);
-                ImageAlgorithms.Do1v1Action(inpt, ref outp, act);
+                SingleImage.MatchOutputToInput(inpt, ref outp);
+                SingleImage.Do1v1Action(inpt, ref outp, act);
 
                 return ToolboxReturn.Good;
             }

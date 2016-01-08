@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace SamSeifert.CSCV
 {
-    public static partial class ImageAlgorithms
+    public static partial class SingleImage
     {
         private static void MatchOutputToInput(Sect inpt, ref Sect outp)
         {
             MatchOutputToInput(inpt, ref outp, inpt.getPrefferedSize());
         }
+
         private static void MatchOutputToInput(Sect inpt, ref Sect outp, Size sz_out)
         {
             Boolean remake = outp == null;

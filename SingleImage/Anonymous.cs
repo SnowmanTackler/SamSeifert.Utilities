@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SamSeifert.CSCV
 {
-    public static partial class ImageAlgorithms
+    public static partial class SingleImage
     {
         public static ToolboxReturn Anonymous(Sect inpt, Func<float, float> f, ref Sect outp)
         {
@@ -28,8 +28,8 @@ namespace SamSeifert.CSCV
                             anon_outp[y, x] = f(anon_inpt[y, x]);
                 };
 
-                ImageAlgorithms.MatchOutputToInput(inpt, ref outp);
-                ImageAlgorithms.Do1v1Action(inpt, ref outp, act);
+                SingleImage.MatchOutputToInput(inpt, ref outp);
+                SingleImage.Do1v1Action(inpt, ref outp, act);
 
                 return ToolboxReturn.Good;
             }

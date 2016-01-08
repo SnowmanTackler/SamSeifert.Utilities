@@ -134,12 +134,12 @@ namespace SamSeifert.CSCV
 
 
 
-        public static SectHolder SectHoldeFromImage(Image input)
+        public static Sect SectHoldeFromImage(Image input)
         {
             return SectHolder.SectHoldeFromImage(input, input.Width, input.Height);
         }
 
-        public static SectHolder SectHoldeFromImage(Image input, int w, int h)
+        public static Sect SectHoldeFromImage(Image input, int w, int h)
         {
             var ls = new List<Sect>();
             ls.Add(new SectArray(SectType.RGB_R, w, h));
@@ -158,7 +158,18 @@ namespace SamSeifert.CSCV
 
             ret.setImage(b);
 
-            return ret;
+            Sect comparer = null;
+            foreach (var s in ls)
+            {
+                if (comparer == null) comparer = s;
+                else
+                    for (int y = 0; y < h; y++)
+                        for (int x = 0; x < w; x++)
+                            if (comparer[y, x] != s[y, x])
+                                return ret;
+            }
+
+            return new SectMask(SectType.Gray, ls[0]); // Gray Scale
         }
 
         private unsafe void setImage(Bitmap input)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SamSeifert.CSCV
 {
-    public static partial class ImageAlgorithms
+    public static partial class SingleImage
     {
         public static ToolboxReturn HistogramFlatten(Sect inpt, ref Sect outp)
         {
@@ -64,8 +64,8 @@ namespace SamSeifert.CSCV
                     }
                 };
 
-                ImageAlgorithms.MatchOutputToInput(inpt, ref outp);
-                ImageAlgorithms.Do1v1Action(inpt, ref outp, act);
+                SingleImage.MatchOutputToInput(inpt, ref outp);
+                SingleImage.Do1v1Action(inpt, ref outp, act);
 
                 return ToolboxReturn.Good;
             }

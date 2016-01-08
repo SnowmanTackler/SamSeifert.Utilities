@@ -16,7 +16,7 @@ namespace SamSeifert.CSCV
         SaltAndPepper
     };
 
-    public static partial class ImageAlgorithms
+    public static partial class SingleImage
     {
 
         public static ToolboxReturn Noise(Sect inpt, NoiseType nt, Single p, ref Sect outp)
@@ -76,8 +76,8 @@ namespace SamSeifert.CSCV
                     }
                 };
 
-                ImageAlgorithms.MatchOutputToInput(inpt, ref outp);
-                ImageAlgorithms.Do1v1Action(inpt, ref outp, act);
+                SingleImage.MatchOutputToInput(inpt, ref outp);
+                SingleImage.Do1v1Action(inpt, ref outp, act);
 
                 return ToolboxReturn.Good;
             }

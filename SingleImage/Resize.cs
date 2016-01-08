@@ -18,7 +18,7 @@ namespace SamSeifert.CSCV
         Bilinear
     };
 
-    public static partial class ImageAlgorithms
+    public static partial class SingleImage
     {
         public static ToolboxReturn Resize(Sect inpt, Size sz_out, ResizeType t, ref Sect outp)
         {
@@ -120,8 +120,8 @@ namespace SamSeifert.CSCV
                     }
                 };
 
-                ImageAlgorithms.MatchOutputToInput(inpt, ref outp, sz_out);
-                ImageAlgorithms.Do1v1Action(inpt, ref outp, act);
+                SingleImage.MatchOutputToInput(inpt, ref outp, sz_out);
+                SingleImage.Do1v1Action(inpt, ref outp, act);
 
                 return ToolboxReturn.Good;
             }

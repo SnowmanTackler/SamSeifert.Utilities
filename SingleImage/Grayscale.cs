@@ -13,7 +13,7 @@ namespace SamSeifert.CSCV
         Minimum
     };
 
-    public static partial class ImageAlgorithms
+    public static partial class SingleImage
     {
         public static ToolboxReturn Grayscale(Sect inpt, GrayscaleType t, ref Sect outp)
         {

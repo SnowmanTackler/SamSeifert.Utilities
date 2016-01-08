@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace SamSeifert.CSCV
 {
-    public static partial class ImageAlgorithms
+    public static partial class SingleImage
     {
         public static ToolboxReturn HueFilter(Sect inpt, float BandCenter, float BandWidth, ref Sect outp)
         {
