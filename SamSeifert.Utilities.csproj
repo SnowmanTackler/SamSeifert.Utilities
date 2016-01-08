@@ -61,6 +61,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="EnumUtil.cs" />
+    <Compile Include="FileParsing\BracketFile.cs" />
+    <Compile Include="FileParsing\JsonParser.cs" />
+    <Compile Include="FileParsing\TagFile.cs" />
     <Compile Include="GlobalEvents.cs" />
     <Compile Include="CustomControls\HueFilter.cs">
       <SubType>UserControl</SubType>
