@@ -160,22 +160,52 @@ namespace SamSeifert.CSCV
                                 int inhm1 = inh - 1;
                                 int inwm1 = inw - 1;
 
-                                // 1 - Math.Abs() gives right angle we're looking for
-
+                                // 1 - Math.Abs() gives right angle we're looking for (input pixel to output pixel)
                                 for (int y = 0; y < outp_sz.Height; y++)
+                                {
                                     for (int x = 0; x < outp_sz.Width; x++)
                                     {
                                         anon_outp[y, x] = anon_inpt[
                                             inhm1 - Math.Abs(inhm1 - (((y - pad) % repy + repy) % repy)),
-                                            inwm1 - Math.Abs(inwm1 - (((x - pad) % repx + repx) % repx))
-                                            ];
+                                            inwm1 - Math.Abs(inwm1 - (((x - pad) % repx + repx) % repx))];
                                     }
+                                }
                                 break;
-
                             }
                         default: throw new NotImplementedException();
                     }
+                };
 
+
+                var ls = new List<SectType>();
+                if (inpt._Type == SectType.Holder) ls.AddRange((inpt as SectHolder).getSectTypes());
+                else ls.Add(inpt._Type);
+
+                SingleImage.MatchOutputToSizeAndSectTypes(ref outp, outp_sz, ls.ToArray());
+                SingleImage.Do1v1Action(inpt, ref outp, act);
+
+                return ToolboxReturn.Good;
+            }
+        }
+
+        public static ToolboxReturn PaddingOff(Sect inpt, int pad, ref Sect outp)
+        {
+            if (inpt == null)
+            {
+                outp = null;
+                return ToolboxReturn.NullInput;
+            }
+            else
+            {
+                var outp_sz = inpt.getPrefferedSize(); ;
+                outp_sz.Width -= pad * 2;
+                outp_sz.Height -= pad * 2;
+
+                Action<Sect, SectArray> act = (Sect anon_inpt, SectArray anon_outp) =>
+                {
+                    for (int y = 0; y < outp_sz.Height; y++)
+                        for (int x = 0; x < outp_sz.Width; x++)
+                            anon_outp[y, x] = anon_inpt[y + pad, x + pad]; // CENTER
                 };
 
 
