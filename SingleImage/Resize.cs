@@ -39,8 +39,6 @@ namespace SamSeifert.CSCV
                     int h = sz_out.Height;
                     int w = sz_out.Width;
 
-                    int xUp, xDown, yUp, yDown;
-                    float xAdj, yAdj;
 
                     Size sz_in = anon_inpt.getPrefferedSize();
                     int refH = sz_in.Height;
@@ -50,24 +48,39 @@ namespace SamSeifert.CSCV
                     {
                         case ResizeType.NearestNeighbor:
                             {
+                                float temp;
+                                int yA, xA;
+
                                 for (int y = 0; y < h; y++)
                                 {
-                                    yAdj = y * (refH - 1);
-                                    yAdj /= (h - 1);
-                                    yUp = (int)Math.Round(yAdj, 0);
+                                    temp = y;
+                                    temp /= h;
+                                    temp += 1.0f / (2 * h);
+                                    // temp is now scaled 0 to 1 on large image 
+                                    temp -= 1.0f / (2 * refH);
+                                    temp *= refH;
+                                    yA = Helpers.Clamp((int)Math.Round(temp), 0, refH - 1);
 
                                     for (int x = 0; x < w; x++)
                                     {
-                                        xAdj = x * (refW - 1);
-                                        xAdj /= (w - 1);
-                                        xUp = (int)Math.Round(xAdj, 0);
-                                        anon_outp[y, x] = anon_inpt[yUp, xUp];
+                                        temp = x;
+                                        temp /= w;
+                                        temp += 1.0f / (2 * w);
+                                        // temp is now scaled 0 to 1 on large image 
+                                        temp -= 1.0f / (2 * refW);
+                                        temp *= refW;
+                                        xA = Helpers.Clamp((int)Math.Round(temp), 0, refW - 1);
+
+                                        anon_outp[y, x] = anon_inpt[yA, xA];
                                     }
                                 }
                                 break;
                             }
-                        case ResizeType.Bilinear:
+                        case ResizeType.Bilinear: // TODO: FIX BILINEAR (PIXELS ON BORDER)
                             {
+                                int xUp, xDown, yUp, yDown;
+                                float xAdj, yAdj;
+
                                 for (int y = 0; y < h; y++)
                                 {
                                     yAdj = y * (refH - 1);

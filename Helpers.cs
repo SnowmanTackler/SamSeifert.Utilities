@@ -26,6 +26,11 @@ namespace SamSeifert.CSCV
             return Math.Min(max, Math.Max(min, val));
         }
 
+        internal static int Clamp(int val, int min, int max)
+        {
+            return Math.Min(max, Math.Max(min, val));
+        }
+
         internal static int Cast(float f)
         {
             return Math.Max(-255, Math.Min(255, (int)Math.Round(f, 0)));

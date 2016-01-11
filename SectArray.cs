@@ -168,10 +168,11 @@ namespace SamSeifert.CSCV
 
 
 
-        public static SectArray Gaussian(SectType t, Single sigma, int span)
+        public static SectArray GaussianNormalizedSum(SectType t, Single sigma, int span)
         {
             SectArray sa = new SectArray(t, span, span);
             Single sum = 0;
+
             float center = (span - 1.0f) / 2;
             for (int i = 0; i < span; i++)
             {
@@ -184,11 +185,40 @@ namespace SamSeifert.CSCV
                     sa.Data[i, j] = val;
                 }
             }
+
             for (int i = 0; i < span; i++)
             {
                 for (int j = 0; j < span; j++)
                 {
                     sa.Data[i, j] /= sum;
+                }
+            }
+            return sa;
+        }
+
+        public static SectArray GaussianNormalizedMax(SectType t, Single sigma, int span)
+        {
+            SectArray sa = new SectArray(t, span, span);
+            Single max = 0;
+
+            float center = (span - 1.0f) / 2;
+            for (int i = 0; i < span; i++)
+            {
+                for (int j = 0; j < span; j++)
+                {
+                    Single x = j - center;
+                    Single y = i - center;
+                    Single val = (Single)Math.Pow(Math.E, -(x * x + y * y) / (2 * sigma));
+                    max = Math.Max(max, val);
+                    sa.Data[i, j] = val;
+                }
+            }
+
+            for (int i = 0; i < span; i++)
+            {
+                for (int j = 0; j < span; j++)
+                {
+                    sa.Data[i, j] /= max;
                 }
             }
             return sa;

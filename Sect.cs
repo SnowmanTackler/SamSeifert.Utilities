@@ -230,28 +230,34 @@ namespace SamSeifert.CSCV
                     byte* row;
                     int xx = 0, x;
 
-                    float yAdj;
-                    float xAdj;
-                    
                     // Nearest Neighbor [Expansion]
                     if (rect.Width > sz.Width || rect.Height > sz.Height)
                     {
                         int yA, xA;
                         Single r, g, b;
+                        float temp;
 
                         for (int y = 0; y < bmp.Height; y++)
                         {
-                            yAdj = y * (sz.Height - 1);
-                            yAdj /= (bmp.Height - 1);
-                            yA = (int)Math.Round(yAdj, 0);
+                            temp = y;
+                            temp /= bmp.Height;
+                            temp += 1.0f / (2 * bmp.Height);
+                            // temp is now scaled 0 to 1 on large image 
+                            temp -= 1.0f / (2 * sz.Height);
+                            temp *= sz.Height;
+                            yA = Helpers.Clamp((int)Math.Round(temp), 0, sz.Height - 1);
 
                             row = (Byte*)bmdNew.Scan0 + (y * bmdNew.Stride);
 
                             for (x = 0, xx = 0; x < bmp.Width; x++, xx += 3)
                             {
-                                xAdj = x * (sz.Width - 1);
-                                xAdj /= (bmp.Width - 1);
-                                xA = (int)Math.Round(xAdj, 0);
+                                temp = x;
+                                temp /= bmp.Width;
+                                temp += 1.0f / (2 * bmp.Width);
+                                // temp is now scaled 0 to 1 on large image 
+                                temp -= 1.0f / (2 * sz.Width);
+                                temp *= sz.Width;
+                                xA = Helpers.Clamp((int)Math.Round(temp), 0, sz.Width - 1);
 
                                 anonFunc(yA, xA, out r, out g, out b);
                                 row[xx + 2] = Helpers.castByte(r * 255);
@@ -261,7 +267,7 @@ namespace SamSeifert.CSCV
                         }
                     }
                     // Bilinear [Compression]
-                    else
+                    else  // TODO: FIX BILINEAR (PIXELS ON BORDER)
                     {
                         Single rYuXu, gYuXu, bYuXu;
                         Single rYuXd, gYuXd, bYuXd;
@@ -276,6 +282,8 @@ namespace SamSeifert.CSCV
                         Single fB = 0;
                         Single yAdj2 = 0;
                         Single xAdj2 = 0;
+
+                        Single xAdj, yAdj;
 
                         for (int y = 0; y < bmp.Height; y++)
                         {
