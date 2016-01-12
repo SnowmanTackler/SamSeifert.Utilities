@@ -189,6 +189,15 @@ namespace SamSeifert.Utilities.FileParsing
             q.WriteByte((byte)text);
         }
 
+
+        public static string ToSting(Object o)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            JsonParser.print(o, (char c) => sb.Append(c), (string s) => sb.Append(s));
+
+            return sb.ToString();
+        }
         public static void print (Object o)
         {
             JsonParser.print(o, Console.Out.Write, Console.Out.Write);

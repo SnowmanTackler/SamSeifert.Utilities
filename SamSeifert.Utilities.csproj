@@ -74,6 +74,7 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScreenCapture.cs" />
+    <Compile Include="StringUtil.cs" />
     <EmbeddedResource Include="CustomControls\HueFilter.resx">
       <DependentUpon>HueFilter.cs</DependentUpon>
     </EmbeddedResource>
