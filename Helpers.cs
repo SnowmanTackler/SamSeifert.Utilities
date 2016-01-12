@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SamSeifert.Utilities
 {
-    public class Helpers
+    public static class Helpers
     {
         public static void Swap<T>(ref T i, ref T o)
         {

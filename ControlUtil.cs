@@ -135,5 +135,21 @@ namespace SamSeifert.Utilities
             }
         }
 
+
+
+
+
+
+
+
+
+
+        public static T GetParent<T>(this Control c) where T : class
+        {
+            if (c is T) return c as T;
+            else if (c.Parent == null) return null;
+            else return c.Parent.GetParent<T>();
+        }
+
     }
 }
