@@ -78,7 +78,7 @@ namespace SamSeifert.Utilities.FileParsing
                                     if (key_off)
                                     {
                                         key_off = false;
-                                        ret[key] = float.Parse(sb.ToString());
+                                        ret[key] = Double.Parse(sb.ToString());
                                         sb.Length = 0;
                                     }
                                     else throw new Exception("Entering Dictionary Without Key");
@@ -133,7 +133,7 @@ namespace SamSeifert.Utilities.FileParsing
                             default:
                                 if (sb.Length != 0)
                                 {
-                                    ret.Add(float.Parse(sb.ToString()));
+                                    ret.Add(Double.Parse(sb.ToString()));
                                     sb.Length = 0;
                                 }
                                 break;
