@@ -14,5 +14,11 @@ namespace SamSeifert.Utilities
             i = o;
             o = temp;
         }
+
+        public static String GetExecutablePath()
+        {
+            return System.Reflection.Assembly.GetEntryAssembly().Location;
+        }
+
     }
 }
