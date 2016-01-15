@@ -135,5 +135,46 @@ namespace SamSeifert.Utilities
             }
         }
 
+
+
+
+
+
+
+
+
+
+
+        public static void LoadFormState(this Form f)
+        {
+            if (Properties.Settings.Default.FormPositionSaved)
+            {
+                if ((Properties.Settings.Default.FormWindowState != -1) &&
+                    (((FormWindowState)(Properties.Settings.Default.FormWindowState)) == FormWindowState.Maximized))
+                {
+                    f.WindowState = FormWindowState.Maximized;
+                }
+                else
+                {
+                    f.Location = Properties.Settings.Default.FormLocation;
+                    f.StartPosition = FormStartPosition.Manual;
+                    f.Size = Properties.Settings.Default.FormSize;
+                }
+            }
+        }
+
+        public static void SaveFormState(this Form f)
+        {
+            Properties.Settings.Default.FormPositionSaved = true;
+            Properties.Settings.Default.FormLocation = f.Location;
+            Properties.Settings.Default.FormSize = f.Size;
+
+            if (f.WindowState == FormWindowState.Minimized) Properties.Settings.Default.FormWindowState = Convert.ToInt32(FormWindowState.Normal);
+            else Properties.Settings.Default.FormWindowState = Convert.ToInt32(f.WindowState);
+
+            Properties.Settings.Default.Save();
+
+        }
+
     }
 }
