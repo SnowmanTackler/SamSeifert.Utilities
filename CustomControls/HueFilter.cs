@@ -15,6 +15,12 @@ namespace SamSeifert.Utilities.CustomControls
         public float BandWidth { get; private set; } = 0.5f;
         public float BandCenter { get; private set; } = 0.5f;
 
+        public void setInitialValues(float band_center, float band_width)
+        {
+            this.BandWidth = band_width;
+            this.BandCenter = band_center;
+        }
+
         public event EventHandler ValueChanged;
 
         public HueFilter()
@@ -154,5 +160,6 @@ namespace SamSeifert.Utilities.CustomControls
             this.setImageForControl();
             if (this.ValueChanged != null) this.ValueChanged(this, EventArgs.Empty);
         }
+
     }
 }
