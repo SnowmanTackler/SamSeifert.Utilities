@@ -210,7 +210,7 @@ namespace SamSeifert.Utilities.FileParsing
         }
 
 
-        public static string ToSting(Object o)
+        public static string ToString(Object o)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -218,6 +218,7 @@ namespace SamSeifert.Utilities.FileParsing
 
             return sb.ToString();
         }
+
         public static void print (Object o)
         {
             JsonParser.print(o, Console.Out.Write, Console.Out.Write);
