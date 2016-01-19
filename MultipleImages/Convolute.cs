@@ -55,9 +55,9 @@ namespace SamSeifert.CSCV
 
                 // In an ideal world the smaller input would have an odd (height) and (width)
                 int x1_start = (s2.Width - 1) / 2;
-                int x1_end = s1.Width - (s2.Width - x1_start);
+                int x1_end = s1.Width - (s2.Width - x1_start - 1);
                 int y1_start = (s2.Height - 1) / 2;
-                int y1_end = s1.Height - (s2.Height - y1_start);
+                int y1_end = s1.Height - (s2.Height - y1_start - 1);
 
                 Action<Sect, Sect, Sect> act = (Sect anon_in1, Sect anon_in2, Sect anon_outp) =>
                 {
