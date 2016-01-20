@@ -188,6 +188,44 @@ namespace SamSeifert.CSCV
             }
         }
 
+        public static void UpdatePadding(int pad, float value, ref Sect inpt)
+        {
+            var size_now = inpt.getPrefferedSize();
+            var inh = size_now.Height - pad * 2;
+            var inw = size_now.Width - pad * 2;
+
+            Action<SectArray> act = (SectArray anon) =>
+            {
+                for (int y = 0; y < pad; y++)
+                    for (int x = 0; x < size_now.Width; x++)
+                        anon[y, x] = value; // TOP  
+
+                for (int y = inh + pad, py = 0; py < pad; py++, y++)
+                    for (int x = 0; x < size_now.Width; x++)
+                        anon[y, x] = value; // BOT
+
+                for (int y = pad, ih = 0; ih < inh; ih++, y++)
+                    for (int x = 0; x < pad; x++)
+                        anon[y, x] = value; // LEFT (No Corners)
+
+                for (int y = pad, ih = 0; ih < inh; ih++, y++)
+                    for (int x = inw + pad, px = 0; px < pad; px++, x++)
+                        anon[y, x] = value; // RIGHT (No Corners)
+            };
+
+            if (inpt._Type == SectType.Holder)
+            {
+                foreach (var sect in (inpt as SectHolder).Sects.Values)
+                {
+                    act(sect as SectArray);
+                }
+            }
+            else
+            {
+                act(inpt as SectArray);
+            }
+        }
+
         public static ToolboxReturn PaddingOff(Sect inpt, int pad, ref Sect outp)
         {
             if (inpt == null)
