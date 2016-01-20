@@ -102,6 +102,7 @@
     <Compile Include="IA_Single.cs" />
     <Compile Include="MultipleImages\Add.cs" />
     <Compile Include="MultipleImages\Convolute.cs" />
+    <Compile Include="MultipleImages\ErodeDilate.cs" />
     <Compile Include="MultipleImages\Helpers.cs" />
     <Compile Include="MultipleImages\Multiply.cs" />
     <Compile Include="SingleImage\Anonymous.cs" />
