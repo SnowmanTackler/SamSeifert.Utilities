@@ -38,6 +38,7 @@ namespace SamSeifert.GLE.CAD
         public static void NoColorOn() { UseColorTracker++; }
         public static void NoColorOff() { UseColorTracker--; }
 
+        internal Action AnonymousDraw = null;
 
         public CadObject(CadObject[] cos, String name = "Group")
         {
@@ -158,6 +159,10 @@ namespace SamSeifert.GLE.CAD
             }
         }
 
+        /// <summary>
+        /// Checks The Viewport to see if we're inside.
+        /// </summary>
+        /// <param name="useColor"></param>
         private void draw2(bool useColor)
         {
             this.updateBoundingSphere();
@@ -213,29 +218,33 @@ namespace SamSeifert.GLE.CAD
             }
             else
             {
-                if ((CadObject.UseColorTracker == 0) && (useColor) && (this._Color != null)) this._Color.sendToGL();
-
-                switch (this._GLType)
+                if (this.AnonymousDraw == null)
                 {
-                    case GLType.UNK:
-                        {
-                            break;
-                        }
-                    case GLType.GL3:
-                        {
-                            if (this._BoolSetupGL3) this.drawGL3();
-                            else if (this.setupGL3()) this._BoolSetupGL3 = true;
-                            else this._GLType = GLType.UNK;
-                            break;
-                        }
-                    case GLType.GL4:
-                        {
-                            if (this._BoolSetupGL4) this.drawGL4();
-                            else if (this.setupGL4()) this._BoolSetupGL4 = true;
-                            else this._GLType = GLType.UNK;
-                            break;
-                        }
+                    if ((CadObject.UseColorTracker == 0) && (useColor) && (this._Color != null)) this._Color.sendToGL();
+
+                    switch (this._GLType)
+                    {
+                        case GLType.UNK:
+                            {
+                                break;
+                            }
+                        case GLType.GL3:
+                            {
+                                if (this._BoolSetupGL3) this.drawGL3();
+                                else if (this.setupGL3()) this._BoolSetupGL3 = true;
+                                else this._GLType = GLType.UNK;
+                                break;
+                            }
+                        case GLType.GL4:
+                            {
+                                if (this._BoolSetupGL4) this.drawGL4();
+                                else if (this.setupGL4()) this._BoolSetupGL4 = true;
+                                else this._GLType = GLType.UNK;
+                                break;
+                            }
+                    }
                 }
+                else AnonymousDraw();
             }
         }
 

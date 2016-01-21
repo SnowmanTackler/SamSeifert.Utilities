@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="CAD\CadObject.cs" />
     <Compile Include="CAD\CadObjectGenerator.cs" />
+    <Compile Include="CAD\CadObjectGenerator\FromXaml.cs" />
     <Compile Include="CAD\GUI\CadHandler.cs">
       <SubType>UserControl</SubType>
     </Compile>
