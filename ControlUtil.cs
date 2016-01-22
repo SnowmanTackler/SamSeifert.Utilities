@@ -155,16 +155,14 @@ namespace SamSeifert.Utilities
         {
             if (Properties.Settings.Default.FormPositionSaved)
             {
+                f.Location = Properties.Settings.Default.FormLocation;
+                f.StartPosition = FormStartPosition.Manual;
+                f.Size = Properties.Settings.Default.FormSize;
+
                 if ((Properties.Settings.Default.FormWindowState != -1) &&
                     (((FormWindowState)(Properties.Settings.Default.FormWindowState)) == FormWindowState.Maximized))
                 {
                     f.WindowState = FormWindowState.Maximized;
-                }
-                else
-                {
-                    f.Location = Properties.Settings.Default.FormLocation;
-                    f.StartPosition = FormStartPosition.Manual;
-                    f.Size = Properties.Settings.Default.FormSize;
                 }
             }
         }
