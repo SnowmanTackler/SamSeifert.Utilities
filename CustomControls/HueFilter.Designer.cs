@@ -39,20 +39,20 @@
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(325, 187);
+            this.pictureBox1.Size = new System.Drawing.Size(325, 125);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.SizeChanged += new System.EventHandler(this.ControlSizeChanged);
             // 
-            // HueChooser
+            // HueFilter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.Controls.Add(this.pictureBox1);
-            this.Name = "HueChooser";
-            this.Size = new System.Drawing.Size(325, 187);
+            this.Name = "HueFilter";
+            this.Size = new System.Drawing.Size(325, 125);
             this.Load += new System.EventHandler(this.ControlLoad);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

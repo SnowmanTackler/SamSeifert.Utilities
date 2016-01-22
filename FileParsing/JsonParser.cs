@@ -4,12 +4,26 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Net.Sockets;
+using System.CodeDom;
+using System.CodeDom.Compiler;
 
 namespace SamSeifert.Utilities.FileParsing
 {
 
     public static class JsonParser
     {
+        private static String ToLiteral(String input)
+        {
+            using (var writer = new System.IO.StringWriter())
+            {
+                using (var provider = CodeDomProvider.CreateProvider("CSharp"))
+                {
+                    provider.GenerateCodeFromExpression(new CodePrimitiveExpression(input), writer, null);
+                    return writer.ToString();
+                }
+            }
+        }
+
         public static Dictionary<String, object> parseDictionary(StreamReader sr)
         {
             var ret = new Dictionary<String, object>();
@@ -154,16 +168,22 @@ namespace SamSeifert.Utilities.FileParsing
                 switch (next)
                 {
                     case '\\':
-                        switch (sr.Read())
+                        char temper = (char)sr.Read();
+                        switch (temper)
                         {
+                            case 'a': sb.Append('\a'); break;
                             case 'b': sb.Append('\b'); break;
                             case 'f': sb.Append('\f'); break;
                             case 'n': sb.Append('\n'); break;
                             case 'r': sb.Append('\r'); break;
                             case 't': sb.Append('\t'); break;
-                            case '"': sb.Append('\"'); break;
+                            case 'v': sb.Append('\v'); break;
+                            case '0': sb.Append('\0'); break;
+                            case '"': sb.Append('"'); break;
                             case '\\': sb.Append('\\'); break;
-                            default: throw new Exception("Unsupported Char After Escape Char!");
+                            default:
+                                Console.WriteLine("Unsupported Char After Escape Char: *" + temper + "*");
+                                throw new NotImplementedException();
                         }
                         break;
                     case '"':
@@ -190,7 +210,7 @@ namespace SamSeifert.Utilities.FileParsing
         }
 
 
-        public static string ToSting(Object o)
+        public static string ToString(Object o)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -198,6 +218,7 @@ namespace SamSeifert.Utilities.FileParsing
 
             return sb.ToString();
         }
+
         public static void print (Object o)
         {
             JsonParser.print(o, Console.Out.Write, Console.Out.Write);
@@ -206,12 +227,7 @@ namespace SamSeifert.Utilities.FileParsing
 
         public static void print(Object o, CharWriter cw, StringWriter sw, string indent = "")
         {
-            if (o is String)
-            {
-                cw('"');
-                sw(o as String);
-                cw('"');
-            }
+            if (o is String) sw(JsonParser.ToLiteral(o as String));
             else if (o is float) sw(o.ToString());
             else if (o is double) sw(o.ToString());
             else if (o is int) sw(o.ToString());
