@@ -20,5 +20,14 @@ namespace SamSeifert.Utilities
             return System.Reflection.Assembly.GetEntryAssembly().Location;
         }
 
+        public static int ModGuaranteePositive(int x, int mod)
+        {
+            return (x % mod + mod) % mod;
+        }
+
+        public static float ModGuaranteePositive(float x, float mod)
+        {
+            return (x % mod + mod) % mod;
+        }
     }
 }
