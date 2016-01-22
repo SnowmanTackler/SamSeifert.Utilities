@@ -7,7 +7,9 @@ using System.Linq;
 using System.Text;
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL; using GL = SamSeifert.GLE.GLR;
+using OpenTK.Graphics.OpenGL;
+using GL = SamSeifert.GLE.GLR;
+using SamSeifert.Utilities;
 
 namespace SamSeifert.GLE
 {
@@ -103,8 +105,7 @@ namespace SamSeifert.GLE
 
                 int dAngle2 = dAngle * 2;
 
-                while (did < 0) did += 360;
-                while (did > 360) did -= 360;
+                did = Helpers.ModGuaranteePositive(did, 360) - 180;
 
                 int stripL = (this.countRadius - 1) * 6;
                 int stripLP = stripL * 4;
