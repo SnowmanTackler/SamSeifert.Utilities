@@ -105,7 +105,7 @@ namespace SamSeifert.GLE
 
                 int dAngle2 = dAngle * 2;
 
-                did = Helpers.ModGuaranteePositive(did, 360) - 180;
+                did = MathUtil.ModGuaranteePositive(did, 360) - 180;
 
                 int stripL = (this.countRadius - 1) * 6;
                 int stripLP = stripL * 4;
