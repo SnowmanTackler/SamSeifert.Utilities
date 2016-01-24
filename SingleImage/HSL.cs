@@ -53,7 +53,7 @@ namespace SamSeifert.CSCV
                 {
                     for (int x = 0; x < w; x++)
                     {
-                        ColorMethods.rgb2hsl(
+                        ColorUtil.rgb2hsl(
                             Math.Max(0, Math.Min(1, R[y, x])),
                             Math.Max(0, Math.Min(1, G[y, x])),
                             Math.Max(0, Math.Min(1, B[y, x])),
@@ -110,7 +110,7 @@ namespace SamSeifert.CSCV
                 {
                     for (int x = 0; x < w; x++)
                     {
-                        ColorMethods.hsl2rgb(
+                        ColorUtil.hsl2rgb(
                             H[y, x],
                             Math.Max(0, Math.Min(1, S[y, x])),
                             Math.Max(0, Math.Min(1, L[y, x])),
