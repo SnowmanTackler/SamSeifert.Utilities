@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SamSeifert.Utilities
 {
-    public static class Helpers
+    public static class MiscUtil
     {
         public static void Swap<T>(ref T i, ref T o)
         {
@@ -18,16 +18,6 @@ namespace SamSeifert.Utilities
         public static String GetExecutablePath()
         {
             return System.Reflection.Assembly.GetEntryAssembly().Location;
-        }
-
-        public static int ModGuaranteePositive(int x, int mod)
-        {
-            return (x % mod + mod) % mod;
-        }
-
-        public static float ModGuaranteePositive(float x, float mod)
-        {
-            return (x % mod + mod) % mod;
         }
     }
 }

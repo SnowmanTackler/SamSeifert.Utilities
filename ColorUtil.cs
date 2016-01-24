@@ -7,12 +7,12 @@ using System.Text;
 
 namespace SamSeifert.Utilities
 {
-    public static class ColorMethods
+    public static class ColorUtil
     {
         public static Boolean CheckHue(float hue, float BandCenter, float BandWidth)
         {
-            hue = Helpers.ModGuaranteePositive(hue, 1.0f);
-            return ColorMethods.GetDistanceWithRollOver(hue, BandCenter) < BandWidth / 2;
+            hue = MathUtil.ModGuaranteePositive(hue, 1.0f);
+            return ColorUtil.GetDistanceWithRollOver(hue, BandCenter) < BandWidth / 2;
         }
 
         public static float GetDistanceWithRollOver(float v1, float v2)
@@ -31,7 +31,7 @@ namespace SamSeifert.Utilities
         /// <param name="b"></param>
         public static void hsl2rgb(float h, float s, float l, out float r, out float g, out float b)
         {
-            h = 6 * Helpers.ModGuaranteePositive(h, 1);
+            h = 6 * MathUtil.ModGuaranteePositive(h, 1);
             float c = s * (1 - Math.Abs(2 * l - 1));
             float x = c * (1 - Math.Abs(h % 2 - 1));
             float m = l - c / 2;
@@ -100,7 +100,7 @@ namespace SamSeifert.Utilities
         /// <param name="v"></param>
         public static void rgb2hsl(Color c, out float h, out float s, out float l)
         {
-            ColorMethods.rgb2hsl(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, out h, out s, out l);
+            ColorUtil.rgb2hsl(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, out h, out s, out l);
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace SamSeifert.Utilities
         public static Color hsv2rgb(float h, float s, float v)
         {
             Color c;
-            ColorMethods.hsv2rgb(h, s, v, out c);
+            ColorUtil.hsv2rgb(h, s, v, out c);
             return c;
         }
 
@@ -163,7 +163,7 @@ namespace SamSeifert.Utilities
         public static void hsv2rgb(float h, float s, float v, out Color c)
         {
             float r, g, b;
-            ColorMethods.hsv2rgb(h, s, v, out r, out g, out b);
+            ColorUtil.hsv2rgb(h, s, v, out r, out g, out b);
             c = Color.FromArgb((int)(r * 255), (int)(g * 255), (int)(b * 255));
         }
 
@@ -187,7 +187,7 @@ namespace SamSeifert.Utilities
                 b = v;
                 return;
             }
-            h = 6 * Helpers.ModGuaranteePositive(h, 1);
+            h = 6 * MathUtil.ModGuaranteePositive(h, 1);
             i = (int)Math.Floor(h);
             f = h - i;          // factorial part of h
             p = v * (1 - s);
@@ -238,7 +238,7 @@ namespace SamSeifert.Utilities
         /// <param name="v"></param>
         public static void rgb2hsv(Color c, out float h, out float s, out float v)
         {
-            ColorMethods.rgb2hsv(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, out h, out s, out v);
+            ColorUtil.rgb2hsv(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, out h, out s, out v);
         }
 
         /// <summary>
