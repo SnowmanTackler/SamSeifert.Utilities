@@ -177,14 +177,12 @@ namespace SamSeifert.GLE.CAD
             {
                 // Check if object is to the right of the camera.
                 float angle = GLR.Projection_hFOV / 2;
-                Vector3 Cutoff = new Vector3((float)Math.Sin(angle), 0, -(float)Math.Cos(angle));
                 angle -= MathHelper.DegreesToRadians(90);
                 Vector3 mover = new Vector3((float)Math.Sin(angle), 0, -(float)Math.Cos(angle));
                 if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
 
                 // Check if object is to the left of the camera.
                 mover.X *= -1;
-                Cutoff.X *= -1;
                 // Object is to the left of fov
                 if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
             }
@@ -192,14 +190,12 @@ namespace SamSeifert.GLE.CAD
             {
                 // Check if object is above of the camera.
                 float angle = GLR.Projection_vFOV / 2;
-                Vector3 Cutoff = new Vector3(0, (float)Math.Sin(angle), -(float)Math.Cos(angle));
                 angle -= MathHelper.DegreesToRadians(90);
                 Vector3 mover = new Vector3(0, (float)Math.Sin(angle), -(float)Math.Cos(angle));
                 if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
 
                 // Check if object is below the camera.
                 mover.Y *= -1;
-                Cutoff.Y *= -1;
                 // Object is to the left of fov
                 if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
             }
@@ -294,8 +290,6 @@ namespace SamSeifert.GLE.CAD
 
         private void updateBoundingSphere()
         {
-            //var tempArray = new Vector3[this.Vertices.Length];  
-
             if (this.BoundingSphereNeeded)
             {
                 this.BoundingSphereNeeded = false;
@@ -343,7 +337,7 @@ namespace SamSeifert.GLE.CAD
                             }
                         }
 
-                        if (furthest_distance < 1.005f * this.BoundingSphereRadius) break; // 1.005 is wiggle room
+                        if (furthest_distance < 1.001f * this.BoundingSphereRadius) break; // 1.001 is wiggle room
 
                         var center_to_farthest = furthest.Item1 - this.BoundingSphereCenter;
                         float new_radius = (center_to_farthest.Length + this.BoundingSphereRadius + furthest.Item2) / 2;
@@ -354,36 +348,68 @@ namespace SamSeifert.GLE.CAD
                 }
                 else
                 {
-                    var bestLength = 0f;
+                    // Bitter's Algorithm
+                    var furthest_distance = 0f;
                     var bestV = Vector3.Zero;
+
+                    // Find Point Farthest From Origin
                     foreach (var v in this.Vertices)
                     {
-                        var length = (this.Vertices[0] - v).LengthSquared;
-         
-                        if (length > bestLength)
+                        var length = (this.Vertices[0] - v).LengthSquared;         
+                        if (length > furthest_distance)
                         {
-                            bestLength = length;
+                            furthest_distance = length;
                             bestV = v;
                         }
                     }
-                    bestLength = 0.0f;
+
+                    furthest_distance = 0.0f;
                     var circlePoint1 = bestV;
+
+                    // Find Point Farthest From That Point
                     foreach (var v in this.Vertices)
                     {
                         var length = (circlePoint1 - v).LengthSquared;
 
-                        if (length > bestLength)
+                        if (length > furthest_distance)
                         {
-                            bestLength = length;
+                            furthest_distance = length;
                             bestV = v;
                         }
                     }
+
+                    // Setup Sphere
                     this.BoundingSphereCenter = (circlePoint1 + bestV) / 2;
                     this.BoundingSphereRadius = (circlePoint1 - bestV).Length / 2;
+
+                    // Find farthest spheres not enclosed by bigger sphere
+                    while (true)
+                    {
+                        furthest_distance = 0;
+                        var furthest = Vector3.Zero;
+                        foreach (var v in this.Vertices)
+                        {
+                            float dist = (this.BoundingSphereCenter - v).Length;
+
+                            if (dist > furthest_distance)
+                            {
+                                furthest_distance = dist;
+                                furthest = v;
+                            }
+                        }
+
+                        if (furthest_distance < 1.001f * this.BoundingSphereRadius) break; // 1.001 is wiggle room
+
+                        // Expand Spherer to Include Furthest
+                        var center_to_farthest = furthest - this.BoundingSphereCenter;
+                        float new_radius = (center_to_farthest.Length + this.BoundingSphereRadius) / 2;
+                        center_to_farthest.Normalize();
+                        this.BoundingSphereCenter += center_to_farthest * (new_radius - this.BoundingSphereRadius);
+                        this.BoundingSphereRadius = new_radius;
+                    }
                 }
 
                 this.BoundingSphereRadius *= 1.001f; // Just give a little clearance.
-//                Console.WriteLine(this._Name + " " + this.BoundingSphereRadius);
             }
         }
 

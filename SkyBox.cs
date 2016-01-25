@@ -165,6 +165,7 @@ namespace SamSeifert.GLE
                     GL.Color3(Color.White);
                     GL.Enable(EnableCap.Texture2D);
                     GL.Enable(EnableCap.TextureCubeMapSeamless);
+                    GL.Disable(EnableCap.Lighting);
 
                     if (this._BoolFull) GL.Translate(0, -distance, 0);
 
@@ -284,6 +285,7 @@ namespace SamSeifert.GLE
                     GL.Disable(EnableCap.TextureCubeMapSeamless);
                     GL.BindTexture(TextureTarget.Texture2D, 0);
                     GL.Disable(EnableCap.Texture2D);
+                    GL.Enable(EnableCap.Lighting);
                 }
                 GL.EndList();
             }
