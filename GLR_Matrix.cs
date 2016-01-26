@@ -68,6 +68,17 @@ namespace SamSeifert.GLE
             ls[ls.Count - 1] = m * ls[ls.Count - 1];
         }
 
+        /// <summary>
+        /// Only modify the matrix in OpenGL.  Not in our matrix holders!
+        /// </summary>
+        /// <param name="m"></param>
+        public static void MultMatrixOnlyGL(ref Matrix4 m)
+        {
+            GL.MultMatrix(ref m);
+        }
+
+
+
         public static void Translate(Vector3 v)
         {
             GLR.Translate(v.X, v.Y, v.Z);
