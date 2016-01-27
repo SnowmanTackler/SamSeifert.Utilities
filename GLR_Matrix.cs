@@ -180,15 +180,8 @@ namespace SamSeifert.GLE
 
         public static void loadProjection(float vertical_fov_degrees, float horizontal_fov_degrees, float zNear, float zFar)
         {
-            GLR.Projection_vFOV = MathHelper.DegreesToRadians(vertical_fov_degrees);
-            GLR.Projection_hFOV = MathHelper.DegreesToRadians(horizontal_fov_degrees);
-            GLR.Projection_zFar = zFar;
-            GLR.Projection_zNear = zNear;
-
-            GL.MatrixMode(OpenTK.Graphics.OpenGL.MatrixMode.Projection);
             Matrix4 p = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(vertical_fov_degrees), horizontal_fov_degrees / vertical_fov_degrees, zNear, zFar);
-            GL.LoadMatrix(ref p);
-            GL.MatrixMode(GLR._MatrixMode);
+            GLR.loadProjection(ref p, vertical_fov_degrees, horizontal_fov_degrees, zNear, zFar);
         }
 
         public static void loadProjectionOrtho(ref Matrix4 p)
