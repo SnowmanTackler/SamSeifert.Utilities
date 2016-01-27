@@ -20,44 +20,44 @@ namespace SamSeifert.Utilities
 
         public const float PIF = (float)Math.PI;
 
-        public static float toRadiansf(float degrees)
+        public static float toRadiansF(float degrees)
         {
             return degrees * (MathUtil.PIF / 180);
         }
 
-        public static float toDegreesf(float radians)
+        public static float toDegreesF(float radians)
         {
             return radians * (180 / MathUtil.PIF);
         }
 
-        public static double toRadiansd(double degrees)
+        public static double toRadiansD(double degrees)
         {
             return degrees * (Math.PI / 180);
         }
 
-        public static double toDegreesd(double radians)
+        public static double toDegreesD(double radians)
         {
             return radians * (180 / Math.PI);
         }
 
         public static float SinDf(float degrees)
         {
-            return (float)Math.Sin(MathUtil.toRadiansf(degrees));
+            return (float)Math.Sin(MathUtil.toRadiansF(degrees));
         }
 
         public static float CosDf(float degrees)
         {
-            return (float)Math.Cos(MathUtil.toRadiansf(degrees));
+            return (float)Math.Cos(MathUtil.toRadiansF(degrees));
         }
 
         public static float SinDf(double degrees)
         {
-            return (float)Math.Sin(MathUtil.toRadiansd(degrees));
+            return (float)Math.Sin(MathUtil.toRadiansD(degrees));
         }
 
         public static float CosDf(double degrees)
         {
-            return (float)Math.Cos(MathUtil.toRadiansd(degrees));
+            return (float)Math.Cos(MathUtil.toRadiansD(degrees));
         }
 
         public static float Clamp(int min, int max, int val)
