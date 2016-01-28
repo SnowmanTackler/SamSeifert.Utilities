@@ -190,6 +190,16 @@ namespace SamSeifert.GLE
             GL.NewList(ls, lm);
         }
 
+        public static int GenFramebuffer()
+        {
+            return GL.GenFramebuffer();
+        }
+
+        public static int GenRenderbuffer()
+        {
+            return GL.GenRenderbuffer();
+        }
+
         public static void Color3(System.Drawing.Color white)
         {
             GL.Color3(white);
@@ -226,6 +236,11 @@ namespace SamSeifert.GLE
         }
 
         public static void TexCoord2(int v1, int v2)
+        {
+            GL.TexCoord2(v1, v2);
+        }
+
+        public static void TexCoord2(float v1, float v2)
         {
             GL.TexCoord2(v1, v2);
         }
