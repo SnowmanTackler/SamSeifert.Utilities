@@ -281,10 +281,10 @@ namespace SamSeifert.GLE.CAD
                             ls.Add(CadObjectGenerator.xamlModelGeometryModel3D(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission));
                             break;
                         case "AmbientLight":
-                            f1.display();
+                            // f1.display();
                             break;
                         case "DirectionalLight":
-                            f1.display();
+                            // f1.display();
                             break;
                         default:
                             Console.WriteLine("CadObjectGenerator." + System.Reflection.MethodBase.GetCurrentMethod().Name + " ignoring " + f1._Name);
