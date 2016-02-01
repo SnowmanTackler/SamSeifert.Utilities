@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using OpenTK.Graphics.OpenGL; using GL = SamSeifert.GLE.GLR;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
+using GL = SamSeifert.GLE.GLR;
 
 
 namespace SamSeifert.GLE
@@ -32,6 +33,11 @@ namespace SamSeifert.GLE
             this.g = g;
             this.b = b;
             this.setColorParams();
+        }
+
+        public ColorGL(Vector3 v)
+            : this(v.X, v.Y, v.Z)
+        {
         }
 
         public void setAlpha(float alpha)

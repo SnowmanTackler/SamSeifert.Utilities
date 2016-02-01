@@ -50,6 +50,12 @@ namespace SamSeifert.GLE
             GL.DrawBuffer(dbm);
         }
 
+        public static void DrawArrays(PrimitiveType pt, int first, int count)
+        {
+            GL.DrawArrays(pt, first, count);
+        }
+
+
         public static void Flush()
         {
             GL.Flush();
@@ -325,6 +331,12 @@ namespace SamSeifert.GLE
             GL.BufferData(bt, ip, dat, buh);
         }
 
+        public static void BufferSubData(BufferTarget target, IntPtr offset, int size, IntPtr data)
+        {
+            GL.BufferSubData(target, offset, size, data);
+        }
+
+
         public static void BindTexture(TextureTarget tt, int dex)
         {
             GL.BindTexture(tt, dex);
@@ -430,9 +442,15 @@ namespace SamSeifert.GLE
             GL.DeleteFramebuffer(id);
         }
 
+        public static void DeleteRenderbuffer(int buffer)
+        {
+            GL.DeleteRenderbuffer(buffer);
+        }
+
         public static void Color4(Color color)
         {
             GL.Color4(color);
         }
+
     }
 }

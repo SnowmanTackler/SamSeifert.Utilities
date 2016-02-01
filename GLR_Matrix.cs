@@ -190,6 +190,5 @@ namespace SamSeifert.GLE
             GL.LoadMatrix(ref p);
             GL.MatrixMode(GLR._MatrixMode);
         }
-
     }
 }

@@ -12,15 +12,36 @@ namespace SamSeifert.GLE
 {
     public class Shaders
     {
-        private readonly int _GL_Program = 0;
-        private readonly int _GL_Vertex = 0;
-        private readonly int _GL_Frag = 0;
+        private int _GL_Program = 0;
+        private int _GL_Vertex = 0;
+        private int _GL_Frag = 0;
+
         private Dictionary<String, int> UniformLocations = new Dictionary<String, int>();
 
         public void UseProgram()
         {
             GL.UseProgram(this._GL_Program);
         }
+       
+        public void GLDelete()
+        {
+            if (this._GL_Vertex != 0)
+            {
+                GL.DeleteShader(this._GL_Vertex);
+                this._GL_Vertex = 0;
+            }
+            if (this._GL_Frag != 0)
+            {
+                GL.DeleteShader(this._GL_Frag);
+                this._GL_Frag = 0;
+            }
+            if (this._GL_Program != 0)
+            {
+                GL.DeleteShader(this._GL_Program);
+                this._GL_Program = 0;
+            }
+        }
+
 
         private int UniformLocation(String key)
         {
@@ -83,8 +104,7 @@ namespace SamSeifert.GLE
             {
                 if (this._GL_Program == 0)
                 {
-                    if (this._GL_Vertex != 0) GL.DeleteShader(this._GL_Vertex);
-                    if (this._GL_Frag != 0) GL.DeleteShader(this._GL_Frag);
+                    this.GLDelete();
                 }
                 else
                 {
@@ -113,7 +133,6 @@ namespace SamSeifert.GLE
             GLO.Uniform1(this.UniformLocation(uniform_name), texture_index);
             GL.UseProgram(0);
         }
-
 
         public void Uniform(String uniform_name, float f)
         {

@@ -120,7 +120,6 @@ namespace SamSeifert.GLE.CAD
                 this._BoolSetupGL3 = this.setupGL3();
                 if (this._BoolSetupGL3) this._GLType = GLType.GL3;
                 else this._GLType = GLType.UNK;
-
             }
         }
 
