@@ -14,7 +14,7 @@ namespace SamSeifert.GLE
     public class FrameBuffers : DeleteableObject
     {
         public int _ColorText { get; private set; } = 0;
-        public int _FrameBuffer { get; private set; } = 0;
+        private int _FrameBuffer = 0;
         public int _DepthBuffer { get; private set; } = 0;
 
         public FrameBuffers(
@@ -99,6 +99,37 @@ namespace SamSeifert.GLE
             {
                 GL.DeleteFramebuffer(this._FrameBuffer);
                 this._FrameBuffer = 0;
+            }
+        }
+
+
+        /// <summary>
+        /// If we want to draw on the buffer, we can call using(this.asDrawable) and this 
+        /// automatically sets up the drawing and turns it off when we're done!
+        /// </summary>
+        public class Drawable : IDisposable
+        {
+            public Drawable(int frame_buffer_index)
+            {
+                GL.BindFramebuffer(FramebufferTarget.FramebufferExt, frame_buffer_index);
+                GL.DrawBuffer((DrawBufferMode)FramebufferAttachment.ColorAttachment0Ext);
+            }
+
+            public void Dispose()
+            {
+                GL.BindFramebuffer(FramebufferTarget.FramebufferExt, 0);
+                GL.DrawBuffer(DrawBufferMode.Back);
+            }
+        }
+
+        /// <summary>
+        /// Make sure you wrap this is an using()
+        /// </summary>
+        public Drawable asDrawable
+        {
+            get
+            {
+                return new Drawable(this._FrameBuffer);
             }
         }
     }

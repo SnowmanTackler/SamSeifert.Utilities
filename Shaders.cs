@@ -17,11 +17,6 @@ namespace SamSeifert.GLE
         private int _GL_Frag = 0;
 
         private Dictionary<String, int> UniformLocations = new Dictionary<String, int>();
-
-        public void UseProgram()
-        {
-            GL.UseProgram(this._GL_Program);
-        }
        
         public void GLDelete()
         {
@@ -41,7 +36,6 @@ namespace SamSeifert.GLE
                 this._GL_Program = 0;
             }
         }
-
 
         private int UniformLocation(String key)
         {
@@ -148,6 +142,37 @@ namespace SamSeifert.GLE
         public void Uniform(String uniform_name, ref Matrix4 mat)
         {
             GLO.UniformMatrix4(this.UniformLocation(uniform_name), false, ref mat);
+        }
+
+
+
+        /// <summary>
+        /// If we want to use program, we can call using(this.asProgram) and this 
+        /// automatically sets up the drawing and turns it off when we're done!
+        /// </summary>
+        public class Program : IDisposable
+        {
+            public Program(int program_index)
+            {
+                GL.UseProgram(program_index);
+            }
+
+            public void Dispose()
+            {
+                GL.UseProgram(0);
+            }
+        }
+
+
+        /// <summary>
+        /// Make sure you wrap this is an using()
+        /// </summary>
+        public Program AsProgram
+        {
+            get
+            {
+                return new Program(this._GL_Program);
+            }
         }
 
 
@@ -340,7 +365,21 @@ namespace SamSeifert.GLE
             GL.GetShader(vertShader, ShaderParameter.CompileStatus, out param);
             if (param == 0)
             {
+                Console.WriteLine("*****************************************");
+                Console.WriteLine("*****************************************");
+                Console.WriteLine("*****************************************");
+                Console.WriteLine();
                 Console.WriteLine("Vert Shader Compile Error");
+                Console.WriteLine();
+                Console.WriteLine("*****************************************");
+                Console.WriteLine();
+                Console.WriteLine(vertexCode);
+                Console.WriteLine();
+                Console.WriteLine(GLO.GetShaderInfoLog(vertShader));
+                Console.WriteLine();
+                Console.WriteLine("*****************************************");
+                Console.WriteLine("*****************************************");
+                Console.WriteLine("*****************************************");
                 return 0;
             }
             return vertShader;
@@ -359,7 +398,21 @@ namespace SamSeifert.GLE
 
             if (param == 0)
             {
+                Console.WriteLine("*****************************************");
+                Console.WriteLine("*****************************************");
+                Console.WriteLine("*****************************************");
+                Console.WriteLine();
                 Console.WriteLine("Frag Shader Compile Error");
+                Console.WriteLine();
+                Console.WriteLine("*****************************************");
+                Console.WriteLine();
+                Console.WriteLine(fragCode);
+                Console.WriteLine();
+                Console.WriteLine(GLO.GetShaderInfoLog(fragShader));
+                Console.WriteLine();
+                Console.WriteLine("*****************************************");
+                Console.WriteLine("*****************************************");
+                Console.WriteLine("*****************************************");
                 return 0;
             }
             return fragShader;

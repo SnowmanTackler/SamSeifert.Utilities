@@ -82,7 +82,7 @@
     </Compile>
     <Compile Include="CAD\GUI\Program.cs" />
     <Compile Include="CAD\Helpers.cs" />
-    <Compile Include="CubeMap.cs" />
+    <Compile Include="CubeMaps.cs" />
     <Compile Include="DeleteableObject.cs" />
     <Compile Include="Draw.cs" />
     <Compile Include="ColorGL.cs" />
