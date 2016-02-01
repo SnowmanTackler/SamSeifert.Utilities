@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SamSeifert.GLE.CAD
+namespace SamSeifert.GLE.CAD.Generator
 {
-    public static partial class CadObjectGenerator
+    public static partial class FromXaml
     {
-        public static CadObject CreateFromFile_XAML(
+        public static CadObject Create(
             String FileText,
             String ObjectName = "",
             float xScale = 1.0f,
@@ -35,7 +35,7 @@ namespace SamSeifert.GLE.CAD
             switch (match0L.Count)
             {
                 case 1:
-                    var co = CadObjectGenerator.xamlModelVisual3D(
+                    var co = SamSeifert.GLE.CAD.Generator.FromXaml.xamlModelVisual3D(
                         match0L[0],
                         xScale,
                         yScale,
@@ -61,7 +61,7 @@ namespace SamSeifert.GLE.CAD
 
                     // TAKE OUT TREE STRUCTURE AND MAKE SINGLE LEVEL
                     var all = new List<CadObject>();
-                    CadObjectGenerator.consolidateMatrices(co, all);
+                    Generic.consolidateMatrices(co, all);
                     int old = all.Count;
 
                     for (int i = 0; i < all.Count; i++)
@@ -143,12 +143,12 @@ namespace SamSeifert.GLE.CAD
                     {
                         case "ModelVisual3D.Transform":
                             {
-                                CadObjectGenerator.xamlParseTransform(f1, xScale, yScale, zScale, co);
+                                xamlParseTransform(f1, xScale, yScale, zScale, co);
                                 break;
                             }
                         case "ModelVisual3D.Content":
                             {
-                                CadObjectGenerator.xamlModelVisual3DContent(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, ret);
+                                xamlModelVisual3DContent(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, ret);
                                 break;
                             }
                         case "ModelVisual3D.Children":
@@ -161,7 +161,7 @@ namespace SamSeifert.GLE.CAD
                                         switch (f2._Name)
                                         {
                                             case "ModelVisual3D":
-                                                ret.Add(CadObjectGenerator.xamlModelVisual3D(f2, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission));
+                                                ret.Add(xamlModelVisual3D(f2, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission));
                                                 break;
                                             default:
                                                 Console.WriteLine("CadObjectGenerator." + System.Reflection.MethodBase.GetCurrentMethod().Name + " ignoring " + f1._Name);
@@ -208,7 +208,7 @@ namespace SamSeifert.GLE.CAD
                         switch (f1._Name)
                         {
                             case "Model3DGroup":
-                                CadObjectGenerator.xamlModel3DGroup(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, ls);
+                                xamlModel3DGroup(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, ls);
                                 break;
                             default:
                                 Console.WriteLine("CadObjectGenerator." + System.Reflection.MethodBase.GetCurrentMethod().Name + " ignoring " + f1._Name);
@@ -243,7 +243,7 @@ namespace SamSeifert.GLE.CAD
                         switch (f1._Name)
                         {
                             case "Model3DGroup.Children":
-                                CadObjectGenerator.xamlModelVisual3DGroupChildren(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, ls);
+                                xamlModelVisual3DGroupChildren(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, ls);
                                 break;
                             default:
                                 Console.WriteLine("CadObjectGenerator." + System.Reflection.MethodBase.GetCurrentMethod().Name + " ignoring " + f1._Name);
@@ -278,7 +278,7 @@ namespace SamSeifert.GLE.CAD
                     switch (f1._Name)
                     {
                         case "GeometryModel3D":
-                            ls.Add(CadObjectGenerator.xamlModelGeometryModel3D(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission));
+                            ls.Add(xamlModelGeometryModel3D(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission));
                             break;
                         case "AmbientLight":
                             // f1.display();
@@ -323,7 +323,7 @@ namespace SamSeifert.GLE.CAD
                         {
                             case "GeometryModel3D.Material":
                                 {
-                                    CadObjectGenerator.xamlParseColor(f1, useAmbient, useDiffuse, useSpecular, useEmission, co);
+                                    xamlParseColor(f1, useAmbient, useDiffuse, useSpecular, useEmission, co);
                                     break;
                                 }
                             case "GeometryModel3D.Geometry":
@@ -343,7 +343,7 @@ namespace SamSeifert.GLE.CAD
                                                         var data = f2._Params;
                                                         var verts = new List<Vector3>();
                                                         var norms = new List<Vector3>();
-                                                        CadObjectGenerator.xamlParseDict(ref data, ref verts, ref norms);
+                                                        xamlParseDict(ref data, ref verts, ref norms);
                                                         var verts2array = verts.ToArray();
                                                         var norms2array = norms.ToArray();
                                                         for (int j = 0; j < verts.Count; j++)
@@ -629,12 +629,12 @@ namespace SamSeifert.GLE.CAD
                 dict.TryGetValue(m2, out ves) &&
                 dict.TryGetValue(m3, out ins))
             {
-                var v = CadObjectGenerator.xamlParseVector3(ves);
-                var n = CadObjectGenerator.xamlParseVector3(nos);
+                var v = xamlParseVector3(ves);
+                var n = xamlParseVector3(nos);
 
                 if (v.Count == n.Count)
                 {
-                    var i = CadObjectGenerator.xamlParseVertices(ins);
+                    var i = xamlParseVertices(ins);
 
                     foreach (var trn in i)
                     {

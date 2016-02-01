@@ -140,7 +140,7 @@ namespace SamSeifert.GLE.CAD.GUI
                     {
                         var name = Path.GetFileName(this.textBox1.Text);
                         var t = String.Join(" ", File.ReadAllLines(this.textBox1.Text));
-                        var co = CadObjectGenerator.CreateFromFile_XAML(t, name);
+                        var co = SamSeifert.GLE.CAD.Generator.FromXaml.Create(t, name);
                         if (co != null) list.Add(co);
                         break;
                     }

@@ -452,5 +452,9 @@ namespace SamSeifert.GLE
             GL.Color4(color);
         }
 
+        public static void DepthMask(bool flag)
+        {
+            GL.DepthMask(flag);
+        }
     }
 }

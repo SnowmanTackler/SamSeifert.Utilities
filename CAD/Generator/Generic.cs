@@ -8,11 +8,11 @@ using System.Windows.Forms;
 using SamSeifert.Utilities.FileParsing;
 using OpenTK;
 
-namespace SamSeifert.GLE.CAD
+namespace SamSeifert.GLE.CAD.Generator
 {
-    public static partial class CadObjectGenerator
+    public static class Generic
     {
-        static void consolidateMatrices(CadObject co, List<CadObject> all_objects)
+        internal static void consolidateMatrices(CadObject co, List<CadObject> all_objects)
         {
             all_objects.Add(co);
             var m4 = Matrix4.Identity;
@@ -24,19 +24,13 @@ namespace SamSeifert.GLE.CAD
                 var new_mat = m4 * child._Matrix;
                 child._Matrix = new_mat;
                 child.BoolUseTranslationAndRotation = true;
-                CadObjectGenerator.consolidateMatrices(child, all_objects);
+                consolidateMatrices(child, all_objects);
             }
             co.transformPoints(ref m4);
         }
 
 
-        public static CadObject CreateFromAnonymousFunction(Action a, Vector3[] vertices)
-        {
-            var co = new CadObject();
-            co.Vertices = vertices;
-            co.AnonymousDraw = a;
-            return co;
-        }
+
 
 
 

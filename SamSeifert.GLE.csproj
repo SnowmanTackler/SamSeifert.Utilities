@@ -53,7 +53,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CAD\CadObject.cs" />
-    <Compile Include="CAD\CadObjectGenerator.cs" />
+    <Compile Include="CAD\CadObjectGenerator\Anonymous.cs" />
+    <Compile Include="CAD\CadObjectGenerator\Generic.cs" />
     <Compile Include="CAD\CadObjectGenerator\FromXaml.cs" />
     <Compile Include="CAD\GUI\CadHandler.cs">
       <SubType>UserControl</SubType>
