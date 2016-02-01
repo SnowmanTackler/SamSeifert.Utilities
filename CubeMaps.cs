@@ -129,15 +129,14 @@ namespace SamSeifert.GLE
         {
             GL.loadProjection(90, 90, zNear, zFar);
             GL.Viewport(0, 0, this._Resolution.Width, this._Resolution.Height);
-            GL.MatrixMode(MatrixMode.Modelview);
 
             for (int i = 0; i < 6; i++)
             {
                 using (this._FrameBuffers[i].asDrawable)
                 {
                     GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-                    GL.LoadIdentity();
-                    GL.MultMatrix(ref this._Matrices[i]);
+                    GL.LoadMatrix(ref this._Matrices[i]);
+//                    GL.MultMatrix(ref this._Matrices[i]);
                     GL.MultMatrix(ref m);
                     render();
                 }
@@ -146,7 +145,7 @@ namespace SamSeifert.GLE
 
         public void RenderOnScreen()
         {
-            var ortho = Matrix4.CreateOrthographicOffCenter(0, 4, 3, 0, 0, 1);
+            var ortho = Matrix4.CreateOrthographicOffCenter(0, 4, 0, 3, 0, 1);
             GL.loadProjectionOrtho(ref ortho);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
