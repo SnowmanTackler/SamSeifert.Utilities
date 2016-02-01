@@ -53,9 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CAD\CadObject.cs" />
-    <Compile Include="CAD\CadObjectGenerator\Anonymous.cs" />
-    <Compile Include="CAD\CadObjectGenerator\Generic.cs" />
-    <Compile Include="CAD\CadObjectGenerator\FromXaml.cs" />
+    <Compile Include="CAD\Generator\Anonymous.cs" />
+    <Compile Include="CAD\Generator\Generic.cs" />
+    <Compile Include="CAD\Generator\FromXaml.cs" />
     <Compile Include="CAD\GUI\CadHandler.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -82,8 +82,11 @@
     </Compile>
     <Compile Include="CAD\GUI\Program.cs" />
     <Compile Include="CAD\Helpers.cs" />
+    <Compile Include="CubeMap.cs" />
+    <Compile Include="DeleteableObject.cs" />
     <Compile Include="Draw.cs" />
     <Compile Include="ColorGL.cs" />
+    <Compile Include="FrameBuffers.cs" />
     <Compile Include="GLR.cs" />
     <Compile Include="GLR_Matrix.cs" />
     <Compile Include="GLR_Simple.cs" />

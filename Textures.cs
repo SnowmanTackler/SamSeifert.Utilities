@@ -49,7 +49,7 @@ namespace SamSeifert.GLE
             System.Drawing.Imaging.BitmapData TextureData = im.LockBits(
                 new System.Drawing.Rectangle(0, 0, w, h),
                 System.Drawing.Imaging.ImageLockMode.ReadOnly,
-                im.PixelFormat);
+                System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 
             //Code to get the data to the OpenGL Driver
 

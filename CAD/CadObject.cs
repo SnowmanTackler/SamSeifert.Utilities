@@ -8,7 +8,7 @@ using OpenTK.Graphics.OpenGL; using GL = SamSeifert.GLE.GLR;
 
 namespace SamSeifert.GLE.CAD
 {
-    public class CadObject
+    public class CadObject : DeleteableObject
     {
         internal bool BoolUseTranslationAndRotation = false;
         public bool BoolDisplay = true;

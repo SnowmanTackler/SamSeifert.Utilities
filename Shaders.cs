@@ -10,7 +10,7 @@ using GL = SamSeifert.GLE.GLR;
 
 namespace SamSeifert.GLE
 {
-    public class Shaders
+    public class Shaders : DeleteableObject
     {
         private int _GL_Program = 0;
         private int _GL_Vertex = 0;
@@ -57,15 +57,7 @@ namespace SamSeifert.GLE
             }
         }
 
-        public bool SuccessfulSetup
-        {
-            get
-            {
-                return this._GL_Program != 0;
-            }
-        }
-
-        public Shaders(String vertexShader, String fragmentShader)
+        public Shaders(String vertexShader, String fragmentShader, out bool success)
         {
             try
             {
@@ -86,6 +78,7 @@ namespace SamSeifert.GLE
                     if (param == 0)
                     {
                         Console.WriteLine("Linkage error");
+                        success = false;
                         return;
                     }
 
@@ -94,11 +87,14 @@ namespace SamSeifert.GLE
                     if (param == 0)
                     {
                         Console.WriteLine("Validate error");
+                        success = false;
                         return;
                     }
 
+                    success = true;
                     this._GL_Program = shader;
                 }
+                else success = false;
             }
             finally
             {
