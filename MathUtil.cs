@@ -69,6 +69,22 @@ namespace SamSeifert.Utilities
         {
             return Math.Min(max, Math.Max(min, val));
         }
+
+
+        public static float NextGaussian(Single std, Random rand)
+        {
+            double u1 = rand.NextDouble(); //these are uniform(0,1) random doubles
+            double u2 = rand.NextDouble();
+            double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
+            return std * (float)randStdNormal;
+            //            double randNormal = mean + stdDev * randStdNormal;
+        }
+
+        public static float NextNormal(Single std, Random rand)
+        {
+            return std * (1 - 2 * ((float)(rand.NextDouble())));
+        }
+
     }
 }
 
