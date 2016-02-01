@@ -17,12 +17,22 @@ namespace SamSeifert.GLE
         private int _FrameBuffer = 0;
         public int _DepthBuffer { get; private set; } = 0;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="resolution"></param>
+        /// <param name="sucess"></param>
+        /// <param name="color_texture_pixel_format"></param>
+        /// <param name="color_texture_pixel_type"></param>
+        /// <param name="depth_texture_pixel_type"></param>
+        /// <param name="interpolation_mode">InterpolationMode</param>
         public FrameBuffers(
             Size resolution,
             out bool sucess,
             PixelFormat color_texture_pixel_format = PixelFormat.Rgb,
             PixelType color_texture_pixel_type = PixelType.Byte,
-            PixelInternalFormat depth_texture_pixel_type = PixelInternalFormat.DepthComponent24
+            PixelInternalFormat depth_texture_pixel_type = PixelInternalFormat.DepthComponent24,
+            TextureMinFilter interpolation_mode = TextureMinFilter.Nearest
             )
         {
             try
@@ -35,9 +45,10 @@ namespace SamSeifert.GLE
                 GL.GenTextures(1, out temp); this._ColorText = temp;
                 GL.BindTexture(TextureTarget.Texture2D, this._ColorText);
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMagFilter.Nearest);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)interpolation_mode);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)interpolation_mode);
                 GL.TexImage2D(
                     TextureTarget.Texture2D,
                     0,
@@ -54,8 +65,9 @@ namespace SamSeifert.GLE
                 GL.BindTexture(TextureTarget.Texture2D, this._DepthBuffer);
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMagFilter.Nearest);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)interpolation_mode);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)interpolation_mode);
                 GL.TexImage2D(TextureTarget.Texture2D, 0, depth_texture_pixel_type, resolution.Width, resolution.Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
                 GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.DepthAttachmentExt, TextureTarget.Texture2D, this._DepthBuffer, 0);
 

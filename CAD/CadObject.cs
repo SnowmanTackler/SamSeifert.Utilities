@@ -50,6 +50,12 @@ namespace SamSeifert.GLE.CAD
         {
         }
 
+        public void setMatrix(ref Matrix4 m)
+        {
+            this._Matrix = m;
+            this.BoolUseTranslationAndRotation = true;
+        }
+
         internal CadObject(Vector3[] verts, Vector3[] norms, String name)
         {
             this._Name = name;

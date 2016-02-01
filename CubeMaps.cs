@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using GL = SamSeifert.GLE.GLR;
 
 namespace SamSeifert.GLE
@@ -84,8 +85,16 @@ namespace SamSeifert.GLE
             }
         }
 
-        private FrameBuffers[] _FrameBuffers = new FrameBuffers[6];
-        private Matrix4[] _Matrices = new Matrix4[6];
+        private readonly FrameBuffers[] _FrameBuffers = new FrameBuffers[6];
+        private readonly Matrix4[] _Matrices = new Matrix4[]
+        {
+            Matrix4.CreateRotationY(-MathHelper.PiOver2), // Left
+            Matrix4.Identity, // Front
+            Matrix4.CreateRotationY(MathHelper.PiOver2), // Right
+            Matrix4.CreateRotationY(MathHelper.Pi), // Back
+            Matrix4.CreateRotationX(MathHelper.PiOver2), // Up
+            Matrix4.CreateRotationX(-MathHelper.PiOver2), // Down
+        };
          
         private readonly Size _Resolution;
 
@@ -93,17 +102,13 @@ namespace SamSeifert.GLE
         {
             this._Resolution = resolution;
 
-            this._FrameBufferLeft = new FrameBuffers(resolution, out sucess);
-            if (!sucess) return;
-            this._FrameBufferFront = new FrameBuffers(resolution, out sucess);
-            if (!sucess) return;
-            this._FrameBufferRight = new FrameBuffers(resolution, out sucess);
-            if (!sucess) return;
-            this._FrameBufferBack = new FrameBuffers(resolution, out sucess);
-            if (!sucess) return;
-            this._FrameBufferTop = new FrameBuffers(resolution, out sucess);
-            if (!sucess) return;
-            this._FrameBufferBottom = new FrameBuffers(resolution, out sucess);
+            for (int i = 0; i < 6; i++)
+            {
+                this._FrameBuffers[i] = new FrameBuffers(resolution, out sucess, interpolation_mode: TextureMinFilter.Linear);
+                if (!sucess) return;
+            }
+
+            sucess = true;
         }
 
         public void GLDelete()
@@ -113,25 +118,105 @@ namespace SamSeifert.GLE
                     fb.GLDelete();
         }
 
-        public void Render(Action a, float zNear, float zFar)
+        /// <summary>
+        /// Current Model View Should be Straight Forward!
+        /// </summary>
+        /// <param name="render"></param>
+        /// <param name="zNear"></param>
+        /// <param name="zFar"></param>
+        /// <param name="m">Model View Should to Straight Forward</param>
+        public void Render(Action render, float zNear, float zFar, ref Matrix4 m)
         {
             GL.loadProjection(90, 90, zNear, zFar);
             GL.Viewport(0, 0, this._Resolution.Width, this._Resolution.Height);
+            GL.MatrixMode(MatrixMode.Modelview);
 
             for (int i = 0; i < 6; i++)
             {
                 using (this._FrameBuffers[i].asDrawable)
                 {
-                    GL.PushMatrix();
-                    {
-                        GL.MultMatrix(ref this._Matrices[i]);
-
-                    }
-                    GL.PopMatrix();
+                    GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+                    GL.LoadIdentity();
+                    GL.MultMatrix(ref this._Matrices[i]);
+                    GL.MultMatrix(ref m);
+                    render();
                 }
             }
         }
 
+        public void RenderOnScreen()
+        {
+            var ortho = Matrix4.CreateOrthographicOffCenter(0, 4, 3, 0, 0, 1);
+            GL.loadProjectionOrtho(ref ortho);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+
+            GL.Disable(EnableCap.CullFace);
+            GL.Disable(EnableCap.DepthTest);
+            GL.DepthMask(false);
+
+            GL.Disable(EnableCap.Lighting);
+            GL.Enable(EnableCap.Texture2D);
+
+            GL.Color3(Color.White);
+
+            GL.BindTexture(TextureTarget.Texture2D, this._FrameBufferLeft._ColorText);
+            GL.Begin(PrimitiveType.Quads);
+            GL.TexCoord2(0, 0); GL.Vertex2(0, 1);
+            GL.TexCoord2(1, 0); GL.Vertex2(1, 1);
+            GL.TexCoord2(1, 1); GL.Vertex2(1, 2);
+            GL.TexCoord2(0, 1); GL.Vertex2(0, 2);
+            GL.End();
+
+            GL.BindTexture(TextureTarget.Texture2D, this._FrameBufferFront._ColorText);
+            GL.Begin(PrimitiveType.Quads);
+            GL.TexCoord2(0, 0); GL.Vertex2(1, 1);
+            GL.TexCoord2(1, 0); GL.Vertex2(2, 1);
+            GL.TexCoord2(1, 1); GL.Vertex2(2, 2);
+            GL.TexCoord2(0, 1); GL.Vertex2(1, 2);
+            GL.End();
+
+            GL.BindTexture(TextureTarget.Texture2D, this._FrameBufferRight._ColorText);
+            GL.Begin(PrimitiveType.Quads);
+            GL.TexCoord2(0, 0); GL.Vertex2(2, 1);
+            GL.TexCoord2(1, 0); GL.Vertex2(3, 1);
+            GL.TexCoord2(1, 1); GL.Vertex2(3, 2);
+            GL.TexCoord2(0, 1); GL.Vertex2(2, 2);
+            GL.End();
+
+            GL.BindTexture(TextureTarget.Texture2D, this._FrameBufferBack._ColorText);
+            GL.Begin(PrimitiveType.Quads);
+            GL.TexCoord2(0, 0); GL.Vertex2(3, 1);
+            GL.TexCoord2(1, 0); GL.Vertex2(4, 1);
+            GL.TexCoord2(1, 1); GL.Vertex2(4, 2);
+            GL.TexCoord2(0, 1); GL.Vertex2(3, 2);
+            GL.End();
+
+            GL.BindTexture(TextureTarget.Texture2D, this._FrameBufferTop._ColorText);
+            GL.Begin(PrimitiveType.Quads);
+            GL.TexCoord2(0, 0); GL.Vertex2(1, 0);
+            GL.TexCoord2(1, 0); GL.Vertex2(2, 0);
+            GL.TexCoord2(1, 1); GL.Vertex2(2, 1);
+            GL.TexCoord2(0, 1); GL.Vertex2(1, 1);
+            GL.End();
+
+            GL.BindTexture(TextureTarget.Texture2D, this._FrameBufferBottom._ColorText);
+            GL.Begin(PrimitiveType.Quads);
+            GL.TexCoord2(0, 0); GL.Vertex2(1, 2);
+            GL.TexCoord2(1, 0); GL.Vertex2(2, 2);
+            GL.TexCoord2(1, 1); GL.Vertex2(2, 3);
+            GL.TexCoord2(0, 1); GL.Vertex2(1, 3);
+            GL.End();
+
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+
+            GL.Disable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.Lighting);
+
+            GL.DepthMask(true);
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.CullFace);
+        }
     }
 }
 
