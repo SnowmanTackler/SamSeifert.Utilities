@@ -7,115 +7,125 @@ using System.Threading.Tasks;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using GLO = OpenTK.Graphics.OpenGL.GL;
 using GL = SamSeifert.GLE.GLR;
 
 namespace SamSeifert.GLE
 {
     public class CubeMaps : DeleteableObject
     {
-        private FrameBuffers _FrameBufferLeft
-        {
-            get
-            {
-                return this._FrameBuffers[0];
-            }
-            set
-            {
-                this._FrameBuffers[0] = value;
-            }
-        }
-
-        private FrameBuffers _FrameBufferFront
-        {
-            get
-            {
-                return this._FrameBuffers[1];
-            }
-            set
-            {
-                this._FrameBuffers[1] = value;
-            }
-        }
-
-        private FrameBuffers _FrameBufferRight
-        {
-            get
-            {
-                return this._FrameBuffers[2];
-            }
-            set
-            {
-                this._FrameBuffers[2] = value;
-            }
-        }
-
-        private FrameBuffers _FrameBufferBack
-        {
-            get
-            {
-                return this._FrameBuffers[3];
-            }
-            set
-            {
-                this._FrameBuffers[3] = value;
-            }
-        }
-
-        private FrameBuffers _FrameBufferTop
-        {
-            get
-            {
-                return this._FrameBuffers[4];
-            }
-            set
-            {
-                this._FrameBuffers[4] = value;
-            }
-        }
-
-        private FrameBuffers _FrameBufferBottom
-        {
-            get
-            {
-                return this._FrameBuffers[5];
-            }
-            set
-            {
-                this._FrameBuffers[5] = value;
-            }
-        }
-
-        private readonly FrameBuffers[] _FrameBuffers = new FrameBuffers[6];
         private readonly Matrix4[] _Matrices = new Matrix4[]
         {
             Matrix4.CreateRotationY(-MathHelper.PiOver2), // Left
             Matrix4.Identity, // Front
             Matrix4.CreateRotationY(MathHelper.PiOver2), // Right
             Matrix4.CreateRotationY(MathHelper.Pi), // Back
-            Matrix4.CreateRotationX(MathHelper.PiOver2), // Up
-            Matrix4.CreateRotationX(-MathHelper.PiOver2), // Down
+            Matrix4.CreateRotationX(-MathHelper.PiOver2), // Up
+            Matrix4.CreateRotationX(MathHelper.PiOver2), // Down
         };
-         
-        private readonly int _Resolution;
+
+        private readonly TextureTarget[] _TextureTargets = new TextureTarget[]
+       {
+            TextureTarget.TextureCubeMapNegativeX,
+            TextureTarget.TextureCubeMapNegativeZ,
+            TextureTarget.TextureCubeMapPositiveX,
+            TextureTarget.TextureCubeMapPositiveZ,
+            TextureTarget.TextureCubeMapPositiveY,
+            TextureTarget.TextureCubeMapNegativeY
+       };
+
+        private readonly int _Resolution = 0;
+        public int _ColorText { get; private set; } = 0;
+        private int _FrameBuffer = 0;
+        private int _DepthBuffer = 0;
 
         public CubeMaps(int resolution, out bool sucess)
         {
-            this._Resolution = resolution;
-
-            for (int i = 0; i < 6; i++)
+            try
             {
-                this._FrameBuffers[i] = new FrameBuffers(new Size(resolution, resolution), out sucess, interpolation_mode: TextureMinFilter.Linear);
-                if (!sucess) return;
-            }
 
-            sucess = true;
+                this._Resolution = resolution;
+
+                this._FrameBuffer = GL.GenFramebuffer();
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, this._FrameBuffer);
+
+                int temp;
+                {
+                    this._ColorText = GL.GenTexture();
+                    GL.BindTexture(TextureTarget.TextureCubeMap, this._ColorText);
+
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (int)All.Linear);
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)All.Linear);
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureBaseLevel, 0);
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMaxLevel, 0);
+
+                    //Define all 6 faces
+                    for (int i = 0; i < 6; i++)
+                    {
+                        GL.TexImage2D(
+                            this._TextureTargets[i],
+                            0,
+                            PixelInternalFormat.Rgb,
+                            this._Resolution,
+                            this._Resolution,
+                            0,
+                            PixelFormat.Bgr,
+                            PixelType.UnsignedByte,
+                            IntPtr.Zero);
+                    }
+                }
+                {
+                    /*
+                    // Not doing depth as texture means we can't draw it!
+                    this._DepthBuffer = GLO.GenRenderbuffer();
+                    GLO.BindRenderbuffer(RenderbufferTarget.Renderbuffer, this._DepthBuffer);
+                    GLO.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.DepthComponent24, this._Resolution, this._Resolution);
+                    GLO.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, this._DepthBuffer); //*/
+
+                    GL.GenTextures(1, out this._DepthBuffer);
+                    GL.BindTexture(TextureTarget.Texture2D, this._DepthBuffer);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
+                    GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent24, this._Resolution, this._Resolution, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
+                    GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, this._DepthBuffer, 0);
+                }
+
+                switch (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer))
+                {
+                    case FramebufferErrorCode.FramebufferComplete:
+                        sucess = true;
+                        break;
+                    default:
+                        Console.WriteLine("FrameBufferIndices Error");
+                        sucess = false;
+                        break;
+                }
+
+                sucess = true;
+            }
+            finally
+            {
+                GL.BindTexture(TextureTarget.TextureCubeMap, 0);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+                GLO.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
+            }
         }
 
         public void GLDelete()
         {
-            foreach (var fb in this._FrameBuffers)
-                if (fb != null)
-                    fb.GLDelete();
+            /*
+            if (this._ColorText != 0)
+            {
+                GL.DeleteTexture(this._ColorText);
+                this._ColorText = 0;
+            }*/
         }
 
         /// <summary>
@@ -130,17 +140,28 @@ namespace SamSeifert.GLE
             GL.loadProjection(90, 90, zNear, zFar);
             GL.Viewport(0, 0, this._Resolution, this._Resolution);
 
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, this._FrameBuffer);
+            GL.DrawBuffer((DrawBufferMode)FramebufferAttachment.ColorAttachment0);
+
             for (int i = 0; i < 6; i++)
             {
-                using (this._FrameBuffers[i].asDrawable)
-                {
-                    GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-                    GL.LoadMatrix(ref this._Matrices[i]);
-//                    GL.MultMatrix(ref this._Matrices[i]);
-                    GL.MultMatrix(ref m);
-                    render();
-                }
+                GL.FramebufferTexture2D(
+                    FramebufferTarget.Framebuffer,
+                    FramebufferAttachment.ColorAttachment0, 
+                    this._TextureTargets[i], 
+                    this._ColorText,
+                    0);
+
+                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+                GL.LoadMatrix(ref this._Matrices[i]);
+                GL.MultMatrix(ref m);
+                render();
+
             }
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            GL.DrawBuffer(DrawBufferMode.Back);
+
         }
 
         public void RenderOnScreen()
@@ -159,55 +180,51 @@ namespace SamSeifert.GLE
 
             GL.Color3(Color.White);
 
-            GL.BindTexture(TextureTarget.Texture2D, this._FrameBufferLeft._ColorText);
+            GL.Enable(EnableCap.TextureCubeMap);
+            GL.BindTexture(TextureTarget.TextureCubeMap, this._ColorText);
+
             GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(0, 0); GL.Vertex2(0, 1);
-            GL.TexCoord2(1, 0); GL.Vertex2(1, 1);
-            GL.TexCoord2(1, 1); GL.Vertex2(1, 2);
-            GL.TexCoord2(0, 1); GL.Vertex2(0, 2);
+
+            // Left
+            GLO.TexCoord3(-1,  1, -1); GL.Vertex2(0, 1);
+            GLO.TexCoord3(-1,  1,  1); GL.Vertex2(1, 1);
+            GLO.TexCoord3(-1, -1,  1); GL.Vertex2(1, 2);
+            GLO.TexCoord3(-1, -1, -1); GL.Vertex2(0, 2);
+
+            // Front
+            GLO.TexCoord3( 1,  1, -1); GL.Vertex2(1, 1);
+            GLO.TexCoord3(-1,  1, -1); GL.Vertex2(2, 1);
+            GLO.TexCoord3(-1, -1, -1); GL.Vertex2(2, 2);
+            GLO.TexCoord3( 1, -1, -1); GL.Vertex2(1, 2);
+
+            // Right
+            GLO.TexCoord3( 1,  1,  1); GL.Vertex2(2, 1);
+            GLO.TexCoord3( 1,  1, -1); GL.Vertex2(3, 1);
+            GLO.TexCoord3( 1, -1, -1); GL.Vertex2(3, 2);
+            GLO.TexCoord3( 1, -1,  1); GL.Vertex2(2, 2);
+               
+            // Back
+            GLO.TexCoord3(-1,  1,  1); GL.Vertex2(3, 1);
+            GLO.TexCoord3( 1,  1,  1); GL.Vertex2(4, 1);
+            GLO.TexCoord3( 1, -1,  1); GL.Vertex2(4, 2);
+            GLO.TexCoord3(-1, -1,  1); GL.Vertex2(3, 2);
+
+            // Bottom
+            GLO.TexCoord3(-1, -1,  1); GL.Vertex2(1, 0);
+            GLO.TexCoord3( 1, -1,  1); GL.Vertex2(2, 0);
+            GLO.TexCoord3( 1, -1, -1); GL.Vertex2(2, 1);
+            GLO.TexCoord3(-1, -1, -1); GL.Vertex2(1, 1);
+
+            // Top
+            GLO.TexCoord3(-1,  1, -1);  GL.Vertex2(1, 2);
+            GLO.TexCoord3( 1,  1, -1);  GL.Vertex2(2, 2);
+            GLO.TexCoord3( 1,  1,  1);  GL.Vertex2(2, 3);
+            GLO.TexCoord3(-1,  1,  1);  GL.Vertex2(1, 3);
+
             GL.End();
 
-            GL.BindTexture(TextureTarget.Texture2D, this._FrameBufferFront._ColorText);
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(0, 0); GL.Vertex2(1, 1);
-            GL.TexCoord2(1, 0); GL.Vertex2(2, 1);
-            GL.TexCoord2(1, 1); GL.Vertex2(2, 2);
-            GL.TexCoord2(0, 1); GL.Vertex2(1, 2);
-            GL.End();
-
-            GL.BindTexture(TextureTarget.Texture2D, this._FrameBufferRight._ColorText);
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(0, 0); GL.Vertex2(2, 1);
-            GL.TexCoord2(1, 0); GL.Vertex2(3, 1);
-            GL.TexCoord2(1, 1); GL.Vertex2(3, 2);
-            GL.TexCoord2(0, 1); GL.Vertex2(2, 2);
-            GL.End();
-
-            GL.BindTexture(TextureTarget.Texture2D, this._FrameBufferBack._ColorText);
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(0, 0); GL.Vertex2(3, 1);
-            GL.TexCoord2(1, 0); GL.Vertex2(4, 1);
-            GL.TexCoord2(1, 1); GL.Vertex2(4, 2);
-            GL.TexCoord2(0, 1); GL.Vertex2(3, 2);
-            GL.End();
-
-            GL.BindTexture(TextureTarget.Texture2D, this._FrameBufferTop._ColorText);
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(0, 0); GL.Vertex2(1, 0);
-            GL.TexCoord2(1, 0); GL.Vertex2(2, 0);
-            GL.TexCoord2(1, 1); GL.Vertex2(2, 1);
-            GL.TexCoord2(0, 1); GL.Vertex2(1, 1);
-            GL.End();
-
-            GL.BindTexture(TextureTarget.Texture2D, this._FrameBufferBottom._ColorText);
-            GL.Begin(PrimitiveType.Quads);
-            GL.TexCoord2(0, 0); GL.Vertex2(1, 2);
-            GL.TexCoord2(1, 0); GL.Vertex2(2, 2);
-            GL.TexCoord2(1, 1); GL.Vertex2(2, 3);
-            GL.TexCoord2(0, 1); GL.Vertex2(1, 3);
-            GL.End();
-
-            GL.BindTexture(TextureTarget.Texture2D, 0);
+            GL.BindTexture(TextureTarget.TextureCubeMap, 0);
+            GL.Disable(EnableCap.TextureCubeMap);
 
             GL.Disable(EnableCap.Texture2D);
             GL.Enable(EnableCap.Lighting);

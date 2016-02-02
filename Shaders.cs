@@ -139,10 +139,17 @@ namespace SamSeifert.GLE
             GLO.Uniform3(this.UniformLocation(uniform_name), ref v);
         }
 
+        public void Uniform(String uniform_name, ref Matrix3 mat)
+        {
+            GLO.UniformMatrix3(this.UniformLocation(uniform_name), false, ref mat);
+        }
+
         public void Uniform(String uniform_name, ref Matrix4 mat)
         {
             GLO.UniformMatrix4(this.UniformLocation(uniform_name), false, ref mat);
         }
+
+
 
 
 

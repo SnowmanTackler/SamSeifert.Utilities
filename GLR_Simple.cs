@@ -367,6 +367,12 @@ namespace SamSeifert.GLE
             GL.GenTextures(v, out output);
         }
 
+        internal static int GenTexture()
+        {
+            return GL.GenTexture();
+        }
+
+
         public static void TexParameterI(TextureTarget tt, TextureParameterName tpn, ref int param)
         {
             GL.TexParameterI(tt, tpn, ref param);

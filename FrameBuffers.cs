@@ -38,7 +38,7 @@ namespace SamSeifert.GLE
             try
             {
                 this._FrameBuffer = GL.GenFramebuffer();
-                GL.BindFramebuffer(FramebufferTarget.FramebufferExt, this._FrameBuffer);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, this._FrameBuffer);
 
                 int temp;
 
@@ -59,7 +59,7 @@ namespace SamSeifert.GLE
                     color_texture_pixel_format,
                     color_texture_pixel_type,
                     IntPtr.Zero);
-                GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, this._ColorText, 0);
+                GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, this._ColorText, 0);
 
                 GL.GenTextures(1, out temp); this._DepthBuffer = temp;
                 GL.BindTexture(TextureTarget.Texture2D, this._DepthBuffer);
@@ -69,17 +69,17 @@ namespace SamSeifert.GLE
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)interpolation_mode);
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)interpolation_mode);
                 GL.TexImage2D(TextureTarget.Texture2D, 0, depth_texture_pixel_type, resolution.Width, resolution.Height, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
-                GL.FramebufferTexture2D(FramebufferTarget.FramebufferExt, FramebufferAttachment.DepthAttachmentExt, TextureTarget.Texture2D, this._DepthBuffer, 0);
+                GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, this._DepthBuffer, 0);
 
                 // Not doing depth as texture means we can't draw it!
                 // this._DepthBuffer = GL.GenTextures(1, out this._DepthBuffer);
-                // GLO.BindRenderbuffer(RenderbufferTarget.RenderbufferExt, this._DepthBuffer);
-                // GLO.RenderbufferStorage(RenderbufferTarget.RenderbufferExt, RenderbufferStorage.DepthComponent24, sz.Width, sz.Height);
-                // GLO.FramebufferRenderbuffer(FramebufferTarget.FramebufferExt, FramebufferAttachment.DepthAttachmentExt, RenderbufferTarget.RenderbufferExt, this._DepthBuffer);
+                // GLO.BindRenderbuffer(RenderbufferTarget.Renderbuffer, this._DepthBuffer);
+                // GLO.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.DepthComponent24, sz.Width, sz.Height);
+                // GLO.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment RenderbufferTarget.Renderbuffer, this._DepthBuffer);
 
-                switch (GL.CheckFramebufferStatus(FramebufferTarget.FramebufferExt))
+                switch (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer))
                 {
-                    case FramebufferErrorCode.FramebufferCompleteExt:
+                    case FramebufferErrorCode.FramebufferComplete:
                         sucess = true;
                         break;
                     default:
@@ -90,7 +90,7 @@ namespace SamSeifert.GLE
             }
             finally
             {
-                GL.BindFramebuffer(FramebufferTarget.FramebufferExt, 0);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
             }
         }
@@ -123,13 +123,13 @@ namespace SamSeifert.GLE
         {
             public Drawable(int frame_buffer_index)
             {
-                GL.BindFramebuffer(FramebufferTarget.FramebufferExt, frame_buffer_index);
-                GL.DrawBuffer((DrawBufferMode)FramebufferAttachment.ColorAttachment0Ext);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, frame_buffer_index);
+                GL.DrawBuffer((DrawBufferMode)FramebufferAttachment.ColorAttachment0);
             }
 
             public void Dispose()
             {
-                GL.BindFramebuffer(FramebufferTarget.FramebufferExt, 0);
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
                 GL.DrawBuffer(DrawBufferMode.Back);
             }
         }

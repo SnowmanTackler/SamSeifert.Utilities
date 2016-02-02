@@ -166,8 +166,6 @@ namespace SamSeifert.GLE
                     GL.Enable(EnableCap.Texture2D);
                     GL.Enable(EnableCap.TextureCubeMapSeamless);
                     GL.Disable(EnableCap.Lighting);
-                    GL.Disable(EnableCap.DepthTest);
-                    GL.DepthMask(false);
 
                     if (this._BoolFull) GL.Translate(0, -distance, 0);
 
@@ -284,8 +282,6 @@ namespace SamSeifert.GLE
 
                     if (this._BoolFull) GL.Translate(0, distance, 0);
 
-                    GL.DepthMask(true);
-                    GL.Enable(EnableCap.DepthTest);
                     GL.Disable(EnableCap.TextureCubeMapSeamless);
                     GL.BindTexture(TextureTarget.Texture2D, 0);
                     GL.Disable(EnableCap.Texture2D);
