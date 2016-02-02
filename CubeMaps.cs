@@ -16,12 +16,20 @@ namespace SamSeifert.GLE
     {
         private readonly Matrix4[] _Matrices = new Matrix4[]
         {
-            Matrix4.CreateRotationY(-MathHelper.PiOver2), // Left
-            Matrix4.Identity, // Front
-            Matrix4.CreateRotationY(MathHelper.PiOver2), // Right
-            Matrix4.CreateRotationY(MathHelper.Pi), // Back
-            Matrix4.CreateRotationX(-MathHelper.PiOver2), // Up
-            Matrix4.CreateRotationX(MathHelper.PiOver2), // Down
+            /*
+            Matrix4.CreateRotationY(-MathHelper.PiOver2) * Matrix4.CreateRotationZ(-MathHelper.Pi), // Front OF START
+            Matrix4.CreateRotationZ(MathHelper.Pi), // Bottom
+            Matrix4.CreateRotationY(MathHelper.PiOver2) * Matrix4.CreateRotationZ(-MathHelper.Pi), // Front OF START
+            Matrix4.CreateRotationX(MathHelper.Pi), // Top OF START
+            Matrix4.CreateRotationX(-MathHelper.PiOver2), // Left OF START
+            Matrix4.CreateRotationX(MathHelper.PiOver2), // Right OF START
+            */
+            Matrix4.CreateRotationY(-MathHelper.PiOver2) * Matrix4.CreateRotationZ(-MathHelper.Pi), // Front OF START
+            Matrix4.CreateRotationZ(MathHelper.Pi), // Bottom
+            Matrix4.CreateRotationY(MathHelper.PiOver2) * Matrix4.CreateRotationZ(-MathHelper.Pi), // Front OF START
+            Matrix4.CreateRotationX(MathHelper.Pi), // Top OF START
+            Matrix4.CreateRotationX(-MathHelper.PiOver2), // Left OF START
+            Matrix4.CreateRotationX(MathHelper.PiOver2), // Right OF START
         };
 
         private readonly TextureTarget[] _TextureTargets = new TextureTarget[]
@@ -49,7 +57,6 @@ namespace SamSeifert.GLE
                 this._FrameBuffer = GL.GenFramebuffer();
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, this._FrameBuffer);
 
-                int temp;
                 {
                     this._ColorText = GL.GenTexture();
                     GL.BindTexture(TextureTarget.TextureCubeMap, this._ColorText);
@@ -152,16 +159,29 @@ namespace SamSeifert.GLE
                     this._ColorText,
                     0);
 
+                /*
+                switch (i)
+                {
+                    case 0: GL.ClearColor(Color.Red); break; // Left
+                    case 1: GL.ClearColor(Color.Green); break; // Front
+                    case 2: GL.ClearColor(Color.Blue); break; // Right
+                    case 3: GL.ClearColor(Color.Yellow); break; // Back
+                    case 4: GL.ClearColor(Color.Cyan); break; // Up
+                    case 5: GL.ClearColor(Color.Magenta); break; // Down
+                }
+                */
+
                 GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
                 GL.LoadMatrix(ref this._Matrices[i]);
                 GL.MultMatrix(ref m);
-                render();
 
+                render();
             }
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.DrawBuffer(DrawBufferMode.Back);
 
+            GL.ClearColor(Color.Black);
         }
 
         public void RenderOnScreen()
