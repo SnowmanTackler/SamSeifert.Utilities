@@ -96,15 +96,15 @@ namespace SamSeifert.GLE
             Matrix4.CreateRotationX(-MathHelper.PiOver2), // Down
         };
          
-        private readonly Size _Resolution;
+        private readonly int _Resolution;
 
-        public CubeMaps(Size resolution, out bool sucess)
+        public CubeMaps(int resolution, out bool sucess)
         {
             this._Resolution = resolution;
 
             for (int i = 0; i < 6; i++)
             {
-                this._FrameBuffers[i] = new FrameBuffers(resolution, out sucess, interpolation_mode: TextureMinFilter.Linear);
+                this._FrameBuffers[i] = new FrameBuffers(new Size(resolution, resolution), out sucess, interpolation_mode: TextureMinFilter.Linear);
                 if (!sucess) return;
             }
 
@@ -128,7 +128,7 @@ namespace SamSeifert.GLE
         public void Render(Action render, float zNear, float zFar, ref Matrix4 m)
         {
             GL.loadProjection(90, 90, zNear, zFar);
-            GL.Viewport(0, 0, this._Resolution.Width, this._Resolution.Height);
+            GL.Viewport(0, 0, this._Resolution, this._Resolution);
 
             for (int i = 0; i < 6; i++)
             {
