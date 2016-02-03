@@ -16,22 +16,22 @@ namespace SamSeifert.GLE
     {
         private readonly Matrix4[] _Matrices = new Matrix4[]
         {
-            Matrix4.CreateRotationY(MathHelper.PiOver2) , // Front OF START
-            Matrix4.CreateRotationZ(MathHelper.Pi) * Matrix4.CreateRotationZ(-MathHelper.Pi), // Bottom
-            Matrix4.CreateRotationY(-MathHelper.PiOver2) , // Back OF START
-            Matrix4.CreateRotationX(MathHelper.Pi) * Matrix4.CreateRotationZ(-MathHelper.Pi), // Top OF START
-            Matrix4.CreateRotationX(MathHelper.PiOver2)* Matrix4.CreateRotationZ(-MathHelper.Pi), // Left OF START
-            Matrix4.CreateRotationX(-MathHelper.PiOver2)* Matrix4.CreateRotationZ(-MathHelper.Pi), // Right OF START
+            Matrix4.LookAt(Vector3.Zero, Vector3.UnitX, -Vector3.UnitY),
+            Matrix4.LookAt(Vector3.Zero, -Vector3.UnitX, -Vector3.UnitY),
+            Matrix4.LookAt(Vector3.Zero, Vector3.UnitY, Vector3.UnitZ),
+            Matrix4.LookAt(Vector3.Zero, -Vector3.UnitY, -Vector3.UnitZ),
+            Matrix4.LookAt(Vector3.Zero, Vector3.UnitZ, -Vector3.UnitY),
+            Matrix4.LookAt(Vector3.Zero, -Vector3.UnitZ, -Vector3.UnitY),
         };
 
         private readonly TextureTarget[] _TextureTargets = new TextureTarget[]
        {
-            TextureTarget.TextureCubeMapNegativeX,
-            TextureTarget.TextureCubeMapNegativeZ,
             TextureTarget.TextureCubeMapPositiveX,
-            TextureTarget.TextureCubeMapPositiveZ,
+            TextureTarget.TextureCubeMapNegativeX,
             TextureTarget.TextureCubeMapPositiveY,
-            TextureTarget.TextureCubeMapNegativeY
+            TextureTarget.TextureCubeMapNegativeY,
+            TextureTarget.TextureCubeMapPositiveZ,
+            TextureTarget.TextureCubeMapNegativeZ,
        };
 
         private readonly int _Resolution = 0;
@@ -77,13 +77,13 @@ namespace SamSeifert.GLE
                     }
                 }
                 {
-                    /*
                     // Not doing depth as texture means we can't draw it!
                     this._DepthBuffer = GLO.GenRenderbuffer();
                     GLO.BindRenderbuffer(RenderbufferTarget.Renderbuffer, this._DepthBuffer);
                     GLO.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.DepthComponent24, this._Resolution, this._Resolution);
                     GLO.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, this._DepthBuffer); //*/
 
+                    /*
                     GL.GenTextures(1, out this._DepthBuffer);
                     GL.BindTexture(TextureTarget.Texture2D, this._DepthBuffer);
                     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
@@ -93,6 +93,7 @@ namespace SamSeifert.GLE
                     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
                     GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent24, this._Resolution, this._Resolution, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
                     GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, this._DepthBuffer, 0);
+                    */
                 }
 
                 switch (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer))

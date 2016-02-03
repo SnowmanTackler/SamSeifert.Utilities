@@ -462,5 +462,10 @@ namespace SamSeifert.GLE
         {
             GL.DepthMask(flag);
         }
+
+        public static void ClearColor(Vector3 color)
+        {
+            GL.ClearColor(color.X, color.Y, color.Z, 0);
+        }
     }
 }
