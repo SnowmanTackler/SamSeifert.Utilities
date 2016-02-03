@@ -16,20 +16,12 @@ namespace SamSeifert.GLE
     {
         private readonly Matrix4[] _Matrices = new Matrix4[]
         {
-            /*
-            Matrix4.CreateRotationY(-MathHelper.PiOver2) * Matrix4.CreateRotationZ(-MathHelper.Pi), // Front OF START
-            Matrix4.CreateRotationZ(MathHelper.Pi), // Bottom
-            Matrix4.CreateRotationY(MathHelper.PiOver2) * Matrix4.CreateRotationZ(-MathHelper.Pi), // Front OF START
-            Matrix4.CreateRotationX(MathHelper.Pi), // Top OF START
-            Matrix4.CreateRotationX(-MathHelper.PiOver2), // Left OF START
-            Matrix4.CreateRotationX(MathHelper.PiOver2), // Right OF START
-            */
-            Matrix4.CreateRotationY(-MathHelper.PiOver2) * Matrix4.CreateRotationZ(-MathHelper.Pi), // Front OF START
-            Matrix4.CreateRotationZ(MathHelper.Pi), // Bottom
-            Matrix4.CreateRotationY(MathHelper.PiOver2) * Matrix4.CreateRotationZ(-MathHelper.Pi), // Front OF START
-            Matrix4.CreateRotationX(MathHelper.Pi), // Top OF START
-            Matrix4.CreateRotationX(-MathHelper.PiOver2), // Left OF START
-            Matrix4.CreateRotationX(MathHelper.PiOver2), // Right OF START
+            Matrix4.CreateRotationY(MathHelper.PiOver2) , // Front OF START
+            Matrix4.CreateRotationZ(MathHelper.Pi) * Matrix4.CreateRotationZ(-MathHelper.Pi), // Bottom
+            Matrix4.CreateRotationY(-MathHelper.PiOver2) , // Back OF START
+            Matrix4.CreateRotationX(MathHelper.Pi) * Matrix4.CreateRotationZ(-MathHelper.Pi), // Top OF START
+            Matrix4.CreateRotationX(MathHelper.PiOver2)* Matrix4.CreateRotationZ(-MathHelper.Pi), // Left OF START
+            Matrix4.CreateRotationX(-MathHelper.PiOver2)* Matrix4.CreateRotationZ(-MathHelper.Pi), // Right OF START
         };
 
         private readonly TextureTarget[] _TextureTargets = new TextureTarget[]
