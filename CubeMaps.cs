@@ -199,28 +199,28 @@ namespace SamSeifert.GLE
             GL.Begin(PrimitiveType.Quads);
 
             // Left
-            GLO.TexCoord3(-1,  1, -1); GL.Vertex2(0, 1);
-            GLO.TexCoord3(-1,  1,  1); GL.Vertex2(1, 1);
-            GLO.TexCoord3(-1, -1,  1); GL.Vertex2(1, 2);
-            GLO.TexCoord3(-1, -1, -1); GL.Vertex2(0, 2);
+            GLO.TexCoord3(-1,  1, -1); GL.Vertex2(1, 2);
+            GLO.TexCoord3(-1,  1,  1); GL.Vertex2(0, 2);
+            GLO.TexCoord3(-1, -1,  1); GL.Vertex2(0, 1);
+            GLO.TexCoord3(-1, -1, -1); GL.Vertex2(1, 1);
 
             // Front
-            GLO.TexCoord3( 1,  1, -1); GL.Vertex2(1, 1);
-            GLO.TexCoord3(-1,  1, -1); GL.Vertex2(2, 1);
-            GLO.TexCoord3(-1, -1, -1); GL.Vertex2(2, 2);
-            GLO.TexCoord3( 1, -1, -1); GL.Vertex2(1, 2);
+            GLO.TexCoord3( 1,  1, -1); GL.Vertex2(2, 2);
+            GLO.TexCoord3(-1,  1, -1); GL.Vertex2(1, 2);
+            GLO.TexCoord3(-1, -1, -1); GL.Vertex2(1, 1);
+            GLO.TexCoord3( 1, -1, -1); GL.Vertex2(2, 1);
 
-            // Right
-            GLO.TexCoord3( 1,  1,  1); GL.Vertex2(2, 1);
-            GLO.TexCoord3( 1,  1, -1); GL.Vertex2(3, 1);
-            GLO.TexCoord3( 1, -1, -1); GL.Vertex2(3, 2);
-            GLO.TexCoord3( 1, -1,  1); GL.Vertex2(2, 2);
+            // Right 
+            GLO.TexCoord3( 1,  1,  1); GL.Vertex2(3, 2);
+            GLO.TexCoord3( 1,  1, -1); GL.Vertex2(2, 2);
+            GLO.TexCoord3( 1, -1, -1); GL.Vertex2(2, 1);
+            GLO.TexCoord3( 1, -1,  1); GL.Vertex2(3, 1);
                
             // Back
-            GLO.TexCoord3(-1,  1,  1); GL.Vertex2(3, 1);
-            GLO.TexCoord3( 1,  1,  1); GL.Vertex2(4, 1);
-            GLO.TexCoord3( 1, -1,  1); GL.Vertex2(4, 2);
-            GLO.TexCoord3(-1, -1,  1); GL.Vertex2(3, 2);
+            GLO.TexCoord3(-1,  1,  1); GL.Vertex2(4, 2);
+            GLO.TexCoord3( 1,  1,  1); GL.Vertex2(3, 2);
+            GLO.TexCoord3( 1, -1,  1); GL.Vertex2(3, 1);
+            GLO.TexCoord3(-1, -1,  1); GL.Vertex2(4, 1);
 
             // Bottom
             GLO.TexCoord3(-1, -1,  1); GL.Vertex2(1, 0);
