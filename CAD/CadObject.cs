@@ -425,6 +425,14 @@ namespace SamSeifert.GLE.CAD
             this.BoundingSphereRadius = radius;
         }
 
+        public void getBoundingSphere(out Vector3 center, out float radius)
+        {
+            this.updateBoundingSphere();
+            center = this.BoundingSphereCenter;
+            radius = this.BoundingSphereRadius;
+        }
+
+
 
 
 
