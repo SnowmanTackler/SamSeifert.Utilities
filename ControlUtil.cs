@@ -9,6 +9,21 @@ using System.Windows.Forms;
 
 namespace SamSeifert.Utilities
 {
+    public class ControlHolder<T>
+    {
+        public T Held;
+
+        public override string ToString()
+        {
+            return this.Held.ToString();
+        }
+
+        public ControlHolder(T ai)
+        {
+            this.Held = ai;
+        }
+    }
+
     public static class ControlUtil
     {
         public static void WireAllControls_MouseDown(this Control parent, MouseEventHandler eh)
