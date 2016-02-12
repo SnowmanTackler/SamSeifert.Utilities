@@ -182,17 +182,16 @@ namespace SamSeifert.Utilities
                 else if (m.Msg == WM_KEYDOWN)
                 {
                     Keys ks = (Keys)(m.WParam);
-
                     GlobalEvents.keyTable[ks] = true;
 
                     //                if (!this.isKeyPressed(ks))
-                    {
-                        if (this._KeyDown != null) this._KeyDown(null, EventArgs.Empty);
-                    }
+                    if (this._KeyDown != null)
+                        this._KeyDown(null, EventArgs.Empty);
                 }
                 else if (m.Msg == WM_KEYUP)
                 {
-                    GlobalEvents.keyTable[(Keys)m.WParam] = false;
+                    Keys ks = (Keys)(m.WParam);
+                    GlobalEvents.keyTable[ks] = false;
                     if (this._KeyUp != null) this._KeyUp(null, EventArgs.Empty);
                 }
                 return false;
@@ -209,6 +208,18 @@ namespace SamSeifert.Utilities
                 bool pressed = false;
                 GlobalEvents.keyTable.TryGetValue(k, out pressed);
                 return pressed;
+            }
+        }
+
+        /// <summary>
+        /// When we are crossing multiple forms the key presses can get lost on new forms.
+        /// </summary>
+        /// <param name="p"></param>
+        public static void ForceDown(Keys p)
+        {
+            lock (Instance)
+            {
+                GlobalEvents.keyTable[p] = false;
             }
         }
 
