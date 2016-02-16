@@ -18,6 +18,11 @@ namespace SamSeifert.Utilities
             return (x % mod + mod) % mod;
         }
 
+        public static double ModGauraunteePositive(double x, double mod)
+        {
+            return (x % mod + mod) % mod;
+        }
+
         public const float PIF = (float)Math.PI;
 
         public static float toRadiansF(float degrees)
