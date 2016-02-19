@@ -9,7 +9,6 @@ using System.CodeDom.Compiler;
 
 namespace SamSeifert.Utilities.FileParsing
 {
-
     public static class JsonParser
     {
         private static String ToLiteral(String input)
@@ -68,36 +67,31 @@ namespace SamSeifert.Utilities.FileParsing
                         }
                         else throw new Exception("Entering Array Without Key");
                         break;
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                    case '-': // Negative
+                    case '.': // Decimal
+                    case 'E': // Exponent
+                        sb.Append(next);
+                        break;
                     default:
-                        switch (next)
+                        if (sb.Length != 0)
                         {
-                            case '0':
-                            case '1':
-                            case '2':
-                            case '3':
-                            case '4':
-                            case '5':
-                            case '6':
-                            case '7':
-                            case '8':
-                            case '9':
-                            case '-': // Negative
-                            case '.': // Decimal
-                            case 'E': // Exponent
-                                sb.Append(next);
-                                break;
-                            default:
-                                if (sb.Length != 0)
-                                {
-                                    if (key_off)
-                                    {
-                                        key_off = false;
-                                        ret[key] = Double.Parse(sb.ToString());
-                                        sb.Length = 0;
-                                    }
-                                    else throw new Exception("Entering Dictionary Without Key");
-                                }
-                                break;
+                            if (key_off)
+                            {
+                                key_off = false;
+                                ret[key] = Double.Parse(sb.ToString());
+                                sb.Length = 0;
+                            }
+                            else throw new Exception("Number Without Key");
                         }
                         break;
                 }
@@ -126,31 +120,26 @@ namespace SamSeifert.Utilities.FileParsing
                     case '[':
                         ret.Add(JsonParser.parseArray(sr));
                         break;
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                    case '-': // Negative
+                    case '.': // Decimal
+                    case 'E': // Exponent
+                        sb.Append(next);
+                        break;
                     default:
-                        switch (next)
+                        if (sb.Length != 0)
                         {
-                            case '0':
-                            case '1':
-                            case '2':
-                            case '3':
-                            case '4':
-                            case '5':
-                            case '6':
-                            case '7':
-                            case '8':
-                            case '9':
-                            case '-': // Negative
-                            case '.': // Decimal
-                            case 'E': // Exponent
-                                sb.Append(next);
-                                break;
-                            default:
-                                if (sb.Length != 0)
-                                {
-                                    ret.Add(Double.Parse(sb.ToString()));
-                                    sb.Length = 0;
-                                }
-                                break;
+                            ret.Add(Double.Parse(sb.ToString()));
+                            sb.Length = 0;
                         }
                         break;
                 }
