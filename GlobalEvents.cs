@@ -140,7 +140,10 @@ namespace SamSeifert.Utilities
         {
             get
             {
-                return Instance.pointL;
+                lock (Instance)
+                {
+                    return Instance.pointL;
+                }
             }
         }
 

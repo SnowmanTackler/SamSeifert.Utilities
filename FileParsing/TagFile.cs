@@ -168,8 +168,10 @@ namespace SamSeifert.Utilities.FileParsing
                     }
                     else if (charCurrent.Equals(TB_CLOSE))
                     {
+#pragma warning disable CS0642 // Possible mistaken empty statement
                         if (charLast.Equals(SLASH)) ;
                         else if (charLast.Equals(QMARK)) ;
+#pragma warning restore CS0642 // Possible mistaken empty statement
                         else cTBF.parseText(ref input, ref start);
 
                         chillis.Add(cTBF);
