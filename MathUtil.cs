@@ -18,7 +18,7 @@ namespace SamSeifert.Utilities
             return (x % mod + mod) % mod;
         }
 
-        public static double ModGauraunteePositive(double x, double mod)
+        public static double ModGuaranteePositive(double x, double mod)
         {
             return (x % mod + mod) % mod;
         }
