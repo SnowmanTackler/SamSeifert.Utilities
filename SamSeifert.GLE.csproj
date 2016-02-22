@@ -87,6 +87,7 @@
     <Compile Include="Draw.cs" />
     <Compile Include="ColorGL.cs" />
     <Compile Include="FrameBuffers.cs" />
+    <Compile Include="Geometry2D\Triangle.cs" />
     <Compile Include="GLR.cs" />
     <Compile Include="GLR_Matrix.cs" />
     <Compile Include="GLR_Simple.cs" />

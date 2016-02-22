@@ -192,6 +192,11 @@ namespace SamSeifert.GLE
             GL.Vertex2(v1, v2);
         }
 
+        public static void Vertex2(Vector2 v1)
+        {
+            GL.Vertex2(v1);
+        }
+
         public static void NewList(int ls, ListMode lm)
         {
             GL.NewList(ls, lm);
