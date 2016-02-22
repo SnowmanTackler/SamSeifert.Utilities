@@ -6,6 +6,7 @@ using System.Text;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using System.Runtime.InteropServices;
 
 namespace SamSeifert.GLE
 {
@@ -390,16 +391,32 @@ namespace SamSeifert.GLE
 
         public static void TexImage2D(
             TextureTarget tt,
-            int level, 
-            PixelInternalFormat pif, 
-            int width, 
+            int level,
+            PixelInternalFormat pif,
+            int width,
             int height,
-            int border, 
+            int border,
             PixelFormat pf,
-            PixelType pt, 
+            PixelType pt,
             IntPtr ip)
         {
             GL.TexImage2D(tt, level, pif, width, height, border, pf, pt, ip);
+        }
+
+        public static void TexImage2D<T8>(
+            OpenTK.Graphics.OpenGL.TextureTarget target, 
+            Int32 level, 
+            OpenTK.Graphics.OpenGL.PixelInternalFormat internalformat,
+            Int32 width,
+            Int32 height, 
+            Int32 border,
+            OpenTK.Graphics.OpenGL.PixelFormat format, 
+            OpenTK.Graphics.OpenGL.PixelType type, 
+            [InAttribute, OutAttribute] T8[] pixels)
+            where T8 : struct
+        {
+            GL.TexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
+
         }
 
         public static void FramebufferTexture2D(

@@ -86,6 +86,8 @@ namespace SamSeifert.GLE
             //free the bitmap data (we dont need it anymore because it has been passed to the OpenGL driver
             im.UnlockBits(TextureData);
 
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+
             return output;
         }
     }
