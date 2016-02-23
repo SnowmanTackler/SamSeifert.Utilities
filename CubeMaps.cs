@@ -25,14 +25,14 @@ namespace SamSeifert.GLE
         };
 
         private readonly TextureTarget[] _TextureTargets = new TextureTarget[]
-       {
+        {
             TextureTarget.TextureCubeMapPositiveX,
             TextureTarget.TextureCubeMapNegativeX,
             TextureTarget.TextureCubeMapPositiveY,
             TextureTarget.TextureCubeMapNegativeY,
             TextureTarget.TextureCubeMapPositiveZ,
             TextureTarget.TextureCubeMapNegativeZ,
-       };
+        };
 
         private readonly int _Resolution = 0;
         public int _ColorText { get; private set; } = 0;
@@ -43,7 +43,6 @@ namespace SamSeifert.GLE
         {
             try
             {
-
                 this._Resolution = resolution;
 
                 this._FrameBuffer = GL.GenFramebuffer();
@@ -81,19 +80,9 @@ namespace SamSeifert.GLE
                     this._DepthBuffer = GLO.GenRenderbuffer();
                     GLO.BindRenderbuffer(RenderbufferTarget.Renderbuffer, this._DepthBuffer);
                     GLO.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.DepthComponent24, this._Resolution, this._Resolution);
-                    GLO.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, this._DepthBuffer); //*/
 
-                    /*
-                    GL.GenTextures(1, out this._DepthBuffer);
-                    GL.BindTexture(TextureTarget.Texture2D, this._DepthBuffer);
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
-                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
-                    GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.DepthComponent24, this._Resolution, this._Resolution, 0, PixelFormat.DepthComponent, PixelType.Float, IntPtr.Zero);
-                    GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, TextureTarget.Texture2D, this._DepthBuffer, 0);
-                    */
+                    // Assign render buffer to the frame buffer.
+                    GLO.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment, RenderbufferTarget.Renderbuffer, this._DepthBuffer);
                 }
 
                 switch (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer))
@@ -120,12 +109,21 @@ namespace SamSeifert.GLE
 
         public void GLDelete()
         {
-            /*
             if (this._ColorText != 0)
             {
                 GL.DeleteTexture(this._ColorText);
                 this._ColorText = 0;
-            }*/
+            }
+            if (this._DepthBuffer != 0)
+            {
+                GL.DeleteRenderbuffer(this._DepthBuffer);
+                this._DepthBuffer = 0;
+            }
+            if (this._FrameBuffer != 0)
+            {
+                GL.DeleteFramebuffer(this._FrameBuffer);
+                this._FrameBuffer = 0;
+            }
         }
 
         /// <summary>
@@ -151,18 +149,6 @@ namespace SamSeifert.GLE
                     this._TextureTargets[i], 
                     this._ColorText,
                     0);
-
-                /*
-                switch (i)
-                {
-                    case 0: GL.ClearColor(Color.Red); break; // Left
-                    case 1: GL.ClearColor(Color.Green); break; // Front
-                    case 2: GL.ClearColor(Color.Blue); break; // Right
-                    case 3: GL.ClearColor(Color.Yellow); break; // Back
-                    case 4: GL.ClearColor(Color.Cyan); break; // Up
-                    case 5: GL.ClearColor(Color.Magenta); break; // Down
-                }
-                */
 
                 GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
