@@ -12,5 +12,15 @@ namespace SamSeifert.Utilities
         {
             return (fahrenheit - 32) * (5 / 9.0f);
         }
+
+        public static float FeetToMeters(float feet)
+        {
+            return 0.3048f * feet;
+        }
+
+        public static float InchesToMeters(float inches)
+        {
+            return FeetToMeters(inches / 12);
+        }
     }
 }
