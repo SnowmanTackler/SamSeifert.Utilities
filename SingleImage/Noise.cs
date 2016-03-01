@@ -45,7 +45,7 @@ namespace SamSeifert.CSCV
                                 {
                                     for (int x = 0; x < w; x++)
                                     {
-                                        anon_outp[y, x] = anon_inpt[y, x] + Helpers.nextGaussian(p, r);
+                                        anon_outp[y, x] = anon_inpt[y, x] + Utilities.MathUtil.NextGaussian(p, r);
                                     }
                                 }
                                 break;
@@ -56,7 +56,7 @@ namespace SamSeifert.CSCV
                                 {
                                     for (int x = 0; x < w; x++)
                                     {
-                                        anon_outp[y, x] = anon_inpt[y, x] + Helpers.nextNormal(p, r);
+                                        anon_outp[y, x] = anon_inpt[y, x] + Utilities.MathUtil.NextNormal(p, r);
                                     }
                                 }
                                 break;

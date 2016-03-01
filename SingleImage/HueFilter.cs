@@ -29,7 +29,7 @@ namespace SamSeifert.CSCV
 
                 for (int y = 0; y < h; y++)
                     for (int x = 0; x < w; x++)
-                        outp[y, x] = SamSeifert.Utilities.ColorMethods.CheckHue(inpt[y, x], BandCenter, BandWidth) ? 1 : 0;
+                        outp[y, x] = SamSeifert.Utilities.ColorUtil.CheckHue(inpt[y, x], BandCenter, BandWidth) ? 1 : 0;
 
                 return ToolboxReturn.Good;
             }
