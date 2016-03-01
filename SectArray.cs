@@ -71,7 +71,7 @@ namespace SamSeifert.CSCV
             Array.Copy(this._Data, s._Data, this._Width * this._Height);
         }
 
-        public override Single min
+        public override Single getMinValue
         {
             get
             {
@@ -80,7 +80,7 @@ namespace SamSeifert.CSCV
             }
         }
 
-        public override Single max
+        public override Single getMaxValue
         {
             get
             {
@@ -88,7 +88,7 @@ namespace SamSeifert.CSCV
                 return this._max;
             }
         }
-        public override Single avg
+        public override Single getAverageValue
         {
             get
             {
@@ -97,7 +97,7 @@ namespace SamSeifert.CSCV
             }
         }
 
-        public override void reset()
+        public override void Reset()
         {
             this.unsetMinMaxAvg = true;
             this.unsetStd = true;
@@ -127,7 +127,7 @@ namespace SamSeifert.CSCV
             this.unsetMinMaxAvg = false;
         }
 
-        public Single std
+        public Single getStandardDeviation
         {
             get
             {
@@ -139,7 +139,7 @@ namespace SamSeifert.CSCV
                     {
                         for (int x = 0; x < this._Width; x++)
                         {
-                            f = this._Data[y, x] - this.avg;
+                            f = this._Data[y, x] - this.getAverageValue;
                             st += (f * f);
                         }
                     }

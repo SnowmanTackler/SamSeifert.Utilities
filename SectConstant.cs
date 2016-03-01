@@ -38,7 +38,7 @@ namespace SamSeifert.CSCV
             return new SectConstant(this.value, this._Type);
         }
 
-        public override Single min
+        public override Single getMinValue
         {
             get
             {
@@ -46,7 +46,7 @@ namespace SamSeifert.CSCV
             }
         }
 
-        public override Single max
+        public override Single getMaxValue
         {
             get
             {
@@ -54,7 +54,7 @@ namespace SamSeifert.CSCV
             }
         }
 
-        public override Single avg
+        public override Single getAverageValue
         {
             get
             {
@@ -62,7 +62,7 @@ namespace SamSeifert.CSCV
             }
         }
 
-        public override void reset()
+        public override void Reset()
         {
         }
     }

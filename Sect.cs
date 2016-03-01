@@ -43,7 +43,7 @@ namespace SamSeifert.CSCV
             throw new NotImplementedException();
         }
 
-        public virtual Single min
+        public virtual Single getMinValue
         {
             get
             {
@@ -51,7 +51,7 @@ namespace SamSeifert.CSCV
             }
         }
 
-        public virtual Single max
+        public virtual Single getMaxValue
         {
             get
             {
@@ -59,7 +59,7 @@ namespace SamSeifert.CSCV
             }
         }
 
-        public virtual Single avg
+        public virtual Single getAverageValue
         {
             get
             {
@@ -67,7 +67,7 @@ namespace SamSeifert.CSCV
             }
         }
 
-        public virtual void reset()
+        public virtual void Reset()
         {
             throw new NotImplementedException();
         }
@@ -98,43 +98,43 @@ namespace SamSeifert.CSCV
 
 
 
-        public Bitmap getImage()
+        public Bitmap getImage(ColorFiller anonFunc = null)
         {
             var sz = this.getPrefferedSize();
 
             Bitmap newB = new Bitmap(sz.Width, sz.Height, PixelFormat.Format24bppRgb);
 
-            this.refreshImage(ref newB);
+            this.RefreshImage(ref newB, anonFunc);
 
             return newB;
         }
 
-        public Bitmap getImageForSize(Size s)
+        public Bitmap getImageForSize(Size s, ColorFiller anonFunc = null)
         {
-            return this.getImageForSize(s.Width, s.Height);
+            return this.getImageForSize(s.Width, s.Height, anonFunc);
         }
 
-        public Bitmap getImageForSize(int w, int h)
+        public Bitmap getImageForSize(int w, int h, ColorFiller anonFunc = null)
         {
             Bitmap newB = new Bitmap(w, h, PixelFormat.Format24bppRgb);
 
-            this.refreshImage(ref newB);
+            this.RefreshImage(ref newB, anonFunc);
 
             return newB;
         }
 
-        public Bitmap getImageForSizeShrinkEnlarge(Size s)
+        public Bitmap getImageForSizeShrinkEnlarge(Size s, ColorFiller anonFunc = null)
         {
             var ns = Sizing.fitAinB(this.getPrefferedSize(), new Size(s.Width, s.Height));
 
             Bitmap newB = new Bitmap(ns.Width, ns.Height, PixelFormat.Format24bppRgb);
 
-            this.refreshImage(ref newB);
+            this.RefreshImage(ref newB, anonFunc);
 
             return newB;
         }
 
-        public Bitmap getImageForSizeShrinkOnly(Size s)
+        public Bitmap getImageForSizeShrinkOnly(Size s, ColorFiller anonFunc = null)
         {
             var p = this.getPrefferedSize();
             var ns = Sizing.fitAinB(p, s);
@@ -142,14 +142,14 @@ namespace SamSeifert.CSCV
 
             Bitmap newB = new Bitmap(p.Width, p.Height, PixelFormat.Format24bppRgb);
 
-            this.refreshImage(ref newB);
+            this.RefreshImage(ref newB, anonFunc);
 
             return newB;
         }
 
         
-        internal delegate void ColorFiller(int y, int x, out float r, out float g, out float b);
-        internal virtual ColorFiller getColorFiller()
+        public delegate void ColorFiller(int y, int x, out float r, out float g, out float b);
+        public virtual ColorFiller getColorFiller()
         {
             switch (this._Type)
             {
@@ -186,14 +186,14 @@ namespace SamSeifert.CSCV
             }
         }
 
-        public unsafe void refreshImage(ref Bitmap bmp)
+        public unsafe void RefreshImage(ref Bitmap bmp, ColorFiller anonFunc = null)
         {
             if (bmp == null) bmp = this.getImage();
             else
             {
                 var sz = this.getPrefferedSize();
 
-                ColorFiller anonFunc = this.getColorFiller();
+                if (anonFunc == null) anonFunc = this.getColorFiller();
 
                 if (bmp.Size == sz)
                 {

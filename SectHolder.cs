@@ -92,32 +92,32 @@ namespace SamSeifert.CSCV
             return new SectHolder(ls.ToArray());
         }
 
-        public override Single min
+        public override Single getMinValue
         {
             get
             {
                 var mn = Single.MaxValue;
-                foreach (var s in this._Sects.Values) mn = Math.Min(mn, s.min);
+                foreach (var s in this._Sects.Values) mn = Math.Min(mn, s.getMinValue);
                 return mn;
             }
         }
 
-        public override Single max
+        public override Single getMaxValue
         {
             get
             {
                 var mx = Single.MinValue;
-                foreach (var s in this._Sects.Values) mx = Math.Max(mx, s.max);
+                foreach (var s in this._Sects.Values) mx = Math.Max(mx, s.getMaxValue);
                 return mx;
             }
         }
 
-        public override Single avg
+        public override Single getAverageValue
         {
             get
             {
                 Single av = 0;
-                foreach (var s in this._Sects.Values) av += s.avg;
+                foreach (var s in this._Sects.Values) av += s.getAverageValue;
                 av /= this._Sects.Count;
                 return av;
             }
@@ -203,13 +203,13 @@ namespace SamSeifert.CSCV
 
                 input.UnlockBits(bmd);
 
-                this.reset();                
+                this.Reset();                
             }
         }
 
-        public override void reset()
+        public override void Reset()
         {
-            foreach (var s in this._Sects.Values) s.reset();
+            foreach (var s in this._Sects.Values) s.Reset();
         }
 
         ~SectHolder()
@@ -249,7 +249,7 @@ namespace SamSeifert.CSCV
 
 
 
-        internal override ColorFiller getColorFiller()
+        public override ColorFiller getColorFiller()
         {
             if (this.hasRGB())
             {

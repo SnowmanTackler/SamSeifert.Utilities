@@ -73,7 +73,7 @@ namespace SamSeifert.CSCV
                 outp = null;
                 return ToolboxReturn.SpecialError;
             }
-            else if ((inpt.max > 1) || (inpt.min < 0))
+            else if ((inpt.getMaxValue > 1) || (inpt.getMinValue < 0))
             {
                 outp = null;
                 return ToolboxReturn.SpecialError;
