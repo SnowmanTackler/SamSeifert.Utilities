@@ -64,6 +64,28 @@ namespace SamSeifert.CSCV
                     int tx, ty;
                     float sum;
 
+                    // Set border:
+                    for (int y1 = 0; y1 < y1_start; y1++)
+                        for (int x1 = 0; x1 < s1.Width; x1++)
+                            anon_outp[y1, x1] = 0;
+
+                    for (int y1 = y1_start; y1 < y1_end; y1++)
+                    {
+                        for (int x1 = 0; x1 < x1_start; x1++)
+                            anon_outp[y1, x1] = 0;
+
+                        for (int x1 = x1_end; x1 < s1.Height; x1++)
+                            anon_outp[y1, x1] = 0;
+                    }
+
+                    for (int y1 = y1_end; y1 < s1.Height; y1++)
+                        for (int x1 = 0; x1 < s1.Width; x1++)
+                            anon_outp[y1, x1] = 0;
+
+
+
+
+                    // Set middle:
                     for (int y1 = y1_start; y1 < y1_end; y1++)
                     {
                         for (int x1 = x1_start; x1 < x1_end; x1++)

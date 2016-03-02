@@ -46,6 +46,11 @@ namespace SamSeifert.CSCV
             return new SectMask(this._Type, this._Sect.Clone());
         }
 
+        public override Sect Transpose()
+        {
+            return new SectMask(this._Type, this._Sect.Transpose());
+        }
+
         public override Single getMinValue
         {
             get

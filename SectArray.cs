@@ -30,11 +30,39 @@ namespace SamSeifert.CSCV
             return s;
         }
 
+        public override Sect Transpose()
+        {
+            var s = new SectArray(this._Type, this._Height, this._Width);
+
+            s.unsetMinMaxAvg = this.unsetMinMaxAvg;
+            s.unsetStd = this.unsetStd;
+            s._std = this._std;
+            s._min = this._min;
+            s._max = this._max;
+            s._avg = this._avg;
+
+            for (int y = 0; y < this._Height; y++)
+            {
+                for (int x = 0; x < this._Width; x++)
+                {
+                    s._Data[x, y] = this._Data[y, x];
+                }
+            }
+
+            return s;
+        }
+
         public override Size getPrefferedSize()
         {
             return new Size(this._Width, this._Height);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="y">row</param>
+        /// <param name="x">column</param>
+        /// <returns></returns>
         public override Single this[int y, int x]
         {
             get
@@ -162,66 +190,87 @@ namespace SamSeifert.CSCV
 
 
 
-
-
-
-
-
-
-        public static SectArray GaussianNormalizedSum(SectType t, Single sigma, int span)
+        public void NormalizeMax()
         {
-            SectArray sa = new SectArray(t, span, span);
-            Single sum = 0;
+            float max = float.MinValue;
 
-            float center = (span - 1.0f) / 2;
-            for (int i = 0; i < span; i++)
-            {
-                for (int j = 0; j < span; j++)
-                {
-                    Single x = j - center;
-                    Single y = i - center;
-                    Single val = (Single)Math.Pow(Math.E, -(x * x + y * y) / (2 * sigma));
-                    sum += val;
-                    sa.Data[i, j] = val;
-                }
-            }
+            for (int i = 0; i < this._Height; i++)
+                for (int j = 0; j < this._Width; j++)
+                    max = Math.Max(max, this.Data[i, j]);
 
-            for (int i = 0; i < span; i++)
-            {
-                for (int j = 0; j < span; j++)
-                {
-                    sa.Data[i, j] /= sum;
-                }
-            }
-            return sa;
+            for (int i = 0; i < this._Height; i++)
+                for (int j = 0; j < this._Width; j++)
+                    this.Data[i, j] /= max;
         }
 
-        public static SectArray GaussianNormalizedMax(SectType t, Single sigma, int span)
+        public void NormalizeSum()
         {
-            SectArray sa = new SectArray(t, span, span);
-            Single max = 0;
+            Single sum = 0;
 
-            float center = (span - 1.0f) / 2;
-            for (int i = 0; i < span; i++)
+            for (int i = 0; i < this._Height; i++)
+                for (int j = 0; j < this._Width; j++)
+                    sum += this.Data[i, j];
+
+            for (int i = 0; i < this._Height; i++)
+                for (int j = 0; j < this._Width; j++)
+                    this.Data[i, j] /= sum;
+        }
+
+
+
+
+        public static class Build
+        {
+            public static class Gaussian
             {
-                for (int j = 0; j < span; j++)
+                private static SectArray G(SectType t, Single sigma, int w, int h)
                 {
-                    Single x = j - center;
-                    Single y = i - center;
-                    Single val = (Single)Math.Pow(Math.E, -(x * x + y * y) / (2 * sigma));
-                    max = Math.Max(max, val);
-                    sa.Data[i, j] = val;
+                    SectArray sa = new SectArray(t, w, h);
+                    Single sum = 0;
+
+                    for (int i = 0; i < h; i++)
+                    {
+                        for (int j = 0; j < w; j++)
+                        { 
+                            Single x = j - (w - 1.0f) / 2;
+                            Single y = i - (h - 1.0f) / 2;
+                            Single val = (Single)Math.Pow(Math.E, -(x * x + y * y) / (2 * sigma));
+                            sum += val;
+                            sa.Data[i, j] = val;
+                        }
+                    }
+
+                    return sa;
+                }
+
+                public static SectArray NormalizedSum1D(SectType t, Single sigma, int span)
+                {
+                    SectArray sa = G(t, sigma, 1, span);
+                    sa.NormalizeSum();
+                    return sa;
+                }
+
+                public static SectArray NormalizedMax1D(SectType t, Single sigma, int span)
+                {
+                    SectArray sa = G(t, sigma, 1, span);
+                    sa.NormalizeMax();
+                    return sa;
+                }
+
+                public static SectArray NormalizedSum2D(SectType t, Single sigma, int span)
+                {
+                    SectArray sa = G(t, sigma, span, span);
+                    sa.NormalizeSum();
+                    return sa;
+                }
+
+                public static SectArray NormalizedMax2D(SectType t, Single sigma, int span)
+                {
+                    SectArray sa = G(t, sigma, span, span);
+                    sa.NormalizeMax();
+                    return sa;
                 }
             }
-
-            for (int i = 0; i < span; i++)
-            {
-                for (int j = 0; j < span; j++)
-                {
-                    sa.Data[i, j] /= max;
-                }
-            }
-            return sa;
         }
     }
 }

@@ -38,6 +38,11 @@ namespace SamSeifert.CSCV
             return new SectConstant(this.value, this._Type);
         }
 
+        public override Sect Transpose()
+        {
+            return new SectConstant(this.value, this._Type);
+        }
+
         public override Single getMinValue
         {
             get

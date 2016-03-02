@@ -92,6 +92,16 @@ namespace SamSeifert.CSCV
             return new SectHolder(ls.ToArray());
         }
 
+        public override Sect Transpose()
+        {
+            var ls = new List<Sect>();
+
+            foreach (var s in this._Sects.Values) ls.Add(s.Transpose());
+
+            return new SectHolder(ls.ToArray());
+
+        }
+
         public override Single getMinValue
         {
             get

@@ -38,7 +38,20 @@ namespace SamSeifert.CSCV
             }
         }
 
+        /// <summary>
+        /// Returns a copy of this image.
+        /// </summary>
+        /// <returns></returns>
         public virtual Sect Clone()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Should return a transposes copy of this image!
+        /// </summary>
+        /// <returns></returns>
+        public virtual Sect Transpose()
         {
             throw new NotImplementedException();
         }
