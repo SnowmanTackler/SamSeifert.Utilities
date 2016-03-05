@@ -134,6 +134,34 @@ namespace SamSeifert.MathNet.Numerics.Extensions
             return mat;
         }
 
+
+
+        /// <summary>
+        /// Eeach row of the original matrix is multiplied with v
+        /// </summary>
+        /// <param name="mat"></param>
+        /// <param name="v"></param>
+        /// <returns></returns>
+        public static Matrix<float> MultiplyRowT(this Matrix<float> mat, Vector<float> v)
+        {
+            if (mat.ColumnCount != v.Count) throw new Exception("SubtractRow Mismatch");
+
+            int rows = mat.RowCount;
+            int cols = mat.ColumnCount;
+
+            for (int c = 0; c < cols; c++)
+            {
+                for (int r = 0; r < rows; r++)
+                {
+                    mat[r, c] *= v[c];
+                }
+            }
+
+            return mat;
+        }
+
+
+
         /// <summary>
         /// Calculate the standard deviation of the rows.  This returns one value for each column!
         /// </summary>
