@@ -60,6 +60,7 @@
     <Compile Include="CustomControls\DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="EnumerableUtil.cs" />
     <Compile Include="EnumUtil.cs" />
     <Compile Include="FileParsing\BracketFile.cs" />
     <Compile Include="FileParsing\JsonParser.cs" />
@@ -80,6 +81,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="ScreenCapture.cs" />
+    <Compile Include="Statistics.cs" />
     <Compile Include="StringUtil.cs" />
     <Compile Include="UnitConverter.cs" />
     <EmbeddedResource Include="CustomControls\HueFilter.resx">
