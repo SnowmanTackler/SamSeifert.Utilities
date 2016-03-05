@@ -72,6 +72,7 @@
     <Compile Include="CustomControls\HueFilter.Designer.cs">
       <DependentUpon>HueFilter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logger.cs" />
     <Compile Include="MiscUtil.cs" />
     <Compile Include="MathUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
