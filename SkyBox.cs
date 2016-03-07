@@ -38,7 +38,7 @@ namespace SamSeifert.GLE
             String kHalf = "Half";
 
             String contents = File.ReadAllText(file);
-            TagFile f = TagFile.parseText(contents);
+            TagFile f = TagFile.ParseText(contents);
 
             String output = null;
             Double outputD = 0.0;

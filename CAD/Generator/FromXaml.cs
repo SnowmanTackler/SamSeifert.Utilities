@@ -27,7 +27,7 @@ namespace SamSeifert.GLE.CAD.Generator
             bool reduceComplexity = true
             )
         {
-            var f = TagFile.parseText(FileText);
+            var f = TagFile.ParseText(FileText);
 
             String match0 = "ModelVisual3D";
             var match0L = f.getMatches(ref match0);
@@ -476,7 +476,7 @@ namespace SamSeifert.GLE.CAD.Generator
                                         }
                                     }
 
-                                    if (!no_angle) f1.display();
+                                    if (!no_angle) f1.Display();
                                     break;
                                 }
                             default:
