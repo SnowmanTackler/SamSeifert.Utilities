@@ -7,8 +7,9 @@ namespace SamSeifert.Utilities.FileParsing
 {
     public interface TagItem
     {
-        void display();
-        void display(String prec);
+        void Display();
+        void Display(String prec);
+        IEnumerable<TagItem> Enumerate();
     }
 
     public class TagText : TagItem
@@ -30,12 +31,12 @@ namespace SamSeifert.Utilities.FileParsing
             valid = true;
         }
 
-        public void display()
+        public void Display()
         {
-            this.display(" ");
+            this.Display(" ");
         }
 
-        public void display(String prec)
+        public void Display(String prec)
         {
             Console.Write((prec.Length - 1).ToString("00"));
             Console.Write(prec);
@@ -44,6 +45,11 @@ namespace SamSeifert.Utilities.FileParsing
             Console.Write("\"");
             Console.Write(Environment.NewLine);
         }
+
+        public IEnumerable<TagItem> Enumerate()
+        {
+            yield return this;
+        }
     }
 
     public class TagFile : TagItem
@@ -51,14 +57,14 @@ namespace SamSeifert.Utilities.FileParsing
         public String _Name = "";
         public TagItem[] _Children = new TagItem[] { };
         public Dictionary<String, String> _Params = new Dictionary<String, String>();
-        public Dictionary<int, String> _ParamsOrder = new Dictionary<int, String>();
+        public List<String> _ParamsOrder = new List<String>();
 
         const char TB_OPEN = '<';
         const char TB_CLOSE = '>';
         const char QUOTE = '"';
         const char SPACE = ' ';
         const char EQUALS = '=';
-        const char SLASH = '/';
+        const char FSLASH = '/';
         const char QMARK = '?';
 
         private TagFile()
@@ -66,24 +72,32 @@ namespace SamSeifert.Utilities.FileParsing
 
         }
 
+        public IEnumerable<TagItem> Enumerate()
+        {
+            yield return this;
+            foreach (var child in this._Children)
+                foreach (var en in child.Enumerate())
+                    yield return en;
+        }
+
         public override string ToString()
         {
             return this._Name;
         }
 
-        public static TagFile parseText(String input)
+        public static TagFile ParseText(String input)
         {
             var i = input.ToCharArray();
             int s = 0;
 
             TagFile tbf = new TagFile();
 
-            tbf.parseText(ref i, ref s);
+            tbf.ParseText(ref i, ref s);
 
             return tbf;
         }
 
-        private void parseText(ref Char[] input, ref int start)
+        private void ParseText(ref Char[] input, ref int start)
         {
             var cStart = start;
 
@@ -110,6 +124,7 @@ namespace SamSeifert.Utilities.FileParsing
             {
                 charLast = charCurrent;
                 charCurrent = input[start++];
+
                 length = start - cStart - 1;
 
                 if (inQuote)
@@ -119,8 +134,9 @@ namespace SamSeifert.Utilities.FileParsing
                         cValue = length > 0 ? new String(input, cStart, length).Trim() : "";
                         cStart = start;
                         inQuote = false;
-                        cTBF._ParamsOrder.Add(cTBF._Params.Count, cKey);
-                        cTBF._Params.Add(cKey, cValue);
+                        cTBF._ParamsOrder.Add(cKey);
+                        if (!cTBF._Params.ContainsKey(cKey)) cTBF._Params[cKey] = cValue;
+                        //else Console.WriteLine("Replacing " + cTBF._Params[cKey] + " with " + cValue);
                     }
                 }
                 else if (inBracketName)
@@ -134,7 +150,7 @@ namespace SamSeifert.Utilities.FileParsing
                     }
                     if (charCurrent.Equals(TB_CLOSE))
                     {
-                        if (charLast.Equals(SLASH))
+                        if (charLast.Equals(FSLASH))
                         {
                             cTBF._Name = length > 0 ? new String(input, cStart, length - 1).Trim() : "";
                         }
@@ -145,7 +161,7 @@ namespace SamSeifert.Utilities.FileParsing
                         else
                         {
                             cTBF._Name = length > 0 ? new String(input, cStart, length).Trim() : "";
-                            cTBF.parseText(ref input, ref start);
+                            cTBF.ParseText(ref input, ref start);
                         }
 
                         chillis.Add(cTBF);
@@ -169,10 +185,10 @@ namespace SamSeifert.Utilities.FileParsing
                     else if (charCurrent.Equals(TB_CLOSE))
                     {
 #pragma warning disable CS0642 // Possible mistaken empty statement
-                        if (charLast.Equals(SLASH)) ;
+                        if (charLast.Equals(FSLASH)) ;
                         else if (charLast.Equals(QMARK)) ;
 #pragma warning restore CS0642 // Possible mistaken empty statement
-                        else cTBF.parseText(ref input, ref start);
+                        else cTBF.ParseText(ref input, ref start);
 
                         chillis.Add(cTBF);
                         cTBF = null;
@@ -182,29 +198,35 @@ namespace SamSeifert.Utilities.FileParsing
                 }
                 else
                 {
-                    bool tboG = charCurrent.Equals(TB_OPEN);
-                    bool endNew = tboG && start < input.Length ? input[start].Equals(SLASH) : false;
+                    bool open = charCurrent.Equals(TB_OPEN);
+                    bool close_bracket = false;
 
-                    if (tboG && text_start > 0)
-                    {
-                        bool add;
-                        String so = new String(input, text_start, text_length);
-                        var tfa = new TagText(so, out add);
-                        if (add) chillis.Add(tfa);
-                        text_start = -1;
-                    }
+                    if (start < input.Length)
+                        close_bracket = input[start] == FSLASH;
 
-                    if (endNew)
+                    if (open)
                     {
-                        while (start < input.Length && !charCurrent.Equals(TB_CLOSE)) 
-                            charCurrent = input[start++];
-                        break;
-                    }
-                    else if (tboG)
-                    {
-                        inBracketName = true;
-                        cTBF = new TagFile();
-                        cStart = start;
+                        if (text_start > 0)
+                        {
+                            bool add;
+                            String so = new String(input, text_start, text_length);
+                            var tfa = new TagText(so, out add);
+                            if (add) chillis.Add(tfa);
+                            text_start = -1;
+                        }
+
+                        if (close_bracket)
+                        {
+                            while (start < input.Length && !charCurrent.Equals(TB_CLOSE))
+                                charCurrent = input[start++];
+                            break;
+                        }
+                        else
+                        {
+                            inBracketName = true;
+                            cTBF = new TagFile();
+                            cStart = start;
+                        }
                     }
                     else
                     {
@@ -222,12 +244,12 @@ namespace SamSeifert.Utilities.FileParsing
         }
 
 
-        public void display()
+        public void Display()
         {
-            this.display(" ");
+            this.Display(" ");
         }
 
-        public void display(String prec)
+        public void Display(String prec)
         {
             Console.Write((prec.Length - 1).ToString("00"));
             Console.Write(prec);
@@ -250,7 +272,7 @@ namespace SamSeifert.Utilities.FileParsing
 
             if (this._Children.Length > 0)
                 foreach (var f in this._Children)
-                    f.display(prec);
+                    f.Display(prec);
         }
 
 

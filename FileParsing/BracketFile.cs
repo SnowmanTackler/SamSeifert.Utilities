@@ -16,7 +16,7 @@ namespace SamSeifert.Utilities.FileParsing
         public const char bracketType2Open = '[';
         public const char bracketType2Close = ']';
 
-        public static BracketFile parseText(String input)
+        public static BracketFile ParseText(String input)
         {
             try
             {
@@ -25,7 +25,7 @@ namespace SamSeifert.Utilities.FileParsing
                 var ca = input.ToCharArray();
                 int start = 0;
 
-                BracketFile f = BracketFile.parseText(ref ca, "", 0, ref start);
+                BracketFile f = BracketFile.ParseText(ref ca, "", 0, ref start);
 
                 if (f._Children.Length == 1) return f._Children[0];
                 else return f;
@@ -37,7 +37,7 @@ namespace SamSeifert.Utilities.FileParsing
             }
         }
 
-        private static BracketFile parseText(ref char[] input, string head, int btype, ref int start)
+        private static BracketFile ParseText(ref char[] input, string head, int btype, ref int start)
         {
             BracketFile f = new BracketFile();
 
@@ -59,7 +59,7 @@ namespace SamSeifert.Utilities.FileParsing
                 if (false) ;
                 else if (s.Equals(bracketType1Open))
                 {
-                    list.Add(BracketFile.parseText(
+                    list.Add(BracketFile.ParseText(
                         ref input,
                         length > 0 ? new String(input, contextstart, length) : "",
                         1,
@@ -68,7 +68,7 @@ namespace SamSeifert.Utilities.FileParsing
                 }
                 else if (s.Equals(bracketType2Open))
                 {
-                    list.Add(BracketFile.parseText(
+                    list.Add(BracketFile.ParseText(
                         ref input,
                         length > 0 ? new String(input, contextstart, length) : "",
                         2,
@@ -90,17 +90,17 @@ namespace SamSeifert.Utilities.FileParsing
                 BracketFile f2 = new BracketFile();
                 f2._Children = new BracketFile[] { };
                 f2.text = length > 0 ? new String(input, contextstart, length) : "";
-                f2.niceStrings();
+                f2.NiceStrings();
                 list.Add(f2);
             }
 
-            f.niceStrings();
+            f.NiceStrings();
             f._Children = list.ToArray();
 
             return f;
         }
 
-        private void niceStrings()
+        private void NiceStrings()
         {
             this.text = this.text.Trim();
             this.text = this.text.Replace('\t', ' ');
@@ -113,11 +113,11 @@ namespace SamSeifert.Utilities.FileParsing
             }
         }
 
-        public void save()
+        public void Save()
         {
             var x = new List<String>();
 
-            this.save(0, ref x);
+            this.Save(0, ref x);
 
             var sf = new System.Windows.Forms.SaveFileDialog();
 
@@ -125,7 +125,7 @@ namespace SamSeifert.Utilities.FileParsing
                 System.IO.File.WriteAllLines(sf.FileName, x);
         }
 
-        private void save(int level, ref List<string> str)
+        private void Save(int level, ref List<string> str)
         {
             String s = level.ToString("00 ");
             for (int i = 0; i < level; i++) s += " ";
@@ -137,16 +137,16 @@ namespace SamSeifert.Utilities.FileParsing
 
             if (this._Children.Length > 0)
             {
-                foreach (var f in this._Children) f.save(level + 1, ref str);
+                foreach (var f in this._Children) f.Save(level + 1, ref str);
             }
         }
 
-        public void display(bool contents)
+        public void Display(bool contents)
         {
-            this.display(0, contents);
+            this.Display(0, contents);
         }
 
-        private void display(int level, bool contents)
+        private void Display(int level, bool contents)
         {
             String s = level.ToString("00 ");
             for (int i = 0; i < level; i++) s += " ";
@@ -158,7 +158,7 @@ namespace SamSeifert.Utilities.FileParsing
 
             if (this._Children.Length > 0)
             {
-                foreach (var f in this._Children) f.display(level + 1, contents);
+                foreach (var f in this._Children) f.Display(level + 1, contents);
             }
         }
 
