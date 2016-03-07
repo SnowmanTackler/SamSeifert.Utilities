@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="MatrixUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VectorUtil.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
