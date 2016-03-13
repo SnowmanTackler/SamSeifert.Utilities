@@ -12,9 +12,9 @@ using GL = SamSeifert.GLE.GLR;
 
 namespace SamSeifert.GLE
 {
-    public class CubeMaps : DeleteableObject
+    public class CubeColorMap : DeleteableObject
     {
-        private readonly Matrix4[] _Matrices = new Matrix4[]
+        public static readonly Matrix4[] _Matrices = new Matrix4[]
         {
             Matrix4.LookAt(Vector3.Zero, Vector3.UnitX, -Vector3.UnitY),
             Matrix4.LookAt(Vector3.Zero, -Vector3.UnitX, -Vector3.UnitY),
@@ -24,7 +24,7 @@ namespace SamSeifert.GLE
             Matrix4.LookAt(Vector3.Zero, -Vector3.UnitZ, -Vector3.UnitY),
         };
 
-        private readonly TextureTarget[] _TextureTargets = new TextureTarget[]
+        public static readonly TextureTarget[] _TextureTargets = new TextureTarget[]
         {
             TextureTarget.TextureCubeMapPositiveX,
             TextureTarget.TextureCubeMapNegativeX,
@@ -39,7 +39,7 @@ namespace SamSeifert.GLE
         private int _FrameBuffer = 0;
         private int _DepthBuffer = 0;
 
-        public CubeMaps(int resolution, out bool sucess)
+        public CubeColorMap(int resolution, out bool success)
         {
             try
             {
@@ -64,7 +64,7 @@ namespace SamSeifert.GLE
                     for (int i = 0; i < 6; i++)
                     {
                         GL.TexImage2D(
-                            this._TextureTargets[i],
+                            CubeColorMap._TextureTargets[i],
                             0,
                             PixelInternalFormat.Rgb,
                             this._Resolution,
@@ -88,15 +88,15 @@ namespace SamSeifert.GLE
                 switch (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer))
                 {
                     case FramebufferErrorCode.FramebufferComplete:
-                        sucess = true;
+                        success = true;
                         break;
                     default:
-                        Console.WriteLine("FrameBufferIndices Error");
-                        sucess = false;
+                        Console.WriteLine("CubeColorMap Error");
+                        success = false;
                         break;
                 }
 
-                sucess = true;
+                success = true;
             }
             finally
             {
@@ -133,8 +133,10 @@ namespace SamSeifert.GLE
         /// <param name="zNear"></param>
         /// <param name="zFar"></param>
         /// <param name="m">Model View Should to Straight Forward</param>
-        public void Render(Action render, float zNear, float zFar, ref Matrix4 m)
+        public void Render(Action render, float zNear, float zFar, Matrix4 m)
         {
+            m.Invert();
+
             GL.loadProjection(90, 90, zNear, zFar);
             GL.Viewport(0, 0, this._Resolution, this._Resolution);
 
@@ -145,22 +147,20 @@ namespace SamSeifert.GLE
             {
                 GL.FramebufferTexture2D(
                     FramebufferTarget.Framebuffer,
-                    FramebufferAttachment.ColorAttachment0, 
-                    this._TextureTargets[i], 
+                    FramebufferAttachment.ColorAttachment0,
+                    CubeColorMap._TextureTargets[i], 
                     this._ColorText,
                     0);
 
                 GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-                GL.LoadMatrix(ref this._Matrices[i]);
+                GL.LoadMatrix(ref CubeColorMap._Matrices[i]);
                 GL.MultMatrix(ref m);
 
                 render();
             }
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.DrawBuffer(DrawBufferMode.Back);
-
-            GL.ClearColor(Color.Black);
         }
 
         public void RenderOnScreen()
@@ -234,8 +234,3 @@ namespace SamSeifert.GLE
         }
     }
 }
-
-
-
-
-

@@ -21,14 +21,14 @@ namespace SamSeifert.GLE
         /// 
         /// </summary>
         /// <param name="resolution"></param>
-        /// <param name="sucess"></param>
+        /// <param name="success"></param>
         /// <param name="color_texture_pixel_format"></param>
         /// <param name="color_texture_pixel_type"></param>
         /// <param name="depth_texture_pixel_type"></param>
         /// <param name="interpolation_mode">InterpolationMode</param>
         public FrameBuffers(
             Size resolution,
-            out bool sucess,
+            out bool success,
             PixelFormat color_texture_pixel_format = PixelFormat.Rgb,
             PixelType color_texture_pixel_type = PixelType.Byte,
             PixelInternalFormat depth_texture_pixel_type = PixelInternalFormat.DepthComponent24,
@@ -80,11 +80,11 @@ namespace SamSeifert.GLE
                 switch (GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer))
                 {
                     case FramebufferErrorCode.FramebufferComplete:
-                        sucess = true;
+                        success = true;
                         break;
                     default:
                         Console.WriteLine("FrameBufferIndices Error");
-                        sucess = false;
+                        success = false;
                         break;
                 }
             }

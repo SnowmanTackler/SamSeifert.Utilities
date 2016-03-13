@@ -13,5 +13,16 @@ namespace SamSeifert.GLE
 {
     public static partial class GLR
     {
+        public static void DepthOff()
+        {
+            GL.Disable(EnableCap.DepthTest);
+            GL.DepthMask(false);
+        }
+
+        public static void DepthOn()
+        {
+            GL.Enable(EnableCap.DepthTest);
+            GL.DepthMask(true);
+        }
     }
 }
