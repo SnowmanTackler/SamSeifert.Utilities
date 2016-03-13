@@ -454,10 +454,10 @@ namespace SamSeifert.GLE
             GL.ColorMask(v1, v2, v3, v4);
         }
 
-        public static void GetTexImage<T>(TextureTarget tt, int v, PixelFormat pf, PixelType pt, T[] data)
+        public static void GetTexImage<T>(TextureTarget target, int level, PixelFormat format, PixelType type, T[] pixels)
             where T : struct
         {
-            GL.GetTexImage<T>(tt, v, pf, pt, data);
+            GL.GetTexImage<T>(target, level, format, type, pixels);
         }
 
         public static void ColorPointer(int size, ColorPointerType type, int stride, int offset)

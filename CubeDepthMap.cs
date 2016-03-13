@@ -35,14 +35,15 @@ namespace SamSeifert.GLE
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (int)All.Linear);
-                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)All.Linear);
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (int)All.Nearest);
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)All.Nearest);
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureBaseLevel, 0);
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMaxLevel, 0);
 
                     //Define all 6 faces
                     for (int i = 0; i < 6; i++)
                     {
+                        this._Use[i] = true;
                         GL.TexImage2D(
                             CubeColorMap._TextureTargets[i],
                             0,
@@ -122,6 +123,17 @@ namespace SamSeifert.GLE
 
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.DrawBuffer(DrawBufferMode.Back);
+        }
+
+        public bool[] _Use = new bool[6];
+        public void Skip(TextureTarget t)
+        {
+            for (int i = 0; i < 6; i++)
+                if (CubeColorMap._TextureTargets[i] == t)
+                {
+                    this._Use[i] = false;
+                    break;
+                }
         }
     }
 }

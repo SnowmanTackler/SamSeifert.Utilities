@@ -63,6 +63,7 @@ namespace SamSeifert.GLE
                     //Define all 6 faces
                     for (int i = 0; i < 6; i++)
                     {
+                        this._Use[i] = true;
                         GL.TexImage2D(
                             CubeColorMap._TextureTargets[i],
                             0,
@@ -145,20 +146,24 @@ namespace SamSeifert.GLE
 
             for (int i = 0; i < 6; i++)
             {
-                GL.FramebufferTexture2D(
-                    FramebufferTarget.Framebuffer,
-                    FramebufferAttachment.ColorAttachment0,
-                    CubeColorMap._TextureTargets[i], 
-                    this._ColorText,
-                    0);
+                if (this._Use[i])
+                {
+                    GL.FramebufferTexture2D(
+                        FramebufferTarget.Framebuffer,
+                        FramebufferAttachment.ColorAttachment0,
+                        CubeColorMap._TextureTargets[i],
+                        this._ColorText,
+                        0);
 
-                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+                    GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-                GL.LoadMatrix(ref CubeColorMap._Matrices[i]);
-                GL.MultMatrix(ref m);
+                    GL.LoadMatrix(ref CubeColorMap._Matrices[i]);
+                    GL.MultMatrix(ref m);
 
-                render();
+                    render();
+                }
             }
+
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.DrawBuffer(DrawBufferMode.Back);
         }
@@ -231,6 +236,17 @@ namespace SamSeifert.GLE
             GL.DepthMask(true);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
+        }
+
+        public bool[] _Use = new bool[6];
+        public void Skip(TextureTarget t)
+        {
+            for (int i = 0; i < 6; i++)
+                if (CubeColorMap._TextureTargets[i] == t)
+                {
+                    this._Use[i] = false;
+                    break;
+                }
         }
     }
 }

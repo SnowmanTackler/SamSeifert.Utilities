@@ -71,7 +71,8 @@ namespace SamSeifert.GLE
                     GL.GetProgram(shader, ProgramParameter.LinkStatus, out param);
                     if (param == 0)
                     {
-                        Console.WriteLine("Linkage error");
+                        Console.WriteLine("Linkage error:");
+                        Console.WriteLine(GLO.GetProgramInfoLog(shader));
                         success = false;
                         return;
                     }
