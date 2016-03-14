@@ -16,7 +16,7 @@ namespace SamSeifert.GLE.CAD
         internal Matrix4 _Matrix = Matrix4.Identity;
         internal ColorGL _Color = null;
 
-        internal CadObject[] Children = new CadObject[0];
+        public CadObject[] Children = new CadObject[0];
         internal Vector3[] Vertices;
         internal Vector3[] Normals;
         internal uint[] Indices;
@@ -351,7 +351,7 @@ namespace SamSeifert.GLE.CAD
                         this.BoundingSphereRadius = new_radius;
                     }
                 }
-                else
+                else if (this.Vertices != null)
                 {
                     // Bitter's Algorithm
                     var furthest_distance = 0f;

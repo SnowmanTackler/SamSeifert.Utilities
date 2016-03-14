@@ -180,7 +180,22 @@ namespace SamSeifert.GLE.CAD.Generator
                 }
             }
 
+            for (int i = 0; i < ret.Count; i++)
+            {
+                if (ret[i].Children != null)
+                    if (ret[i].Children.Length != 0)
+                        continue;
+
+                if (ret[i].Vertices != null)
+                    if (ret[i].Vertices.Length != 0)
+                        continue;
+
+                ret.RemoveAt(i);
+                i--;
+            }
+
             co.Children = ret.ToArray();
+
             return co;
         }
 
