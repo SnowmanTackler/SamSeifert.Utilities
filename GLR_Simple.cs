@@ -237,10 +237,6 @@ namespace SamSeifert.GLE
             GL.Normal3(v);
         }
 
-        public static void Begin(PrimitiveType pt)
-        {
-            GL.Begin(pt);
-        }
 
         public static void BlendFunc(BlendingFactorSrc src, BlendingFactorDest dst)
         {
@@ -255,6 +251,11 @@ namespace SamSeifert.GLE
         public static void TexCoord2(float v1, float v2)
         {
             GL.TexCoord2(v1, v2);
+        }
+
+        public static void Begin(PrimitiveType pt)
+        {
+            GL.Begin(pt);
         }
 
         public static void End()

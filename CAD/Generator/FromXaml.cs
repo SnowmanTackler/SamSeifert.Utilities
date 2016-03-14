@@ -110,7 +110,7 @@ namespace SamSeifert.GLE.CAD.Generator
 
                         all[i].initializeWithVectorsAndNormalsSorted(verts.ToArray(), norms.ToArray(), dices.ToArray());
                     }
-                    //                    Console.WriteLine("Combine Colors: " + old + " to " + all.Count);
+                    // Console.WriteLine("Combine Colors: " + old + " to " + all.Count);
 
                     var ret = new CadObject(all.ToArray(), ObjectName);
                     return ret;

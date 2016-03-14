@@ -42,7 +42,7 @@ namespace SamSeifert.GLE.CAD
 
         public CadObject(CadObject[] cos, String name = "Group")
         {
-            this.Children = cos;
+            if (cos != null) this.Children = cos;
             this._Name = name;
         }
 
@@ -149,15 +149,14 @@ namespace SamSeifert.GLE.CAD
 
         public void draw(bool useColor = true)
         {
+
             if (this.BoolDisplay)
             {
                 if (this.BoolUseTranslationAndRotation)
                 {
                     GL.PushMatrix();
-                    {
-                        GL.MultMatrix(ref this._Matrix);
-                        this.draw2(useColor);
-                    }
+                    GL.MultMatrix(ref this._Matrix);
+                    this.draw2(useColor);
                     GL.PopMatrix();
                 }
                 else this.draw2(useColor);
@@ -209,7 +208,7 @@ namespace SamSeifert.GLE.CAD
         }
 
         private void draw3(bool useColor)
-        { 
+        {
             if (this.Children.Length > 0)
             {
                 foreach (CadObject co in this.Children)
@@ -351,7 +350,7 @@ namespace SamSeifert.GLE.CAD
                         this.BoundingSphereRadius = new_radius;
                     }
                 }
-                else if (this.Vertices != null)
+                else
                 {
                     // Bitter's Algorithm
                     var furthest_distance = 0f;
