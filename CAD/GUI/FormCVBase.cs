@@ -40,6 +40,7 @@ namespace SamSeifert.GLE.CAD.GUI
             this.glControl1.MouseWheel += new MouseEventHandler(this.glControl1_MouseWheel);
 
             GL.ClearColor(Color.LightBlue);
+            GL.MatrixMode(MatrixMode.Modelview); // Always the default
 
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
@@ -89,7 +90,6 @@ namespace SamSeifert.GLE.CAD.GUI
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
             GL.Translate(0, 0, -ObserveDistance);

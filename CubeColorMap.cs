@@ -172,7 +172,6 @@ namespace SamSeifert.GLE
         {
             var ortho = Matrix4.CreateOrthographicOffCenter(0, 4, 0, 3, 0, 1);
             GL.loadProjectionOrtho(ref ortho);
-            GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
 
             GL.Disable(EnableCap.CullFace);
