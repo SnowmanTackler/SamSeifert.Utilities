@@ -133,56 +133,7 @@ namespace SamSeifert.CSCV
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-        public static Sect SectHoldeFromImage(Image input)
-        {
-            return SectHolder.SectHoldeFromImage(input, input.Width, input.Height);
-        }
-
-        public static Sect SectHoldeFromImage(Image input, int w, int h)
-        {
-            var ls = new List<Sect>();
-            ls.Add(new SectArray(SectType.RGB_R, w, h));
-            ls.Add(new SectArray(SectType.RGB_G, w, h));
-            ls.Add(new SectArray(SectType.RGB_B, w, h));
-
-            bool create = false;
-
-            Bitmap b = input as Bitmap;
-
-            if (b == null) create = true;
-            else if (b.Size != new Size(w, h)) create = true;
-            if (create) b = new Bitmap(input, w, h);
-
-            var ret = new SectHolder(ls.ToArray());
-
-            ret.setImage(b);
-
-            Sect comparer = null;
-            foreach (var s in ls)
-            {
-                if (comparer == null) comparer = s;
-                else
-                    for (int y = 0; y < h; y++)
-                        for (int x = 0; x < w; x++)
-                            if (comparer[y, x] != s[y, x])
-                                return ret;
-            }
-
-            return new SectMask(SectType.Gray, ls[0]); // Gray Scale
-        }
-
-        private unsafe void setImage(Bitmap input)
+        internal unsafe void setImage(Bitmap input)
         {
             if (input == null) return;
             else if (this._Size != input.Size) Console.WriteLine("SectHolder: private unsafe void setImage(Bitmap input) - Size mismatch");
