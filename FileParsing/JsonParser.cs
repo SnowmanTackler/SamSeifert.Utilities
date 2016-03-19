@@ -11,14 +11,30 @@ namespace SamSeifert.Utilities.FileParsing
 {
     public static class JsonParser
     {
-        private static String ToLiteral(String input)
+        private static void ToLiteral(string text, CharWriter cw)
         {
-            using (var writer = new System.IO.StringWriter())
+            foreach (var c in text)
             {
-                using (var provider = CodeDomProvider.CreateProvider("CSharp"))
+                switch (c)
                 {
-                    provider.GenerateCodeFromExpression(new CodePrimitiveExpression(input), writer, null);
-                    return writer.ToString();
+                    // case '\'':
+                    case '\"':
+                    case '\0':
+                    case '\a':
+                    case '\b':
+                    case '\f':
+                    case '\n':
+                    case '\r':
+                    case '\t':
+                    case '\v':
+                    case '\\':
+                        cw('\\');
+                        cw(c);
+                        break;
+                    default:
+                        cw(c);
+                        break;
+
                 }
             }
         }
@@ -216,7 +232,7 @@ namespace SamSeifert.Utilities.FileParsing
 
         public static void print(Object o, CharWriter cw, StringWriter sw, string indent = "")
         {
-            if (o is String) sw(JsonParser.ToLiteral(o as String));
+            if (o is String) JsonParser.ToLiteral(o as String, cw);
             else if (o is float) sw(o.ToString());
             else if (o is double) sw(o.ToString());
             else if (o is int) sw(o.ToString());
