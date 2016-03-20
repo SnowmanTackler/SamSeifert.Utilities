@@ -13,6 +13,7 @@ namespace SamSeifert.Utilities.FileParsing
     {
         private static void ToLiteral(string text, CharWriter cw)
         {
+            cw('"');
             foreach (var c in text)
             {
                 switch (c)
@@ -37,6 +38,7 @@ namespace SamSeifert.Utilities.FileParsing
 
                 }
             }
+            cw('"');
         }
 
         public static Dictionary<String, object> parseDictionary(StreamReader sr)
