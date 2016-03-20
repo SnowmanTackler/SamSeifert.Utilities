@@ -65,7 +65,7 @@ namespace SamSeifert.CSCV
                 };
 
                 SingleImage.MatchOutputToInput(inpt, ref outp);
-                SingleImage.Do1v1Action(inpt, ref outp, act);
+                SingleImage.DoAction1v1(ref outp, act, inpt);
 
                 return ToolboxReturn.Good;
             }

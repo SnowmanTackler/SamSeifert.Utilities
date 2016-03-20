@@ -45,100 +45,24 @@ namespace SamSeifert.CSCV
                 outp_sz.Width += pad * 2;
                 outp_sz.Height += pad * 2;
 
+                var ls = new List<SectType>();
+                if (inpt._Type == SectType.Holder) ls.AddRange((inpt as SectHolder).getSectTypes());
+                else ls.Add(inpt._Type);
+
+                SingleImage.MatchOutputToSizeAndSectTypes(ref outp, outp_sz, ls.ToArray());
+
+
                 Action<Sect, SectArray> act = (Sect anon_inpt, SectArray anon_outp) =>
                 {
                     switch (pt)
                     {
                         case PaddingType.Zero:
-                            {
-                                for (int y = 0; y < inh; y++)
-                                    for (int x = 0; x < inw; x++)
-                                        anon_outp[y + pad, x + pad] = anon_inpt[y, x]; // CENTER
-
-                                for (int y = 0; y < pad; y++)
-                                    for (int x = 0; x < outp_sz.Width; x++)
-                                        anon_outp[y, x] = 0; // TOP  
-
-                                for (int y = inh + pad, py = 0; py < pad; py++, y++)
-                                    for (int x = 0; x < outp_sz.Width; x++)
-                                        anon_outp[y, x] = 0; // BOT
-
-                                for (int y = pad, ih = 0; ih < inh; ih++, y++)
-                                    for (int x = 0; x < pad; x++)
-                                        anon_outp[y, x] = 0; // LEFT (No Corners)
-
-                                for (int y = pad, ih = 0; ih < inh; ih++, y++)
-                                    for (int x = inw + pad, px = 0; px < pad; px++, x++)
-                                        anon_outp[y, x] = 0; // RIGHT (No Corners)
-                                break;
-                            }
                         case PaddingType.Unity:
-                            {
-                                for (int y = 0; y < inh; y++)
-                                    for (int x = 0; x < inw; x++)
-                                        anon_outp[y + pad, x + pad] = anon_inpt[y, x]; // CENTER
-
-                                for (int y = 0; y < pad; y++)
-                                    for (int x = 0; x < outp_sz.Width; x++)
-                                        anon_outp[y, x] = 1; // TOP  
-
-                                for (int y = inh + pad, py = 0; py < pad; py++, y++)
-                                    for (int x = 0; x < outp_sz.Width; x++)
-                                        anon_outp[y, x] = 1; // BOT
-
-                                for (int y = pad, ih = 0; ih < inh; ih++, y++)
-                                    for (int x = 0; x < pad; x++)
-                                        anon_outp[y, x] = 1; // LEFT (No Corners)
-
-                                for (int y = pad, ih = 0; ih < inh; ih++, y++)
-                                    for (int x = inw + pad, px = 0; px < pad; px++, x++)
-                                        anon_outp[y, x] = 1; // RIGHT (No Corners)
-                                break;
-                            }
                         case PaddingType.Extend:
                             {
                                 for (int y = 0; y < inh; y++)
                                     for (int x = 0; x < inw; x++)
                                         anon_outp[y + pad, x + pad] = anon_inpt[y, x]; // CENTER
-
-                                for (int y = 0; y < pad; y++)
-                                    for (int x = pad, iw = 0; iw < inw; iw++, x++)
-                                        anon_outp[y, x] = anon_outp[pad, x]; // TOP (No Corners)
-
-                                for (int y = inh + pad, py = 0; py < pad; py++, y++)
-                                    for (int x = pad, iw = 0; iw < inw; iw++, x++)
-                                        anon_outp[y, x] = anon_outp[inh + pad - 1, x]; // BOT (No Corners)
-
-                                for (int y = pad, ih = 0; ih < inh; ih++, y++)
-                                    for (int x = 0; x < pad; x++)
-                                        anon_outp[y, x] = anon_outp[y, pad]; // LEFT (No Corners)
-
-                                for (int y = pad, ih = 0; ih < inh; ih++, y++)
-                                    for (int x = inw + pad, px = 0; px < pad; px++, x++)
-                                        anon_outp[y, x] = anon_outp[y, inw + pad - 1]; // RIGHT (No Corners)
-
-                                float val;
-
-                                val = anon_outp[pad, pad];
-                                for (int y = 0; y < pad; y++)
-                                    for (int x = 0; x < pad; x++)
-                                        anon_outp[y, x] = val; // TOP LEFT CORNER
-
-                                val = anon_outp[pad, inw + pad - 1];
-                                for (int y = 0; y < pad; y++)
-                                    for (int x = inw + pad, px = 0; px < pad; px++, x++)
-                                        anon_outp[y, x] = val; // TOP RIGHT CORNER
-
-                                val = anon_outp[inh + pad - 1, pad];
-                                for (int y = inh + pad, py = 0; py < pad; py++, y++)
-                                    for (int x = 0; x < pad; x++)
-                                        anon_outp[y, x] = val; // BOT LEFT CORNER
-
-                                val = anon_outp[inh + pad - 1, inw + pad - 1];
-                                for (int y = inh + pad, py = 0; py < pad; py++, y++)
-                                    for (int x = inw + pad, px = 0; px < pad; px++, x++)
-                                        anon_outp[y, x] = val; // BOT RIGHT CORNER
-
                                 break;
                             }
                         case PaddingType.Repeat:
@@ -172,23 +96,33 @@ namespace SamSeifert.CSCV
                                 }
                                 break;
                             }
-                        default: throw new NotImplementedException();
                     }
                 };
 
+                SingleImage.DoAction1v1(ref outp, act, inpt);
 
-                var ls = new List<SectType>();
-                if (inpt._Type == SectType.Holder) ls.AddRange((inpt as SectHolder).getSectTypes());
-                else ls.Add(inpt._Type);
-
-                SingleImage.MatchOutputToSizeAndSectTypes(ref outp, outp_sz, ls.ToArray());
-                SingleImage.Do1v1Action(inpt, ref outp, act);
+                switch (pt)
+                {
+                    case PaddingType.Zero:
+                        PaddingUpdateUniform(pad, 0, outp);
+                        break;
+                    case PaddingType.Unity:
+                        PaddingUpdateUniform(pad, 1, outp);
+                        break;
+                    case PaddingType.Extend:
+                        PaddingUpdateExtend(pad, outp);
+                        break;
+                    case PaddingType.Repeat:
+                    case PaddingType.Mirror:
+                        break;
+                    default: throw new NotImplementedException();
+                }
 
                 return ToolboxReturn.Good;
             }
         }
 
-        public static void UpdatePadding(int pad, float value, ref Sect inpt)
+        public static void PaddingUpdateUniform(int pad, float value, Sect inpt)
         {
             var size_now = inpt.getPrefferedSize();
             var inh = size_now.Height - pad * 2;
@@ -226,6 +160,76 @@ namespace SamSeifert.CSCV
             }
         }
 
+        public static void PaddingUpdateExtend(int pad, Sect inpt)
+        {
+            var size_now = inpt.getPrefferedSize();
+            var inh = size_now.Height - pad * 2;
+            var inw = size_now.Width - pad * 2;
+
+            Action<SectArray> act = (SectArray anon) =>
+            {
+                for (int y = 0; y < pad; y++)
+                    for (int x = pad, iw = 0; iw < inw; iw++, x++)
+                        anon[y, x] = anon[pad, x]; // TOP (No Corners)
+
+                for (int y = inh + pad, py = 0; py < pad; py++, y++)
+                    for (int x = pad, iw = 0; iw < inw; iw++, x++)
+                        anon[y, x] = anon[inh + pad - 1, x]; // BOT (No Corners)
+
+                for (int y = pad, ih = 0; ih < inh; ih++, y++)
+                    for (int x = 0; x < pad; x++)
+                        anon[y, x] = anon[y, pad]; // LEFT (No Corners)
+
+                for (int y = pad, ih = 0; ih < inh; ih++, y++)
+                    for (int x = inw + pad, px = 0; px < pad; px++, x++)
+                        anon[y, x] = anon[y, inw + pad - 1]; // RIGHT (No Corners)
+
+                float val;
+
+                val = anon[pad, pad];
+                for (int y = 0; y < pad; y++)
+                    for (int x = 0; x < pad; x++)
+                        anon[y, x] = val; // TOP LEFT CORNER
+
+                val = anon[pad, inw + pad - 1];
+                for (int y = 0; y < pad; y++)
+                    for (int x = inw + pad, px = 0; px < pad; px++, x++)
+                        anon[y, x] = val; // TOP RIGHT CORNER
+
+                val = anon[inh + pad - 1, pad];
+                for (int y = inh + pad, py = 0; py < pad; py++, y++)
+                    for (int x = 0; x < pad; x++)
+                        anon[y, x] = val; // BOT LEFT CORNER
+
+                val = anon[inh + pad - 1, inw + pad - 1];
+                for (int y = inh + pad, py = 0; py < pad; py++, y++)
+                    for (int x = inw + pad, px = 0; px < pad; px++, x++)
+                        anon[y, x] = val; // BOT RIGHT CORNER
+            };
+
+            if (inpt._Type == SectType.Holder)
+            {
+                foreach (var sect in (inpt as SectHolder).Sects.Values)
+                {
+                    act(sect as SectArray);
+                }
+            }
+            else
+            {
+                act(inpt as SectArray);
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
         public static ToolboxReturn PaddingOff(Sect inpt, int pad, ref Sect outp)
         {
             if (inpt == null)
@@ -252,7 +256,7 @@ namespace SamSeifert.CSCV
                 else ls.Add(inpt._Type);
 
                 SingleImage.MatchOutputToSizeAndSectTypes(ref outp, outp_sz, ls.ToArray());
-                SingleImage.Do1v1Action(inpt, ref outp, act);
+                SingleImage.DoAction1v1(ref outp, act, inpt);
 
                 return ToolboxReturn.Good;
             }

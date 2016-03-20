@@ -82,9 +82,6 @@ namespace SamSeifert.CSCV
                         for (int x1 = 0; x1 < s1.Width; x1++)
                             anon_outp[y1, x1] = 0;
 
-
-
-
                     // Set middle:
                     for (int y1 = y1_start; y1 < y1_end; y1++)
                     {

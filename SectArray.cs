@@ -221,6 +221,26 @@ namespace SamSeifert.CSCV
 
         public static class Build
         {
+            public static SectArray FromArray(SectType t, int w, int h, IEnumerable<float> f)
+            {
+                SectArray sa = new SectArray(t, w, h);
+
+                using (var en = f.GetEnumerator())
+                {
+                    for (int y = 0; y < h; y++)
+                    {
+                        for (int x = 0; x < w; x++)
+                        {
+                            if (en.MoveNext()) sa.Data[y, x] = en.Current;
+                            else sa.Data[y, x] = 0;
+                        }
+                    }
+                }
+
+                return sa;
+            }
+
+
             public static class Gaussian
             {
                 private static SectArray G(SectType t, Single sigma, int w, int h)
@@ -228,28 +248,43 @@ namespace SamSeifert.CSCV
                     SectArray sa = new SectArray(t, w, h);
                     Single sum = 0;
 
-                    for (int i = 0; i < h; i++)
+                    for (int y = 0; y < h; y++)
                     {
-                        for (int j = 0; j < w; j++)
+                        for (int x = 0; x < w; x++)
                         { 
-                            Single x = j - (w - 1.0f) / 2;
-                            Single y = i - (h - 1.0f) / 2;
-                            Single val = (Single)Math.Pow(Math.E, -(x * x + y * y) / (2 * sigma));
+                            Single dx = x - (w - 1.0f) / 2;
+                            Single dy = y - (h - 1.0f) / 2;
+                            Single val = (Single)Math.Pow(Math.E, -(dx * dx + dy * dy) / (2 * sigma));
                             sum += val;
-                            sa.Data[i, j] = val;
+                            sa.Data[y, x] = val;
                         }
                     }
 
                     return sa;
                 }
 
+                /// <summary>
+                /// 
+                /// </summary>
+                /// <param name="t"></param>
+                /// <param name="sigma"></param>
+                /// <param name="span">Should be Odd!</param>
+                /// <returns></returns>
                 public static SectArray NormalizedSum1D(SectType t, Single sigma, int span)
                 {
+                    
                     SectArray sa = G(t, sigma, 1, span);
                     sa.NormalizeSum();
                     return sa;
                 }
 
+                /// <summary>
+                /// 
+                /// </summary>
+                /// <param name="t"></param>
+                /// <param name="sigma"></param>
+                /// <param name="span">Should be Odd!</param>
+                /// <returns></returns>
                 public static SectArray NormalizedMax1D(SectType t, Single sigma, int span)
                 {
                     SectArray sa = G(t, sigma, 1, span);
@@ -257,6 +292,13 @@ namespace SamSeifert.CSCV
                     return sa;
                 }
 
+                /// <summary>
+                /// 
+                /// </summary>
+                /// <param name="t"></param>
+                /// <param name="sigma"></param>
+                /// <param name="span">Should be Odd!</param>
+                /// <returns></returns>
                 public static SectArray NormalizedSum2D(SectType t, Single sigma, int span)
                 {
                     SectArray sa = G(t, sigma, span, span);
@@ -264,6 +306,13 @@ namespace SamSeifert.CSCV
                     return sa;
                 }
 
+                /// <summary>
+                /// 
+                /// </summary>
+                /// <param name="t"></param>
+                /// <param name="sigma"></param>
+                /// <param name="span">Should be Odd!</param>
+                /// <returns></returns>
                 public static SectArray NormalizedMax2D(SectType t, Single sigma, int span)
                 {
                     SectArray sa = G(t, sigma, span, span);

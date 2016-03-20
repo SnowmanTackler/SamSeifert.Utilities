@@ -102,7 +102,7 @@ namespace SamSeifert.CSCV
             }
         }
 
-        private static void Do1v1Action(Sect inpt, ref Sect outp, Action<Sect, SectArray> act)
+        private static void DoAction1v1(ref Sect outp, Action<Sect, SectArray> act, Sect inpt)
         {
             if (inpt._Type == SectType.Holder)
             {
@@ -112,8 +112,7 @@ namespace SamSeifert.CSCV
                 foreach (var kvp in sh_inpt.Sects)
                 {
                     var sout = sh_outp.getSect(kvp.Key);
-                    var sin = kvp.Value;
-                    act(sin, sout as SectArray);
+                    act(kvp.Value, sout as SectArray);
                 }
             }
             else
@@ -121,5 +120,28 @@ namespace SamSeifert.CSCV
                 act(inpt, outp as SectArray);
             }
         }
+
+        private static void DoAction1vN(ref Sect outp, Action<Sect[], SectArray> act, params Sect[] inpt)
+        {
+            if (outp._Type == SectType.Holder)
+            {
+                var sh_outp = outp as SectHolder;
+
+                foreach (var kvp in sh_outp.Sects)
+                {
+                    var sin = new Sect[inpt.Length];
+
+                    for (int i = 0; i < inpt.Length; i++)
+                        sin[i] = (inpt[i] as SectHolder).getSect(kvp.Key);
+
+                    act(sin, kvp.Value as SectArray);
+                }
+            }
+            else
+            {
+                act(inpt, outp as SectArray);
+            }
+        }
+
     }
 }
