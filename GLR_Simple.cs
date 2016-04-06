@@ -167,6 +167,11 @@ namespace SamSeifert.GLE
             GL.Color3(v1, v2, v3);
         }
 
+        public static void Color3(Vector3 vector3)
+        {
+            GL.Color3(vector3);
+        }
+
         public static void DeleteLists(int list, int range)
         {
             GL.DeleteLists(list, range);
