@@ -80,12 +80,6 @@ namespace SamSeifert.CSCV
             }
         }
 
-        public virtual void Reset()
-        {
-            throw new NotImplementedException();
-        }
-
-
         public unsafe static Sect FromImage(Image input, bool grayscale = false)
         {
             int w = input.Width;

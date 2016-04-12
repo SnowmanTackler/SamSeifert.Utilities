@@ -51,7 +51,6 @@ namespace SamSeifert.CSCV
                         break;
                 }
             }
-            else outp.Reset();
         }
 
         private static void MatchOutputToSizeAndSectTypes(ref Sect outp, Size sz, params SectType[] sts)
@@ -64,7 +63,6 @@ namespace SamSeifert.CSCV
                     {
                         if (!remake) remake = sts.First() != outp._Type;
                         if (remake) outp = new SectArray(SectType.Gray, sz.Width, sz.Height);
-                        else outp.Reset();
                     }
                     break;
                 default:
@@ -96,7 +94,6 @@ namespace SamSeifert.CSCV
                             else remake = true;
                         }
                         if (remake) outp = new SectHolder(sz, sts);
-                        else outp.Reset();
                     }
                     break;
             }

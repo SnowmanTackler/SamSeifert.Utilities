@@ -126,7 +126,6 @@ namespace SamSeifert.CSCV
                     if (!remake) remake = !(outp is SectArray);
                     if (!remake) remake = (single_type != outp._Type) || (sz_out != outp.getPrefferedSize());
                     if (remake) outp = new SectArray(single_type, sz_out.Width, sz_out.Height);
-                    else outp.Reset();
                 }
                 else
                 {
@@ -140,7 +139,6 @@ namespace SamSeifert.CSCV
                     }
 
                     if (remake) outp = new SectHolder(sz_out, first_sh.getSectTypes());
-                    else outp.Reset();
                 }
 
                 return ToolboxReturn.Good;

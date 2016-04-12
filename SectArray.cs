@@ -13,11 +13,6 @@ namespace SamSeifert.CSCV
         private readonly int _Width;
         private readonly int _Height;
 
-        private Boolean unsetMinMaxAvg = true;
-        private Single _min, _max, _avg;
-        private Boolean unsetStd = true;
-        private Single _std;
-
         public override bool isSquishy()
         {
             return false;
@@ -30,16 +25,20 @@ namespace SamSeifert.CSCV
             return s;
         }
 
+        public void SetValue(float val)
+        {
+            for (int y = 0; y < this._Height; y++)
+            {
+                for (int x = 0; x < this._Width; x++)
+                {
+                    this._Data[y, x] = val;
+                }
+            }
+        }
+
         public override Sect Transpose()
         {
             var s = new SectArray(this._Type, this._Height, this._Width);
-
-            s.unsetMinMaxAvg = this.unsetMinMaxAvg;
-            s.unsetStd = this.unsetStd;
-            s._std = this._std;
-            s._min = this._min;
-            s._max = this._max;
-            s._avg = this._avg;
 
             for (int y = 0; y < this._Height; y++)
             {
@@ -90,12 +89,6 @@ namespace SamSeifert.CSCV
 
         internal void CopyTo(SectArray s)
         {
-            s.unsetMinMaxAvg = this.unsetMinMaxAvg;
-            s.unsetStd = this.unsetStd;
-            s._std = this._std;
-            s._min = this._min;
-            s._max = this._max;
-            s._avg = this._avg;
             Array.Copy(this._Data, s._Data, this._Width * this._Height);
         }
 
@@ -103,8 +96,13 @@ namespace SamSeifert.CSCV
         {
             get
             {
-                if (this.unsetMinMaxAvg) this.statsSet(); 
-                return this._min;
+                float tracker = Single.MaxValue;
+
+                for (int y = 0; y < this._Height; y++)
+                    for (int x = 0; x < this._Width; x++)
+                        tracker = Math.Min(this._Data[y, x], tracker);
+
+                return tracker;
             }
         }
 
@@ -112,77 +110,116 @@ namespace SamSeifert.CSCV
         {
             get
             {
-                if (this.unsetMinMaxAvg) this.statsSet();
-                return this._max;
+                float tracker = Single.MinValue;
+
+                for (int y = 0; y < this._Height; y++)
+                    for (int x = 0; x < this._Width; x++)
+                        tracker = Math.Max(this._Data[y, x], tracker);
+
+                return tracker;
             }
         }
         public override Single getAverageValue
         {
             get
             {
-                if (this.unsetMinMaxAvg) this.statsSet();
-                return this._avg;
+                float tracker = 0;
+
+                for (int y = 0; y < this._Height; y++)
+                    for (int x = 0; x < this._Width; x++)
+                        tracker += this._Data[y, x];
+
+                return tracker / (this._Width * this._Height);
             }
-        }
-
-        public override void Reset()
-        {
-            this.unsetMinMaxAvg = true;
-            this.unsetStd = true;
-        }
-
-        private void statsSet()
-        {
-            this._min = Single.MaxValue;
-            this._max = Single.MinValue;
-            this._avg = 0;
-
-            Single val = 0;
-
-            for (int y = 0; y < this._Height; y++)
-            {
-                for (int x = 0; x < this._Width; x++)
-                {
-                    val = this._Data[y, x];
-                    this._min = Math.Min(val, this._min);
-                    this._max = Math.Max(val, this._max);
-                    this._avg += val;
-                }
-            }
-
-            this._avg /= (this._Width * this._Height);
-
-            this.unsetMinMaxAvg = false;
         }
 
         public Single getStandardDeviation
         {
             get
             {
-                if (this.unsetStd)
+                float average = this.getAverageValue;
+
+                Single f = 0, st = 0;
+
+                for (int y = 0; y < this._Height; y++)
                 {
-                    Single f = 0, st = 0;
-
-                    for (int y = 0; y < this._Height; y++)
+                    for (int x = 0; x < this._Width; x++)
                     {
-                        for (int x = 0; x < this._Width; x++)
-                        {
-                            f = this._Data[y, x] - this.getAverageValue;
-                            st += (f * f);
-                        }
+                        f = this._Data[y, x] - average;
+                        st += (f * f);
                     }
-
-                    st /= this._Height * this._Width;
-                    this._std = (Single)Math.Sqrt(st);
-                    this.unsetStd = false;
                 }
 
-                return this._std;
+                st /= this._Height * this._Width;
+                return (Single)Math.Sqrt(st);
             }
         }
 
 
 
+
+
+
+
+        /// <summary>
+        /// ONLY USE FOR +=
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static SectArray operator + (SectArray left, float right)
+        {
+            for (int i = 0; i < left._Height; i++)
+                for (int j = 0; j < left._Width; j++)
+                    left.Data[i, j] += right;
+
+            return left;
+        }
+
+        /// <summary>
+        /// ONLY USE FOR -=
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static SectArray operator -(SectArray left, float right)
+        {
+            for (int i = 0; i < left._Height; i++)
+                for (int j = 0; j < left._Width; j++)
+                    left.Data[i, j] -= right;
+
+            return left;
+        }
+
+        /// <summary>
+        /// ONLY USE FOR /=
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static SectArray operator /(SectArray left, float right)
+        {
+            for (int i = 0; i < left._Height; i++)
+                for (int j = 0; j < left._Width; j++)
+                    left.Data[i, j] /= right;
+
+            return left;
+        }
+
+        /// <summary>
+        /// ONLY USE FOR *=
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static SectArray operator *(SectArray left, float right)
+        {
+            for (int i = 0; i < left._Height; i++)
+                for (int j = 0; j < left._Width; j++)
+                    left.Data[i, j] *= right;
+
+            return left;
+        }
 
 
 

@@ -66,9 +66,5 @@ namespace SamSeifert.CSCV
                 return this.value;
             }
         }
-
-        public override void Reset()
-        {
-        }
     }
 }

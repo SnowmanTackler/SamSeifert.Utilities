@@ -163,14 +163,7 @@ namespace SamSeifert.CSCV
                 }
 
                 input.UnlockBits(bmd);
-
-                this.Reset();                
             }
-        }
-
-        public override void Reset()
-        {
-            foreach (var s in this._Sects.Values) s.Reset();
         }
 
         ~SectHolder()
@@ -278,5 +271,79 @@ namespace SamSeifert.CSCV
             return this._Sects.Keys.ToArray();
         }
 
+
+
+
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// ONLY USE FOR +=
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static SectHolder operator +(SectHolder left, float right)
+        {
+            foreach (var sect in left._Sects.Values)
+            {
+                var sa = sect as SectArray;
+                if (sa != null) sa += right;
+            }
+            return left;
+        }
+
+        /// <summary>
+        /// ONLY USE FOR +=
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static SectHolder operator -(SectHolder left, float right)
+        {
+            foreach (var sect in left._Sects.Values)
+            {
+                var sa = sect as SectArray;
+                if (sa != null) sa -= right;
+            }
+            return left;
+        }
+
+        /// <summary>
+        /// ONLY USE FOR +=
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static SectHolder operator *(SectHolder left, float right)
+        {
+            foreach (var sect in left._Sects.Values)
+            {
+                var sa = sect as SectArray;
+                if (sa != null) sa *= right;
+            }
+            return left;
+        }
+
+        /// <summary>
+        /// ONLY USE FOR +=
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <returns></returns>
+        public static SectHolder operator /(SectHolder left, float right)
+        {
+            foreach (var sect in left._Sects.Values)
+            {
+                var sa = sect as SectArray;
+                if (sa != null) sa /= right;
+            }
+            return left;
+        }
     }
 }

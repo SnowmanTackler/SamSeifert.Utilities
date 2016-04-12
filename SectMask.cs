@@ -74,10 +74,5 @@ namespace SamSeifert.CSCV
                 return this._Sect.getAverageValue;
             }
         }
-
-        public override void Reset()
-        {
-            this._Sect.Reset();
-        }
     }
 }

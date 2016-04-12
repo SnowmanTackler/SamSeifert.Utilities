@@ -63,6 +63,7 @@
     <Compile Include="SingleImage\Anonymous.cs" />
     <Compile Include="SingleImage\AnonymousExtensions.cs" />
     <Compile Include="SingleImage\BitsPerPixel.cs" />
+    <Compile Include="SingleImage\Crop.cs" />
     <Compile Include="SingleImage\Gradient.cs" />
     <Compile Include="SingleImage\Grayscale.cs" />
     <Compile Include="SingleImage\HarrisCorners.cs" />
