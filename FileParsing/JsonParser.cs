@@ -226,6 +226,11 @@ namespace SamSeifert.Utilities.FileParsing
             return sb.ToString();
         }
 
+        public static void print(object[] o, StreamWriter file)
+        {
+            JsonParser.print(o, file.Write, file.Write);
+        }
+
         public static void print (Object o)
         {
             JsonParser.print(o, Console.Out.Write, Console.Out.Write);
