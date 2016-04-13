@@ -13,6 +13,22 @@ namespace SamSeifert.CSCV
         private readonly int _Width;
         private readonly int _Height;
 
+        public int Width
+        {
+            get
+            {
+                return this._Width;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                return this._Height;
+            }
+        }
+
         public override bool isSquishy()
         {
             return false;

@@ -437,5 +437,19 @@ namespace SamSeifert.CSCV
                 }
             }
         }
+
+        public void ShowDialog()
+        {
+            using (var bp = this.getImage())
+            {
+                var frm = new System.Windows.Forms.Form();
+
+                var pb = new System.Windows.Forms.PictureBox();
+                pb.Image = bp;
+                frm.Controls.Add(pb);
+                pb.Dock = System.Windows.Forms.DockStyle.Fill;
+                frm.ShowDialog();
+            }
+        }
     }
 }
