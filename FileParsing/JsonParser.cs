@@ -11,6 +11,35 @@ namespace SamSeifert.Utilities.FileParsing
 {
     public static class JsonParser
     {
+        public static class FromFile
+        {
+            public static Dictionary<String, object> Dictionary(String path)
+            {
+                using (StreamReader sr = new StreamReader(path))
+                {
+                    while (!sr.EndOfStream)
+                        if (sr.Read() == '{')
+                            break;
+
+                    if (sr.EndOfStream) return null;
+                    return parseDictionary(sr);
+                }
+            }
+
+            public static object[] Array(String path)
+            {
+                using (StreamReader sr = new StreamReader(path))
+                {
+                    while (!sr.EndOfStream)
+                        if (sr.Read() == '[')
+                            break;
+
+                    if (sr.EndOfStream) return null;
+                    return parseArray(sr);
+                }
+            }
+        }
+
         private static void ToLiteral(string text, CharWriter cw)
         {
             cw('"');
@@ -128,7 +157,6 @@ namespace SamSeifert.Utilities.FileParsing
 
                 switch (next)
                 {
-                    case ']': return ret.ToArray();
                     case '"':
                         ret.Add(JsonParser.parseString(sr));
                         break;
@@ -160,6 +188,13 @@ namespace SamSeifert.Utilities.FileParsing
                             sb.Length = 0;
                         }
                         break;
+                    case ']':
+                        if (sb.Length != 0)
+                        {
+                            ret.Add(Double.Parse(sb.ToString()));
+                            sb.Length = 0;
+                        }
+                        return ret.ToArray();
                 }
             }
         }
