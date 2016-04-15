@@ -95,6 +95,11 @@ namespace SamSeifert.CSCV
         {
         }
 
+        public SectArray(SectType t, Size sz)
+        : this(t, sz.Width, sz.Height)
+        {
+        }
+
         public SectArray(Single[,] data, SectType t)
             : base(t)
         {
