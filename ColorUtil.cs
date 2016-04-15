@@ -273,23 +273,32 @@ namespace SamSeifert.Utilities
 
             v = max;
 
-            if (max != 0) s = delta / max;       // s
-            else
+            if (max == 0)
             {
                 s = 0;
                 h = 0;
-                return;
             }
-
-            if (fr == max)
-                h = (fg - fb) / delta;       // between yellow & magenta
-            else if (fg == max)
-                h = 2 + (fb - fr) / delta;   // between cyan & yellow
             else
-                h = 4 + (fr - fg) / delta;   // between magenta & cyan
+            {
+                s = delta / max;       // s
 
-            h /= 6;               // degrees
-            if (h < 0) h += 1;
+                if (delta == 0)
+                {
+                    h = 0;
+                }
+                else
+                {
+                    if (fr == max)
+                        h = (fg - fb) / delta;       // between yellow & magenta
+                    else if (fg == max)
+                        h = 2 + (fb - fr) / delta;   // between cyan & yellow
+                    else // fb == max
+                        h = 4 + (fr - fg) / delta;   // between magenta & cyan
+
+                    h /= 6; // normalize from 0 to 1
+                    if (h < 0) h += 1;
+                }
+            }
         }
     }
 }
