@@ -225,7 +225,7 @@ namespace SamSeifert.CSCV
             return newB;
         }
 
-        
+
         public delegate void ColorFiller(int y, int x, out float r, out float g, out float b);
         public virtual ColorFiller getColorFiller()
         {
@@ -449,6 +449,15 @@ namespace SamSeifert.CSCV
                 frm.Controls.Add(pb);
                 pb.Dock = System.Windows.Forms.DockStyle.Fill;
                 frm.ShowDialog();
+            }
+        }
+
+
+        public void SaveToFile(string path)
+        {
+            using (var bp = this.getImage())
+            {
+                bp.Save(path);
             }
         }
     }
