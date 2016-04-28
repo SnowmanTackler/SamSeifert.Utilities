@@ -9,7 +9,7 @@ namespace SamSeifert.CSCV
 {
     public static partial class SingleImage
     {
-        private static void MatchOutputToInput(Sect inpt, ref Sect outp)
+        public static void MatchOutputToInput(Sect inpt, ref Sect outp)
         {
             MatchOutputToInput(inpt, ref outp, inpt.getPrefferedSize());
         }
