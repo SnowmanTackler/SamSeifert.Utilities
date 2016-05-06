@@ -248,43 +248,6 @@ namespace SamSeifert.GLE.CAD
             }
         }
 
-        internal void transformPoints(ref Matrix4 m4)
-        {
-            Vector4 v = Vector4.Zero;
-            if (Vertices != null)
-            {
-                for (int i = 0; i < Vertices.Length; i++)
-                {
-                    v.X = Vertices[i].X;
-                    v.Y = Vertices[i].Y;
-                    v.Z = Vertices[i].Z;
-                    v.W = 1;
-
-                    v = Vector4.Transform(v, m4);
-
-                    Vertices[i].X = v.X;
-                    Vertices[i].Y = v.Y;
-                    Vertices[i].Z = v.Z;
-                }
-            }
-
-            if (Normals != null)
-            {
-                for (int i = 0; i < Normals.Length; i++)
-                {
-                    v.X = Normals[i].X;
-                    v.Y = Normals[i].Y;
-                    v.Z = Normals[i].Z;
-                    v.W = 0;
-
-                    v = Vector4.Transform(v, m4);
-
-                    Normals[i].X = v.X;
-                    Normals[i].Y = v.Y;
-                    Normals[i].Z = v.Z;
-                }
-            }
-        }
 
 
 
@@ -540,5 +503,71 @@ namespace SamSeifert.GLE.CAD
 
 
 
+
+
+
+
+        
+
+        internal List<CadObject> ConsolidateMatrices()
+        {
+            List<CadObject> all_objects = new List<CadObject>();
+            this.ConsolidateMatrices(all_objects, Matrix4.Identity);
+            return all_objects;
+        }
+
+        internal void ConsolidateMatrices(List<CadObject> all_objects, Matrix4 m4)
+        {
+            all_objects.Add(this);
+            if (this.BoolUseTranslationAndRotation)
+            {
+                m4 = this._Matrix * m4;
+                this.BoolUseTranslationAndRotation = false;
+                this._Matrix = Matrix4.Identity;
+            }
+            foreach (var child in this.Children)
+            {
+                child.ConsolidateMatrices(all_objects, m4);
+            }
+            this.TransformPoints(ref m4);
+        }
+
+        internal void TransformPoints(ref Matrix4 m4)
+        {
+            Vector4 t = Vector4.Zero;
+            if (Vertices != null)
+            {
+                for (int i = 0; i < Vertices.Length; i++)
+                {
+                    t.X = Vertices[i].X;
+                    t.Y = Vertices[i].Y;
+                    t.Z = Vertices[i].Z;
+                    t.W = 1;
+
+                    t = Vector4.Transform(t, m4);
+
+                    Vertices[i].X = t.X;
+                    Vertices[i].Y = t.Y;
+                    Vertices[i].Z = t.Z;
+                }
+            }
+
+            if (Normals != null)
+            {
+                for (int i = 0; i < Normals.Length; i++)
+                {
+                    t.X = Normals[i].X;
+                    t.Y = Normals[i].Y;
+                    t.Z = Normals[i].Z;
+                    t.W = 0;
+
+                    t = Vector4.Transform(t, m4);
+
+                    Normals[i].X = t.X;
+                    Normals[i].Y = t.Y;
+                    Normals[i].Z = t.Z;
+                }
+            }
+        }
     }
 }

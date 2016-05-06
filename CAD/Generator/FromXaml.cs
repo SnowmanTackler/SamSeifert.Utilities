@@ -47,9 +47,8 @@ namespace SamSeifert.GLE.CAD.Generator
                         );
 
                     co.BoolUseTranslationAndRotation = true;
-                    co._Matrix.M41 += xOff;
-                    co._Matrix.M42 += yOff;
-                    co._Matrix.M43 += zOff;
+
+                    co._Matrix *= Matrix4.CreateTranslation(xOff, yOff, zOff);
 
                     if (!reduceComplexity)
                     {
@@ -60,8 +59,7 @@ namespace SamSeifert.GLE.CAD.Generator
                     co.GLDelete();
 
                     // TAKE OUT TREE STRUCTURE AND MAKE SINGLE LEVEL
-                    var all = new List<CadObject>();
-                    Generic.consolidateMatrices(co, all);
+                    var all = co.ConsolidateMatrices();
                     int old = all.Count;
 
                     for (int i = 0; i < all.Count; i++)
@@ -72,17 +70,11 @@ namespace SamSeifert.GLE.CAD.Generator
                             all[i].GLDelete();
                             all.RemoveAt(i--);
                         }
-                    }
-
-                    //                    Console.WriteLine("Removing Tree: " + old + " to " + all.Count);
-                    old = all.Count;
-
-                    for (int i = 0; i < all.Count; i++)
-                    {
-                        var linq = all[i].Vertices;
-                        if ((linq == null) || (linq.Length == 0)) all.RemoveAt(i--);
                         else all[i].Children = new CadObject[0];
                     }
+
+                    // Console.WriteLine("Removing Tree: " + old + " to " + all.Count);
+                    old = all.Count;
 
                     // COMBINE COLORS
                     for (int i = 0; i < all.Count; i++)
