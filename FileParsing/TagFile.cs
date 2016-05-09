@@ -72,6 +72,11 @@ namespace SamSeifert.Utilities.FileParsing
 
         }
 
+        public TagFile(params TagFile[] children)
+        {
+            this._Children = children;
+        }
+
         public IEnumerable<TagItem> Enumerate()
         {
             yield return this;
@@ -264,7 +269,12 @@ namespace SamSeifert.Utilities.FileParsing
                 Console.Write("   > ");
                 Console.Write(key);
                 Console.Write(" : ");
-                Console.Write(val);
+
+                if (val.Length < 100)
+                    Console.Write(val);
+                else
+                    Console.Write(val.Substring(0, 100));
+
                 Console.Write(Environment.NewLine);
             }
 
