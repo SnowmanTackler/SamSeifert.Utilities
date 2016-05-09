@@ -165,12 +165,13 @@ namespace SamSeifert.GLE.CAD
 
         /// <summary>
         /// Checks The Viewport to see if we're inside.
+        /// Requires using SamSeifert.GLE.GLR everywhere
         /// </summary>
         /// <param name="useColor"></param>
-        private static bool FilterStuff = false;
+        public static bool RenderOnlyOnscreenObjects = false;
         private void draw2(bool useColor)
         {
-            if (FilterStuff)
+            if (CadObject.RenderOnlyOnscreenObjects)
             {
                 this.updateBoundingSphere();
 
