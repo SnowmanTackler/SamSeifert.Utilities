@@ -12,9 +12,9 @@ namespace SamSeifert.GLE
 {
     public class Shaders : DeleteableObject
     {
-        private int _GL_Program = 0;
-        private int _GL_Vertex = 0;
-        private int _GL_Frag = 0;
+        public int _GL_Program { get; private set; } = 0;
+        public int _GL_Vertex { get; private set; } = 0;
+        public int _GL_Frag { get; private set; } = 0;
 
         private Dictionary<String, int> UniformLocations = new Dictionary<String, int>();
        

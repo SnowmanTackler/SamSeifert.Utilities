@@ -28,88 +28,93 @@ namespace SamSeifert.GLE.CAD.Generator
             )
         {
             var f = TagFile.ParseText(FileText);
-
             String match0 = "ModelVisual3D";
             var match0L = f.getMatches(ref match0);
+
+            TagFile parent = null;
 
             switch (match0L.Count)
             {
                 case 1:
-                    var co = SamSeifert.GLE.CAD.Generator.FromXaml.xamlModelVisual3D(
-                        match0L[0],
-                        xScale,
-                        yScale,
-                        zScale,
-                        useAmbient,
-                        useDiffuse,
-                        useSpecular,
-                        useEmission
-                        );
-
-                    co.BoolUseTranslationAndRotation = true;
-
-                    co._Matrix *= Matrix4.CreateTranslation(xOff, yOff, zOff);
-
-                    if (!reduceComplexity)
-                    {
-                        co._Name = ObjectName;
-                        return co;
-                    }
-
-                    co.GLDelete();
-
-                    // TAKE OUT TREE STRUCTURE AND MAKE SINGLE LEVEL
-                    var all = co.ConsolidateMatrices();
-                    int old = all.Count;
-
-                    for (int i = 0; i < all.Count; i++)
-                    {
-                        var linq = all[i].Vertices;
-                        if ((linq == null) || (linq.Length == 0))
-                        {
-                            all[i].GLDelete();
-                            all.RemoveAt(i--);
-                        }
-                        else all[i].Children = new CadObject[0];
-                    }
-
-                    // Console.WriteLine("Removing Tree: " + old + " to " + all.Count);
-                    old = all.Count;
-
-                    // COMBINE COLORS
-                    for (int i = 0; i < all.Count; i++)
-                    {
-                        ColorGL col = all[i]._Color;
-
-                        var verts = new List<Vector3>();
-                        var norms = new List<Vector3>();
-                        var dices = new List<uint>();
-
-                        for (int j = i; j < all.Count; j++)
-                        {
-                            if (ColorGL.CheckMatch(all[i]._Color, all[j]._Color))
-                            {
-                                for (int dex = 0; dex < all[j].Indices.Length; dex++)
-                                    all[j].Indices[dex] += (uint)verts.Count; // CHANGE INDICES
-
-                                verts.AddRange(all[j].Vertices);
-                                norms.AddRange(all[j].Normals);
-                                dices.AddRange(all[j].Indices);
-
-                                if (i != j) all.RemoveAt(j--); // dont delete the first one!
-                            }
-                        }
-
-                        all[i].initializeWithVectorsAndNormalsSorted(verts.ToArray(), norms.ToArray(), dices.ToArray());
-                    }
-                    // Console.WriteLine("Combine Colors: " + old + " to " + all.Count);
-
-                    var ret = new CadObject(all.ToArray(), ObjectName);
-                    return ret;
+                    parent = match0L[0];
+                    break;
                 default:
                     Console.WriteLine("CadObjectGenerator: Invalid XAML File");
                     return new CadObject();
             }
+
+
+            var co = SamSeifert.GLE.CAD.Generator.FromXaml.xamlModelVisual3D(
+                parent,
+                xScale,
+                yScale,
+                zScale,
+                useAmbient,
+                useDiffuse,
+                useSpecular,
+                useEmission
+                );
+
+            co.BoolUseTranslationAndRotation = true;
+
+            co._Matrix *= Matrix4.CreateTranslation(xOff, yOff, zOff);
+
+            if (!reduceComplexity)
+            {
+                co._Name = ObjectName;
+                return co;
+            }
+
+            co.GLDelete();
+
+            // TAKE OUT TREE STRUCTURE AND MAKE SINGLE LEVEL
+            var all = co.ConsolidateMatrices();
+            int old = all.Count;
+
+            for (int i = 0; i < all.Count; i++)
+            {
+                var linq = all[i].Vertices;
+                if ((linq == null) || (linq.Length == 0))
+                {
+                    all[i].GLDelete();
+                    all.RemoveAt(i--);
+                }
+                else all[i].Children = new CadObject[0];
+            }
+
+            // Console.WriteLine("Removing Tree: " + old + " to " + all.Count);
+            old = all.Count;
+
+            // COMBINE COLORS
+            for (int i = 0; i < all.Count; i++)
+            {
+                ColorGL col = all[i]._Color;
+
+                var verts = new List<Vector3>();
+                var norms = new List<Vector3>();
+                var dices = new List<uint>();
+
+                for (int j = i; j < all.Count; j++)
+                {
+                    if (ColorGL.CheckMatch(all[i]._Color, all[j]._Color))
+                    {
+                        for (int dex = 0; dex < all[j].Indices.Length; dex++)
+                            all[j].Indices[dex] += (uint)verts.Count; // CHANGE INDICES
+
+                        verts.AddRange(all[j].Vertices);
+                        norms.AddRange(all[j].Normals);
+                        dices.AddRange(all[j].Indices);
+
+                        if (i != j) all.RemoveAt(j--); // dont delete the first one!
+                    }
+                }
+
+                all[i].initializeWithVectorsAndNormalsSorted(verts.ToArray(), norms.ToArray(), dices.ToArray());
+            }
+            // Console.WriteLine("Combine Colors: " + old + " to " + all.Count);
+
+            var ret = new CadObject(all.ToArray(), ObjectName);
+            return ret;
         }
 
         private static CadObject xamlModelVisual3D(
@@ -155,8 +160,9 @@ namespace SamSeifert.GLE.CAD.Generator
                                             case "ModelVisual3D":
                                                 ret.Add(xamlModelVisual3D(f2, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission));
                                                 break;
+                                            
                                             default:
-                                                Console.WriteLine("CadObjectGenerator." + System.Reflection.MethodBase.GetCurrentMethod().Name + " ignoring " + f1._Name);
+                                                Console.WriteLine("CadObjectGenerator." + System.Reflection.MethodBase.GetCurrentMethod().Name + " ignoring " + f2._Name);
                                                 break;
                                         }
                                     }
@@ -165,7 +171,9 @@ namespace SamSeifert.GLE.CAD.Generator
                             }
                         default:
                             {
+#if DEBUG
                                 Console.WriteLine("CadObjectGenerator." + System.Reflection.MethodBase.GetCurrentMethod().Name + " ignoring " + f1._Name);
+#endif
                                 break;
                             }
                     }
@@ -218,7 +226,9 @@ namespace SamSeifert.GLE.CAD.Generator
                                 xamlModel3DGroup(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, ls);
                                 break;
                             default:
+#if DEBUG
                                 Console.WriteLine("CadObjectGenerator." + System.Reflection.MethodBase.GetCurrentMethod().Name + " ignoring " + f1._Name);
+#endif
                                 break;
                         }
                     }
@@ -253,7 +263,9 @@ namespace SamSeifert.GLE.CAD.Generator
                                 xamlModelVisual3DGroupChildren(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, ls);
                                 break;
                             default:
+#if DEBUG
                                 Console.WriteLine("CadObjectGenerator." + System.Reflection.MethodBase.GetCurrentMethod().Name + " ignoring " + f1._Name);
+#endif
                                 break;
                         }
                     }
@@ -294,7 +306,9 @@ namespace SamSeifert.GLE.CAD.Generator
                             // f1.display();
                             break;
                         default:
+#if DEBUG
                             Console.WriteLine("CadObjectGenerator." + System.Reflection.MethodBase.GetCurrentMethod().Name + " ignoring " + f1._Name);
+#endif
                             break;
                     }
                     // }
@@ -363,7 +377,7 @@ namespace SamSeifert.GLE.CAD.Generator
                                                         break;
                                                     }
                                                 default:
-                                                    Console.WriteLine("CadObjectGenerator: GeometryModel3D.Geometry ignoring " + f0._Name);
+                                                    Console.WriteLine("CadObjectGenerator: GeometryModel3D.Geometry ignoring " + f2._Name);
                                                     break;
                                             }
                                         }
@@ -371,7 +385,9 @@ namespace SamSeifert.GLE.CAD.Generator
                                 }
                                 break;
                             default:
-                                Console.WriteLine("CadObjectGenerator: GeometryModel3D ignoring " + f0._Name);
+#if DEBUG
+                                Console.WriteLine("CadObjectGenerator: GeometryModel3D ignoring " + f1._Name);
+#endif
                                 break;
                         }
                     }
@@ -443,11 +459,16 @@ namespace SamSeifert.GLE.CAD.Generator
                                                         co._Matrix.M42 *= yScale;
                                                         co._Matrix.M43 *= zScale;
                                                     }
+#if DEBUG
                                                     else Console.WriteLine("CadObjectGenerator." + System.Reflection.MethodBase.GetCurrentMethod().Name + " matrix doesn't have 16 values!");
+#endif
                                                     break;
                                                 }
                                             default:
+#if DEBUG
                                                 Console.WriteLine("CadObjectGenerator." + System.Reflection.MethodBase.GetCurrentMethod().Name + ", MatrixTransform3D ignoring " + kv);
+#endif
+
                                                 break;
                                         }
                                     }
@@ -487,7 +508,9 @@ namespace SamSeifert.GLE.CAD.Generator
                                     break;
                                 }
                             default:
+#if DEBUG
                                 Console.WriteLine("CadObjectGenerator." + System.Reflection.MethodBase.GetCurrentMethod().Name + " ignoring " + f1._Name);
+#endif
                                 break;
                         }
                     }

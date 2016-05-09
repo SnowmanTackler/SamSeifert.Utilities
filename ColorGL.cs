@@ -40,6 +40,19 @@ namespace SamSeifert.GLE
         {
         }
 
+        public ColorGL(float[] a, float[] d, float[] e, float[] s, float shininess)
+        {
+            if (a.Length != 4) throw new NotImplementedException("Color Incorrect");
+            if (d.Length != 4) throw new NotImplementedException("Color Incorrect");
+            if (e.Length != 4) throw new NotImplementedException("Color Incorrect");
+            if (s.Length != 4) throw new NotImplementedException("Color Incorrect");
+            this._Ambient = a;
+            this._Diffuse = d;
+            this._Emission = e;
+            this._Specular = s;
+            this._Shininess[0] = shininess;
+        }
+
         public void setAlpha(float alpha)
         {
             this._Ambient[3] = alpha;

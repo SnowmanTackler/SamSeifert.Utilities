@@ -167,44 +167,48 @@ namespace SamSeifert.GLE.CAD
         /// Checks The Viewport to see if we're inside.
         /// </summary>
         /// <param name="useColor"></param>
+        private static bool FilterStuff = false;
         private void draw2(bool useColor)
         {
-            this.updateBoundingSphere();
-
-            if (this.BoundingSphereRadius == 0) return;
-
-            var pos = Vector3.Transform(this.BoundingSphereCenter, GL.getMatrix(MatrixMode.Modelview)); // Convert to Camera POV
-
-            if (pos.Z + this.BoundingSphereRadius < -GLR.Projection_zFar) return; // Too far in front
-            if (pos.Z - this.BoundingSphereRadius > 0) return; // behind camera
-
+            if (FilterStuff)
             {
-                // Check if object is to the right of the camera.
-                float angle = GLR.Projection_hFOV / 2;
-                angle -= MathHelper.DegreesToRadians(90);
-                Vector3 mover = new Vector3((float)Math.Sin(angle), 0, -(float)Math.Cos(angle));
-                if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
+                this.updateBoundingSphere();
 
-                // Check if object is to the left of the camera.
-                mover.X *= -1;
-                // Object is to the left of fov
-                if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
+                if (this.BoundingSphereRadius == 0) return;
+
+                var pos = Vector3.Transform(this.BoundingSphereCenter, GL.getMatrix(MatrixMode.Modelview)); // Convert to Camera POV
+
+                if (pos.Z + this.BoundingSphereRadius < -GLR.Projection_zFar) return; // Too far in front
+                if (pos.Z - this.BoundingSphereRadius > 0) return; // behind camera
+
+                {
+                    // Check if object is to the right of the camera.
+                    float angle = GLR.Projection_hFOV / 2;
+                    angle -= MathHelper.DegreesToRadians(90);
+                    Vector3 mover = new Vector3((float)Math.Sin(angle), 0, -(float)Math.Cos(angle));
+                    if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
+
+                    // Check if object is to the left of the camera.
+                    mover.X *= -1;
+                    // Object is to the left of fov
+                    if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
+                }
+
+                {
+                    // Check if object is above of the camera.
+                    float angle = GLR.Projection_vFOV / 2;
+                    angle -= MathHelper.DegreesToRadians(90);
+                    Vector3 mover = new Vector3(0, (float)Math.Sin(angle), -(float)Math.Cos(angle));
+                    if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
+
+                    // Check if object is below the camera.
+                    mover.Y *= -1;
+                    // Object is to the left of fov
+                    if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
+                }
             }
 
-            {
-                // Check if object is above of the camera.
-                float angle = GLR.Projection_vFOV / 2;
-                angle -= MathHelper.DegreesToRadians(90);
-                Vector3 mover = new Vector3(0, (float)Math.Sin(angle), -(float)Math.Cos(angle));
-                if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
-
-                // Check if object is below the camera.
-                mover.Y *= -1;
-                // Object is to the left of fov
-                if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
-            }
-
-            this.draw3(useColor);            
+            this.draw3(useColor);                            
         }
 
         private void draw3(bool useColor)
