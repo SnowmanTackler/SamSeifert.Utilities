@@ -427,7 +427,31 @@ namespace SamSeifert.GLE
             where T8 : struct
         {
             GL.TexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
-
+        }
+        
+        public static void TexSubImage2D<T8>(
+            TextureTarget texture2D,
+            int level,
+            int x_offset,
+            int y_offset,
+            int width,
+            int height,
+            PixelFormat pixelformat,
+            PixelType pixeltype,
+            [InAttribute, OutAttribute] T8[] pixels)
+            where T8 : struct
+        {
+            GL.TexSubImage2D(
+                texture2D,
+                level, // level
+                x_offset, // X Offset,
+                y_offset, // Y Offset,
+                width,
+                height,
+                pixelformat,
+                pixeltype,
+                pixels
+                );
         }
 
         public static void FramebufferTexture2D(
@@ -495,5 +519,7 @@ namespace SamSeifert.GLE
         {
             GL.ClearColor(color.X, color.Y, color.Z, 0);
         }
+
+
     }
 }

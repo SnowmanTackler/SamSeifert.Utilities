@@ -13,6 +13,27 @@ namespace SamSeifert.GLE
 {
     public static partial class GLR
     {
+        public static IDisposable MatrixPush
+        {
+            get
+            {
+                return new MatrixPushClass();
+            }
+        }
+
+        private class MatrixPushClass : IDisposable
+        {
+            public MatrixPushClass()
+            {
+                GLR.PushMatrix();
+            }
+
+            void IDisposable.Dispose()
+            {
+                GLR.PopMatrix();
+            }
+        }
+
         public static void DepthOff()
         {
             GL.Disable(EnableCap.DepthTest);
