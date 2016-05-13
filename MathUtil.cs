@@ -35,7 +35,30 @@ namespace SamSeifert.Utilities
         }
 
 
+        public class Continuous360
+        {
+            private bool _First = true;
+            private float _Angle = 0;
+            private int _TurnCount = 0;
 
+            public float UpdateAngle(float raw_angle)
+            {
+                float angle;
+                do // 360 Continuos!
+                {
+                    angle = raw_angle + this._TurnCount * UnitConverter.PIF * 2;
+                    float yawP1 = angle + UnitConverter.PIF * 2;
+                    float yawM1 = angle - UnitConverter.PIF * 2;
+                    if (Math.Abs(yawP1 - this._Angle) < Math.Abs(angle - this._Angle)) this._TurnCount++;
+                    else if (Math.Abs(yawM1 - this._Angle) < Math.Abs(angle - this._Angle)) this._TurnCount--;
+                    else break;
+                } while (true);
+
+                this._Angle = angle;
+                return angle;
+            }
+
+        }
 
 
     }
