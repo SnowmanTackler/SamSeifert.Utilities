@@ -14,12 +14,12 @@ namespace SamSeifert.Utilities
         /// <param name="std"></param>
         /// <param name="rand"></param>
         /// <returns></returns>
-        public static float NextGaussian(Single std, Random rand)
+        public static float NextGaussian(Random rand, Single std = 1.0f, Single mean = 0.0f)
         {
             double u1 = rand.NextDouble(); //these are uniform(0,1) random doubles
             double u2 = rand.NextDouble();
             double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
-            return std * (float)randStdNormal;
+            return mean + std * (float)randStdNormal;
             // double randNormal = mean + stdDev * randStdNormal;
         }
 
