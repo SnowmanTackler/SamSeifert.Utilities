@@ -214,6 +214,32 @@ namespace SamSeifert.Utilities
             }
         }
 
+        private static Keys[] _NumberKeys = new Keys[]
+        {
+            Keys.D0,
+            Keys.D1,
+            Keys.D2,
+            Keys.D3,
+            Keys.D4,
+            Keys.D5,
+            Keys.D6,
+            Keys.D7,
+            Keys.D8,
+            Keys.D9,
+        };
+
+        public static bool isNumberPressed(int i)
+        {
+            if (i < 0) return false;
+            if (i > 9) return false;
+            lock (Instance)
+            {
+                bool pressed = false;
+                GlobalEvents.keyTable.TryGetValue(_NumberKeys[i], out pressed);
+                return pressed;
+            }
+        }
+
         /// <summary>
         /// When we are crossing multiple forms the key presses can get lost on new forms.
         /// </summary>

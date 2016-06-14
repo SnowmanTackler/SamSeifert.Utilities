@@ -34,6 +34,12 @@ namespace SamSeifert.Utilities
             return Math.Min(max, Math.Max(min, val));
         }
 
+        public static void Clamp(float min, float max, float[] val)
+        {
+            for (int i = 0; i < val.Length; i++)
+                val[i] = Clamp(min, max, val[i]);
+        }
+
 
         public class Continuous360
         {
