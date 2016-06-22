@@ -24,7 +24,7 @@ namespace SamSeifert.Utilities
         }
 
 
-        public static float Clamp(int min, int max, int val)
+        public static int Clamp(int min, int max, int val)
         {
             return Math.Min(max, Math.Max(min, val));
         }
