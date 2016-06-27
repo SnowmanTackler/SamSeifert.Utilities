@@ -662,8 +662,6 @@ namespace SamSeifert.CSCV.Cameras
 
             AddFilter_Crossbar();
 
-            AddFilter_TeeSplitter();
-
             AddFilter_SampleGrabber();
         }
 
@@ -911,10 +909,6 @@ namespace SamSeifert.CSCV.Cameras
             // Pins used in graph
             IPin pinSourceCapture = null;
 
-            IPin pinTeeInput = null;
-            IPin pinTeePreview = null;
-            IPin pinTeeCapture = null;
-
             IPin pinSampleGrabberInput = null;
 
             int hr = 0;
@@ -925,18 +919,10 @@ namespace SamSeifert.CSCV.Cameras
                 //pinSourceCapture = DsFindPin.ByCategory(DX.CaptureFilter, PinCategory.Capture, 0);
                 pinSourceCapture = DsFindPin.ByDirection(DX.CaptureFilter, PinDirection.Output, 0);
 
-                pinTeeInput = DsFindPin.ByDirection(DX.SmartTee, PinDirection.Input, 0);
-                pinTeePreview = DsFindPin.ByName(DX.SmartTee, "Preview");
-                pinTeeCapture = DsFindPin.ByName(DX.SmartTee, "Capture");
-
                 pinSampleGrabberInput = DsFindPin.ByDirection(DX.SampleGrabberFilter, PinDirection.Input, 0);
 
                 // Connect source to tee splitter
-                hr = DX.FilterGraph.Connect(pinSourceCapture, pinTeeInput);
-                DsError.ThrowExceptionForHR(hr);
-
-                // Connect samplegrabber on preview-pin of tee splitter
-                hr = DX.FilterGraph.Connect(pinTeePreview, pinSampleGrabberInput);
+                hr = DX.FilterGraph.Connect(pinSourceCapture, pinSampleGrabberInput);
                 DsError.ThrowExceptionForHR(hr);
             }
             catch
@@ -947,15 +933,6 @@ namespace SamSeifert.CSCV.Cameras
             {
                 SafeReleaseComObject(pinSourceCapture);
                 pinSourceCapture = null;
-
-                SafeReleaseComObject(pinTeeInput);
-                pinTeeInput = null;
-
-                SafeReleaseComObject(pinTeePreview);
-                pinTeePreview = null;
-
-                SafeReleaseComObject(pinTeeCapture);
-                pinTeeCapture = null;
 
                 SafeReleaseComObject(pinSampleGrabberInput);
                 pinSampleGrabberInput = null;
@@ -1035,20 +1012,6 @@ namespace SamSeifert.CSCV.Cameras
             }
         }
         
-        
-        /// <summary>
-        /// Adds tee splitter filter to split for grabber and for capture.
-        /// </summary>
-        private void AddFilter_TeeSplitter()
-        {
-            int hr = 0;
-
-            // Add a splitter
-            DX.SmartTee = (IBaseFilter)new SmartTee();
-
-            hr = DX.FilterGraph.AddFilter(DX.SmartTee, "SmartTee");
-            DsError.ThrowExceptionForHR(hr);
-        }
         
         /// <summary>
         /// Adds SampleGrabber for screenshot making.
