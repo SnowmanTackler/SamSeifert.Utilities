@@ -309,17 +309,6 @@ namespace SamSeifert.CSCV.Cameras
 
         // ====================================================================
 
-        #region Events
-
-        /// <summary>
-        /// Subscribe to this event to handle changing of size of video output <see cref="OutputVideoSize"/>.
-        /// </summary>
-        public event EventHandler OutputVideoSizeChanged;
-
-        #endregion
-
-        // ====================================================================
-
         #region Public Static functions
 
         /// <summary>
@@ -638,119 +627,7 @@ namespace SamSeifert.CSCV.Cameras
 
         #endregion
 
-        #region TV Mode
-
-        /// <summary>
-        /// Sets TV Mode for device.
-        /// </summary>
-        /// <param name="mode">TV Mode to set (analog video standard).</param>
-        public void SetTVMode(AnalogVideoStandard mode)
-        {
-            if (DX.CaptureFilter == null)
-                return;
-
-            IAMAnalogVideoDecoder pDecoder = DX.CaptureFilter as IAMAnalogVideoDecoder;
-
-            if (pDecoder == null)
-                return;
-
-            int hr = pDecoder.put_TVFormat(mode);
-            DsError.ThrowExceptionForHR(hr);
-
-            //Marshal.ReleaseComObject(pDecoder);
-        }
-
-        /// <summary>
-        /// Gets TV Mode of device.
-        /// </summary>
-        /// <returns>TV Mode of device (analog video standard)</returns>
-        public AnalogVideoStandard GetTVMode()
-        {
-            if (DX.CaptureFilter == null)
-                return AnalogVideoStandard.None;
-
-            IAMAnalogVideoDecoder pDecoder = DX.CaptureFilter as IAMAnalogVideoDecoder;
-
-            if (pDecoder == null)
-                return AnalogVideoStandard.None;
-
-            AnalogVideoStandard mode = AnalogVideoStandard.None;
-            int hr = pDecoder.get_TVFormat(out mode);
-            DsError.ThrowExceptionForHR(hr);
-
-            //Marshal.ReleaseComObject(pDecoder);
-
-            return mode;
-        }
-
-        #endregion
-
         #region Spanshot (screenshots) frame
-
-        /// <summary>
-        /// Make snapshot of output image. Slow, but includes all graph's effects.
-        /// </summary>
-        /// <returns>Snapshot as a Bitmap</returns>
-        /// <seealso cref="SnapshotSourceImage"/>
-        public Bitmap SnapshotOutputImage()
-        {
-            if (DX.WindowlessCtrl == null)
-                throw new Exception("WindowlessCtrl is not initialized.");
-
-            IntPtr currentImage = IntPtr.Zero;
-            Bitmap bitmap = null;
-            Bitmap bitmap_clone = null;
-
-            try
-            {
-                int hr = DX.WindowlessCtrl.GetCurrentImage(out currentImage);
-                DsError.ThrowExceptionForHR(hr);
-
-                if (currentImage != IntPtr.Zero)
-                {
-                    BitmapInfoHeader structure = new BitmapInfoHeader();
-                    Marshal.PtrToStructure(currentImage, structure);
-
-                    PixelFormat pixelFormat = PixelFormat.Format24bppRgb;
-                    switch (structure.BitCount)
-                    {
-                        case 24:
-                            pixelFormat = PixelFormat.Format24bppRgb;
-                            break;
-                        case 32:
-                            pixelFormat = PixelFormat.Format32bppRgb;
-                            break;
-                        case 48:
-                            pixelFormat = PixelFormat.Format48bppRgb;
-                            break;
-                        default:
-                            throw new Exception("Unsupported BitCount.");
-                    }
-
-                    bitmap = new Bitmap(structure.Width, structure.Height, (structure.BitCount / 8) * structure.Width, pixelFormat, new IntPtr(currentImage.ToInt64() + DIB_Image_HeaderSize));
-
-                    bitmap_clone = bitmap.Clone(new Rectangle(0, 0, structure.Width, structure.Height), PixelFormat.Format24bppRgb);
-
-                    bitmap_clone.RotateFlip(RotateFlipType.RotateNoneFlipY);
-                }
-            }
-            catch
-            {
-                if (bitmap != null)
-                {
-                    bitmap.Dispose();
-                    bitmap = null;
-                }
-
-                throw;
-            }
-            finally
-            {
-                Marshal.FreeCoTaskMem(currentImage);
-            }
-
-            return bitmap_clone;
-        }
 
         /// <summary>
         /// Make snapshot of source image. Much faster than SnapshotOutputImage.
