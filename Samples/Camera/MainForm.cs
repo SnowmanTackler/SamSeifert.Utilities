@@ -54,6 +54,8 @@ namespace SampleProject
 
             // Fill camera list combobox with available resolutions
             FillResolutionList();
+
+            this.Enabled = true;
         }
 
         // On close of Form
@@ -93,14 +95,11 @@ namespace SampleProject
                 }
 
                 // Initialize
-                _Camera.Initialize(this.panel1, moniker);
+                _Camera.Initialize(moniker);
 
-                Console.WriteLine("ARg 1");
                 // Build and Run graph
                 _Camera.BuildGraph();
-                Console.WriteLine("ARg2");
                 _Camera.RunGraph();
-                Console.WriteLine("ARg3");
             }
             catch (Exception e)
             {
@@ -229,10 +228,22 @@ namespace SampleProject
             }
         }
 
+
+
+
         #endregion
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (this.pictureBox1.Image != null)
+            {
+                this.pictureBox1.Image.Dispose();
+                this.pictureBox1.Image = null;
+            }
 
+            if (this._Camera == null) return;
 
-
+            this.pictureBox1.Image = this._Camera.SnapshotSourceImage();
+        }
     }
 }

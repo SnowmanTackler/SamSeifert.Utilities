@@ -22,11 +22,6 @@ namespace SamSeifert.CSCV.Cameras
         #region Private members
 
         /// <summary>
-        /// Private field. Use the public property <see cref="HostingControl"/> for access to this value.
-        /// </summary>
-        private Control _HostingControl = null;
-
-        /// <summary>
         /// Private field. Use the public property <see cref="Moniker"/> for access to this value.
         /// </summary>
         private IMoniker _Moniker = null;
@@ -90,11 +85,6 @@ namespace SamSeifert.CSCV.Cameras
         /// Private field. Was the graph built or not.
         /// </summary>
         internal bool _bGraphIsBuilt = false;
-
-        /// <summary>
-        /// Private field. Were handlers added or not. Needed to remove delegates
-        /// </summary>
-        internal bool _bHandlersAdded = false;
 
         /// <summary>
         /// Private field. SampleGrabber helper (wrapper)
@@ -196,14 +186,6 @@ namespace SamSeifert.CSCV.Cameras
 
         #region Public properties
         
-        /// <summary>
-        /// Gets a control that is used for hosting camera's output.
-        /// </summary>
-        public Control HostingControl
-        {
-            get { return _HostingControl; }
-        }
-
         /// <summary>
         /// Gets a camera moniker (device identification).
         /// </summary> 
@@ -417,25 +399,12 @@ namespace SamSeifert.CSCV.Cameras
         /// <param name="moniker">Moniker (device identification) of camera.</param>
         /// <seealso cref="HostingControl"/>
         /// <seealso cref="Moniker"/>
-        public void Initialize(Control hControl, IMoniker moniker)
+        public void Initialize(IMoniker moniker)
         {
-            if ( hControl == null )
-                throw new Exception(@"Hosting control should be set.");
-
             if ( moniker == null )
                 throw new Exception(@"Camera's moniker should be set.");
 
             _Moniker = moniker;
-
-            _HostingControl = hControl;
-
-            #if USE_D3D
-            if (!_UseGDI)
-            {
-                // Init Managed Direct3D
-                InitializeDirect3DIfNeeded();
-            }
-            #endif
         }
 
         /// <summary>
@@ -485,11 +454,6 @@ namespace SamSeifert.CSCV.Cameras
                 }
             }
 
-            if (_bHandlersAdded)
-            {
-                RemoveHandlers();
-            }
-
             //FilterGraphTools.RemoveAllFilters(this.graphBuilder);
 
 #if DEBUG
@@ -507,6 +471,7 @@ namespace SamSeifert.CSCV.Cameras
             }
 
             DX.CloseInterfaces();
+
         }
 
         #endregion
@@ -543,12 +508,9 @@ namespace SamSeifert.CSCV.Cameras
 
                 // -------------------------------------------------------
                 PostActions_SampleGrabber();
-                PostActions_Renderer();
                 // -------------------------------------------------------
 
-                UpdateOutputVideoSize();
-
-               
+              
 
                 // -------------------------------------------------------
                 _bGraphIsBuilt = true;
@@ -821,8 +783,6 @@ namespace SamSeifert.CSCV.Cameras
             AddFilter_Source();
             SetSourceParams();
 
-            AddFilter_Renderer();
-
             AddFilter_Crossbar();
 
             AddFilter_TeeSplitter();
@@ -1080,8 +1040,6 @@ namespace SamSeifert.CSCV.Cameras
 
             IPin pinSampleGrabberInput = null;
 
-            IPin pinRendererInput = null;
-
             int hr = 0;
 
             try
@@ -1095,7 +1053,6 @@ namespace SamSeifert.CSCV.Cameras
                 pinTeeCapture = DsFindPin.ByName(DX.SmartTee, "Capture");
 
                 pinSampleGrabberInput = DsFindPin.ByDirection(DX.SampleGrabberFilter, PinDirection.Input, 0);
-                pinRendererInput = DsFindPin.ByDirection(DX.VMRenderer, PinDirection.Input, 0);
 
                 // Connect source to tee splitter
                 hr = DX.FilterGraph.Connect(pinSourceCapture, pinTeeInput);
@@ -1103,10 +1060,6 @@ namespace SamSeifert.CSCV.Cameras
 
                 // Connect samplegrabber on preview-pin of tee splitter
                 hr = DX.FilterGraph.Connect(pinTeePreview, pinSampleGrabberInput);
-                DsError.ThrowExceptionForHR(hr);
-
-                // Connect the capture-pin of tee splitter to the renderer
-                hr = DX.FilterGraph.Connect(pinTeeCapture, pinRendererInput);
                 DsError.ThrowExceptionForHR(hr);
             }
             catch
@@ -1129,9 +1082,6 @@ namespace SamSeifert.CSCV.Cameras
 
                 SafeReleaseComObject(pinSampleGrabberInput);
                 pinSampleGrabberInput = null;
-
-                SafeReleaseComObject(pinRendererInput);
-                pinRendererInput = null;
             }
         }
         
@@ -1207,96 +1157,7 @@ namespace SamSeifert.CSCV.Cameras
                 _VideoInput = GetCrossbarInput(DX.Crossbar);
             }
         }
-
-        /// <summary>
-        /// Adds VMR9 (renderer) filter to the filter graph.
-        /// </summary>
-        private void AddFilter_Renderer()
-        {
-            int hr = 0;
-
-            DX.VMRenderer = (IBaseFilter) new VideoMixingRenderer9();
-
-            ConfigureVMRInWindowlessMode();
-
-
-            hr = DX.FilterGraph.AddFilter(DX.VMRenderer, "Video Mixing Renderer 9");
-            DsError.ThrowExceptionForHR(hr);
-        }
-
-        /// <summary>
-        /// Does stuff for renderer (set video size, resolution, etc.) after graph building before rendering.
-        /// </summary>
-        private void PostActions_Renderer()
-        {
-            int hr = 0;
-
-            // Save resolution
-            int video_width, video_height, arW, arH;
-            hr = DX.WindowlessCtrl.GetNativeVideoSize(out video_width, out video_height, out arW, out arH);
-            DsError.ThrowExceptionForHR(hr);
-
-            _Resolution = new Resolution(video_width, video_height);
-
-
-            // For VMR9
-            DX.MixerBitmap = (IVMRMixerBitmap9)DX.VMRenderer;
-
-            #region Code for VMR7 to set PointFiltering
-            // For VMR7:
-            //mixerBitmap = (IVMRMixerBitmap)vmr;
-
-            // For VMR7:
-            //// Request point filtering (instead of bilinear filtering)
-            //IVMRMixerControl pMixerControl = (IVMRMixerControl) vmr;
-
-            //VMRMixerPrefs dwMixerPrefs = 0;
-            //hr = pMixerControl.GetMixingPrefs(out dwMixerPrefs);
-            //DsError.ThrowExceptionForHR(hr);
-
-            //dwMixerPrefs = (dwMixerPrefs | VMRMixerPrefs.PointFiltering) & (~VMRMixerPrefs.BiLinearFiltering);
-
-            //hr = pMixerControl.SetMixingPrefs(dwMixerPrefs);
-            //DsError.ThrowExceptionForHR(hr);
-            #endregion
-        }
-
-        /// <summary>
-        /// Configures VMR9 to run in hosting control and etc.
-        /// </summary>
-        private void ConfigureVMRInWindowlessMode()
-        {
-            int hr = 0;
-
-            IVMRFilterConfig9 filterConfig = (IVMRFilterConfig9)DX.VMRenderer;
-
-            // Not really needed for vmr but don't forget calling it with VMR7
-            hr = filterConfig.SetNumberOfStreams(1);
-            DsError.ThrowExceptionForHR(hr);
-
-            // Change vmr mode to Windowless
-            hr = filterConfig.SetRenderingMode(VMR9Mode.Windowless);
-            DsError.ThrowExceptionForHR(hr);
-
-            DX.WindowlessCtrl = (IVMRWindowlessControl9)DX.VMRenderer;
-
-            // Set "Parent" window
-            if (_HostingControl != null)
-            {
-                hr = DX.WindowlessCtrl.SetVideoClippingWindow(_HostingControl.Handle);
-                DsError.ThrowExceptionForHR(hr);
-            }
-
-            // Set Aspect-Ratio
-            hr = DX.WindowlessCtrl.SetAspectRatioMode(VMR9AspectRatioMode.LetterBox);
-            DsError.ThrowExceptionForHR(hr);
-
-            // Add delegates for Windowless operations
-            AddHandlers();
-
-            // Call the resize handler to configure the output size
-            HostingControl_ResizeMove(null, null);
-        }
+        
         
         /// <summary>
         /// Adds tee splitter filter to split for grabber and for capture.
@@ -1469,112 +1330,6 @@ namespace SamSeifert.CSCV.Cameras
 
         #region Internal event handlers for HostingControl and system
 
-        /// <summary>
-        /// Adds event handlers for hosting control.
-        /// </summary>
-        /// <seealso cref="HostingControl"/>
-        private void AddHandlers()
-        {
-            if (_HostingControl == null)
-                throw new Exception("Can't add handlers. Hosting control is not set.");
-
-            // Add handlers for VMR purpose
-            _HostingControl.Paint += new PaintEventHandler(HostingControl_Paint); // for WM_PAINT
-            _HostingControl.Resize += new EventHandler(HostingControl_ResizeMove); // for WM_SIZE
-            _HostingControl.Move += new EventHandler(HostingControl_ResizeMove); // for WM_MOVE
-            SystemEvents.DisplaySettingsChanged += new EventHandler(SystemEvents_DisplaySettingsChanged); // for WM_DISPLAYCHANGE
-            _bHandlersAdded = true;
-        }
-
-        /// <summary>
-        /// Removes event handlers for hosting control.
-        /// </summary>
-        /// <seealso cref="HostingControl"/>
-        private void RemoveHandlers()
-        {
-            if (_HostingControl == null)
-                throw new Exception("Can't remove handlers. Hosting control is not set.");
-
-            // remove handlers when they are no more needed
-            _bHandlersAdded = false;
-            _HostingControl.Paint -= new PaintEventHandler(HostingControl_Paint);
-            _HostingControl.Resize -= new EventHandler(HostingControl_ResizeMove);
-            _HostingControl.Move -= new EventHandler(HostingControl_ResizeMove);
-            SystemEvents.DisplaySettingsChanged -= new EventHandler(SystemEvents_DisplaySettingsChanged);
-        }
-
-        /// <summary>
-        /// Handler of Paint event of HostingControl.
-        /// </summary>
-        /// <seealso cref="HostingControl"/>
-        private void HostingControl_Paint(object sender, PaintEventArgs e)
-        {
-            if (!_bGraphIsBuilt)
-                return; // Do nothing before graph was built
-
-            if (DX.WindowlessCtrl != null && _HostingControl != null)
-            {
-                IntPtr hdc = e.Graphics.GetHdc();
-                try
-                {
-                    int hr = DX.WindowlessCtrl.RepaintVideo(_HostingControl.Handle, hdc);
-                }
-                catch (System.Runtime.InteropServices.COMException ex)
-                {
-                    // Catch com-expection VFW_E_BUFFER_NOTSET (0x8004020c) in RepaintVideo() and ignore it
-                    // it can be in the moment of moving window out of first monitor to second one.
-                    // NOTE: This could be probably fixed with checking if graph is running or not
-                    if (ex.ErrorCode == DsResults.E_BufferNotSet)
-                    {
-                        ; // ignore exception
-                    }
-                    else
-                    {
-                        throw; // re-throw exception up
-                    }
-                
-                }
-                finally
-                {
-                    e.Graphics.ReleaseHdc(hdc);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Handler of Resize and Move events of HostingControl.
-        /// </summary>
-        /// <seealso cref="HostingControl"/>
-        private void HostingControl_ResizeMove(object sender, EventArgs e)
-        {
-            if (DX.WindowlessCtrl == null)
-                return;
-            if (_HostingControl == null)
-                return;
-
-            int hr = DX.WindowlessCtrl.SetVideoPosition(null, DsRect.FromRectangle(_HostingControl.ClientRectangle));
-
-            if (!_bGraphIsBuilt)
-                return; // Do nothing before graph was built
-
-            UpdateOutputVideoSize();
-
-            // Call event handlers (External)
-            if ( OutputVideoSizeChanged != null )
-            {
-                OutputVideoSizeChanged(sender, e);
-            }
-        
-            
-
-            //// Get the bitmap with alpha transparency
-            //alphaBitmap = BitmapGenerator.GenerateAlphaBitmap(p.Width, p.Height);
-
-            //// Create a surface from our alpha bitmap
-            //surface = new Surface(device, alphaBitmap, Pool.SystemMemory);
-            //// Get the unmanaged pointer
-            //unmanagedSurface = surface.GetObjectByValue(DxMagicNumber);
-        }
 
         /// <summary>
         /// Handler of SystemEvents.DisplaySettingsChanged.
@@ -1721,90 +1476,6 @@ namespace SamSeifert.CSCV.Cameras
 
         #endregion
         
-        #region Coorinate convertions
-
-        // Information: coordinate types:
-        // 0) Normalized. [0.0 .. 1.0] for video signal
-        // 1) Video.   Related to video stream (e.g. can be VGA (640x480)).
-        // 2) Window.  Related to _HostingControl.ClientRectangle
-        // 3) Overlay. Related to pixel is the same size as Window-type, but position is related to Video position
-
-        /// <summary>
-        /// Converts window coordinates to normalized.
-        /// </summary>
-        /// <param name="point">Point in window coordinates.</param>
-        /// <returns>Normalized coordinates</returns>
-        public PointF ConvertWinToNorm(PointF point)
-        {
-            // window_coordinate
-            NormalizedRect video_rect = GetVideoRect();
-
-            return new PointF(
-                    (point.X - video_rect.left) / (video_rect.right - video_rect.left),
-                    (point.Y - video_rect.top) / (video_rect.bottom - video_rect.top)
-                );
-        }
-
-        /// <summary>
-        /// Gets Video Rect in pixels (float values of pixels).
-        /// </summary>
-        /// <returns>return Video rect in normalized coordinates</returns>
-        private NormalizedRect GetVideoRect()
-        {
-            int window_width = _HostingControl.ClientRectangle.Width;
-            int window_height = _HostingControl.ClientRectangle.Height;
-
-            return new NormalizedRect(
-                    (window_width  - _OutputVideoSize.Width) / 2.0f,
-                    (window_height - _OutputVideoSize.Height) / 2.0f,
-                    window_width  - (window_width - _OutputVideoSize.Width) / 2.0f,
-                    window_height - (window_height - _OutputVideoSize.Height) / 2.0f
-                );
-        }
-
-        /// <summary>
-        /// Sets camera output rect (zooms to selected rect).
-        /// </summary>
-        /// <param name="zoomRect">Rectangle for zooming in video coordinates.</param>
-        public void ZoomToRect(Rectangle zoomRect)
-        {
-            if (zoomRect.Height == 0 || zoomRect.Width == 0)
-                throw new Exception(@"ZoomRect has zero size.");
-
-            IVMRMixerControl9 pMix = (IVMRMixerControl9)DX.VMRenderer;
-
-            if (pMix == null)
-                throw new Exception(@"The Mixer control is not created.");
-
-            float x_scale = (float)_Resolution.Width / zoomRect.Width;
-            float y_scale = (float)_Resolution.Height / zoomRect.Height;
-
-            NormalizedRect rect = new NormalizedRect
-                (
-                -(float)zoomRect.Left * x_scale,
-                -(float)zoomRect.Top * y_scale,
-                -(float)zoomRect.Right * x_scale + _Resolution.Width * (x_scale + 1),
-                -(float)zoomRect.Bottom * y_scale + _Resolution.Height * (y_scale + 1)
-                );
-
-
-            rect.left /= _Resolution.Width;
-            rect.right /= _Resolution.Width;
-            rect.top /= _Resolution.Height;
-            rect.bottom /= _Resolution.Height;
-
-            //NormalizedRect rect = new NormalizedRect(-1, -1, 2, 2);
-
-            //NormalizedRect rect = new NormalizedRect(
-            //    (float)zoomRect.Left / _Resolution.Width,
-            //    (float)zoomRect.Top / _Resolution.Height,
-            //    (float)zoomRect.Right / _Resolution.Width,
-            //    (float)zoomRect.Bottom / _Resolution.Height);
-
-            pMix.SetOutputRect(0, ref rect);
-        }
-
-        #endregion
 
         #region Private Helpers
 
@@ -1882,58 +1553,7 @@ namespace SamSeifert.CSCV.Cameras
                 Marshal.ReleaseComObject(obj);
             }
         }
-
-        /// <summary>
-        /// Updates output of video size from HostingControl
-        /// </summary>
-        private void UpdateOutputVideoSize()
-        {
-            int w = _HostingControl.ClientRectangle.Width;
-            int h = _HostingControl.ClientRectangle.Height;
-
-            int video_width  = _Resolution.Width;
-            int video_height = _Resolution.Height;
-
-            // Check size of video data, to save original ratio
-            int window_width = _HostingControl.ClientRectangle.Width;
-            int window_height = _HostingControl.ClientRectangle.Height;
-
-            if (window_width == 0 || window_height == 0)
-            {
-                throw new Exception(@"Incorrect window size (zero).");
-            }
-            if (video_width == 0 || video_height == 0)
-            {
-                throw new Exception(@"Incorrect video size (zero).");
-            }
-
-            Size result;
-
-            double ratio_video = (double)video_width / video_height;
-            double ratio_window = (double)window_width / window_height;
-
-            if (ratio_video <= ratio_window)
-            {
-                // calculate width of video
-                int real_video_width = Convert.ToInt32(Math.Round(window_height * ratio_video));
-                real_video_width = Math.Min(window_width, real_video_width); // Check it's not bigger than window's size
-
-                // Put video frame in center of window
-                result = new Size(real_video_width, window_height);
-            }
-            else
-            {
-                // calculate width of video
-                int real_video_height = Convert.ToInt32(Math.Round(window_width / ratio_video));
-                real_video_height = Math.Min(window_height, real_video_height); // Check it's not bigger than window's size
-
-                // Put video frame in center of window
-                result = new Size(window_width, real_video_height);
-            }
-
-            _OutputVideoSize = result;
-        }
-
+        
         #endregion
         
 
