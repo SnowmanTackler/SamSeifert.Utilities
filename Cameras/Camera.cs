@@ -634,12 +634,12 @@ namespace SamSeifert.CSCV.Cameras
         /// </summary>
         /// <returns>Snapshot as a Bitmap</returns>
         /// <seealso cref="SnapshotOutputImage"/>
-        public Bitmap SnapshotSourceImage()
+        public Bitmap SnapshotSourceImage(RotateFlipType rft = RotateFlipType.RotateNoneFlipNone)
         {
             if (_pSampleGrabberHelper == null)
                 throw new Exception("SampleGrabberHelper is not initialized.");
 
-            return _pSampleGrabberHelper.SnapshotNextFrame();
+            return _pSampleGrabberHelper.SnapshotNextFrame(rft);
         }
 
         #endregion
@@ -651,7 +651,7 @@ namespace SamSeifert.CSCV.Cameras
         #region Private members
 
         #region Graph building stuff
-        
+
         /// <summary>
         /// Adds filters to DirectShow graph.
         /// </summary>

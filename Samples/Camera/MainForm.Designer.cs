@@ -29,9 +29,7 @@
         private void InitializeComponent()
         {
             this.buttonCameraSettings = new System.Windows.Forms.Button();
-            this.buttonSave = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.labelFPS = new System.Windows.Forms.Label();
             this.comboBoxCameraList = new System.Windows.Forms.ComboBox();
             this.comboBoxResolutionList = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -44,61 +42,42 @@
             this.buttonCameraSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonCameraSettings.Location = new System.Drawing.Point(12, 473);
             this.buttonCameraSettings.Name = "buttonCameraSettings";
-            this.buttonCameraSettings.Size = new System.Drawing.Size(129, 23);
+            this.buttonCameraSettings.Size = new System.Drawing.Size(97, 23);
             this.buttonCameraSettings.TabIndex = 1;
             this.buttonCameraSettings.Text = "Settings";
             this.buttonCameraSettings.UseVisualStyleBackColor = true;
             this.buttonCameraSettings.Click += new System.EventHandler(this.buttonCameraSettings_Click);
             // 
-            // buttonSave
-            // 
-            this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSave.Location = new System.Drawing.Point(523, 498);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(129, 52);
-            this.buttonSave.TabIndex = 3;
-            this.buttonSave.Text = "Save";
-            this.buttonSave.UseVisualStyleBackColor = true;
-            // 
             // saveFileDialog1
             // 
             this.saveFileDialog1.Filter = "Jpeg Image (*.Jpeg)|*.Jpeg";
             // 
-            // labelFPS
-            // 
-            this.labelFPS.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelFPS.Location = new System.Drawing.Point(147, 498);
-            this.labelFPS.Name = "labelFPS";
-            this.labelFPS.Size = new System.Drawing.Size(370, 52);
-            this.labelFPS.TabIndex = 4;
-            this.labelFPS.Text = "FPS";
-            this.labelFPS.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // comboBoxCameraList
             // 
+            this.comboBoxCameraList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.comboBoxCameraList.FormattingEnabled = true;
             this.comboBoxCameraList.Location = new System.Drawing.Point(12, 502);
             this.comboBoxCameraList.Name = "comboBoxCameraList";
-            this.comboBoxCameraList.Size = new System.Drawing.Size(129, 21);
+            this.comboBoxCameraList.Size = new System.Drawing.Size(200, 21);
             this.comboBoxCameraList.TabIndex = 5;
             this.comboBoxCameraList.SelectedIndexChanged += new System.EventHandler(this.comboBoxCameraList_SelectedIndexChanged);
             // 
             // comboBoxResolutionList
             // 
+            this.comboBoxResolutionList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.comboBoxResolutionList.FormattingEnabled = true;
             this.comboBoxResolutionList.Location = new System.Drawing.Point(12, 529);
             this.comboBoxResolutionList.Name = "comboBoxResolutionList";
-            this.comboBoxResolutionList.Size = new System.Drawing.Size(129, 21);
+            this.comboBoxResolutionList.Size = new System.Drawing.Size(200, 21);
             this.comboBoxResolutionList.TabIndex = 6;
             this.comboBoxResolutionList.SelectedIndexChanged += new System.EventHandler(this.comboBoxResolutionList_SelectedIndexChanged);
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(160, 485);
+            this.button1.Location = new System.Drawing.Point(115, 473);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(129, 52);
+            this.button1.Size = new System.Drawing.Size(97, 23);
             this.button1.TabIndex = 8;
             this.button1.Text = "Refresh";
             this.button1.UseVisualStyleBackColor = true;
@@ -121,12 +100,11 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.comboBoxResolutionList);
             this.Controls.Add(this.comboBoxCameraList);
-            this.Controls.Add(this.labelFPS);
-            this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.buttonCameraSettings);
             this.Enabled = false;
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.ShowIcon = false;
+            this.Text = "Sample";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMain_FormClosed);
             this.Load += new System.EventHandler(this.FormCameraControlTool_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -136,9 +114,7 @@
 
         #endregion
         private System.Windows.Forms.Button buttonCameraSettings;
-        private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.Label labelFPS;
         private System.Windows.Forms.ComboBox comboBoxCameraList;
         private System.Windows.Forms.ComboBox comboBoxResolutionList;
         private System.Windows.Forms.Button button1;
