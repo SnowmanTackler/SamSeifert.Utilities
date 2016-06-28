@@ -15,6 +15,9 @@ using Camera_NET;
 
 namespace SamSeifert.CSCV.Cameras
 {
+    /// <summary>
+    /// This is similar to the Camera_NET Camera, however we don't use the rendering pipeline at all.
+    /// </summary>
     public class Camera : IDisposable
     {
         // ====================================================================
@@ -60,14 +63,6 @@ namespace SamSeifert.CSCV.Cameras
 
         // Header's size of DIB image returned by IVMRWindowlessControl9::GetCurrentImage method (BITMAPINFOHEADER)
         private static readonly int DIB_Image_HeaderSize = Marshal.SizeOf(typeof(BitmapInfoHeader)); // == 40;
-
-
-        #if USE_D3D
-        /// <summary>
-        /// Private field. Use the public property <see cref="UseGDI"/> for access to this value.
-        /// </summary>
-        private bool _UseGDI = true;
-        #endif
 
         #endregion
 
@@ -281,30 +276,6 @@ namespace SamSeifert.CSCV.Cameras
                 ApplyDirectShowLogFile();
             }
         }
-
-
-
-
-        #if USE_D3D
-        /// <summary>
-        /// Gets a value that determines whether GDI or Direct3D is used for drawing over mixer image.
-        /// </summary> 
-        /// <value>Set to true to use GDI for drawing over mixer image, or false to use Direct3D.</value>
-        public bool UseGDI
-        {
-            get { return _UseGDI; }
-            set
-            {
-                _UseGDI = value;
-
-                if (_bMixerEnabled)
-                {
-                    UpdateMixerStuff();
-                }
-            }
-        }        
-        #endif
-
         #endregion
 
         // ====================================================================
