@@ -51,7 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Blob.cs" />
-    <Compile Include="Cameras\Camera.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="HistogramViewer.cs" />
@@ -105,14 +104,6 @@
     <ProjectReference Include="..\SamSeifert.Utilities\SamSeifert.Utilities.csproj">
       <Project>{a9446cbe-818f-45f6-8894-068693da47ca}</Project>
       <Name>SamSeifert.Utilities</Name>
-    </ProjectReference>
-    <ProjectReference Include="Camera_Net\Camera_Net\Camera_NET.csproj">
-      <Project>{e6052609-a070-41d5-85b9-acaba91170c5}</Project>
-      <Name>Camera_NET</Name>
-    </ProjectReference>
-    <ProjectReference Include="Camera_Net\DirectShowLib\DirectShowLib-2010.csproj">
-      <Project>{ce009bfa-5ef6-4153-b2a1-2fa79698a9ae}</Project>
-      <Name>DirectShowLib-2010</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
