@@ -242,5 +242,11 @@ namespace SampleProject
 
             this.pictureBox1.Image = this._Camera.SnapshotSourceImage();
         }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            
+            this.button1_Click(sender, e);
+        }
     }
 }
