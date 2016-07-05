@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SamSeifert.Utilities;
 
 namespace SamSeifert.CSCV
 {
@@ -37,6 +38,37 @@ namespace SamSeifert.CSCV
                 throw new NotImplementedException();
             }
         }
+
+
+        /// <summary>
+        /// THIS DOESNT WORK YET
+        /// </summary>
+        /// <param name="y"></param>
+        /// <param name="x"></param>
+        /// <param name="rt"></param>
+        /// <returns></returns>
+        public Single this[float y, float x, ResizeType rt]
+        {
+            get
+            {
+                var sz = this.getPrefferedSize();
+                switch (rt)
+                {
+                    case ResizeType.Bilinear: // TODO Real Bilinear
+                        int xh = MathUtil.Clamp(0, sz.Width - 1, (int)Math.Ceiling(x));
+                        int xl = MathUtil.Clamp(0, sz.Width - 1, (int)Math.Floor(x));
+                        int yh = MathUtil.Clamp(0, sz.Height - 1, (int)Math.Ceiling(y));
+                        int yl = MathUtil.Clamp(0, sz.Height - 1, (int)Math.Floor(y));
+                        return this[yh, xh] + this[yh, xl] + this[yl, xl] + this[yl, xh];
+                    case ResizeType.NearestNeighbor:
+                        return this[MathUtil.Clamp(0, sz.Height - 1, (int)Math.Round(y)), MathUtil.Clamp(0, sz.Width - 1, (int)Math.Round(x))];
+                    default:
+                        return 0;
+
+                }
+            }
+        }
+
 
         /// <summary>
         /// Returns a copy of this image.
