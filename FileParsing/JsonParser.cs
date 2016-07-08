@@ -129,6 +129,29 @@ namespace SamSeifert.Utilities.FileParsing
                     case 'E': // Exponent
                         sb.Append(next);
                         break;
+                    case 't': // true
+                        if (key_off && sb.Length == 0)
+                        {
+                            key_off = false;
+                            if ('r' != (char)sr.Read()) throw new Exception("Invalid tr");
+                            if ('u' != (char)sr.Read()) throw new Exception("Invalid tru");
+                            if ('e' != (char)sr.Read()) throw new Exception("Invalid true");
+                            ret[key] = true;
+                        }
+                        else throw new Exception("Invalid t + ");
+                        break;
+                    case 'f': // false
+                        if (key_off && sb.Length == 0)
+                        {
+                            key_off = false;
+                            if ('a' != (char)sr.Read()) throw new Exception("Invalid fa");
+                            if ('l' != (char)sr.Read()) throw new Exception("Invalid fal");
+                            if ('s' != (char)sr.Read()) throw new Exception("Invalid fals");
+                            if ('e' != (char)sr.Read()) throw new Exception("Invalid false");
+                            ret[key] = false;
+                        }
+                        else throw new Exception("Invalid f");
+                        break;
                     default:
                         if (sb.Length != 0)
                         {
@@ -199,7 +222,7 @@ namespace SamSeifert.Utilities.FileParsing
             }
         }
 
-        public static String parseString(StreamReader sr)
+        private static String parseString(StreamReader sr)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -279,6 +302,7 @@ namespace SamSeifert.Utilities.FileParsing
             else if (o is double) sw(o.ToString());
             else if (o is int) sw(o.ToString());
             else if (o is long) sw(o.ToString());
+            else if (o is bool) sw(o.ToString());
             else if (o is Dictionary<String, object>) JsonParser.print(o as Dictionary<String, object>, cw, sw, indent);
             else if (o is object[]) JsonParser.print(o as object[], cw, sw, indent);
             else throw new NotImplementedException("Can't Print JSON");
