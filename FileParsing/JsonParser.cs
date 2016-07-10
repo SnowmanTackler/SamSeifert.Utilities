@@ -284,9 +284,9 @@ namespace SamSeifert.Utilities.FileParsing
             return sb.ToString();
         }
 
-        public static void print(object[] o, StreamWriter file)
+        public static void print(object o, StreamWriter writer)
         {
-            JsonParser.print(o, file.Write, file.Write);
+            JsonParser.print(o, writer.Write, writer.Write);
         }
 
         public static void print (Object o)
