@@ -39,6 +39,36 @@ namespace SamSeifert.Utilities.FileParsing
                 }
             }
         }
+        public static class FromString
+        {
+            public static Dictionary<String, object> Dictionary(String data)
+            {
+                using (StreamReader sr = new StreamReader(data.AsStream()))
+                {
+                    while (!sr.EndOfStream)
+                        if (sr.Read() == '{')
+                            break;
+
+                    if (sr.EndOfStream) return null;
+                    return parseDictionary(sr);
+                }
+            }
+
+            public static object[] Array(String data)
+            {
+                using (StreamReader sr = new StreamReader(data.AsStream()))
+                {
+                    while (!sr.EndOfStream)
+                        if (sr.Read() == '[')
+                            break;
+
+                    if (sr.EndOfStream) return null;
+                    return parseArray(sr);
+                }
+            }
+        }
+
+
 
         private static void ToLiteral(string text, CharWriter cw)
         {
