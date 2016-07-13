@@ -23,13 +23,17 @@ namespace SamSeifert.Utilities
             return (x % mod + mod) % mod;
         }
 
-
         public static int Clamp(int min, int max, int val)
         {
             return Math.Min(max, Math.Max(min, val));
         }
 
         public static float Clamp(float min, float max, float val)
+        {
+            return Math.Min(max, Math.Max(min, val));
+        }
+
+        public static Decimal Clamp(Decimal min, Decimal max, Decimal val)
         {
             return Math.Min(max, Math.Max(min, val));
         }
