@@ -12,6 +12,11 @@ namespace SamSeifert.GLE
 {
     public static partial class GLR
     {
+        public static void ReadPixels(int x, int y, int width, int height, PixelFormat format, PixelType type, IntPtr pixels)
+        {
+            GL.ReadPixels(x, y, width, height, format, type, pixels);
+        }
+
         public static void ActiveTexture(TextureUnit tu)
         {
             GL.ActiveTexture(tu);
