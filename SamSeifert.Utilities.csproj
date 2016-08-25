@@ -61,6 +61,8 @@
     <Compile Include="CustomControls\DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="DataStructures\ImpulseManager.cs" />
+    <Compile Include="DataStructures\Queue.cs" />
     <Compile Include="EnumerableUtil.cs" />
     <Compile Include="EnumUtil.cs" />
     <Compile Include="FileParsing\BracketFile.cs" />
