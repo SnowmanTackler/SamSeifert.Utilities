@@ -15,6 +15,14 @@ namespace SamSeifert.Utilities
             return Enum.GetValues(typeof(T)).Cast<T>();
         }
 
+
+        public static T Random<T>(Random r)
+            where T : struct
+        {
+            Array values = Enum.GetValues(typeof(T));
+            return (T)values.GetValue(r.Next(values.Length));
+        }
+
         public static string GetDescription<T>(this T enumerationValue)
             where T : struct
         {
@@ -40,7 +48,8 @@ namespace SamSeifert.Utilities
 
             //If we have no description attribute, just return the ToString of the enum
             return enumerationValue.ToString();
-
         }
+
+
     }
 }
