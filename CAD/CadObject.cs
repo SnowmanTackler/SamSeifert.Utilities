@@ -149,7 +149,6 @@ namespace SamSeifert.GLE.CAD
 
         public void draw(bool useColor = true)
         {
-
             if (this.BoolDisplay)
             {
                 if (this.BoolUseTranslationAndRotation)
@@ -499,6 +498,9 @@ namespace SamSeifert.GLE.CAD
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IntIndicesBufferID);
             GL.DrawElements(PrimitiveType.Triangles, this.Indices.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
+
+            GL.DisableClientState(ArrayCap.VertexArray);
+            GL.DisableClientState(ArrayCap.NormalArray);
         }
 
 
