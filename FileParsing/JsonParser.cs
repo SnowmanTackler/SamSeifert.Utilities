@@ -11,6 +11,12 @@ namespace SamSeifert.Utilities.FileParsing
 {
     public static class JsonParser
     {
+        public interface Packable
+        {
+            Dictionary<String, Object> Pack();
+            void Unpack(Dictionary<String, Object> dict);
+        }
+
         public static class FromFile
         {
             public static Dictionary<String, object> Dictionary(String path)
