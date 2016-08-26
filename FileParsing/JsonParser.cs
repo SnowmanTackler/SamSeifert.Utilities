@@ -9,17 +9,35 @@ using System.CodeDom.Compiler;
 
 namespace SamSeifert.Utilities.FileParsing
 {
-    public static class JsonParser
+    public interface JsonPackable
     {
-        public interface Packable
+        JsonDict Pack();
+        void Unpack(JsonDict dict);
+    }
+
+    public class JsonDict : Dictionary<String, Object>
+    {
+        public JsonDict() : base()
         {
-            Dictionary<String, Object> Pack();
-            void Unpack(Dictionary<String, Object> dict);
         }
 
+        public JsonDict(int capacity) : base(capacity)
+        {
+
+        }
+
+        public override string ToString()
+        {
+            return JsonParser.ToString(this);
+        }
+    }
+
+
+    public static class JsonParser
+    {
         public static class FromFile
         {
-            public static Dictionary<String, object> Dictionary(String path)
+            public static JsonDict Dictionary(String path)
             {
                 using (StreamReader sr = new StreamReader(path))
                 {
@@ -47,7 +65,7 @@ namespace SamSeifert.Utilities.FileParsing
         }
         public static class FromString
         {
-            public static Dictionary<String, object> Dictionary(String data)
+            public static JsonDict Dictionary(String data)
             {
                 using (StreamReader sr = new StreamReader(data.AsStream()))
                 {
@@ -106,9 +124,9 @@ namespace SamSeifert.Utilities.FileParsing
             cw('"');
         }
 
-        public static Dictionary<String, object> parseDictionary(StreamReader sr)
+        public static JsonDict parseDictionary(StreamReader sr)
         {
-            var ret = new Dictionary<String, object>();
+            var ret = new JsonDict();
 
             bool key_off = false;
             String key = "";
@@ -339,12 +357,12 @@ namespace SamSeifert.Utilities.FileParsing
             else if (o is int) sw(o.ToString());
             else if (o is long) sw(o.ToString());
             else if (o is bool) sw(o.ToString());
-            else if (o is Dictionary<String, object>) JsonParser.print(o as Dictionary<String, object>, cw, sw, indent);
+            else if (o is JsonDict) JsonParser.print(o as JsonDict, cw, sw, indent);
             else if (o is object[]) JsonParser.print(o as object[], cw, sw, indent);
             else throw new NotImplementedException("Can't Print JSON");
         }
 
-        private static void print(Dictionary<String, object> dict, CharWriter cw, StringWriter sw, string indent = "")
+        private static void print(JsonDict dict, CharWriter cw, StringWriter sw, string indent = "")
         {
             String nindent = indent + "\t";
             cw('{');
