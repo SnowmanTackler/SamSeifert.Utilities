@@ -49,7 +49,72 @@ namespace SamSeifert.Utilities
             //If we have no description attribute, just return the ToString of the enum
             return enumerationValue.ToString();
         }
+    }
 
+    /// <summary>
+    /// The base classes must be Enums!
+    /// </summary>
+    /// <typeparam name="Enum1"></typeparam>
+    /// <typeparam name="Enum2"></typeparam>
+    public class TwoEnums<Enum1, Enum2>
+        where Enum1 : struct
+        where Enum2 : struct
+    {
+        public static bool Equals(TwoEnums<Enum1, Enum2> a, TwoEnums<Enum1, Enum2> b)
+        {
+            return (a.e1.Equals(b.e1)) && (a.e2.Equals(b.e2));
+        }
 
+        public readonly Enum1 e1;
+        public readonly Enum2 e2;
+
+        public TwoEnums(Enum1 col, Enum2 st)
+        {
+            this.e1 = col;
+            this.e2 = st;
+        }
+
+        public override string ToString()
+        {
+            return EnumUtil.GetDescription(this.e1) + " " + EnumUtil.GetDescription(this.e2);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.e2.GetHashCode() * 17 + this.e1.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is TwoEnums<Enum1, Enum2>)
+            {
+                var obj_s = obj as TwoEnums<Enum1, Enum2>;
+                return TwoEnums<Enum1, Enum2>.Equals(this, obj_s);
+            }
+            else return false;
+        }
+
+        public static TwoEnums<Enum1, Enum2>[] Random(Random r, int count)
+        {
+            var ls = new List<TwoEnums<Enum1, Enum2>>();
+
+            while (ls.Count < count)
+            {
+                var new_symbol = new TwoEnums<Enum1, Enum2>(EnumUtil.Random<Enum1>(r), EnumUtil.Random<Enum2>(r));
+
+                foreach (var old_symbol in ls)
+                {
+                    if (new_symbol.Equals(old_symbol))
+                    {
+                        new_symbol = null;
+                        break;
+                    }
+                }
+
+                if (new_symbol != null) ls.Add(new_symbol);
+            }
+
+            return ls.ToArray();
+        }
     }
 }
