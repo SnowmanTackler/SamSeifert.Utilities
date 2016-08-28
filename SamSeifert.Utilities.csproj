@@ -55,6 +55,12 @@
   <ItemGroup>
     <Compile Include="ColorUtil.cs" />
     <Compile Include="ControlUtil.cs" />
+    <Compile Include="CustomControls\CheckedListBoxUpDown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\CheckedListBoxUpDown.Designer.cs">
+      <DependentUpon>CheckedListBoxUpDown.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomControls\DoubleBufferedForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,6 +69,12 @@
     </Compile>
     <Compile Include="CustomControls\EnumPicker.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ListBoxUpDown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ListBoxUpDown.Designer.cs">
+      <DependentUpon>ListBoxUpDown.cs</DependentUpon>
     </Compile>
     <Compile Include="DataStructures\ImpulseManager.cs" />
     <Compile Include="DataStructures\Queue.cs" />
@@ -91,8 +103,14 @@
     <Compile Include="Statistics.cs" />
     <Compile Include="StringUtil.cs" />
     <Compile Include="UnitConverter.cs" />
+    <EmbeddedResource Include="CustomControls\CheckedListBoxUpDown.resx">
+      <DependentUpon>CheckedListBoxUpDown.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\HueFilter.resx">
       <DependentUpon>HueFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ListBoxUpDown.resx">
+      <DependentUpon>ListBoxUpDown.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -111,6 +129,15 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SpriteDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SpriteUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Error.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
