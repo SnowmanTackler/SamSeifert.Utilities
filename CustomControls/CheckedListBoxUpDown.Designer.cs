@@ -125,6 +125,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.Name = "CheckedListBoxUpDown";
             this.Size = new System.Drawing.Size(400, 392);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckedListBoxUpDown_KeyDown);
