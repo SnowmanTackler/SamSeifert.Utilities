@@ -108,6 +108,24 @@ namespace SamSeifert.GLE.CAD.Generator
 
 
 
+        private static void Face(
+            Vector3 v1,
+            Vector3 v2,
+            Vector3 v3,
+            Vector3 v4,
+            Vector3 n,
+            List<Vector3> vs,
+            List<Vector3> ns
+        )
+        {
+            vs.Add(v1); ns.Add(n);
+            vs.Add(v2); ns.Add(n);
+            vs.Add(v3); ns.Add(n);
+
+            vs.Add(v1); ns.Add(n);
+            vs.Add(v3); ns.Add(n);
+            vs.Add(v4); ns.Add(n);
+        }
 
         public static CadObject CreateFace(
             Vector3 v1,
@@ -120,15 +138,73 @@ namespace SamSeifert.GLE.CAD.Generator
             List<Vector3> vs = new List<Vector3>();
             List<Vector3> ns = new List<Vector3>();
 
-            vs.Add(v1); ns.Add(n);
-            vs.Add(v2); ns.Add(n);
-            vs.Add(v3); ns.Add(n);
-
-            vs.Add(v1); ns.Add(n);
-            vs.Add(v3); ns.Add(n);
-            vs.Add(v4); ns.Add(n);
+            Face(v1, v2, v3, v4, n, vs, ns);
 
             return new CadObject(vs.ToArray(), ns.ToArray(), name);
+        }
+
+        public static CadObject CreateRectangularPrism(float dim_x, float dim_y, float dim_z, String name = "Rectangle Prism")
+        {
+            dim_x /= 2;
+            dim_y /= 2;
+            dim_z /= 2;
+
+            Vector3 n;
+
+            List<Vector3> vs = new List<Vector3>();
+            List<Vector3> ns = new List<Vector3>();
+
+            n = Vector3.UnitZ;
+            Face(
+                new Vector3(-dim_x, dim_y, dim_z),
+                new Vector3(-dim_x, -dim_y, dim_z),
+                new Vector3(dim_x, -dim_y, dim_z),
+                new Vector3(dim_x, dim_y, dim_z),
+                n, vs, ns);
+
+            n = -Vector3.UnitZ;
+            Face(
+                new Vector3(dim_x, dim_y, -dim_z),
+                new Vector3(dim_x, -dim_y, -dim_z),
+                new Vector3(-dim_x, -dim_y, -dim_z),
+                new Vector3(-dim_x, dim_y, -dim_z),
+                n, vs, ns);
+
+            n = Vector3.UnitX;
+            Face(
+                new Vector3(dim_x, dim_y, dim_z),
+                new Vector3(dim_x, -dim_y, dim_z),
+                new Vector3(dim_x, -dim_y, -dim_z),
+                new Vector3(dim_x, dim_y, -dim_z),
+                n, vs, ns);
+
+            n = -Vector3.UnitX;
+            Face(
+                new Vector3(-dim_x, dim_y, -dim_z),
+                new Vector3(-dim_x, -dim_y, -dim_z),
+                new Vector3(-dim_x, -dim_y, dim_z),
+                new Vector3(-dim_x, dim_y, dim_z),
+                n, vs, ns);
+
+            n = Vector3.UnitY;
+            Face(
+                new Vector3(dim_x, dim_y, dim_z),
+                new Vector3(dim_x, dim_y, -dim_z),
+                new Vector3(-dim_x, dim_y, -dim_z),
+                new Vector3(-dim_x, dim_y, dim_z),
+                n, vs, ns);
+
+            n = -Vector3.UnitY;
+            Face(
+                new Vector3(-dim_x, -dim_y, dim_z),
+                new Vector3(-dim_x, -dim_y, -dim_z),
+                new Vector3(dim_x, -dim_y, -dim_z),
+                new Vector3(dim_x, -dim_y, dim_z),
+                n, vs, ns);
+
+
+            return new CadObject(vs.ToArray(), ns.ToArray(), name);
+
         }
     }
 }
