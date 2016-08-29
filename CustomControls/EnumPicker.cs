@@ -49,5 +49,17 @@ namespace SamSeifert.Utilities.CustomControls
                 return this._Ts[dex];
             }
         }
+
+        public string _Description
+        {
+            get
+            {
+                return EnumUtil.GetDescription(this._T);
+            }
+            set
+            {
+                this.SelectedItem = value;
+            }
+        }
     }
 }

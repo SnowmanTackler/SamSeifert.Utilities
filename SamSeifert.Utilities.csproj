@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayUtil.cs" />
     <Compile Include="ColorUtil.cs" />
     <Compile Include="ControlUtil.cs" />
     <Compile Include="CustomControls\CheckedListBoxUpDown.cs">
