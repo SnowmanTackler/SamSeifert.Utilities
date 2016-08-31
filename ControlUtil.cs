@@ -11,16 +11,16 @@ namespace SamSeifert.Utilities
 {
     public class ControlHolder<T>
     {
-        public T Held;
+        public T _Held;
 
         public override string ToString()
         {
-            return this.Held.ToString();
+            return this._Held.ToString();
         }
 
         public ControlHolder(T ai)
         {
-            this.Held = ai;
+            this._Held = ai;
         }
     }
 
