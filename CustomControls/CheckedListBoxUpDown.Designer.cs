@@ -59,6 +59,7 @@
             this.checkedListBox1.ScrollAlwaysVisible = true;
             this.checkedListBox1.Size = new System.Drawing.Size(366, 390);
             this.checkedListBox1.TabIndex = 33;
+            this.checkedListBox1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBox1_ItemCheck);
             this.checkedListBox1.SelectedValueChanged += new System.EventHandler(this.clb_SelectedValueChanged);
             this.checkedListBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckedListBoxUpDown_KeyDown);
             // 
@@ -125,7 +126,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
             this.Name = "CheckedListBoxUpDown";
             this.Size = new System.Drawing.Size(400, 392);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckedListBoxUpDown_KeyDown);

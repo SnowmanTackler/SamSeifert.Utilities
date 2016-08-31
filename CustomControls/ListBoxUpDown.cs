@@ -41,7 +41,6 @@ namespace SamSeifert.Utilities.CustomControls
         public void Add(Object o)
         {
             this.listBox1.Items.Add(o);
-            this.bRemove.Enabled = this.listBox1.Items.Count != 0;
         }
 
         public Object SelectedItem
@@ -68,7 +67,7 @@ namespace SamSeifert.Utilities.CustomControls
             }
         }
 
-        public event EventHandler SelectedValueChanged;
+        public event EventHandler _SelectedValueChanged;
 
         private void clb_SelectedValueChanged(object sender, EventArgs e)
         {
@@ -80,8 +79,8 @@ namespace SamSeifert.Utilities.CustomControls
             this.bUp.Enabled = si != null;
             this.bDown.Enabled = si != null;
 
-            if (this.SelectedValueChanged != null)
-                this.SelectedValueChanged(this, e);
+            if (this._SelectedValueChanged != null)
+                this._SelectedValueChanged(this, e);
         }
 
 
