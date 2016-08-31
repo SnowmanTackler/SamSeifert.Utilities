@@ -151,11 +151,9 @@ namespace SamSeifert.Utilities.CustomControls
         private void bRemove_Click(object sender, EventArgs e)
         {
             var si = this.checkedListBox1.SelectedItem;
-
-            if (this.checkedListBox1.SelectedValue != null)
+            if (si != null)
             {
                 this.checkedListBox1.Items.Remove(si);
-
                 if (this._ObjectRemoved != null)
                 {
                     this._ObjectRemoved(this, si);

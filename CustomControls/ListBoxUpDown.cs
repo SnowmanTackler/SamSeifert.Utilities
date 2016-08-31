@@ -67,7 +67,7 @@ namespace SamSeifert.Utilities.CustomControls
             }
         }
 
-        public event EventHandler _SelectedValueChanged;
+        public event EventHandler _SelectedItemChanged;
 
         private void clb_SelectedValueChanged(object sender, EventArgs e)
         {
@@ -79,8 +79,8 @@ namespace SamSeifert.Utilities.CustomControls
             this.bUp.Enabled = si != null;
             this.bDown.Enabled = si != null;
 
-            if (this._SelectedValueChanged != null)
-                this._SelectedValueChanged(this, e);
+            if (this._SelectedItemChanged != null)
+                this._SelectedItemChanged(this, e);
         }
 
 
