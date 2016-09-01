@@ -14,6 +14,18 @@ namespace SamSeifert.Utilities.CustomControls
     {
         public readonly object _SwapLock = new object();
 
+        public bool _AddEnabled
+        {
+            get
+            {
+                return this.bAdd.Enabled;
+            }
+            set
+            {
+                this.bAdd.Enabled = value;
+            }
+        }
+
         public ListBoxUpDown()
         {
             InitializeComponent();
@@ -133,6 +145,13 @@ namespace SamSeifert.Utilities.CustomControls
                     this._ObjectRemoved(this, si);
                 }
             }
+        }
+
+        public event EventHandler _AddClick;
+        private void bAdd_Click(object sender, EventArgs e)
+        {
+            if (this._AddClick != null)
+                this._AddClick(this, e);
         }
 
         private void ListBoxUpDown_KeyDown(object sender, KeyEventArgs e)

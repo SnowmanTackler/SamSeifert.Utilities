@@ -16,6 +16,18 @@ namespace SamSeifert.Utilities.CustomControls
     {
         public readonly object _SwapLock = new object();
 
+        public bool _AddEnabled
+        {
+            get
+            {
+                return this.bAdd.Enabled;
+            }
+            set
+            {
+                this.bAdd.Enabled = value;
+            }
+        }
+
         public CheckedListBoxUpDown()
         {
             InitializeComponent();
@@ -163,12 +175,18 @@ namespace SamSeifert.Utilities.CustomControls
             this.bRemove.Enabled = this.checkedListBox1.Items.Count != 0;
         }
 
+        public event EventHandler _AddClick;
+        private void bAdd_Click(object sender, EventArgs e)
+        {
+            if (this._AddClick != null)
+                this._AddClick(this, e);
+        }
+
         private void CheckedListBoxUpDown_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Escape)
                 this.checkedListBox1.SelectedItem = null;
         }
-
 
         public event ItemCheckEventHandler _ItemCheck;
         private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
