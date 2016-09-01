@@ -63,6 +63,7 @@ namespace SamSeifert.Utilities.FileParsing
                 }
             }
         }
+
         public static class FromString
         {
             public static JsonDict Dictionary(String data)
@@ -356,7 +357,7 @@ namespace SamSeifert.Utilities.FileParsing
             else if (o is double) sw(o.ToString());
             else if (o is int) sw(o.ToString());
             else if (o is long) sw(o.ToString());
-            else if (o is bool) sw(o.ToString());
+            else if (o is bool) sw(((bool)o) ? "true" : "false");
             else if (o is JsonDict) JsonParser.print(o as JsonDict, cw, sw, indent);
             else if (o is object[]) JsonParser.print(o as object[], cw, sw, indent);
             else throw new NotImplementedException("Can't Print JSON");
