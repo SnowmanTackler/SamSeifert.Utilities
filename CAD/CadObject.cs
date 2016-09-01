@@ -56,6 +56,16 @@ namespace SamSeifert.GLE.CAD
             this.BoolUseTranslationAndRotation = true;
         }
 
+        public void multMatrix(Matrix4 m)
+        {
+            this.multMatrix(ref m);
+        }
+
+        public void multMatrix(ref Matrix4 m)
+        {
+            this._Matrix *= m;
+        }
+
         internal CadObject(Vector3[] verts, Vector3[] norms, String name)
         {
             this._Name = name;
