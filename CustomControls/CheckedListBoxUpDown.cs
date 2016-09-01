@@ -59,7 +59,8 @@ namespace SamSeifert.Utilities.CustomControls
 
         public void Add(Object o, bool v)
         {
-            this.checkedListBox1.Items.Add(o, v);
+            lock (this._SwapLock)
+                this.checkedListBox1.Items.Add(o, v);
         }
 
         public Object SelectedItem
@@ -163,16 +164,15 @@ namespace SamSeifert.Utilities.CustomControls
         private void bRemove_Click(object sender, EventArgs e)
         {
             var si = this.checkedListBox1.SelectedItem;
+
             if (si != null)
-            {
-                this.checkedListBox1.Items.Remove(si);
-                if (this._ObjectRemoved != null)
-                {
-                    this._ObjectRemoved(this, si);
-                }
-            }
+                lock (this._SwapLock)
+                    this.checkedListBox1.Items.Remove(si);
 
             this.bRemove.Enabled = this.checkedListBox1.Items.Count != 0;
+
+            if (this._ObjectRemoved != null)
+                this._ObjectRemoved(this, si);
         }
 
         public event EventHandler _AddClick;
