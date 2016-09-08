@@ -46,7 +46,8 @@ namespace SamSeifert.Utilities.CustomControls
 
         public Object ItemAt(int index)
         {
-            return this.checkedListBox1.Items[index];
+            lock (this._SwapLock)
+                return this.checkedListBox1.Items[index];
         }
 
         public int Count
