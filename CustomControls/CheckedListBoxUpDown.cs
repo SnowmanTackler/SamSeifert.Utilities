@@ -14,8 +14,6 @@ namespace SamSeifert.Utilities.CustomControls
 
     public partial class CheckedListBoxUpDown : UserControl
     {
-        public readonly object _SwapLock = new object();
-
         public bool _AddEnabled
         {
             get
@@ -33,21 +31,54 @@ namespace SamSeifert.Utilities.CustomControls
             InitializeComponent();
         }
 
+
+        /// <summary>
+        /// Thread Safe!  Call on any thread.
+        /// </summary>
+        public IEnumerable<Object> CheckedItems
+        {
+            get
+            {
+                if (this.InvokeRequired)
+                {
+                    Logger.WriteLine("OH NO: CLBUP Not thread safe yet");
+                    yield break;
+                }
+                else
+                {
+                    foreach (var o in this.checkedListBox1.CheckedItems)
+                        yield return o;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Thread Safe!  Call on any thread.
+        /// </summary>
         public IEnumerable<Object> Items
         {
             get
             {
-                foreach (var ob in this.checkedListBox1.Items)
+                if (this.InvokeRequired)
                 {
-                    yield return ob;
+                    Logger.WriteLine("OH NO: CLBUP Not thread safe yet");
+                    yield break;
+                }
+                else
+                {
+                    foreach (var ob in this.checkedListBox1.Items)
+                        yield return ob;
                 }
             }
         }
 
         public Object ItemAt(int index)
-        {
-            lock (this._SwapLock)
-                return this.checkedListBox1.Items[index];
+        {            
+            if (index >= 0)
+                if (index < this.checkedListBox1.Items.Count)                    
+                    return this.checkedListBox1.Items[index];
+
+            return null;
         }
 
         public int Count
@@ -60,8 +91,7 @@ namespace SamSeifert.Utilities.CustomControls
 
         public void Add(Object o, bool v)
         {
-            lock (this._SwapLock)
-                this.checkedListBox1.Items.Add(o, v);
+            this.checkedListBox1.Items.Add(o, v);
         }
 
         public Object SelectedItem
@@ -85,14 +115,6 @@ namespace SamSeifert.Utilities.CustomControls
             set
             {
                 this.checkedListBox1.SelectedIndex = value;
-            }
-        }
-
-        public CheckedListBox.CheckedItemCollection CheckedItems
-        {
-            get
-            {
-                return this.checkedListBox1.CheckedItems;
             }
         }
 
@@ -124,41 +146,35 @@ namespace SamSeifert.Utilities.CustomControls
 
         private void bUp_Click(object sender, EventArgs e)
         {
-            lock (this._SwapLock)
-            {
-                int current_index = this.checkedListBox1.SelectedIndex;
-                if (current_index < 1) return;
+            int current_index = this.checkedListBox1.SelectedIndex;
+            if (current_index < 1) return;
 
-                bool is_checked = this.checkedListBox1.GetItemChecked(current_index);
-                var item = this.checkedListBox1.SelectedItem;
-                this.checkedListBox1.Items.RemoveAt(current_index);
+            bool is_checked = this.checkedListBox1.GetItemChecked(current_index);
+            var item = this.checkedListBox1.SelectedItem;
+            this.checkedListBox1.Items.RemoveAt(current_index);
 
-                current_index--;
+            current_index--;
 
-                this.checkedListBox1.Items.Insert(current_index, item);
-                this.checkedListBox1.SetItemChecked(current_index, is_checked);
-                this.checkedListBox1.SelectedIndex = current_index;
-            }
+            this.checkedListBox1.Items.Insert(current_index, item);
+            this.checkedListBox1.SetItemChecked(current_index, is_checked);
+            this.checkedListBox1.SelectedIndex = current_index;
         }
 
         private void bDown_Click(object sender, EventArgs e)
         {
-            lock (this._SwapLock)
-            {
-                int current_index = this.checkedListBox1.SelectedIndex;
-                if (current_index < 0) return;
-                if (current_index == this.checkedListBox1.Items.Count - 1) return;
+            int current_index = this.checkedListBox1.SelectedIndex;
+            if (current_index < 0) return;
+            if (current_index == this.checkedListBox1.Items.Count - 1) return;
 
-                bool is_checked = this.checkedListBox1.GetItemChecked(current_index);
-                var item = this.checkedListBox1.SelectedItem;
-                this.checkedListBox1.Items.RemoveAt(current_index);
+            bool is_checked = this.checkedListBox1.GetItemChecked(current_index);
+            var item = this.checkedListBox1.SelectedItem;
+            this.checkedListBox1.Items.RemoveAt(current_index);
 
-                current_index++;
+            current_index++;
 
-                this.checkedListBox1.Items.Insert(current_index, item);
-                this.checkedListBox1.SetItemChecked(current_index, is_checked);
-                this.checkedListBox1.SelectedIndex = current_index;
-            }
+            this.checkedListBox1.Items.Insert(current_index, item);
+            this.checkedListBox1.SetItemChecked(current_index, is_checked);
+            this.checkedListBox1.SelectedIndex = current_index;
         }
 
         public event ObjectRemoved _ObjectRemoved;
@@ -167,13 +183,26 @@ namespace SamSeifert.Utilities.CustomControls
             var si = this.checkedListBox1.SelectedItem;
 
             if (si != null)
-                lock (this._SwapLock)
-                    this.checkedListBox1.Items.Remove(si);
+            {
+                this.checkedListBox1.Items.Remove(si);
+                if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
+            }
+        }
 
-            this.bRemove.Enabled = this.checkedListBox1.Items.Count != 0;
+        private void CheckedListBoxUpDown_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Escape)
+                this.checkedListBox1.SelectedItem = null;
+        }
 
-            if (this._ObjectRemoved != null)
-                this._ObjectRemoved(this, si);
+        private void deleteAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            while (this.checkedListBox1.Items.Count > 0)
+            {
+                object si = this.checkedListBox1.Items[0];
+                this.checkedListBox1.Items.RemoveAt(0);
+                if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
+            }
         }
 
         public event EventHandler _AddClick;
@@ -183,17 +212,16 @@ namespace SamSeifert.Utilities.CustomControls
                 this._AddClick(this, e);
         }
 
-        private void CheckedListBoxUpDown_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.Escape)
-                this.checkedListBox1.SelectedItem = null;
-        }
-
         public event ItemCheckEventHandler _ItemCheck;
         private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             if (this._ItemCheck != null)
                 this._ItemCheck(sender, e);
+        }
+
+        private void CheckedListBoxUpDown_Load(object sender, EventArgs e)
+        {
+            this.checkedListBox1.ContextMenuStrip = this.contextMenuStrip1;
         }
     }
 }
