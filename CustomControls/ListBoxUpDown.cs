@@ -160,6 +160,11 @@ namespace SamSeifert.Utilities.CustomControls
 
         private void deleteAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            this.ClearAll();
+        }
+
+        public void ClearAll()
+        {
             while (this.listBox1.Items.Count > 0)
             {
                 object si = this.listBox1.Items[0];
