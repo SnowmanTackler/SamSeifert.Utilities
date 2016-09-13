@@ -64,7 +64,7 @@
             this.listBox1.ScrollAlwaysVisible = true;
             this.listBox1.Size = new System.Drawing.Size(266, 149);
             this.listBox1.TabIndex = 0;
-            this.listBox1.SelectedValueChanged += new System.EventHandler(this.clb_SelectedValueChanged);
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.clb_SelectedIndexChanged);
             this.listBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxUpDown_KeyDown);
             // 
             // tableLayoutPanel1
@@ -89,6 +89,7 @@
             // 
             // bAdd
             // 
+            this.bAdd.BackColor = System.Drawing.SystemColors.Control;
             this.bAdd.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bAdd.Enabled = false;
             this.bAdd.Image = global::SamSeifert.Utilities.Properties.Resources.Plus;
@@ -102,6 +103,7 @@
             // 
             // bDown
             // 
+            this.bDown.BackColor = System.Drawing.SystemColors.Control;
             this.bDown.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bDown.Enabled = false;
             this.bDown.Image = global::SamSeifert.Utilities.Properties.Resources.SpriteDown;
@@ -115,6 +117,7 @@
             // 
             // bUp
             // 
+            this.bUp.BackColor = System.Drawing.SystemColors.Control;
             this.bUp.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bUp.Enabled = false;
             this.bUp.Image = global::SamSeifert.Utilities.Properties.Resources.SpriteUp;
@@ -128,6 +131,7 @@
             // 
             // bRemove
             // 
+            this.bRemove.BackColor = System.Drawing.SystemColors.Control;
             this.bRemove.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bRemove.Enabled = false;
             this.bRemove.Image = global::SamSeifert.Utilities.Properties.Resources.Error;
@@ -142,7 +146,7 @@
             // deleteAllToolStripMenuItem
             // 
             this.deleteAllToolStripMenuItem.Name = "deleteAllToolStripMenuItem";
-            this.deleteAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.deleteAllToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
             this.deleteAllToolStripMenuItem.Text = "Delete All";
             this.deleteAllToolStripMenuItem.Click += new System.EventHandler(this.deleteAllToolStripMenuItem_Click);
             // 
@@ -151,7 +155,7 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.deleteAllToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(153, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(125, 26);
             // 
             // ListBoxUpDown
             // 

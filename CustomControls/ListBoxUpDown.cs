@@ -97,7 +97,7 @@ namespace SamSeifert.Utilities.CustomControls
 
         public event EventHandler _SelectedItemChanged;
 
-        private void clb_SelectedValueChanged(object sender, EventArgs e)
+        private void clb_SelectedIndexChanged(object sender, EventArgs e)
         {
             var si = this.listBox1.SelectedItem;
 

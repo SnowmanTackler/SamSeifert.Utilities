@@ -120,7 +120,7 @@ namespace SamSeifert.Utilities.CustomControls
 
         public event EventHandler _SelectedValueChanged;
 
-        private void clb_SelectedValueChanged(object sender, EventArgs e)
+        private void clb_SelectedIndexChanged(object sender, EventArgs e)
         {
             var si = this.checkedListBox1.SelectedItem;
 
