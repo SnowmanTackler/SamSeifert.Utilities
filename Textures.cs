@@ -39,7 +39,10 @@ namespace SamSeifert.GLE
         }
 
 
-        public static int getGLTextureBitmap(Bitmap im)
+        public static int getGLTextureBitmap(
+            Bitmap im,
+            bool mipmap = true
+            )
         {
             if (im == null) return 0;
 
@@ -61,15 +64,12 @@ namespace SamSeifert.GLE
             GL.BindTexture(TextureTarget.Texture2D, output);
 
             //the following code sets certian parameters for the texture
-            GL.TexEnv(TextureEnvTarget.TextureEnv,
-                    TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
-            GL.TexParameter(TextureTarget.Texture2D,
-                    TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
-            GL.TexParameter(TextureTarget.Texture2D,
-                    TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
 
             // tell OpenGL to build mipmaps out of the bitmap data
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, (float)1.0f);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, mipmap ? 1.0f : 0.0f);
 
             // load the texture
             GL.TexImage2D(
