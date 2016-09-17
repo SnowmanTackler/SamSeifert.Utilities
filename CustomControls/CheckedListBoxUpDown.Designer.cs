@@ -28,15 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panel2 = new System.Windows.Forms.Panel();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.bAdd = new System.Windows.Forms.Button();
             this.bRemove = new System.Windows.Forms.Button();
             this.bUp = new System.Windows.Forms.Button();
             this.bDown = new System.Windows.Forms.Button();
-            this.bAdd = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deleteAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.panel2.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel2
@@ -61,7 +66,7 @@
             this.checkedListBox1.Size = new System.Drawing.Size(266, 149);
             this.checkedListBox1.TabIndex = 33;
             this.checkedListBox1.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBox1_ItemCheck);
-            this.checkedListBox1.SelectedValueChanged += new System.EventHandler(this.clb_SelectedValueChanged);
+            this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.clb_SelectedIndexChanged);
             this.checkedListBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckedListBoxUpDown_KeyDown);
             // 
             // tableLayoutPanel1
@@ -84,6 +89,19 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(32, 151);
             this.tableLayoutPanel1.TabIndex = 34;
+            // 
+            // bAdd
+            // 
+            this.bAdd.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bAdd.Enabled = false;
+            this.bAdd.Image = global::SamSeifert.Utilities.Properties.Resources.Plus;
+            this.bAdd.Location = new System.Drawing.Point(3, 77);
+            this.bAdd.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
+            this.bAdd.Name = "bAdd";
+            this.bAdd.Size = new System.Drawing.Size(29, 29);
+            this.bAdd.TabIndex = 4;
+            this.bAdd.UseVisualStyleBackColor = false;
+            this.bAdd.Click += new System.EventHandler(this.bAdd_Click);
             // 
             // bRemove
             // 
@@ -124,18 +142,24 @@
             this.bDown.UseVisualStyleBackColor = true;
             this.bDown.Click += new System.EventHandler(this.bDown_Click);
             // 
-            // bAdd
+            // contextMenuStrip1
             // 
-            this.bAdd.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.bAdd.Enabled = false;
-            this.bAdd.Image = global::SamSeifert.Utilities.Properties.Resources.Plus;
-            this.bAdd.Location = new System.Drawing.Point(3, 77);
-            this.bAdd.Margin = new System.Windows.Forms.Padding(3, 3, 0, 0);
-            this.bAdd.Name = "bAdd";
-            this.bAdd.Size = new System.Drawing.Size(29, 29);
-            this.bAdd.TabIndex = 4;
-            this.bAdd.UseVisualStyleBackColor = false;
-            this.bAdd.Click += new System.EventHandler(this.bAdd_Click);
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteAllToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(125, 26);
+            // 
+            // deleteAllToolStripMenuItem
+            // 
+            this.deleteAllToolStripMenuItem.Name = "deleteAllToolStripMenuItem";
+            this.deleteAllToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.deleteAllToolStripMenuItem.Text = "Delete All";
+            this.deleteAllToolStripMenuItem.Click += new System.EventHandler(this.deleteAllToolStripMenuItem_Click);
+            // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(61, 4);
             // 
             // CheckedListBoxUpDown
             // 
@@ -145,9 +169,11 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "CheckedListBoxUpDown";
             this.Size = new System.Drawing.Size(300, 151);
+            this.Load += new System.EventHandler(this.CheckedListBoxUpDown_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CheckedListBoxUpDown_KeyDown);
             this.panel2.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -160,5 +186,8 @@
         private System.Windows.Forms.Button bDown;
         private System.Windows.Forms.Button bRemove;
         private System.Windows.Forms.Button bAdd;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem deleteAllToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
     }
 }

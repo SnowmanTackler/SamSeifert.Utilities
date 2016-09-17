@@ -19,23 +19,38 @@ namespace SamSeifert.Utilities.CustomControls
         {
             this._Default = default_T;
 
-            var ls = new List<T>();
-
-            int select = 0;
+            // Overloaded Enums
+            var dupes = new HashSet<T>();
+            var ls_sort = new List<Tuple<T, String>>();
 
             foreach (var ev in EnumUtil.GetValues<T>())
             {
-                this.Items.Add(ev.GetDescription());
+                if (dupes.Contains(ev)) continue;
+                dupes.Add(ev);
+                ls_sort.Add(new Tuple<T, string>(ev, ev.GetDescription()));
+            }
 
-                if (this._Default.Equals(ev))
+            ls_sort.Sort((x, y) => {
+                return x.Item2.CompareTo(y.Item2);
+            });
+
+
+            var ls = new List<T>();
+            int select = 0;
+            foreach (var tup in ls_sort)
+            {
+                this.Items.Add(tup.Item2);
+
+                if (this._Default.Equals(tup.Item1))
                     select = ls.Count;
 
-                ls.Add(ev);
+                ls.Add(tup.Item1);
             }
 
             this._Ts = ls.ToArray();
 
             this.SelectedIndex = select;
+            this.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         public T _T
@@ -47,6 +62,10 @@ namespace SamSeifert.Utilities.CustomControls
                 if (dex < 0) return this._Default;
                 if (dex >= this.Items.Count) return this._Default;
                 return this._Ts[dex];
+            }
+            set
+            {
+                this.SelectedItem = value.GetDescription();
             }
         }
 

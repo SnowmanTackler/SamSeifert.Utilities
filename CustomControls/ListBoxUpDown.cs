@@ -12,8 +12,6 @@ namespace SamSeifert.Utilities.CustomControls
 {
     public partial class ListBoxUpDown : UserControl
     {
-        public readonly object _SwapLock = new object();
-
         public bool _AddEnabled
         {
             get
@@ -31,15 +29,33 @@ namespace SamSeifert.Utilities.CustomControls
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Thread Safe!  Call on any thread.
+        /// </summary>
         public IEnumerable<Object> Items
         {
             get
             {
-                foreach (var ob in this.listBox1.Items)
+                if (this.InvokeRequired)
                 {
-                    yield return ob;
+                    Logger.WriteLine("OH NO: LBUP Not thread safe yet");
+                    yield break;
+                }
+                else
+                {
+                    foreach (var ob in this.listBox1.Items)
+                        yield return ob;
                 }
             }
+        }
+
+
+        public Object ItemAt(int index)
+        {
+            if (index >= 0)
+                if (index < this.listBox1.Items.Count)
+                    return this.listBox1.Items[index];
+            return null;
         }
 
         public int Count
@@ -81,7 +97,7 @@ namespace SamSeifert.Utilities.CustomControls
 
         public event EventHandler _SelectedItemChanged;
 
-        private void clb_SelectedValueChanged(object sender, EventArgs e)
+        private void clb_SelectedIndexChanged(object sender, EventArgs e)
         {
             var si = this.listBox1.SelectedItem;
 
@@ -98,37 +114,31 @@ namespace SamSeifert.Utilities.CustomControls
 
         private void bUp_Click(object sender, EventArgs e)
         {
-            lock (this._SwapLock)
-            {
-                int current_index = this.listBox1.SelectedIndex;
-                if (current_index < 1) return;
+            int current_index = this.listBox1.SelectedIndex;
+            if (current_index < 1) return;
 
-                var item = this.listBox1.SelectedItem;
-                this.listBox1.Items.RemoveAt(current_index);
+            var item = this.listBox1.SelectedItem;
+            this.listBox1.Items.RemoveAt(current_index);
 
-                current_index--;
+            current_index--;
 
-                this.listBox1.Items.Insert(current_index, item);
-                this.listBox1.SelectedIndex = current_index;
-            }
+            this.listBox1.Items.Insert(current_index, item);
+            this.listBox1.SelectedIndex = current_index;
         }
 
         private void bDown_Click(object sender, EventArgs e)
         {
-            lock (this._SwapLock)
-            {
-                int current_index = this.listBox1.SelectedIndex;
-                if (current_index < 0) return;
-                if (current_index == this.listBox1.Items.Count - 1) return;
+            int current_index = this.listBox1.SelectedIndex;
+            if (current_index < 0) return;
+            if (current_index == this.listBox1.Items.Count - 1) return;
 
-                var item = this.listBox1.SelectedItem;
-                this.listBox1.Items.RemoveAt(current_index);
+            var item = this.listBox1.SelectedItem;
+            this.listBox1.Items.RemoveAt(current_index);
 
-                current_index++;
+            current_index++;
 
-                this.listBox1.Items.Insert(current_index, item);
-                this.listBox1.SelectedIndex = current_index;
-            }
+            this.listBox1.Items.Insert(current_index, item);
+            this.listBox1.SelectedIndex = current_index;
         }
 
         public event ObjectRemoved _ObjectRemoved;
@@ -139,11 +149,27 @@ namespace SamSeifert.Utilities.CustomControls
             if (si != null)
             {
                 this.listBox1.Items.Remove(si);
+                if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
+            }
+        }
 
-                if (this._ObjectRemoved != null)
-                {
-                    this._ObjectRemoved(this, si);
-                }
+        private void ListBoxUpDown_Load(object sender, EventArgs e)
+        {
+            this.listBox1.ContextMenuStrip = this.contextMenuStrip1;
+        }
+
+        private void deleteAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ClearAll();
+        }
+
+        public void ClearAll()
+        {
+            while (this.listBox1.Items.Count > 0)
+            {
+                object si = this.listBox1.Items[0];
+                this.listBox1.Items.RemoveAt(0);
+                if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
             }
         }
 
@@ -159,5 +185,6 @@ namespace SamSeifert.Utilities.CustomControls
             if (e.KeyData == Keys.Escape)
                 this.listBox1.SelectedItem = null;
         }
+
     }
 }

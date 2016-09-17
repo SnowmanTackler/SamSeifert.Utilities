@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -35,8 +36,11 @@
             this.bDown = new System.Windows.Forms.Button();
             this.bUp = new System.Windows.Forms.Button();
             this.bRemove = new System.Windows.Forms.Button();
+            this.deleteAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -60,7 +64,7 @@
             this.listBox1.ScrollAlwaysVisible = true;
             this.listBox1.Size = new System.Drawing.Size(266, 149);
             this.listBox1.TabIndex = 0;
-            this.listBox1.SelectedValueChanged += new System.EventHandler(this.clb_SelectedValueChanged);
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.clb_SelectedIndexChanged);
             this.listBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxUpDown_KeyDown);
             // 
             // tableLayoutPanel1
@@ -85,6 +89,7 @@
             // 
             // bAdd
             // 
+            this.bAdd.BackColor = System.Drawing.SystemColors.Control;
             this.bAdd.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bAdd.Enabled = false;
             this.bAdd.Image = global::SamSeifert.Utilities.Properties.Resources.Plus;
@@ -98,6 +103,7 @@
             // 
             // bDown
             // 
+            this.bDown.BackColor = System.Drawing.SystemColors.Control;
             this.bDown.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bDown.Enabled = false;
             this.bDown.Image = global::SamSeifert.Utilities.Properties.Resources.SpriteDown;
@@ -111,6 +117,7 @@
             // 
             // bUp
             // 
+            this.bUp.BackColor = System.Drawing.SystemColors.Control;
             this.bUp.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bUp.Enabled = false;
             this.bUp.Image = global::SamSeifert.Utilities.Properties.Resources.SpriteUp;
@@ -124,6 +131,7 @@
             // 
             // bRemove
             // 
+            this.bRemove.BackColor = System.Drawing.SystemColors.Control;
             this.bRemove.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bRemove.Enabled = false;
             this.bRemove.Image = global::SamSeifert.Utilities.Properties.Resources.Error;
@@ -135,6 +143,20 @@
             this.bRemove.UseVisualStyleBackColor = false;
             this.bRemove.Click += new System.EventHandler(this.bRemove_Click);
             // 
+            // deleteAllToolStripMenuItem
+            // 
+            this.deleteAllToolStripMenuItem.Name = "deleteAllToolStripMenuItem";
+            this.deleteAllToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.deleteAllToolStripMenuItem.Text = "Delete All";
+            this.deleteAllToolStripMenuItem.Click += new System.EventHandler(this.deleteAllToolStripMenuItem_Click);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteAllToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(125, 26);
+            // 
             // ListBoxUpDown
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -143,8 +165,11 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "ListBoxUpDown";
             this.Size = new System.Drawing.Size(300, 151);
+            this.Load += new System.EventHandler(this.ListBoxUpDown_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListBoxUpDown_KeyDown);
             this.panel1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -157,5 +182,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Button bAdd;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem deleteAllToolStripMenuItem;
     }
 }

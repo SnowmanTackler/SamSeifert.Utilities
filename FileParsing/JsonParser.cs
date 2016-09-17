@@ -68,6 +68,7 @@ namespace SamSeifert.Utilities.FileParsing
         {
             public static JsonDict Dictionary(String data)
             {
+                if (data == null) throw new Exception("JSON Parser: No Data");
                 using (StreamReader sr = new StreamReader(data.AsStream()))
                 {
                     while (!sr.EndOfStream)
@@ -81,6 +82,7 @@ namespace SamSeifert.Utilities.FileParsing
 
             public static object[] Array(String data)
             {
+                if (data == null) throw new Exception("JSON Parser: No Data");
                 using (StreamReader sr = new StreamReader(data.AsStream()))
                 {
                     while (!sr.EndOfStream)
