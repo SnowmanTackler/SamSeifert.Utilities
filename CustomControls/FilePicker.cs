@@ -66,6 +66,7 @@ namespace SamSeifert.Utilities.CustomControls
 
             FilePicker._Values[this._SaveIdentifier] = this.textBox1.Text;
             Properties.Settings.Default.FilePickers = FilePicker._Values.ToString();
+            Properties.Settings.Default.Save();
         }
 
         private void textBox1_DoubleClick(object sender, EventArgs e)
