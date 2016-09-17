@@ -283,11 +283,13 @@ namespace SamSeifert.Utilities.FileParsing
 
             while (true)
             {
+                if (sr.EndOfStream) throw new Exception("End Of File");
                 char next = (char)sr.Read();
 
                 switch (next)
                 {
                     case '\\':
+                        if (sr.EndOfStream) throw new Exception("End Of File");
                         char temper = (char)sr.Read();
                         switch (temper)
                         {

@@ -71,6 +71,12 @@
     <Compile Include="CustomControls\EnumPicker.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomControls\FilePicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\FilePicker.Designer.cs">
+      <DependentUpon>FilePicker.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomControls\ListBoxUpDown.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -106,6 +112,9 @@
     <Compile Include="UnitConverter.cs" />
     <EmbeddedResource Include="CustomControls\CheckedListBoxUpDown.resx">
       <DependentUpon>CheckedListBoxUpDown.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\FilePicker.resx">
+      <DependentUpon>FilePicker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\HueFilter.resx">
       <DependentUpon>HueFilter.cs</DependentUpon>
