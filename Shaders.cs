@@ -7,6 +7,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using GLO = OpenTK.Graphics.OpenGL.GL;
 using GL = SamSeifert.GLE.GLR;
+using SamSeifert.Utilities;
 
 namespace SamSeifert.GLE
 {
@@ -378,21 +379,15 @@ namespace SamSeifert.GLE
             GL.GetShader(vertShader, ShaderParameter.CompileStatus, out param);
             if (param == 0)
             {
-                Console.WriteLine("*****************************************");
-                Console.WriteLine("*****************************************");
-                Console.WriteLine("*****************************************");
-                Console.WriteLine();
-                Console.WriteLine("Vert Shader Compile Error");
-                Console.WriteLine();
-                Console.WriteLine("*****************************************");
-                Console.WriteLine();
-                Console.WriteLine(vertexCode);
-                Console.WriteLine();
-                Console.WriteLine(GLO.GetShaderInfoLog(vertShader));
-                Console.WriteLine();
-                Console.WriteLine("*****************************************");
-                Console.WriteLine("*****************************************");
-                Console.WriteLine("*****************************************");
+                Logger.WriteLine("*****************************************");
+                Logger.WriteLine("Vert Shader Compile Error");
+                Logger.WriteLine("*****************************************");
+                Logger.WriteLine();
+                Logger.WriteLine(vertexCode);
+                Logger.WriteLine();
+                Logger.WriteLine(GLO.GetShaderInfoLog(vertShader));
+                Logger.WriteLine();
+                Logger.WriteLine("*****************************************");
                 return 0;
             }
             return vertShader;
@@ -411,21 +406,15 @@ namespace SamSeifert.GLE
 
             if (param == 0)
             {
-                Console.WriteLine("*****************************************");
-                Console.WriteLine("*****************************************");
-                Console.WriteLine("*****************************************");
-                Console.WriteLine();
-                Console.WriteLine("Frag Shader Compile Error");
-                Console.WriteLine();
-                Console.WriteLine("*****************************************");
-                Console.WriteLine();
-                Console.WriteLine(fragCode);
-                Console.WriteLine();
-                Console.WriteLine(GLO.GetShaderInfoLog(fragShader));
-                Console.WriteLine();
-                Console.WriteLine("*****************************************");
-                Console.WriteLine("*****************************************");
-                Console.WriteLine("*****************************************");
+                Logger.WriteLine("*****************************************");
+                Logger.WriteLine("Frag Shader Compile Error");
+                Logger.WriteLine("*****************************************");
+                Logger.WriteLine();
+                Logger.WriteLine(fragCode);
+                Logger.WriteLine();
+                Logger.WriteLine(GLO.GetShaderInfoLog(fragShader));
+                Logger.WriteLine();
+                Logger.WriteLine("*****************************************");
                 return 0;
             }
             return fragShader;
