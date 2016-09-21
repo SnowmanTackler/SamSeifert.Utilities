@@ -9,8 +9,20 @@ namespace SamSeifert.Utilities
 {
     public static class Logger
     {
-        public static Action<String> WriteLine = (String s) =>
+        public static void WriteLine()
         {
+            Logger.Writer("");
+        }
+
+        public static void WriteLine(String s)
+        {
+            Logger.Writer(s);
+        }
+
+        public static Action<String> Writer
+        {
+            set; private get;
+        } = (String s) => {
             Trace.WriteLine(s);
         };
     }
