@@ -36,6 +36,18 @@ namespace SamSeifert.Utilities.CustomControls
                 this.textBox1.Text = value;
             }
         }
+
+        public String _Filter
+        {
+            get
+            {
+                return this.openFileDialog1.Filter;
+            }
+            set
+            {
+                this.openFileDialog1.Filter = value;
+            }
+        }
         
         public FilePicker()
         {

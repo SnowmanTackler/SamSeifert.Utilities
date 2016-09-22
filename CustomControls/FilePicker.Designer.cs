@@ -37,7 +37,7 @@
             this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBox1.Location = new System.Drawing.Point(0, 0);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(40, 20);
+            this.textBox1.Size = new System.Drawing.Size(214, 20);
             this.textBox1.TabIndex = 0;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.textBox1.DoubleClick += new System.EventHandler(this.textBox1_DoubleClick);
@@ -55,7 +55,7 @@
             this.MaximumSize = new System.Drawing.Size(0, 20);
             this.MinimumSize = new System.Drawing.Size(40, 20);
             this.Name = "FilePicker";
-            this.Size = new System.Drawing.Size(40, 20);
+            this.Size = new System.Drawing.Size(214, 20);
             this.Load += new System.EventHandler(this.FilePicker_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
