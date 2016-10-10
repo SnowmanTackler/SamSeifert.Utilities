@@ -47,9 +47,23 @@ namespace SamSeifert.GLE
             }
             else
             {
-                Console.WriteLine("Error - Shaders - No uniform for key:" + key);
+                Logger.WriteLine("Error - Shaders - No uniform for key:" + key);
                 return 0;
             }
+        }
+
+        public bool Validate()
+        {
+            int param;
+            GL.ValidateProgram(this._GL_Program);
+            GL.GetProgram(this._GL_Program, ProgramParameter.ValidateStatus, out param);
+            if (param == 0)
+            {
+                Logger.WriteLine("SamSeifert.GLE.Shaders: CATASTOPHIC ERROR");
+                Logger.WriteLine(GLO.GetProgramInfoLog(this._GL_Program));
+                return false;
+            }
+            return true;
         }
 
         public Shaders(String vertexShader, String fragmentShader, out bool success)
@@ -72,17 +86,10 @@ namespace SamSeifert.GLE
                     GL.GetProgram(shader, ProgramParameter.LinkStatus, out param);
                     if (param == 0)
                     {
-                        Console.WriteLine("Linkage error:");
-                        Console.WriteLine(GLO.GetProgramInfoLog(shader));
-                        success = false;
-                        return;
-                    }
-
-                    GL.ValidateProgram(shader);
-                    GL.GetProgram(shader, ProgramParameter.ValidateStatus, out param);
-                    if (param == 0)
-                    {
-                        Console.WriteLine("Validate error");
+                        Logger.WriteLine("SamSeifert.GLE.Shaders: CATASTOPHIC ERROR");
+                        Logger.WriteLine(GLO.GetProgramInfoLog(shader));
+                        Logger.WriteLine("********" + Environment.NewLine + vertexShader);
+                        Logger.WriteLine("********" + Environment.NewLine + fragmentShader);
                         success = false;
                         return;
                     }
