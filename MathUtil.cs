@@ -44,33 +44,48 @@ namespace SamSeifert.Utilities
                 val[i] = Clamp(min, max, val[i]);
         }
 
-
-        public class Continuous360
+        public class Continuous360_Radians
         {
+            protected readonly float _Increment;
+
             private bool _First = true;
             private float _Angle = 0;
             private int _TurnCount = 0;
 
+            protected Continuous360_Radians(float inc)
+            {
+                this._Increment = inc;
+            }
+
+            public Continuous360_Radians() : this(UnitConverter.PIF * 2)
+            {
+            }
+
             public float UpdateAngle(float raw_angle)
             {
                 float angle;
-                do // 360 Continuos!
+
+                while (true)
                 {
-                    angle = raw_angle + this._TurnCount * UnitConverter.PIF * 2;
-                    float yawP1 = angle + UnitConverter.PIF * 2;
-                    float yawM1 = angle - UnitConverter.PIF * 2;
+                    angle = raw_angle + this._TurnCount * this._Increment;
+                    float yawP1 = angle + this._Increment;
+                    float yawM1 = angle - this._Increment;
                     if (Math.Abs(yawP1 - this._Angle) < Math.Abs(angle - this._Angle)) this._TurnCount++;
                     else if (Math.Abs(yawM1 - this._Angle) < Math.Abs(angle - this._Angle)) this._TurnCount--;
                     else break;
-                } while (true);
+                }
 
                 this._Angle = angle;
                 return angle;
             }
-
         }
 
-
+        public class Continuous360 : Continuous360_Radians
+        {
+            public Continuous360() : base(360)
+            {
+            }
+        }
     }
 }
 
