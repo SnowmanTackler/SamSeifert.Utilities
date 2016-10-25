@@ -83,15 +83,26 @@ namespace SamSeifert.Utilities.DataStructures
         /// <param name="leave_this_many">This is the minimum number that will be left (if it starts with enough)</param>
         public void ClearOld(float current_time_seconds, int leave_this_many = 0)
         {
+            this.ClearBefore(current_time_seconds - this._ExpireTime, leave_this_many);
+        }
+
+        public void ClearBefore(float expire_time_seconds, int leave_this_many = 0)
+        {
             while (this._Length > leave_this_many)
             {
-                if (this._Data[this._Index % this._Data.Length]._Time + this._ExpireTime < current_time_seconds)
+                if (this._Data[this._Index % this._Data.Length]._Time <= expire_time_seconds)
                 {
-                    _Index = (_Index + 1) % _Data.Length;
+                    this._Index = (this._Index + 1) % _Data.Length;
                     this._Length--;
                 }
                 else break;
             }
+        }
+
+        public float TimeForIndex(int dex)
+        {
+            if (dex < this._Length) return this._Data[(this._Index + dex) % this._Data.Length]._Time;
+            else throw new IndexOutOfRangeException("In ImpulseManager");
         }
 
         internal T Oldest
