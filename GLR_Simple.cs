@@ -328,6 +328,11 @@ namespace SamSeifert.GLE
             GL.Enable(ec);
         }
 
+        public static void PointSize(float v)
+        {
+            GL.PointSize(v);
+        }
+
         public static void LineWidth(float v)
         {
             GL.LineWidth(v);
