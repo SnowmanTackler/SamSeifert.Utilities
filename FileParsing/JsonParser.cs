@@ -359,12 +359,14 @@ namespace SamSeifert.Utilities.FileParsing
             if (o is String) JsonParser.ToLiteral(o as String, cw);
             else if (o is float) sw(o.ToString());
             else if (o is double) sw(o.ToString());
+            else if (o is byte) sw(o.ToString());
             else if (o is int) sw(o.ToString());
+            else if (o is uint) sw(o.ToString());
             else if (o is long) sw(o.ToString());
             else if (o is bool) sw(((bool)o) ? "true" : "false");
             else if (o is JsonDict) JsonParser.print(o as JsonDict, cw, sw, indent);
             else if (o is object[]) JsonParser.print(o as object[], cw, sw, indent);
-            else throw new NotImplementedException("Can't Print JSON");
+            else throw new NotImplementedException("Can't Print JSON for:" + o.GetType());
         }
 
         private static void print(JsonDict dict, CharWriter cw, StringWriter sw, string indent = "")
