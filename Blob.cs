@@ -96,9 +96,9 @@ namespace SamSeifert.CSCV
 
 //            for (int i = 0; i < sTypes.Length; i++) data[i] = id.getSect(sTypes[i]);
 
-            bool createNew = false;
+            // bool createNew = false;
 
-            if (b == null) createNew = true;
+            // if (b == null) createNew = true;
 //            else if (b.Size != id.Size) createNew = true;
             
 //            if (createNew) b = new Blob(id.Size);
