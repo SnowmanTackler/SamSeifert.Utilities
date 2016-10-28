@@ -110,55 +110,40 @@ namespace SamSeifert.GLE
                 int stripL = (this.countRadius - 1) * 6;
                 int stripLP = stripL * 4;
 
-                if (true)
+                if (did + dAngle2 < 360)
                 {
-                    if (did + dAngle2 < 360)
-                    {
-                        GL.DrawRangeElements(
-                            PrimitiveType.Triangles,
-                            0,
-                            this._IntNumTriangles * 3,
-                            stripL * (dAngle2 / this.incDegrees),
-                            DrawElementsType.UnsignedInt,
-                            new IntPtr(stripLP * (did / this.incDegrees)));
-                    }
-                    else
-                    {
-                        int lens = did + dAngle2 - 360;
-                        lens /= this.incDegrees;
-                        lens *= this.incDegrees;
-
-                        GL.DrawRangeElements(
-                            PrimitiveType.Triangles,
-                            0,
-                            this._IntNumTriangles * 3,
-                            stripL * (lens / this.incDegrees),
-                            DrawElementsType.UnsignedInt,
-                            new IntPtr(0));
-
-                        GL.DrawRangeElements(
-                            PrimitiveType.Triangles,
-                            0,
-                            this._IntNumTriangles * 3,
-                            stripL * ((dAngle2 - lens) / this.incDegrees),
-                            DrawElementsType.UnsignedInt,
-                            new IntPtr(stripLP * (did / this.incDegrees)));
-
-                    }
+                    GL.DrawRangeElements(
+                        PrimitiveType.Triangles,
+                        0,
+                        this._IntNumTriangles * 3,
+                        stripL * (dAngle2 / this.incDegrees),
+                        DrawElementsType.UnsignedInt,
+                        new IntPtr(stripLP * (did / this.incDegrees)));
                 }
                 else
                 {
-                    for (int i = 0; i < countDegrees; i += 2)
-                    {
-                        GL.DrawRangeElements(
-                            PrimitiveType.Triangles,
-                            0,
-                            this._IntNumTriangles * 3,
-                            stripL,
-                            DrawElementsType.UnsignedInt,
-                            new IntPtr(stripLP * i));
-                    }
+                    int lens = did + dAngle2 - 360;
+                    lens /= this.incDegrees;
+                    lens *= this.incDegrees;
+
+                    GL.DrawRangeElements(
+                        PrimitiveType.Triangles,
+                        0,
+                        this._IntNumTriangles * 3,
+                        stripL * (lens / this.incDegrees),
+                        DrawElementsType.UnsignedInt,
+                        new IntPtr(0));
+
+                    GL.DrawRangeElements(
+                        PrimitiveType.Triangles,
+                        0,
+                        this._IntNumTriangles * 3,
+                        stripL * ((dAngle2 - lens) / this.incDegrees),
+                        DrawElementsType.UnsignedInt,
+                        new IntPtr(stripLP * (did / this.incDegrees)));
+
                 }
+
 
 
 

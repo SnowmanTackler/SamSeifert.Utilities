@@ -18,8 +18,8 @@ namespace SamSeifert.GLE.CAD.GUI
         private SelectionType _SelectionType = SelectionType.XAML;
 
         private bool file1 = false;
-        private bool file2 = false;
-        private bool file3 = false;
+        // private bool file2 = false;
+        // private bool file3 = false;
 
         private CadHandler _CadHandler = null;
 
@@ -53,8 +53,6 @@ namespace SamSeifert.GLE.CAD.GUI
         private void updateEnabled()
         {
             bool b1 = false;
-            bool b2 = false;
-            bool b3 = false;
 
             this.button1.Text = "File 1";
 
