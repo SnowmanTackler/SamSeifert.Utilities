@@ -83,8 +83,8 @@
     <Compile Include="CustomControls\ListBoxUpDown.Designer.cs">
       <DependentUpon>ListBoxUpDown.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataStructures\DefaultDict.cs" />
     <Compile Include="DataStructures\ImpulseManager.cs" />
-    <Compile Include="DataStructures\Queue.cs" />
     <Compile Include="EnumerableUtil.cs" />
     <Compile Include="EnumUtil.cs" />
     <Compile Include="FileParsing\BracketFile.cs" />
