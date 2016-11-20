@@ -23,12 +23,19 @@ namespace SamSeifert.Utilities
             return (x % mod + mod) % mod;
         }
 
+
+
         public static int Clamp(int min, int max, int val)
         {
             return Math.Min(max, Math.Max(min, val));
         }
 
         public static float Clamp(float min, float max, float val)
+        {
+            return Math.Min(max, Math.Max(min, val));
+        }
+
+        public static double Clamp(double min, double max, double val)
         {
             return Math.Min(max, Math.Max(min, val));
         }
@@ -43,6 +50,11 @@ namespace SamSeifert.Utilities
             for (int i = 0; i < val.Length; i++)
                 val[i] = Clamp(min, max, val[i]);
         }
+
+
+
+
+
 
         public class Continuous360_Radians
         {
