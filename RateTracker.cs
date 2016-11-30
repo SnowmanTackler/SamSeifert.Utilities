@@ -32,9 +32,6 @@ namespace SamSeifert.Utilities
                 return 0;
             }
 
-            if (elapsed < 0.0001f) return 100000; // Can't track more than 10,000 Hz
-
-
             if (this._Second)
             {
                 this._AverageElapsed = elapsed;
@@ -46,6 +43,8 @@ namespace SamSeifert.Utilities
                 this._AverageElapsed *= (1 - alpha);
                 this._AverageElapsed += alpha * elapsed;
             }
+
+            if (this._AverageElapsed < 0.0001f) return -1; // Can't track more than 10,000 Hz
 
             float fps = 1 / this._AverageElapsed;
 
