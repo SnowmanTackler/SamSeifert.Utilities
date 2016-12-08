@@ -45,6 +45,25 @@ namespace SamSeifert.Utilities
             return Math.Min(max, Math.Max(min, val));
         }
 
+
+
+
+        public static byte ClampByte(int val)
+        {
+            return (byte) Math.Min(255, Math.Max(0, val));
+        }
+
+        public static byte ClampByte(float val)
+        {
+            return ClampByte((int)Math.Round(val));
+        }
+
+
+
+
+
+
+
         public static void Clamp(float min, float max, float[] val)
         {
             for (int i = 0; i < val.Length; i++)

@@ -56,6 +56,9 @@
     <Compile Include="ArrayUtil.cs" />
     <Compile Include="ColorUtil.cs" />
     <Compile Include="ControlUtil.cs" />
+    <Compile Include="CustomControls\ButtonDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CustomControls\CheckedListBoxUpDown.cs">
       <SubType>UserControl</SubType>
     </Compile>
