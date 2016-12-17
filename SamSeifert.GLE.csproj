@@ -88,6 +88,7 @@
     <Compile Include="DeleteableObject.cs" />
     <Compile Include="Draw.cs" />
     <Compile Include="ColorGL.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="FrameBuffers.cs" />
     <Compile Include="GLR.cs" />
     <Compile Include="GLR_Matrix.cs" />
