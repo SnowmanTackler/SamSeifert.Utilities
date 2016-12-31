@@ -8,6 +8,11 @@ namespace SamSeifert.Utilities
 {
     public static class MiscUtil
     {
+        public static bool InRange(this int i, int low, int high)
+        {
+            return (i >= low) && (i < high);
+        }
+
         public static void Swap<T>(ref T i, ref T o)
         {
             T temp = i;

@@ -51,6 +51,29 @@ namespace SamSeifert.Utilities
         }
     }
 
+    public class EnumParser<T>
+        where T : struct
+    {
+        private Dictionary<String, T> _Dict = new Dictionary<string, T>();
+
+        public EnumParser()
+        {
+            foreach (var e in EnumUtil.GetValues<T>())
+            {
+                _Dict[e.GetDescription()] = e;
+            }
+        }
+
+        public T this[String inp]
+        {
+            get
+            {
+                lock (this._Dict)
+                    return this._Dict[inp];
+            }
+        }
+    }
+
     /// <summary>
     /// The base classes must be Enums!
     /// </summary>
@@ -70,6 +93,12 @@ namespace SamSeifert.Utilities
 
         public TwoEnums(Enum1 col, Enum2 st)
         {
+            if (!typeof(Enum1).IsEnum)
+                throw new ArgumentException("Enum1 must be of Enum type", "Enum1");
+
+            if (!typeof(Enum2).IsEnum)
+                throw new ArgumentException("Enum1 must be of Enum type", "Enum2");
+
             this.e1 = col;
             this.e2 = st;
         }
