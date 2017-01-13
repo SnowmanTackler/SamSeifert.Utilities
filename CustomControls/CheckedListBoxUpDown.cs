@@ -218,10 +218,19 @@ namespace SamSeifert.Utilities.CustomControls
         }
 
         public event ItemCheckEventHandler _ItemCheck;
+        private bool _InCheckEvent = false;
         private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+            // For some reason, the ItemCheck event is called before the CheckState is updates.
+            // So we manually update it.
+            if (this._InCheckEvent) return;
+            this._InCheckEvent = true;
+
+            this.checkedListBox1.SetItemCheckState(e.Index, e.NewValue);
             if (this._ItemCheck != null)
                 this._ItemCheck(sender, e);
+
+            this._InCheckEvent = false;
         }
 
         private void CheckedListBoxUpDown_Load(object sender, EventArgs e)
