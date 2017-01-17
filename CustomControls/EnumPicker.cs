@@ -15,7 +15,7 @@ namespace SamSeifert.Utilities.CustomControls
         private T[] _Ts = null;
         private readonly T _Default;
 
-        public EnumPicker(T default_T) : base()
+        public EnumPicker(T default_T, params T[] ignore_t) : base()
         {
             this._Default = default_T;
 
@@ -26,6 +26,7 @@ namespace SamSeifert.Utilities.CustomControls
             foreach (var ev in EnumUtil.GetValues<T>())
             {
                 if (dupes.Contains(ev)) continue;
+                if (ignore_t.Contains(ev)) continue;
                 dupes.Add(ev);
                 ls_sort.Add(new Tuple<T, string>(ev, ev.GetDescription()));
             }
