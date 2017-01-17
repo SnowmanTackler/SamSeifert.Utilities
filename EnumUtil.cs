@@ -72,6 +72,17 @@ namespace SamSeifert.Utilities
                     return this._Dict[inp];
             }
         }
+
+        public T TryParse(String inp, T default_return)
+        {
+            lock (this._Dict)
+            {
+                T o;
+                if (inp == null) return default_return;
+                else if (this._Dict.TryGetValue(inp, out o)) return o;
+                else return default_return;
+            }
+        }
     }
 
     /// <summary>
