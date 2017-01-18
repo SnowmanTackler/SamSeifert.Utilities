@@ -115,6 +115,7 @@
     <Compile Include="ScreenCapture.cs" />
     <Compile Include="Statistics.cs" />
     <Compile Include="StringUtil.cs" />
+    <Compile Include="TableLayoutPanelUtil.cs" />
     <Compile Include="UnitConverter.cs" />
     <EmbeddedResource Include="CustomControls\CheckedListBoxUpDown.resx">
       <DependentUpon>CheckedListBoxUpDown.cs</DependentUpon>
