@@ -133,7 +133,7 @@ namespace SamSeifert.CSCV
             }
         }
 
-        internal unsafe void setImage(Bitmap input)
+        public unsafe void setImage(Bitmap input)
         {
             if (input == null) return;
             else if (this._Size != input.Size) Console.WriteLine("SectHolder: private unsafe void setImage(Bitmap input) - Size mismatch");
