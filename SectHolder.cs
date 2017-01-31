@@ -299,7 +299,7 @@ namespace SamSeifert.CSCV
         }
 
         /// <summary>
-        /// ONLY USE FOR +=
+        /// ONLY USE FOR -=
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
@@ -315,7 +315,7 @@ namespace SamSeifert.CSCV
         }
 
         /// <summary>
-        /// ONLY USE FOR +=
+        /// ONLY USE FOR *=
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
@@ -331,7 +331,7 @@ namespace SamSeifert.CSCV
         }
 
         /// <summary>
-        /// ONLY USE FOR +=
+        /// ONLY USE FOR /=
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
@@ -344,6 +344,56 @@ namespace SamSeifert.CSCV
                 if (sa != null) sa /= right;
             }
             return left;
+        }
+
+        public void RefreshImage(byte[] data, params SectType[] types)
+        {
+            int start = 0;
+            int stride = types.Length;
+
+            foreach (var type in types)
+            {
+                var sect = this._Sects[type] as SectArray;
+
+                int index = start;
+                start++;
+
+                for (int y = 0; y < this._Size.Height; y++)
+                {
+
+                    for (int x = 0; x < this._Size.Width; x++)
+                    {
+                        sect[y, x] = data[index] / 255.0f;
+                        index += stride;
+                    }
+                }
+            }
+        }
+
+        public Byte[] AsBytes(params SectType[] types)
+        {
+            var bytes = new Byte[this._Size.Height * this._Size.Width * types.Length];
+            int start = 0;
+            int stride = types.Length;
+
+            foreach (var type in types)
+            {
+                var sect = this._Sects[type] as SectArray;
+
+                int index = start;
+                start++;
+
+                for (int y = 0; y < this._Size.Height; y++)
+                {
+                    for (int x = 0; x < this._Size.Width; x++)
+                    {
+                        bytes[index] = MathUtil.ClampByte(255 * sect[y, x]);
+                        index += stride;
+                    }
+                }
+            }
+
+            return bytes;
         }
     }
 }
