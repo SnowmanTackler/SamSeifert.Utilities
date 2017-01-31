@@ -19,11 +19,20 @@ namespace SamSeifert.Utilities
             Logger.Writer(s);
         }
 
-        public static Action<String> Writer
-        {
-            set; private get;
-        } = (String s) => {
+        private static volatile Action<String> _Writer = (String s) => {
             Trace.WriteLine(s);
         };
+
+        public static Action<String> Writer
+        {            
+            set
+            {
+                Logger._Writer = value;
+            }
+            private get
+            {
+                return Logger._Writer;
+            }
+        } 
     }
 }
