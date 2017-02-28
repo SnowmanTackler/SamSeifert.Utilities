@@ -233,5 +233,16 @@ namespace SamSeifert.MathNet.Numerics.Extensions
 
             return (float)Math.Sqrt(std);
         }
+
+        public static void setAllValues(this Matrix<float> m, float value = 0)
+        {
+            for (int i = 0; i < m.RowCount; i++)
+            {
+                for (int j = 0; j < m.ColumnCount; j++)
+                {
+                    m.At(i, j, value);
+                }
+            }
+        }
     }
 }
