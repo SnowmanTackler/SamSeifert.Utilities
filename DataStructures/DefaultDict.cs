@@ -11,12 +11,20 @@ namespace SamSeifert.Utilities.DataStructures
     /// </summary>
     public class DefaultDict<TKey, TValue> : Dictionary<TKey, TValue>
     {
-        private readonly TValue _DefaultValue;
+        private readonly Func<TValue> _DefaultFunc;
+
+        public DefaultDict(Func<TValue> default_function)
+        {
+            this._DefaultFunc = default_function;
+        }
 
         public DefaultDict(TValue default_value)
             : base()
         {
-            this._DefaultValue = default_value;
+            this._DefaultFunc = new Func<TValue>(() =>
+            {
+                return default_value;
+            });
         }
 
         public new TValue this[TKey key]
@@ -25,7 +33,12 @@ namespace SamSeifert.Utilities.DataStructures
             {
                 TValue t;
                 if (this.TryGetValue(key, out t)) return t;
-                else return this._DefaultValue;
+                else
+                {
+                    var newel = this._DefaultFunc();
+                    this[key] = newel;
+                    return newel;
+                }
             }
             set
             {
