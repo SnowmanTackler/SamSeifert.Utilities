@@ -5,10 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-using SamSeifert.Utilities.FileParsing;
+using SamSeifert.Utilities.Json;
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL; using GL = SamSeifert.GLE.GLR;
+using OpenTK.Graphics.OpenGL;
+using GL = SamSeifert.GLE.GLR;
+using SamSeifert.Utilities.FileParsing;
 
 namespace SamSeifert.GLE
 {
