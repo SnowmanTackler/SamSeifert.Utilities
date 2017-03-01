@@ -55,7 +55,6 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="HistogramViewer.cs" />
     <Compile Include="HoughTransform.cs" />
-    <Compile Include="IA_Single.cs" />
     <Compile Include="MultipleImages\Add.cs" />
     <Compile Include="MultipleImages\Convolute.cs" />
     <Compile Include="MultipleImages\ErodeDilate.cs" />
@@ -101,6 +100,14 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mathnet.Numerics\src\Numerics\Numerics.csproj">
+      <Project>{b7cae5f4-a23f-4438-b5be-41226618b695}</Project>
+      <Name>Numerics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SamSeifert.MathNet.Numerics.Extensions\SamSeifert.MathNet.Numerics.Extensions.csproj">
+      <Project>{a74567df-9c75-4038-9785-cf6c0bbc17c4}</Project>
+      <Name>SamSeifert.MathNet.Numerics.Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SamSeifert.Utilities\SamSeifert.Utilities.csproj">
       <Project>{a9446cbe-818f-45f6-8894-068693da47ca}</Project>
       <Name>SamSeifert.Utilities</Name>

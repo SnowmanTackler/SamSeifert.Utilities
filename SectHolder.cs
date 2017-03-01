@@ -102,37 +102,6 @@ namespace SamSeifert.CSCV
 
         }
 
-        public override Single getMinValue
-        {
-            get
-            {
-                var mn = Single.MaxValue;
-                foreach (var s in this._Sects.Values) mn = Math.Min(mn, s.getMinValue);
-                return mn;
-            }
-        }
-
-        public override Single getMaxValue
-        {
-            get
-            {
-                var mx = Single.MinValue;
-                foreach (var s in this._Sects.Values) mx = Math.Max(mx, s.getMaxValue);
-                return mx;
-            }
-        }
-
-        public override Single getAverageValue
-        {
-            get
-            {
-                Single av = 0;
-                foreach (var s in this._Sects.Values) av += s.getAverageValue;
-                av /= this._Sects.Count;
-                return av;
-            }
-        }
-
         public unsafe void setImage(Bitmap input)
         {
             if (input == null) return;

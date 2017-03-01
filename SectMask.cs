@@ -51,28 +51,5 @@ namespace SamSeifert.CSCV
             return new SectMask(this._Type, this._Sect.Transpose());
         }
 
-        public override Single getMinValue
-        {
-            get
-            {
-                return this._Sect.getMinValue;
-            }
-        }
-
-        public override Single getMaxValue
-        {
-            get
-            {
-                return this._Sect.getMaxValue;
-            }
-        }
-
-        public override Single getAverageValue
-        {
-            get
-            {
-                return this._Sect.getAverageValue;
-            }
-        }
     }
 }
