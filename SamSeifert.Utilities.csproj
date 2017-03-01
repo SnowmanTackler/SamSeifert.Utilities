@@ -91,7 +91,6 @@
     <Compile Include="EnumerableUtil.cs" />
     <Compile Include="EnumUtil.cs" />
     <Compile Include="FileParsing\BracketFile.cs" />
-    <Compile Include="FileParsing\JsonParser.cs" />
     <Compile Include="FileParsing\TagFile.cs" />
     <Compile Include="GlobalEvents.cs" />
     <Compile Include="CustomControls\HueFilter.cs">
@@ -100,6 +99,10 @@
     <Compile Include="CustomControls\HueFilter.Designer.cs">
       <DependentUpon>HueFilter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Json\JsonArray.cs" />
+    <Compile Include="Json\JsonDict.cs" />
+    <Compile Include="Json\JsonPackable.cs" />
+    <Compile Include="Json\JsonParser.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="MiscUtil.cs" />
     <Compile Include="MathUtil.cs" />

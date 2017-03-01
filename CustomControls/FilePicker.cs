@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using SamSeifert.Utilities.FileParsing;
+using SamSeifert.Utilities.Json;
 
 namespace SamSeifert.Utilities.CustomControls
 {
@@ -19,7 +19,7 @@ namespace SamSeifert.Utilities.CustomControls
 
         static FilePicker()
         {
-            FilePicker._Values = JsonParser.FromString.Dictionary(Properties.Settings.Default.FilePickers);
+            FilePicker._Values = JsonDict.FromString(Properties.Settings.Default.FilePickers);
         }
 
         public event EventHandler _ValidFile;
