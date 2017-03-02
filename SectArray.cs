@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using MathNet.Numerics.LinearAlgebra;
+
 namespace SamSeifert.CSCV
 {
     public class SectArray : Sect
     {
-        public Single[,] Data { get { return this._Data; } }
-        private readonly Single[,] _Data = null;
+        public Matrix<float> Data { get { return this._Data; } }
+        private readonly Matrix<float> _Data = null;
         private readonly int _Width;
         private readonly int _Height;
 
@@ -36,9 +38,7 @@ namespace SamSeifert.CSCV
 
         public override Sect Clone()
         {
-            var s = new SectArray(this._Type, this._Width, this._Height);
-            this.CopyTo(s);
-            return s;
+            return new SectArray(this._Data.Clone(), this._Type);
         }
 
         public void SetValue(float val)
@@ -47,7 +47,7 @@ namespace SamSeifert.CSCV
             {
                 for (int x = 0; x < this._Width; x++)
                 {
-                    this._Data[y, x] = val;
+                    this._Data.At(y, x, val);
                 }
             }
         }
@@ -82,11 +82,19 @@ namespace SamSeifert.CSCV
         {
             get
             {
+#if DEBUG
                 return this._Data[y, x];
+#else
+                return this._Data.At(y, x);                  
+#endif
             }
             set
             {
+#if DEBUG
                 this._Data[y, x] = value;
+#else
+                this._Data.At(y, x, value);
+#endif
             }
         }
 
@@ -103,14 +111,17 @@ namespace SamSeifert.CSCV
         public SectArray(Single[,] data, SectType t)
             : base(t)
         {
-            this._Data = data;
-            this._Height = data.GetLength(0);
-            this._Width = data.GetLength(1);
+            this._Data = Matrix<float>.Build.DenseOfArray(data);
+            this._Height = this._Data.RowCount;
+            this._Width = this._Data.ColumnCount;
         }
 
-        internal void CopyTo(SectArray s)
+        public SectArray(Matrix<float> data, SectType t)
+            : base(t)
         {
-            Array.Copy(this._Data, s._Data, this._Width * this._Height);
+            this._Data = data;
+            this._Height = this._Data.RowCount;
+            this._Width = this._Data.ColumnCount;
         }
 
 
