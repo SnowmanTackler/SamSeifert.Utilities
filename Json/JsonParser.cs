@@ -21,23 +21,20 @@ namespace SamSeifert.Utilities.Json
                 switch (c)
                 {
                     // case '\'':
-                    case '\"':
-                    case '\0':
-                    case '\a':
-                    case '\b':
-                    case '\f':
-                    case '\n':
-                    case '\r':
-                    case '\t':
-                    case '\v':
-                    case '\\':
-                        cw('\\');
-                        cw(c);
-                        break;
+                    // case '\'':
+                    case '\"': cw('\\'); cw('"'); break;
+                    case '\0': cw('\\'); cw('0'); break;
+                    case '\a': cw('\\'); cw('a'); break;
+                    case '\b': cw('\\'); cw('b'); break;
+                    case '\f': cw('\\'); cw('f'); break;
+                    case '\n': cw('\\'); cw('n'); break;
+                    case '\r': cw('\\'); cw('r'); break;
+                    case '\t': cw('\\'); cw('t'); break;
+                    case '\v': cw('\\'); cw('v'); break;
+                    case '\\': cw('\\'); cw('\\'); break;
                     default:
                         cw(c);
                         break;
-
                 }
             }
             cw('"');
