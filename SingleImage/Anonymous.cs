@@ -8,7 +8,11 @@ namespace SamSeifert.CSCV
 {
     public static partial class SingleImage
     {
-        public static ToolboxReturn Anonymous(Sect inpt, Func<float, float> f, ref Sect outp)
+        public static ToolboxReturn Anonymous(
+            Sect inpt,
+            ref Sect outp,
+            Func<float, float> f
+            )
         {
             if ((inpt == null) || (f == null))
             {

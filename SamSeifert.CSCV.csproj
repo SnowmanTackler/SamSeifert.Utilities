@@ -72,6 +72,7 @@
     <Compile Include="SingleImage\HSL.cs" />
     <Compile Include="SingleImage\HSV.cs" />
     <Compile Include="SingleImage\HueFilter.cs" />
+    <Compile Include="SingleImage\KMeans.cs" />
     <Compile Include="SingleImage\Noise.cs" />
     <Compile Include="SingleImage\Padding.cs" />
     <Compile Include="SingleImage\Resize.cs" />
