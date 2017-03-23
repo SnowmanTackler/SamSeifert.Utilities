@@ -32,23 +32,26 @@ namespace SamSeifert.MathNet.Numerics.Extensions
 
         public static float StandardDeviation(this IEnumerable<float> vector)
         {
+            float mean;
+            return vector.StandardDeviation(out mean);
+        }
+
+        public static float StandardDeviation(this IEnumerable<float> vector, out float mean)
+        {
             float xi2 = 0;
             float xi = 0;
             int count = 0;
-            float mean = 0;
 
             foreach (float val in vector)
             {
                 count++;
-                mean += val;
-
                 xi += val;
                 xi2 += val * val;
             }
 
-            mean /= count;
+            mean = xi / count;
 
-            return (float)Math.Sqrt(mean + (xi2 - 2 * mean * xi) / count);
+            return (float)Math.Sqrt(xi2 / count - mean * mean);
         }
 
 
