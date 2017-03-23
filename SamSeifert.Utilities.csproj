@@ -59,6 +59,12 @@
     <Compile Include="CustomControls\ButtonDown.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomControls\CenteringControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\CenteringControl.Designer.cs">
+      <DependentUpon>CenteringControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomControls\CheckedListBoxUpDown.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -120,6 +126,9 @@
     <Compile Include="StringUtil.cs" />
     <Compile Include="TableLayoutPanelUtil.cs" />
     <Compile Include="UnitConverter.cs" />
+    <EmbeddedResource Include="CustomControls\CenteringControl.resx">
+      <DependentUpon>CenteringControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\CheckedListBoxUpDown.resx">
       <DependentUpon>CheckedListBoxUpDown.cs</DependentUpon>
     </EmbeddedResource>
