@@ -106,6 +106,9 @@
     <Compile Include="Logger.cs" />
     <Compile Include="MiscUtil.cs" />
     <Compile Include="MathUtil.cs" />
+    <Compile Include="MultiThreading\BackgroundQueue.cs" />
+    <Compile Include="MultiThreading\BackgroundThread.cs" />
+    <Compile Include="MultiThreading\Delegates.cs" />
     <Compile Include="Networking\Destination.cs" />
     <Compile Include="Permuatate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
