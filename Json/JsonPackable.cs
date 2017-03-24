@@ -53,5 +53,22 @@ namespace SamSeifert.Utilities.Json
         {
             dict[key] = cb.SelectedIndex;
         }
+
+
+        public static T asGeneric<T>(this JsonDict d, String key)
+        {
+            return (T)d[key];
+        }
+
+        public static T asGeneric<T>(this JsonDict d, String key, T empty_or_error_value)
+        {
+            object outo;
+            if (d.TryGetValue(key, out outo))
+                if (outo is T)
+                    return (T)outo;
+
+            return empty_or_error_value;
+        }
+
     }
 }

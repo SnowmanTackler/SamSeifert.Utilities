@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace SamSeifert.Utilities.Json
 {
+
     public class JsonDict : Dictionary<String, Object>
     {
         public JsonDict() : base()
@@ -49,6 +50,70 @@ namespace SamSeifert.Utilities.Json
         {
             return JsonParser.ToString(this);
         }
+
+        public int asInt(String key)
+        {
+            return (int)Math.Round((double)this[key]);
+        }
+
+        public int asInt(String key, int empty_or_error_value)
+        {
+            object outo;
+            if (this.TryGetValue(key, out outo))
+                if (outo is double)
+                    return (int)Math.Round((double)outo);
+
+            return empty_or_error_value;
+        }
+
+        public float asFloat(String key)
+        {
+            return (float)(double)this[key];
+        }
+
+        public float asFloat(String key, float empty_or_error_value)
+        {
+            object outo;
+            if (this.TryGetValue(key, out outo))
+                if (outo is double)
+                    return (float)(double)outo;
+
+            return empty_or_error_value;
+        }
+
+        public double asDouble(String key)
+        {
+            return (double)this[key];
+        }
+
+        public double asDouble(String key, double empty_or_error_value)
+        {
+            object outo;
+            if (this.TryGetValue(key, out outo))
+                if (outo is double)
+                    return (double)outo;
+
+            return empty_or_error_value;
+        }
+
+
+        // //////////////////// DEFAULTS
+
+        public string asString(String key)
+        {
+            return (string)this[key];
+        }
+
+        public string asString(String key, string empty_or_error_value)
+        {
+            return this.asGeneric(key, empty_or_error_value);
+        }
+
+
+
+
+
+        // ///////////////////// CONSTRUCTORS BELOW
 
         public static JsonDict FromFile(String path)
         {
