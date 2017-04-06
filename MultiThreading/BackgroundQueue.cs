@@ -10,38 +10,28 @@ namespace SamSeifert.Utilities.MultiThreading
 {
     public class BackgroundQueue
     {
-        private readonly Queue<BackgroundThreadMethod> _Queue = new Queue<BackgroundThreadMethod>();
+        private readonly Queue<BackgroundQueueMethod> _Queue = new Queue<BackgroundQueueMethod>();
         private bool _Queue_CurrentlyWorking = false;
 
-        private readonly String _Name;
-        private Form _ClosingForm;
-
         private volatile bool _ShouldContinue = true;
-        private volatile Thread _Thread = null;
-
+        private volatile bool _Working = true;
 
         public BackgroundQueue(Form f, String name)
         {
-            this._Name = name;
+            if (f == null)
+                throw new ArgumentNullException();
 
-            this._ClosingForm = f;
+            f.FormClosing += this.FormClosing;
 
-            if (this._ClosingForm != null)
-                this._ClosingForm.FormClosing += FormClosing;
-
-            this._Thread = new Thread(this._BackgroundThread);
-            this._Thread.Start();
+            (new Thread(this._BackgroundThread)).Start(
+                new object[]
+                {
+                    f,
+                    name
+                });
         }
 
-        public void Enqueue(BackgroundThreadMethodWithParam meth, object param)
-        {
-            this.Enqueue((ContinueCheck continue_on) =>
-            {
-                meth(continue_on, param);
-            });
-        }
-
-        public void Enqueue(BackgroundThreadMethod meth)
+        private void Enqueue(BackgroundQueueMethod meth)
         {
             lock (this._Queue)
             {
@@ -50,13 +40,48 @@ namespace SamSeifert.Utilities.MultiThreading
             }
         }
 
-        private void _BackgroundThread()
+        public void Enqueue(ParameterizedBackgroundThreadMethod meth, object param)
         {
-            Thread.CurrentThread.Name = (this._Name == null) ? "Background Queue" : this._Name;
+            this.Enqueue((Form f, ContinueCheck continue_on) =>
+            {
+                meth(continue_on, param);
+            });
+        }
+
+        public void Enqueue(BackgroundThreadMethod meth)
+        {
+            this.Enqueue((Form f, ContinueCheck continue_on) =>
+            {
+                meth(continue_on);
+            });
+        }
+
+        public void Enqueue(ParameterizedBackgroundThreadMethodOut meth, object param, BackgroundThreadFinisher finish)
+        {
+            this.Enqueue((ContinueCheck continue_on) => { return meth(continue_on, param); }, finish);
+        }
+
+        public void Enqueue(BackgroundThreadMethodOut meth, BackgroundThreadFinisher finish)
+        {
+            this.Enqueue((Form f, ContinueCheck continue_on) =>
+            {
+                var ob = meth(continue_on);
+                f.Invoke(finish, ob);
+            });
+        }
+
+
+
+        private void _BackgroundThread(object oargs)
+        {
+            var args = oargs as object[];
+            Thread.CurrentThread.Name = (args[1] == null) ? "Background Thread" : args[1] as String;
+
+            var form = args[0] as Form;
 
             while (this._ShouldContinueMethod())
             {
-                BackgroundThreadMethod args = null;
+                BackgroundQueueMethod btm = null;
 
                 lock (this._Queue)
                 {
@@ -68,33 +93,25 @@ namespace SamSeifert.Utilities.MultiThreading
                     else
                     {
                         this._Queue_CurrentlyWorking = true;
-                        args = this._Queue.Dequeue();
+                        btm = this._Queue.Dequeue();
                     }
                 }
 
-                if (args != null)
+                if (btm != null)
                 {
-                    args(this._ShouldContinueMethod);
+                    btm(form, this._ShouldContinueMethod);
 
                     lock (this._Queue)
                         this._Queue_CurrentlyWorking = false;
                 }
             }
 
-            this._Thread = null;
+            form.Invoke(
+                (Action)(() => {
+                    form.FormClosing -= this.FormClosing;
+                }));
 
-            if (this._ClosingForm != null)
-            {
-                Action a = () =>
-                {
-                    this._ClosingForm.FormClosing -= this.FormClosing;
-                    this._ClosingForm = null;
-                };
-
-                if (this._ClosingForm.IsDisposed) return;
-                else if (this._ClosingForm.InvokeRequired) this._ClosingForm.BeginInvoke(a);
-                else a();
-            }
+            this._Working = false;
         }
 
         private bool _ShouldContinueMethod()
@@ -124,7 +141,7 @@ namespace SamSeifert.Utilities.MultiThreading
         {
             get
             {
-                return this._Thread != null;
+                return this._Working;
             }
         }
 
