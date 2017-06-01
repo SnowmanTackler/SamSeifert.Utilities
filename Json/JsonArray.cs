@@ -9,25 +9,54 @@ namespace SamSeifert.Utilities.Json
 {
     public static class JsonArray
     {
+
         public static void Print(this object[] arg, CharWriter cw, StringWriter sw, string indent = "")
         {
             String nindent = indent + "\t";
             cw('[');
-            sw(Environment.NewLine);
-            bool first = true;
-            foreach (var obj in arg)
+
+            if (arg.Length != 0)
             {
-                if (first) first = false;
+                var o = arg[0];
+
+                if ((o is bool) ||
+                    (o is byte) ||
+                    (o is sbyte) ||
+                    (o is UInt16) ||
+                    (o is Int16) ||
+                    (o is UInt32) ||
+                    (o is Int32) ||
+                    (o is UInt64) ||
+                    (o is Int64) ||
+                    (o is float) ||
+                    (o is double) ||
+                    (o is decimal)
+                    )
+                {
+                    bool first = true;
+                    foreach (var obj in arg)
+                    {
+                        if (first) first = false;
+                        else sw(",");
+                        JsonParser.Print(obj, cw, sw, nindent);
+                    }
+                }
                 else
                 {
-                    cw(',');
+                    var sep = "," + Environment.NewLine + nindent;
                     sw(Environment.NewLine);
+                    bool first = true;
+                    foreach (var obj in arg)
+                    {
+                        if (first) first = false;
+                        else sw(sep);
+                        JsonParser.Print(obj, cw, sw, nindent);
+                    }
+                    sw(Environment.NewLine);
+                    sw(indent);
                 }
-                sw(nindent);
-                JsonParser.Print(obj, cw, sw, nindent);
+
             }
-            sw(Environment.NewLine);
-            sw(indent);
             cw(']');
         }
 

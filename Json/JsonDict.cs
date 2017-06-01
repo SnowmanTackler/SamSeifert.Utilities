@@ -46,6 +46,10 @@ namespace SamSeifert.Utilities.Json
             cw('}');
         }
 
+        /// <summary>
+        /// Custom JSON ToString
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return JsonParser.ToString(this);

@@ -60,7 +60,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="CustomControls\CenteringControl.cs">
-      <SubType>UserControl</SubType>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="CustomControls\CenteringControl.Designer.cs">
       <DependentUpon>CenteringControl.cs</DependentUpon>
