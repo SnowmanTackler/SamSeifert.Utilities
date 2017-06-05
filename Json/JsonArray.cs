@@ -44,7 +44,7 @@ namespace SamSeifert.Utilities.Json
                 else
                 {
                     var sep = "," + Environment.NewLine + nindent;
-                    sw(Environment.NewLine);
+                    sw(Environment.NewLine + nindent);
                     bool first = true;
                     foreach (var obj in arg)
                     {
