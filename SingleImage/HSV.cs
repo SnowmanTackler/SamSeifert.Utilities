@@ -49,6 +49,8 @@ namespace SamSeifert.CSCV
                 var sat = (sh_out.Sects[SectType.HSV_S] as SectArray).Data;
                 var val = (sh_out.Sects[SectType.HSV_V] as SectArray).Data;
 
+                float hh, ss, vv;
+
                 for (int y = 0; y < h; y++)
                 {
                     for (int x = 0; x < w; x++)
@@ -57,9 +59,14 @@ namespace SamSeifert.CSCV
                             Math.Max(0, Math.Min(1, R[y, x])),
                             Math.Max(0, Math.Min(1, G[y, x])),
                             Math.Max(0, Math.Min(1, B[y, x])),
-                            out hue[y, x],
-                            out sat[y, x],
-                            out val[y, x]);
+                            out hh,
+                            out ss,
+                            out vv);
+
+                        hue[y, x] = hh;
+                        sat[y, x] = ss;
+                        val[y, x] = vv;
+
                     }
                 }
 
@@ -106,6 +113,8 @@ namespace SamSeifert.CSCV
                 var G = (sh_out.Sects[SectType.RGB_G] as SectArray).Data;
                 var B = (sh_out.Sects[SectType.RGB_B] as SectArray).Data;
 
+                float rr, gg, bb;
+
                 for (int y = 0; y < h; y++)
                 {
                     for (int x = 0; x < w; x++)
@@ -114,9 +123,13 @@ namespace SamSeifert.CSCV
                             H[y, x],
                             Math.Max(0, Math.Min(1, S[y, x])),
                             Math.Max(0, Math.Min(1, V[y, x])),
-                            out R[y, x],
-                            out G[y, x],
-                            out B[y, x]);
+                            out rr,
+                            out gg,
+                            out bb);
+
+                        R[y, x] = rr;
+                        G[y, x] = gg;
+                        B[y, x] = bb;
                     }
                 }
 

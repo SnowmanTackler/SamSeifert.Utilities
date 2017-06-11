@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using MathNet.Numerics.LinearAlgebra;
+
 namespace SamSeifert.CSCV
 {
     public class SectArray : Sect
     {
-        public Single[,] Data { get { return this._Data; } }
-        private readonly Single[,] _Data = null;
+        public Matrix<float> Data { get { return this._Data; } }
+        private readonly Matrix<float> _Data = null;
         private readonly int _Width;
         private readonly int _Height;
 
@@ -36,9 +38,7 @@ namespace SamSeifert.CSCV
 
         public override Sect Clone()
         {
-            var s = new SectArray(this._Type, this._Width, this._Height);
-            this.CopyTo(s);
-            return s;
+            return new SectArray(this._Data.Clone(), this._Type);
         }
 
         public void SetValue(float val)
@@ -47,7 +47,7 @@ namespace SamSeifert.CSCV
             {
                 for (int x = 0; x < this._Width; x++)
                 {
-                    this._Data[y, x] = val;
+                    this._Data.At(y, x, val);
                 }
             }
         }
@@ -82,11 +82,19 @@ namespace SamSeifert.CSCV
         {
             get
             {
+#if DEBUG
                 return this._Data[y, x];
+#else
+                return this._Data.At(y, x);                  
+#endif
             }
             set
             {
+#if DEBUG
                 this._Data[y, x] = value;
+#else
+                this._Data.At(y, x, value);
+#endif
             }
         }
 
@@ -103,83 +111,18 @@ namespace SamSeifert.CSCV
         public SectArray(Single[,] data, SectType t)
             : base(t)
         {
+            this._Data = Matrix<float>.Build.DenseOfArray(data);
+            this._Height = this._Data.RowCount;
+            this._Width = this._Data.ColumnCount;
+        }
+
+        public SectArray(Matrix<float> data, SectType t)
+            : base(t)
+        {
             this._Data = data;
-            this._Height = data.GetLength(0);
-            this._Width = data.GetLength(1);
+            this._Height = this._Data.RowCount;
+            this._Width = this._Data.ColumnCount;
         }
-
-        internal void CopyTo(SectArray s)
-        {
-            Array.Copy(this._Data, s._Data, this._Width * this._Height);
-        }
-
-        public override Single getMinValue
-        {
-            get
-            {
-                float tracker = Single.MaxValue;
-
-                for (int y = 0; y < this._Height; y++)
-                    for (int x = 0; x < this._Width; x++)
-                        tracker = Math.Min(this._Data[y, x], tracker);
-
-                return tracker;
-            }
-        }
-
-        public override Single getMaxValue
-        {
-            get
-            {
-                float tracker = Single.MinValue;
-
-                for (int y = 0; y < this._Height; y++)
-                    for (int x = 0; x < this._Width; x++)
-                        tracker = Math.Max(this._Data[y, x], tracker);
-
-                return tracker;
-            }
-        }
-        public override Single getAverageValue
-        {
-            get
-            {
-                float tracker = 0;
-
-                for (int y = 0; y < this._Height; y++)
-                    for (int x = 0; x < this._Width; x++)
-                        tracker += this._Data[y, x];
-
-                return tracker / (this._Width * this._Height);
-            }
-        }
-
-        public Single getStandardDeviation
-        {
-            get
-            {
-                float average = this.getAverageValue;
-
-                Single f = 0, st = 0;
-
-                for (int y = 0; y < this._Height; y++)
-                {
-                    for (int x = 0; x < this._Width; x++)
-                    {
-                        f = this._Data[y, x] - average;
-                        st += (f * f);
-                    }
-                }
-
-                st /= this._Height * this._Width;
-                return (Single)Math.Sqrt(st);
-            }
-        }
-
-
-
-
-
 
 
         /// <summary>

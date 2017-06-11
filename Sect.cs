@@ -8,25 +8,61 @@ using SamSeifert.Utilities;
 
 namespace SamSeifert.CSCV
 {
-    public class Sect
+    public abstract class Sect
     {
+        public class Stats
+        {
+            public readonly float _Min = float.MaxValue;
+            public readonly float _Max = float.MinValue;
+            public readonly float _Mean = 0;
+            public readonly float _StandardDeviation = 0;
+
+            public Stats(Sect s)
+            {
+                if (s is SectHolder) throw new Exception();
+                var sz = s.getPrefferedSize();
+
+                float xi2 = 0;
+                float xi = 0;
+
+                for (int y = 0; y < sz.Height; y++)
+                {
+                    for (int x = 0; x < sz.Width; x++)
+                    {
+                        float val = s[y, x];
+                        this._Min = Math.Min(val, this._Min);
+                        this._Max = Math.Max(val, this._Max);
+                        this._Mean += val;
+
+                        xi += val;
+                        xi2 += val * val;
+                    }
+                }
+
+                int pixels = sz.Height * sz.Width;
+
+                this._Mean /= pixels;
+                this._StandardDeviation = (float)Math.Sqrt(this._Mean + (xi2 - 2 * this._Mean * xi) / pixels);
+            }
+        }
+
         public readonly SectType _Type;
+
+        public abstract Sect Clone();
+        public abstract Boolean isSquishy();
+        public abstract Size getPrefferedSize();
+        public abstract Sect Transpose();
 
         public Sect(SectType t)
         {
             this._Type = t;
         }
 
-        public virtual Boolean isSquishy()
+        public Stats getStats()
         {
-            throw new NotImplementedException();
+            return new Stats(this);
         }
-
-        public virtual Size getPrefferedSize()
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public virtual Single this[int y, int x]
         {
             get
@@ -68,49 +104,6 @@ namespace SamSeifert.CSCV
                         return 0;
 
                 }
-            }
-        }
-
-
-        /// <summary>
-        /// Returns a copy of this image.
-        /// </summary>
-        /// <returns></returns>
-        public virtual Sect Clone()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Should return a transposes copy of this image!
-        /// </summary>
-        /// <returns></returns>
-        public virtual Sect Transpose()
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual Single getMinValue
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public virtual Single getMaxValue
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public virtual Single getAverageValue
-        {
-            get
-            {
-                throw new NotImplementedException();
             }
         }
 
