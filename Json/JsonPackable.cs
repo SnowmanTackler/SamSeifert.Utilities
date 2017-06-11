@@ -8,6 +8,8 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Windows.Forms;
 
+using SamSeifert.Utilities;
+
 namespace SamSeifert.Utilities.Json
 {
     public interface JsonPackable
@@ -22,8 +24,9 @@ namespace SamSeifert.Utilities.Json
         {
             object outo;
             if (dict.TryGetValue(key, out outo))
-                nud.Value = MathUtil.Clamp(nud.Minimum, nud.Maximum, (decimal)(double)outo);
+                nud.Value = ((decimal)(double)outo).Clampp(nud.Minimum, nud.Maximum);
         }
+
 
         public static void Pack(this NumericUpDown nud, JsonDict dict, string key)
         {

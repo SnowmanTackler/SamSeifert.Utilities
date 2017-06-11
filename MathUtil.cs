@@ -6,41 +6,41 @@ using System.Threading.Tasks;
 
 namespace SamSeifert.Utilities
 {
-    public class MathUtil
+    public static class MathUtil
     {
-        public static int ModGuaranteePositive(int x, int mod)
+        public static int ModGuaranteePositive(this int x, int mod)
+        {
+            return (x % mod + mod) % mod;
+        }
+         
+        public static float ModGuaranteePositive(this float x, float mod)
         {
             return (x % mod + mod) % mod;
         }
 
-        public static float ModGuaranteePositive(float x, float mod)
-        {
-            return (x % mod + mod) % mod;
-        }
-
-        public static double ModGuaranteePositive(double x, double mod)
+        public static double ModGuaranteePositive(this double x, double mod)
         {
             return (x % mod + mod) % mod;
         }
 
 
 
-        public static int Clamp(int min, int max, int val)
+        public static int Clampp(this int val, int min, int max)
         {
             return Math.Min(max, Math.Max(min, val));
         }
 
-        public static float Clamp(float min, float max, float val)
+        public static float Clampp(this float val, float min, float max)
         {
             return Math.Min(max, Math.Max(min, val));
         }
 
-        public static double Clamp(double min, double max, double val)
+        public static double Clampp(this double val, double min, double max)
         {
             return Math.Min(max, Math.Max(min, val));
         }
 
-        public static Decimal Clamp(Decimal min, Decimal max, Decimal val)
+        public static Decimal Clampp(this Decimal val, Decimal min, Decimal max)
         {
             return Math.Min(max, Math.Max(min, val));
         }
@@ -48,12 +48,12 @@ namespace SamSeifert.Utilities
 
 
 
-        public static byte ClampByte(int val)
+        public static byte ClampByte(this int val)
         {
             return (byte) Math.Min(255, Math.Max(0, val));
         }
 
-        public static byte ClampByte(float val)
+        public static byte ClampByte(this float val)
         {
             return ClampByte((int)Math.Round(val));
         }
@@ -62,13 +62,43 @@ namespace SamSeifert.Utilities
 
 
 
+        public static int Squared(this int f)
+        {
+            return f * f;
+        }
+
+        public static float Squared(this float f)
+        {
+            return f * f;
+        }
+
+        public static double Squared(this double f)
+        {
+            return f * f;
+        }
 
 
-        public static void Clamp(float min, float max, float[] val)
+
+
+
+        public static void Clamp(this int[] val, int min, int max)
         {
             for (int i = 0; i < val.Length; i++)
-                val[i] = Clamp(min, max, val[i]);
+                val[i] = val[i].Clampp(min, max);
         }
+
+        public static void Clamp(this float[] val, float min, float max)
+        {
+            for (int i = 0; i < val.Length; i++)
+                val[i] = val[i].Clampp(min, max);
+        }
+
+        public static void Clamp(this double[] val, double min, double max)
+        {
+            for (int i = 0; i < val.Length; i++)
+                val[i] = val[i].Clampp(min, max);
+        }
+
 
 
 
