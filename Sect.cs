@@ -55,13 +55,15 @@ namespace SamSeifert.CSCV
                 switch (rt)
                 {
                     case ResizeType.Bilinear: // TODO Real Bilinear
-                        int xh = MathUtil.Clamp(0, sz.Width - 1, (int)Math.Ceiling(x));
-                        int xl = MathUtil.Clamp(0, sz.Width - 1, (int)Math.Floor(x));
-                        int yh = MathUtil.Clamp(0, sz.Height - 1, (int)Math.Ceiling(y));
-                        int yl = MathUtil.Clamp(0, sz.Height - 1, (int)Math.Floor(y));
+                        int xh = ((int)Math.Ceiling(x)).Clampp(0, sz.Width - 1);
+                        int xl = ((int)Math.Floor(x)).Clampp(0, sz.Width - 1);
+                        int yh = ((int)Math.Ceiling(y)).Clampp(0, sz.Height - 1);
+                        int yl = ((int)Math.Floor(y)).Clampp(0, sz.Height - 1);
                         return this[yh, xh] + this[yh, xl] + this[yl, xl] + this[yl, xh];
                     case ResizeType.NearestNeighbor:
-                        return this[MathUtil.Clamp(0, sz.Height - 1, (int)Math.Round(y)), MathUtil.Clamp(0, sz.Width - 1, (int)Math.Round(x))];
+                        return this[
+                            ((int)Math.Round(y)).Clampp(0, sz.Height - 1),
+                            ((int)Math.Round(x)).Clampp(0, sz.Width - 1)];
                     default:
                         return 0;
 
