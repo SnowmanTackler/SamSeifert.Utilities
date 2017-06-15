@@ -16,7 +16,7 @@ namespace SamSeifert.Utilities.MultiThreading
         private volatile bool _ShouldContinue = true;
         private volatile bool _Working = true;
 
-        public BackgroundQueue(Form f, String name)
+        public BackgroundQueue(Form f, String name, ThreadPriority tp = ThreadPriority.Normal)
         {
             if (f == null)
                 throw new ArgumentNullException();
@@ -27,7 +27,8 @@ namespace SamSeifert.Utilities.MultiThreading
                 new object[]
                 {
                     f,
-                    name
+                    name,
+                    tp
                 });
         }
 
@@ -75,9 +76,10 @@ namespace SamSeifert.Utilities.MultiThreading
         private void _BackgroundThread(object oargs)
         {
             var args = oargs as object[];
-            Thread.CurrentThread.Name = (args[1] == null) ? "Background Thread" : args[1] as String;
 
             var form = args[0] as Form;
+            Thread.CurrentThread.Name = (args[1] == null) ? "Background Thread" : args[1] as String;
+            Thread.CurrentThread.Priority = (ThreadPriority)args[2];
 
             while (this._ShouldContinueMethod())
             {
