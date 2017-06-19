@@ -10,6 +10,7 @@ namespace SamSeifert.Utilities.MultiThreading
 {
     public class BackgroundQueue
     {
+        private readonly Thread _Thread;
         private readonly Queue<BackgroundQueueMethod> _Queue = new Queue<BackgroundQueueMethod>();
         private bool _Queue_CurrentlyWorking = false;
 
@@ -23,7 +24,8 @@ namespace SamSeifert.Utilities.MultiThreading
 
             f.FormClosing += this.FormClosing;
 
-            (new Thread(this._BackgroundThread)).Start(
+            this._Thread = new Thread(this._BackgroundThread);
+            this._Thread.Start(
                 new object[]
                 {
                     f,
@@ -157,6 +159,11 @@ namespace SamSeifert.Utilities.MultiThreading
                     else return this._Queue.Count == 0;
                 }
             }
+        }
+
+        public void _ThreadSafe_Join()
+        {
+            this._Thread?.Join();
         }
     }
 }
