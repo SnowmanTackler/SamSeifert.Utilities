@@ -34,6 +34,14 @@ namespace SamSeifert.Utilities.MultiThreading
                 });
         }
 
+        public void Clear()
+        {
+            lock (this._Queue)
+            {
+                this._Queue.Clear();
+            }
+        }
+
         private void Enqueue(BackgroundQueueMethod meth)
         {
             lock (this._Queue)
