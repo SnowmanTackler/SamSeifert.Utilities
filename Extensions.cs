@@ -26,5 +26,12 @@ namespace SamSeifert.GLE
             return (v.RotateClockwise(-angle_degrees));
         }
 
+        public static Vector2 asDirectionFromRadians(this float angle)
+        {
+            return new Vector2(
+                (float)Math.Cos(angle),
+                (float)Math.Sin(angle));
+        }
+
     }
 }
