@@ -7,6 +7,7 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System.Runtime.InteropServices;
+using SamSeifert.Utilities;
 
 namespace SamSeifert.GLE
 {
@@ -25,6 +26,16 @@ namespace SamSeifert.GLE
         public static void Color4(float red, float green, float blue, float alpha)
         {
             GL.Color4(red, green, blue, alpha);
+        }
+
+        public static void Color4(Color color)
+        {
+            GL.Color4(color);
+        }
+
+        public static void Color4(Color color, float alpha)
+        {            
+            GL.Color4(color.R, color.G, color.B, ((int)Math.Round(alpha * 255)).ClampByte());
         }
 
         public static void ClearColor(Color c)
@@ -519,11 +530,6 @@ namespace SamSeifert.GLE
         public static void DeleteRenderbuffer(int buffer)
         {
             GL.DeleteRenderbuffer(buffer);
-        }
-
-        public static void Color4(Color color)
-        {
-            GL.Color4(color);
         }
 
         public static void DepthMask(bool flag)
