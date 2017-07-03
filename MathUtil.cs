@@ -109,7 +109,6 @@ namespace SamSeifert.Utilities
         {
             protected readonly float _Increment;
 
-            private bool _First = true;
             private float _Angle = 0;
             private int _TurnCount = 0;
 
