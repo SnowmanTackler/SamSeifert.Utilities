@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SamSeifert.Utilities.DataStructures;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -54,14 +55,21 @@ namespace SamSeifert.Utilities
     public class EnumParser<T>
         where T : struct
     {
-        private Dictionary<String, T> _Dict = new Dictionary<string, T>();
+        private readonly Dictionary<String, T> _Dict;
 
         public EnumParser()
         {
+            this._Dict = new Dictionary<string, T>();
+
             foreach (var e in EnumUtil.GetValues<T>())
-            {
                 _Dict[e.GetDescription()] = e;
-            }
+        }
+
+        public EnumParser(T default_return)
+        {
+            this._Dict = new DefaultDict<String, T>(default_return);
+            foreach (var e in EnumUtil.GetValues<T>())
+                _Dict[e.GetDescription()] = e;
         }
 
         public T this[String inp]
@@ -81,6 +89,14 @@ namespace SamSeifert.Utilities
                 if (inp == null) return default_return;
                 else if (this._Dict.TryGetValue(inp, out o)) return o;
                 else return default_return;
+            }
+        }
+
+        public void Add(string key, T t)
+        {
+            lock (this._Dict)
+            {
+                this._Dict[key] = t;
             }
         }
     }
