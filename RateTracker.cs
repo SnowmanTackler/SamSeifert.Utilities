@@ -12,8 +12,14 @@ namespace SamSeifert.Utilities
         private bool _First = true;
         private bool _Second = true;
         private DateTime _Last = DateTime.Now;
+        private readonly float _Alpha;
 
         int _VisbibleChangeCount = 0;
+
+        public RateTracker(float alpha = 0.1f)
+        {
+            this._Alpha = alpha;
+        }
 
         public void Update(System.Windows.Forms.Label l)
         {
@@ -39,9 +45,8 @@ namespace SamSeifert.Utilities
             }
             else
             {
-                const float alpha = 0.1f;
-                this._AverageElapsed *= (1 - alpha);
-                this._AverageElapsed += alpha * elapsed;
+                this._AverageElapsed *= (1 - this._Alpha);
+                this._AverageElapsed += this._Alpha * elapsed;
             }
 
             if (this._AverageElapsed < 0.0001f) return -1; // Can't track more than 10,000 Hz

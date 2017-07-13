@@ -59,20 +59,12 @@ namespace SamSeifert.Utilities.DataStructures
             this._Length++;
         }
 
-        public T this[int dex]
+        public Impulse<T> this[int dex]
         {
             get
             {
-                if (dex < this._Length) return this._Data[(this._Index + dex) % this._Data.Length]._T;
+                if (dex < this._Length) return this._Data[(this._Index + dex) % this._Data.Length];
                 else throw new IndexOutOfRangeException("In ImpulseManager");
-            }
-        }
-
-        public T Newest
-        {
-            get
-            {
-                return this[this._Length - 1];
             }
         }
 
@@ -105,11 +97,35 @@ namespace SamSeifert.Utilities.DataStructures
             else throw new IndexOutOfRangeException("In ImpulseManager");
         }
 
-        internal T Oldest
+        public T Oldest
+        {
+            get
+            {
+                return this.OldestImpulse._T;
+            }
+        }
+
+        public Impulse<T> OldestImpulse
         {
             get
             {
                 return this[0];
+            }
+        }
+
+        public T Newest
+        {
+            get
+            {
+                return this.NewestImpulse._T;
+            }
+        }
+
+        public Impulse<T> NewestImpulse
+        {
+            get
+            {
+                return this[this._Length - 1];
             }
         }
 
