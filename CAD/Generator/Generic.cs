@@ -101,7 +101,7 @@ namespace SamSeifert.GLE.CAD.Generator
 
             CadObject co = new CadObject(vs.ToArray(), ns.ToArray(), name);
 
-            co.setBoundingSphere(Vector3.Zero, radius);
+            co.SetBoundingSphere(Vector3.Zero, radius);
 
             return co;
         }

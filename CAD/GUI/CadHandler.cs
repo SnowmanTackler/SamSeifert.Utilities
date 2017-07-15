@@ -273,7 +273,7 @@ namespace SamSeifert.GLE.CAD.GUI
                 var co = this.checkedListBox1.Items[e.Index] as CadObject;
                 if (co != null)
                 {
-                    co.BoolDisplay = e.NewValue == CheckState.Checked;
+                    co._BoolDisplay = e.NewValue == CheckState.Checked;
                 }
             }
         }

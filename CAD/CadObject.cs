@@ -10,17 +10,18 @@ namespace SamSeifert.GLE.CAD
 {
     public class CadObject : DeleteableObject
     {
-        internal bool BoolUseTranslationAndRotation = false;
-        public bool BoolDisplay = true;
+        public bool _BoolDisplay = true;
+        public CadObject[] _Children = new CadObject[0];
+
+
         internal String _Name = "Untitled";
         internal Matrix4 _Matrix = Matrix4.Identity;
         internal ColorGL _Color = null;
+        internal Vector3[] _Vertices;
+        internal Vector3[] _Normals;
+        internal uint[] _Indices;
 
-        public CadObject[] Children = new CadObject[0];
-        internal Vector3[] Vertices;
-        internal Vector3[] Normals;
-        internal uint[] Indices;
-
+        private bool _BoolUseTranslationAndRotation = false;
         private bool _BoolSetupGL3 = false;
         private bool _BoolSetupGL4 = false;
         private int _IntList; // Used to support GL3
@@ -30,9 +31,9 @@ namespace SamSeifert.GLE.CAD
         internal enum GLType { GL3, GL4, UNK };
         internal GLType _GLType = GLType.UNK;
 
-        private bool BoundingSphereNeeded = true;
-        private Vector3 BoundingSphereCenter = Vector3.Zero;
-        private float BoundingSphereRadius = 0;
+        private bool _BoundingSphereNeeded = true;
+        private Vector3 _BoundingSphereCenter = Vector3.Zero;
+        private float _BoundingSphereRadius = 0;
 
         private static int UseColorTracker = 0;
         public static void NoColorOn() { UseColorTracker++; }
@@ -42,34 +43,18 @@ namespace SamSeifert.GLE.CAD
 
         public CadObject(CadObject[] cos, String name = "Group")
         {
-            if (cos != null) this.Children = cos;
+            if (cos != null) this._Children = cos;
             this._Name = name;
-        }
-
-        internal CadObject()
-        {
-        }
-
-        public void setMatrix(ref Matrix4 m)
-        {
-            this._Matrix = m;
-            this.BoolUseTranslationAndRotation = true;
-        }
-
-        public void multMatrix(Matrix4 m)
-        {
-            this.multMatrix(ref m);
-        }
-
-        public void multMatrix(ref Matrix4 m)
-        {
-            this._Matrix *= m;
         }
 
         internal CadObject(Vector3[] verts, Vector3[] norms, String name)
         {
             this._Name = name;
-            this.initializeWithVectorsAndNormals(verts, norms);
+            this.InitializeWithVectorsAndNormals(verts, norms);
+        }
+
+        internal CadObject()
+        {
         }
 
         public override string ToString()
@@ -77,11 +62,72 @@ namespace SamSeifert.GLE.CAD
             return this._Name + " " + this._GLType;
         }
 
+
+
+
+
+        public void SetMatrix(ref Matrix4 m)
+        {
+            this._Matrix = m;
+            this._BoolUseTranslationAndRotation = true;
+        }
+
+        public void Transform(Matrix4 m)
+        {
+            this.Transform(ref m);
+        }
+
+        public void Transform(ref Matrix4 m)
+        {
+            this._Matrix *= m;
+            this._BoolUseTranslationAndRotation = true;
+        }
+
+        public void SetUseTranslationAndRotation(bool arg, bool recursive = true)
+        {
+            this._BoolUseTranslationAndRotation = arg;
+            if (recursive) foreach (var e in this._Children) e.SetUseTranslationAndRotation(arg);
+        }
+
+        public void SetAlpha(float a)
+        {
+            if (this._Color != null) this._Color.setAlpha(a);
+            foreach (var e in this._Children) e.SetAlpha(a);
+        }
+
+        public void SetColor(ColorGL c, bool recursive = true)
+        {
+            this._Color = c;
+            if (recursive) foreach (var e in this._Children) e.SetColor(c, recursive);
+        }
+
+        public void SetBoundingSphere(Vector3 center, float radius)
+        {
+            this._BoundingSphereNeeded = false;
+            this._BoundingSphereCenter = center;
+            this._BoundingSphereRadius = radius;
+        }
+
+        public void GetBoundingSphere(out Vector3 center, out float radius)
+        {
+            this.UpdateBoundingSphere();
+            center = Vector3.Transform(this._BoundingSphereCenter, this._Matrix);
+            radius = this._BoundingSphereRadius;
+        }
+
+
+
+
+
+
+
+
+
         public void GLDelete()
         {
-            if (this.Children.Length > 0)
+            if (this._Children.Length > 0)
             {
-                foreach (CadObject co in this.Children) co.GLDelete();
+                foreach (CadObject co in this._Children) co.GLDelete();
             }
             else
             {
@@ -102,75 +148,71 @@ namespace SamSeifert.GLE.CAD
             }
         }
 
-        internal void initializeWithVectorsAndNormals(Vector3[] v, Vector3[] n)
+        public void Draw(bool useColor = true)
+        {
+            if (this._BoolDisplay)
+            {
+                if (this._BoolUseTranslationAndRotation)
+                {
+                    GL.PushMatrix();
+                    GL.MultMatrix(ref this._Matrix);
+                    this.Draw2(useColor);
+                    GL.PopMatrix();
+                }
+                else this.Draw2(useColor);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        internal void InitializeWithVectorsAndNormals(Vector3[] v, Vector3[] n)
         {
             uint count;
-            if (Helpers.ConsolidateData(v, n, out count, out this.Vertices, out this.Normals, out this.Indices)) this.initialize();
+            if (Helpers.ConsolidateData(v, n, out count, out this._Vertices, out this._Normals, out this._Indices)) this.Initialize();
             else this._GLType = GLType.UNK;
         }
 
-        internal void initializeWithVectorsAndNormalsSorted(Vector3[] v, Vector3[] n, uint[] ii)
+        internal void InitializeWithVectorsAndNormalsSorted(Vector3[] v, Vector3[] n, uint[] ii)
         {
-            this.Vertices = v;
-            this.Normals = n;
-            this.Indices = ii;
+            this._Vertices = v;
+            this._Normals = n;
+            this._Indices = ii;
 
-            this.initialize();
+            this.Initialize();
         }
 
-        internal void initialize()
+        internal void Initialize()
         {
             this.GLDelete();
 
-            if (this.Vertices.Length != this.Normals.Length)
+            if (this._Vertices.Length != this._Normals.Length)
             {
                 Console.WriteLine("CadObject." + System.Reflection.MethodBase.GetCurrentMethod().Name + " vertices and normals mismatch");
                 this._GLType = GLType.UNK;
                 return;
             }
 
-            this._BoolSetupGL4 = this.setupGL4();
+            this._BoolSetupGL4 = this.SetupGL4();
             if (this._BoolSetupGL4) this._GLType = GLType.GL4;
             else
             {
-                this._BoolSetupGL3 = this.setupGL3();
+                this._BoolSetupGL3 = this.SetupGL3();
                 if (this._BoolSetupGL3) this._GLType = GLType.GL3;
                 else this._GLType = GLType.UNK;
             }
         }
 
-        public void setUseTranslationAndRotation(bool arg, bool recursive = true)
-        {
-            this.BoolUseTranslationAndRotation = arg;
-            if (recursive) foreach (var e in this.Children) e.setUseTranslationAndRotation(arg);
-        }
-
-        public void setAlpha(float a)
-        {
-            if (this._Color != null) this._Color.setAlpha(a);
-            foreach (var e in this.Children) e.setAlpha(a);
-        }
-
-        public void setColor(ColorGL c, bool recursive = true)
-        {
-            this._Color = c;
-            if (recursive) foreach (var e in this.Children) e.setColor(c, recursive);
-        }
-
-        public void draw(bool useColor = true)
-        {
-            if (this.BoolDisplay)
-            {
-                if (this.BoolUseTranslationAndRotation)
-                {
-                    GL.PushMatrix();
-                    GL.MultMatrix(ref this._Matrix);
-                    this.draw2(useColor);
-                    GL.PopMatrix();
-                }
-                else this.draw2(useColor);
-            }
-        }
 
         /// <summary>
         /// Checks The Viewport to see if we're inside.
@@ -178,32 +220,32 @@ namespace SamSeifert.GLE.CAD
         /// </summary>
         /// <param name="useColor"></param>
         public static bool RenderOnlyOnscreenObjects = false;
-        private void draw2(bool useColor)
+        private void Draw2(bool useColor)
         {
             if (CadObject.RenderOnlyOnscreenObjects)
             {
-                this.updateBoundingSphere();
+                this.UpdateBoundingSphere();
 
-                if (this.BoundingSphereRadius == 0) return;
+                if (this._BoundingSphereRadius == 0) return;
 
-                var pos = Vector3.Transform(this.BoundingSphereCenter, GL.getMatrix(MatrixMode.Modelview)); // Convert to Camera POV
+                var pos = Vector3.Transform(this._BoundingSphereCenter, GL.getMatrix(MatrixMode.Modelview)); // Convert to Camera POV
 
-                if (pos.Length > this.BoundingSphereRadius) // If camera is not inside object
+                if (pos.Length > this._BoundingSphereRadius) // If camera is not inside object
                 {
-                    if (pos.Z + this.BoundingSphereRadius < -GLR.Projection_zFar) return; // Too far in front
-                    if (pos.Z - this.BoundingSphereRadius > 0) return; // behind camera
+                    if (pos.Z + this._BoundingSphereRadius < -GLR.Projection_zFar) return; // Too far in front
+                    if (pos.Z - this._BoundingSphereRadius > 0) return; // behind camera
 
                     {
                         // Check if object is to the right of the camera.
                         float angle = GLR.Projection_hFOV / 2;
                         angle -= MathHelper.DegreesToRadians(90);
                         Vector3 mover = new Vector3((float)Math.Sin(angle), 0, -(float)Math.Cos(angle));
-                        if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
+                        if (Vector3.Dot(pos + this._BoundingSphereRadius * mover, mover) < 0) return;
 
                         // Check if object is to the left of the camera.
                         mover.X *= -1;
                         // Object is to the left of fov
-                        if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
+                        if (Vector3.Dot(pos + this._BoundingSphereRadius * mover, mover) < 0) return;
                     }
 
                     {
@@ -211,26 +253,26 @@ namespace SamSeifert.GLE.CAD
                         float angle = GLR.Projection_vFOV / 2;
                         angle -= MathHelper.DegreesToRadians(90);
                         Vector3 mover = new Vector3(0, (float)Math.Sin(angle), -(float)Math.Cos(angle));
-                        if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
+                        if (Vector3.Dot(pos + this._BoundingSphereRadius * mover, mover) < 0) return;
 
                         // Check if object is below the camera.
                         mover.Y *= -1;
                         // Object is to the left of fov
-                        if (Vector3.Dot(pos + this.BoundingSphereRadius * mover, mover) < 0) return;
+                        if (Vector3.Dot(pos + this._BoundingSphereRadius * mover, mover) < 0) return;
                     }
                 }
             }
 
-            this.draw3(useColor);                            
+            this.Draw3(useColor);                            
         }
 
-        private void draw3(bool useColor)
+        private void Draw3(bool useColor)
         {
-            if (this.Children.Length > 0)
+            if (this._Children.Length > 0)
             {
-                foreach (CadObject co in this.Children)
+                foreach (CadObject co in this._Children)
                 {
-                    co.draw(useColor);
+                    co.Draw(useColor);
                 }
             }
             else
@@ -247,15 +289,15 @@ namespace SamSeifert.GLE.CAD
                             }
                         case GLType.GL3:
                             {
-                                if (this._BoolSetupGL3) this.drawGL3();
-                                else if (this.setupGL3()) this._BoolSetupGL3 = true;
+                                if (this._BoolSetupGL3) this.DrawGL3();
+                                else if (this.SetupGL3()) this._BoolSetupGL3 = true;
                                 else this._GLType = GLType.UNK;
                                 break;
                             }
                         case GLType.GL4:
                             {
-                                if (this._BoolSetupGL4) this.drawGL4();
-                                else if (this.setupGL4()) this._BoolSetupGL4 = true;
+                                if (this._BoolSetupGL4) this.DrawGL4();
+                                else if (this.SetupGL4()) this._BoolSetupGL4 = true;
                                 else this._GLType = GLType.UNK;
                                 break;
                             }
@@ -272,23 +314,23 @@ namespace SamSeifert.GLE.CAD
 
 
 
-        private void updateBoundingSphere()
+        private void UpdateBoundingSphere()
         {
-            if (this.BoundingSphereNeeded)
+            if (this._BoundingSphereNeeded)
             {
-                this.BoundingSphereNeeded = false;
+                this._BoundingSphereNeeded = false;
 
-                if (this.Children.Length > 0) // Have to combine children bounding spheres into one giant bounding sphere
+                if (this._Children.Length > 0) // Have to combine children bounding spheres into one giant bounding sphere
                 {
                     // Bitter's Algorithm
                     var spheres = new List<Tuple<Vector3, float>>();
 
                     // Get spheres for all children!
-                    foreach (var child in this.Children)
+                    foreach (var child in this._Children)
                     {
-                        child.updateBoundingSphere();
-                        spheres.Add(new Tuple<Vector3, float>(child.BoundingSphereCenter,
-                                                              child.BoundingSphereRadius));
+                        child.UpdateBoundingSphere();
+                        spheres.Add(new Tuple<Vector3, float>(child._BoundingSphereCenter,
+                                                              child._BoundingSphereRadius));
                     }
 
                     // Find Sphere Farthest from Origin
@@ -300,8 +342,8 @@ namespace SamSeifert.GLE.CAD
                         if (dist > furthest_distance)
                         {
                             furthest_distance = dist;
-                            this.BoundingSphereCenter = sphere.Item1;
-                            this.BoundingSphereRadius = sphere.Item2;
+                            this._BoundingSphereCenter = sphere.Item1;
+                            this._BoundingSphereRadius = sphere.Item2;
                         }
                     }
 
@@ -312,7 +354,7 @@ namespace SamSeifert.GLE.CAD
                         var furthest = new Tuple<Vector3, float>(Vector3.Zero, 0);
                         foreach (var sphere in spheres)
                         {
-                            float dist = (this.BoundingSphereCenter - sphere.Item1).Length + sphere.Item2;
+                            float dist = (this._BoundingSphereCenter - sphere.Item1).Length + sphere.Item2;
 
                             if (dist > furthest_distance)
                             {
@@ -321,13 +363,13 @@ namespace SamSeifert.GLE.CAD
                             }
                         }
 
-                        if (furthest_distance < 1.001f * this.BoundingSphereRadius) break; // 1.001 is wiggle room
+                        if (furthest_distance < 1.001f * this._BoundingSphereRadius) break; // 1.001 is wiggle room
 
-                        var center_to_farthest = furthest.Item1 - this.BoundingSphereCenter;
-                        float new_radius = (center_to_farthest.Length + this.BoundingSphereRadius + furthest.Item2) / 2;
+                        var center_to_farthest = furthest.Item1 - this._BoundingSphereCenter;
+                        float new_radius = (center_to_farthest.Length + this._BoundingSphereRadius + furthest.Item2) / 2;
                         center_to_farthest.Normalize();
-                        this.BoundingSphereCenter += center_to_farthest * (new_radius - this.BoundingSphereRadius);
-                        this.BoundingSphereRadius = new_radius;
+                        this._BoundingSphereCenter += center_to_farthest * (new_radius - this._BoundingSphereRadius);
+                        this._BoundingSphereRadius = new_radius;
                     }
                 }
                 else
@@ -337,9 +379,9 @@ namespace SamSeifert.GLE.CAD
                     var bestV = Vector3.Zero;
 
                     // Find Point Farthest From Origin
-                    foreach (var v in this.Vertices)
+                    foreach (var v in this._Vertices)
                     {
-                        var length = (this.Vertices[0] - v).LengthSquared;         
+                        var length = (this._Vertices[0] - v).LengthSquared;         
                         if (length > furthest_distance)
                         {
                             furthest_distance = length;
@@ -351,7 +393,7 @@ namespace SamSeifert.GLE.CAD
                     var circlePoint1 = bestV;
 
                     // Find Point Farthest From That Point
-                    foreach (var v in this.Vertices)
+                    foreach (var v in this._Vertices)
                     {
                         var length = (circlePoint1 - v).LengthSquared;
 
@@ -363,17 +405,17 @@ namespace SamSeifert.GLE.CAD
                     }
 
                     // Setup Sphere
-                    this.BoundingSphereCenter = (circlePoint1 + bestV) / 2;
-                    this.BoundingSphereRadius = (circlePoint1 - bestV).Length / 2;
+                    this._BoundingSphereCenter = (circlePoint1 + bestV) / 2;
+                    this._BoundingSphereRadius = (circlePoint1 - bestV).Length / 2;
 
                     // Find farthest spheres not enclosed by bigger sphere
                     while (true)
                     {
                         furthest_distance = 0;
                         var furthest = Vector3.Zero;
-                        foreach (var v in this.Vertices)
+                        foreach (var v in this._Vertices)
                         {
-                            float dist = (this.BoundingSphereCenter - v).Length;
+                            float dist = (this._BoundingSphereCenter - v).Length;
 
                             if (dist > furthest_distance)
                             {
@@ -382,35 +424,20 @@ namespace SamSeifert.GLE.CAD
                             }
                         }
 
-                        if (furthest_distance < 1.001f * this.BoundingSphereRadius) break; // 1.001 is wiggle room
+                        if (furthest_distance < 1.001f * this._BoundingSphereRadius) break; // 1.001 is wiggle room
 
                         // Expand Spherer to Include Furthest
-                        var center_to_farthest = furthest - this.BoundingSphereCenter;
-                        float new_radius = (center_to_farthest.Length + this.BoundingSphereRadius) / 2;
+                        var center_to_farthest = furthest - this._BoundingSphereCenter;
+                        float new_radius = (center_to_farthest.Length + this._BoundingSphereRadius) / 2;
                         center_to_farthest.Normalize();
-                        this.BoundingSphereCenter += center_to_farthest * (new_radius - this.BoundingSphereRadius);
-                        this.BoundingSphereRadius = new_radius;
+                        this._BoundingSphereCenter += center_to_farthest * (new_radius - this._BoundingSphereRadius);
+                        this._BoundingSphereRadius = new_radius;
                     }
                 }
 
-                this.BoundingSphereRadius *= 1.001f; // Just give a little clearance.
+                this._BoundingSphereRadius *= 1.001f; // Just give a little clearance.
             }
         }
-
-        public void setBoundingSphere(Vector3 center, float radius)
-        {
-            this.BoundingSphereNeeded = false;
-            this.BoundingSphereCenter = center;
-            this.BoundingSphereRadius = radius;
-        }
-
-        public void getBoundingSphere(out Vector3 center, out float radius)
-        {
-            this.updateBoundingSphere();
-            center = Vector3.Transform(this.BoundingSphereCenter, this._Matrix);
-            radius = this.BoundingSphereRadius;
-        }
-
 
 
 
@@ -421,17 +448,17 @@ namespace SamSeifert.GLE.CAD
 
 
         // GL Lists are Depracted in GL4
-        private bool setupGL3()
+        private bool SetupGL3()
         {
             this._IntList = GL.GenLists(1);
             GL.NewList(this._IntList, ListMode.Compile);
             {
                 GL.Begin(PrimitiveType.Triangles);
                 {
-                    foreach (var i in this.Indices)
+                    foreach (var i in this._Indices)
                     {
-                        GL.Normal3(this.Normals[i]);
-                        GL.Vertex3(this.Vertices[i]);
+                        GL.Normal3(this._Normals[i]);
+                        GL.Vertex3(this._Vertices[i]);
                     }
                 }
                 GL.End();
@@ -441,7 +468,7 @@ namespace SamSeifert.GLE.CAD
             return true;
         }
 
-        private void drawGL3()
+        private void DrawGL3()
         {
             GL.CallList(this._IntList);
         }
@@ -469,13 +496,13 @@ namespace SamSeifert.GLE.CAD
 
 
 
-        private bool setupGL4()
+        private bool SetupGL4()
         {
-            var idata = new Vector3[Vertices.Length * 2];
-            for (int i = 0; i < Vertices.Length; i ++)
+            var idata = new Vector3[_Vertices.Length * 2];
+            for (int i = 0; i < _Vertices.Length; i ++)
             {
-                idata[i * 2] = this.Vertices[i];
-                idata[i * 2 + 1] = this.Normals[i];
+                idata[i * 2] = this._Vertices[i];
+                idata[i * 2 + 1] = this._Normals[i];
             }
 
             int bufferSize;
@@ -489,10 +516,10 @@ namespace SamSeifert.GLE.CAD
             if (bufferSizeE != bufferSize) return false;
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 
-            bufferSizeE = this.Indices.Length * sizeof(uint);
+            bufferSizeE = this._Indices.Length * sizeof(uint);
             GL.GenBuffers(1, out _IntIndicesBufferID);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IntIndicesBufferID);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(bufferSizeE), this.Indices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(bufferSizeE), this._Indices, BufferUsageHint.StaticDraw);
             GL.GetBufferParameter(BufferTarget.ElementArrayBuffer, BufferParameterName.BufferSize, out bufferSize);
             if (bufferSizeE != bufferSize) return false;
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
@@ -500,7 +527,7 @@ namespace SamSeifert.GLE.CAD
             return true;
         }
 
-        private void drawGL4()
+        private void DrawGL4()
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, _IntInterleaveBufferID);
             GL.VertexPointer(3, VertexPointerType.Float, Vector3.SizeInBytes * 2, IntPtr.Zero);
@@ -510,7 +537,7 @@ namespace SamSeifert.GLE.CAD
             GL.EnableClientState(ArrayCap.NormalArray);
 
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _IntIndicesBufferID);
-            GL.DrawElements(PrimitiveType.Triangles, this.Indices.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.DrawElements(PrimitiveType.Triangles, this._Indices.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
 
             GL.DisableClientState(ArrayCap.VertexArray);
             GL.DisableClientState(ArrayCap.NormalArray);
@@ -539,13 +566,13 @@ namespace SamSeifert.GLE.CAD
         internal void ConsolidateMatrices(List<CadObject> all_objects, Matrix4 m4)
         {
             all_objects.Add(this);
-            if (this.BoolUseTranslationAndRotation)
+            if (this._BoolUseTranslationAndRotation)
             {
                 m4 = this._Matrix * m4;
-                this.BoolUseTranslationAndRotation = false;
+                this._BoolUseTranslationAndRotation = false;
                 this._Matrix = Matrix4.Identity;
             }
-            foreach (var child in this.Children)
+            foreach (var child in this._Children)
             {
                 child.ConsolidateMatrices(all_objects, m4);
             }
@@ -555,37 +582,37 @@ namespace SamSeifert.GLE.CAD
         internal void TransformPoints(ref Matrix4 m4)
         {
             Vector4 t = Vector4.Zero;
-            if (Vertices != null)
+            if (_Vertices != null)
             {
-                for (int i = 0; i < Vertices.Length; i++)
+                for (int i = 0; i < _Vertices.Length; i++)
                 {
-                    t.X = Vertices[i].X;
-                    t.Y = Vertices[i].Y;
-                    t.Z = Vertices[i].Z;
+                    t.X = _Vertices[i].X;
+                    t.Y = _Vertices[i].Y;
+                    t.Z = _Vertices[i].Z;
                     t.W = 1;
 
                     t = Vector4.Transform(t, m4);
 
-                    Vertices[i].X = t.X;
-                    Vertices[i].Y = t.Y;
-                    Vertices[i].Z = t.Z;
+                    _Vertices[i].X = t.X;
+                    _Vertices[i].Y = t.Y;
+                    _Vertices[i].Z = t.Z;
                 }
             }
 
-            if (Normals != null)
+            if (_Normals != null)
             {
-                for (int i = 0; i < Normals.Length; i++)
+                for (int i = 0; i < _Normals.Length; i++)
                 {
-                    t.X = Normals[i].X;
-                    t.Y = Normals[i].Y;
-                    t.Z = Normals[i].Z;
+                    t.X = _Normals[i].X;
+                    t.Y = _Normals[i].Y;
+                    t.Z = _Normals[i].Z;
                     t.W = 0;
 
                     t = Vector4.Transform(t, m4);
 
-                    Normals[i].X = t.X;
-                    Normals[i].Y = t.Y;
-                    Normals[i].Z = t.Z;
+                    _Normals[i].X = t.X;
+                    _Normals[i].Y = t.Y;
+                    _Normals[i].Z = t.Z;
                 }
             }
         }

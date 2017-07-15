@@ -12,7 +12,7 @@ namespace SamSeifert.GLE.CAD.Generator
         public static CadObject Create(Action a, Vector3[] vertices)
         {
             var co = new CadObject();
-            co.Vertices = vertices;
+            co._Vertices = vertices;
             co.AnonymousDraw = a;
             return co;
         }

@@ -44,7 +44,7 @@ namespace SamSeifert.GLE.CAD.GUI
             {
                 var save = new List<String>();
 
-                foreach (var ln in this._CadObject.Vertices)
+                foreach (var ln in this._CadObject._Vertices)
                 {
                     save.Add(ln.X + "," + ln.Y + "," + ln.Z);
                 }
@@ -77,7 +77,7 @@ namespace SamSeifert.GLE.CAD.GUI
         {
             TextWriter tw = new StreamWriter(path);
 
-            if (co.Children.Length == 0)
+            if (co._Children.Length == 0)
             {
                 Single[] x;
                 x = co._Color._Ambient; tw.WriteLine(x[0] + "," + x[1] + "," + x[2] + "," + x[3]);
@@ -85,21 +85,21 @@ namespace SamSeifert.GLE.CAD.GUI
                 x = co._Color._Emission; tw.WriteLine(x[0] + "," + x[1] + "," + x[2] + "," + x[3]);
                 x = co._Color._Specular; tw.WriteLine(x[0] + "," + x[1] + "," + x[2] + "," + x[3]);
                 x = co._Color._Shininess; tw.WriteLine(x[0]);
-                tw.WriteLine(co.Indices.Length); foreach (var i in co.Indices) tw.WriteLine(i);
+                tw.WriteLine(co._Indices.Length); foreach (var i in co._Indices) tw.WriteLine(i);
 
-                tw.WriteLine((co.Vertices.Length * 2));
-                for (int i = 0; i < co.Vertices.Length; i++)
+                tw.WriteLine((co._Vertices.Length * 2));
+                for (int i = 0; i < co._Vertices.Length; i++)
                 {
-                    tw.WriteLine(FormSaveAs.forVec(co.Vertices[i]));
-                    tw.WriteLine(FormSaveAs.forVec(co.Normals[i]));
+                    tw.WriteLine(FormSaveAs.forVec(co._Vertices[i]));
+                    tw.WriteLine(FormSaveAs.forVec(co._Normals[i]));
                 }
             }
             else
             {
                 tw.WriteLine("CHILD");
-                for (int i = 0; i < co.Children.Length; i++)
+                for (int i = 0; i < co._Children.Length; i++)
                 {
-                    CadObject c = co.Children[i];
+                    CadObject c = co._Children[i];
 
                     ;
 
@@ -199,9 +199,9 @@ namespace SamSeifert.GLE.CAD.GUI
 
             save.Add("<" + match0 + ">");
 
-            if (this._CadObject.Children.Length == 0)
+            if (this._CadObject._Children.Length == 0)
                 save.AddRange(FormSaveAs.getDataForObject(this._CadObject));
-            else foreach (CadObject co in this._CadObject.Children)
+            else foreach (CadObject co in this._CadObject._Children)
                  save.AddRange(FormSaveAs.getDataForObject(co));
 
             File.WriteAllLines(this.textBox1.Text, save, Encoding.UTF8);
@@ -274,14 +274,14 @@ namespace SamSeifert.GLE.CAD.GUI
             var m2a = new List<String>();
             var m3a = new List<String>();
 
-            foreach (var vec in co.Vertices)
+            foreach (var vec in co._Vertices)
                 m1a.Add(vec.X + "," + vec.Y + "," + vec.Z + " ");
 
-            foreach (var vec in co.Normals)
+            foreach (var vec in co._Normals)
                 m2a.Add(vec.X + "," + vec.Y + "," + vec.Z + " ");
 
-            for (int i = 0; i < co.Indices.Length; i++)
-                m3a.Add(co.Indices[i] + (((i + 1) % 3 == 0) ? " " : ","));
+            for (int i = 0; i < co._Indices.Length; i++)
+                m3a.Add(co._Indices[i] + (((i + 1) % 3 == 0) ? " " : ","));
 
             return
                 m1 + "=\"" + String.Join("", m1a) + "\" " +

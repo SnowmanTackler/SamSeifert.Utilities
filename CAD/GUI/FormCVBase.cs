@@ -108,7 +108,7 @@ namespace SamSeifert.GLE.CAD.GUI
                 foreach (var o in this.cadHandler1.checkedListBox1.Items)
                 {
                     var co = o as CadObject;
-                    if (co != null) co.draw(true);
+                    if (co != null) co.Draw(true);
                 }
 
                 GL.Enable(EnableCap.ColorMaterial);

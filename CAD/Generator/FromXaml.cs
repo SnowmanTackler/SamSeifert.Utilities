@@ -56,9 +56,8 @@ namespace SamSeifert.GLE.CAD.Generator
                 useEmission
                 );
 
-            co.BoolUseTranslationAndRotation = true;
-
-            co._Matrix *= Matrix4.CreateTranslation(xOff, yOff, zOff);
+            co.SetUseTranslationAndRotation(true, false);
+            co.Transform(Matrix4.CreateTranslation(xOff, yOff, zOff));
 
             if (!reduceComplexity)
             {
@@ -74,13 +73,13 @@ namespace SamSeifert.GLE.CAD.Generator
 
             for (int i = 0; i < all.Count; i++)
             {
-                var linq = all[i].Vertices;
+                var linq = all[i]._Vertices;
                 if ((linq == null) || (linq.Length == 0))
                 {
                     all[i].GLDelete();
                     all.RemoveAt(i--);
                 }
-                else all[i].Children = new CadObject[0];
+                else all[i]._Children = new CadObject[0];
             }
 
             // Console.WriteLine("Removing Tree: " + old + " to " + all.Count);
@@ -99,18 +98,18 @@ namespace SamSeifert.GLE.CAD.Generator
                 {
                     if (ColorGL.CheckMatch(all[i]._Color, all[j]._Color))
                     {
-                        for (int dex = 0; dex < all[j].Indices.Length; dex++)
-                            all[j].Indices[dex] += (uint)verts.Count; // CHANGE INDICES
+                        for (int dex = 0; dex < all[j]._Indices.Length; dex++)
+                            all[j]._Indices[dex] += (uint)verts.Count; // CHANGE INDICES
 
-                        verts.AddRange(all[j].Vertices);
-                        norms.AddRange(all[j].Normals);
-                        dices.AddRange(all[j].Indices);
+                        verts.AddRange(all[j]._Vertices);
+                        norms.AddRange(all[j]._Normals);
+                        dices.AddRange(all[j]._Indices);
 
                         if (i != j) all.RemoveAt(j--); // dont delete the first one!
                     }
                 }
 
-                all[i].initializeWithVectorsAndNormalsSorted(verts.ToArray(), norms.ToArray(), dices.ToArray());
+                all[i].InitializeWithVectorsAndNormalsSorted(verts.ToArray(), norms.ToArray(), dices.ToArray());
             }
             // Console.WriteLine("Combine Colors: " + old + " to " + all.Count);
 
@@ -183,19 +182,19 @@ namespace SamSeifert.GLE.CAD.Generator
 
             for (int i = 0; i < ret.Count; i++)
             {
-                if (ret[i].Children != null)
-                    if (ret[i].Children.Length != 0)
+                if (ret[i]._Children != null)
+                    if (ret[i]._Children.Length != 0)
                         continue;
 
-                if (ret[i].Vertices != null)
-                    if (ret[i].Vertices.Length != 0)
+                if (ret[i]._Vertices != null)
+                    if (ret[i]._Vertices.Length != 0)
                         continue;
 
                 ret.RemoveAt(i);
                 i--;
             }
 
-            co.Children = ret.ToArray();
+            co._Children = ret.ToArray();
 
             return co;
         }
@@ -374,7 +373,7 @@ namespace SamSeifert.GLE.CAD.Generator
                                                             verts2array[j].Y *= yScale;
                                                             verts2array[j].Z *= zScale;
                                                         }
-                                                        co.initializeWithVectorsAndNormals(verts2array, norms2array);
+                                                        co.InitializeWithVectorsAndNormals(verts2array, norms2array);
                                                         break;
                                                     }
                                                 default:
@@ -435,7 +434,7 @@ namespace SamSeifert.GLE.CAD.Generator
                                                     if (points.Count == 16)
                                                     {
                                                         int i = 0;
-                                                        co.BoolUseTranslationAndRotation = true;
+                                                        co.SetUseTranslationAndRotation(true, false);
                                                         co._Matrix.M11 = (float)points[i++];
                                                         co._Matrix.M12 = (float)points[i++];
                                                         co._Matrix.M13 = (float)points[i++];
