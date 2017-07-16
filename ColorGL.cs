@@ -141,11 +141,18 @@ namespace SamSeifert.GLE
 
         public ColorGL Clone()
         {
+            Func<float[], float[]> ca = (float[] fs) =>
+            {
+                var ret = new float[fs.Length];
+                Array.Copy(fs, ret, fs.Length);
+                return ret;
+            };
+
             return new ColorGL(
-                this._Ambient,
-                this._Diffuse,
-                this._Emission,
-                this._Specular,
+                ca(this._Ambient),
+                ca(this._Diffuse),
+                ca(this._Emission),
+                ca(this._Specular),
                 this._Shininess[0]
                 );
         }
