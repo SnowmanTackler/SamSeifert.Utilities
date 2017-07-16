@@ -12,11 +12,11 @@ namespace SamSeifert.GLE
     public class ColorGL
     {
         private float r, g, b;
-        public float[] _Ambient = new float[] { 0f, 0f, 0f, 1.0f };
-        public float[] _Diffuse = new float[] { 0f, 0f, 0f, 1.0f };
-        public float[] _Emission = new float[] { 0f, 0f, 0f, 1.0f };
-        public float[] _Specular = new float[] { 0f, 0f, 0f, 1.0f };        
-        public float[] _Shininess = new float[] { 0 }; // max 128
+        public readonly float[] _Ambient = new float[] { 0f, 0f, 0f, 1.0f };
+        public readonly float[] _Diffuse = new float[] { 0f, 0f, 0f, 1.0f };
+        public readonly float[] _Emission = new float[] { 0f, 0f, 0f, 1.0f };
+        public readonly float[] _Specular = new float[] { 0f, 0f, 0f, 1.0f };        
+        public readonly float[] _Shininess = new float[] { 0 }; // max 128
 
         public ColorGL()
         {
@@ -137,6 +137,17 @@ namespace SamSeifert.GLE
             this._Specular[0] = s * this.r;
             this._Specular[1] = s * this.g;
             this._Specular[2] = s * this.b;
+        }
+
+        public ColorGL Clone()
+        {
+            return new ColorGL(
+                this._Ambient,
+                this._Diffuse,
+                this._Emission,
+                this._Specular,
+                this._Shininess[0]
+                );
         }
     }
 }
