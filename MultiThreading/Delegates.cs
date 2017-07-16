@@ -9,6 +9,10 @@ namespace SamSeifert.Utilities.MultiThreading
 {
     internal delegate void BackgroundQueueMethod(Form f, ContinueCheck continue_on);
 
+    /// <summary>
+    /// Returns true if thread should keep going.
+    /// </summary>
+    /// <returns></returns>
     public delegate bool ContinueCheck();
 
     public delegate void   BackgroundThreadMethod(ContinueCheck continue_on);

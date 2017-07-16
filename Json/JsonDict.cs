@@ -100,6 +100,21 @@ namespace SamSeifert.Utilities.Json
             return empty_or_error_value;
         }
 
+        public bool asBool(String key)
+        {
+            return (bool)this[key];
+        }
+
+        public bool asBool(String key, bool empty_or_error_value)
+        {
+            object outo;
+            if (this.TryGetValue(key, out outo))
+                if (outo is bool)
+                    return (bool)outo;
+
+            return empty_or_error_value;
+        }
+
 
         // //////////////////// DEFAULTS
 
@@ -112,6 +127,31 @@ namespace SamSeifert.Utilities.Json
         {
             return this.asGeneric(key, empty_or_error_value);
         }
+
+
+
+        // /////////////////// ADDERS
+
+        public void addInt(String key, int f)
+        {
+            this[key] = (double)f;
+        }
+
+        public void addFloat(String key, float f)
+        {
+            this[key] = (double)f;
+        }
+
+        public void addDouble(String key, double f)
+        {
+            this[key] = f;
+        }
+
+        public void addBool(String key, bool f)
+        {
+            this[key] = f;
+        }
+
 
 
 
