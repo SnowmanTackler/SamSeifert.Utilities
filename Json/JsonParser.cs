@@ -111,6 +111,26 @@ namespace SamSeifert.Utilities.Json
             Console.Write(Environment.NewLine);
         }
 
+
+        public static void Print(Object o, CharWriter cw)
+        {
+            StringWriter sw = (String stringg) =>
+            {
+                foreach (char charr in stringg)
+                {
+                    cw(charr);
+                }
+            };
+            JsonParser.Print(o, cw, sw);
+        }
+
+        /// <summary>
+        /// Not sure if StringWriter is faster than char writer for all streams, so let user specify both
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="cw"></param>
+        /// <param name="sw"></param>
+        /// <param name="indent"></param>
         public static void Print(Object o, CharWriter cw, StringWriter sw, string indent = "")
         {
             if (o is String) JsonParser.ToLiteral(o as String, cw);
