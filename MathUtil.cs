@@ -12,7 +12,7 @@ namespace SamSeifert.Utilities
         {
             return (x % mod + mod) % mod;
         }
-         
+
         public static float ModGuaranteePositive(this float x, float mod)
         {
             return (x % mod + mod) % mod;
@@ -22,6 +22,30 @@ namespace SamSeifert.Utilities
         {
             return (x % mod + mod) % mod;
         }
+
+        /// <summary>
+        /// Returns mod X between min and max.  Helpful for convertering any angle to +- 180 degrees
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static float ModGuaranteeRange(this float x, float min, float max)
+        {
+            return min + ModGuaranteePositive(x - min, max - min);
+        }
+
+        /// <summary>
+        /// Returns mod X between +/- lim.  Helpful for convertering any angle to +- 180 degrees
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="lim"></param>
+        /// <returns></returns>
+        public static float ModGuaranteeRangeAbs(this float x, float lim)
+        {
+            return ModGuaranteeRange(x, -lim, lim);
+        }
+
 
 
 
