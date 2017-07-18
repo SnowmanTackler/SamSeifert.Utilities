@@ -133,7 +133,7 @@ namespace SamSeifert.GLE
             GL.LinkProgram(shader);
         }
 
-        public static void GetProgram(int shader, ProgramParameter validateStatus, out int param)
+        public static void GetProgram(int shader, GetProgramParameterName validateStatus, out int param)
         {
             GL.GetProgram(shader, validateStatus, out param);
         }

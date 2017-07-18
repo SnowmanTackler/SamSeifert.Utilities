@@ -56,7 +56,7 @@ namespace SamSeifert.GLE
         {
             int param;
             GL.ValidateProgram(this._GL_Program);
-            GL.GetProgram(this._GL_Program, ProgramParameter.ValidateStatus, out param);
+            GL.GetProgram(this._GL_Program, GetProgramParameterName.ValidateStatus, out param);
             if (param == 0)
             {
                 Logger.WriteLine("SamSeifert.GLE.Shaders: CATASTOPHIC ERROR");
@@ -83,7 +83,7 @@ namespace SamSeifert.GLE
                     int param;
 
                     GL.LinkProgram(shader);
-                    GL.GetProgram(shader, ProgramParameter.LinkStatus, out param);
+                    GL.GetProgram(shader, GetProgramParameterName.LinkStatus, out param);
                     if (param == 0)
                     {
                         Logger.WriteLine("SamSeifert.GLE.Shaders: CATASTOPHIC ERROR");
