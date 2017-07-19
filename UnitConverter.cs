@@ -13,6 +13,11 @@ namespace SamSeifert.Utilities
             return (fahrenheit - 32) * (5 / 9.0f);
         }
 
+        public static float CelsiusToFahrenheit(float celsius)
+        {
+            return 32 + celsius * (9 / 5.0f);
+        }
+
         public static float FeetToMeters(float feet)
         {
             return 0.3048f * feet;

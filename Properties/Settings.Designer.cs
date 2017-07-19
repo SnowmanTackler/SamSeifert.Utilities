@@ -70,5 +70,17 @@ namespace SamSeifert.Utilities.Properties {
                 this["FormPositionSaved"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{}")]
+        public string FilePickers {
+            get {
+                return ((string)(this["FilePickers"]));
+            }
+            set {
+                this["FilePickers"] = value;
+            }
+        }
     }
 }

@@ -18,5 +18,6 @@ namespace SamSeifert.Utilities
         {
             return new MemoryStream(e.GetBytes(s));
         }
+
     }
 }

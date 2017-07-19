@@ -53,18 +53,50 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayUtil.cs" />
     <Compile Include="ColorUtil.cs" />
     <Compile Include="ControlUtil.cs" />
+    <Compile Include="CustomControls\ButtonDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControls\CenteringControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControls\CenteringControl.Designer.cs">
+      <DependentUpon>CenteringControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\CheckedListBoxUpDown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\CheckedListBoxUpDown.Designer.cs">
+      <DependentUpon>CheckedListBoxUpDown.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomControls\DoubleBufferedForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CustomControls\DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomControls\EnumPicker.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="CustomControls\FilePicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\FilePicker.Designer.cs">
+      <DependentUpon>FilePicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomControls\ListBoxUpDown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CustomControls\ListBoxUpDown.Designer.cs">
+      <DependentUpon>ListBoxUpDown.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataStructures\DefaultDict.cs" />
+    <Compile Include="DataStructures\ImpulseManager.cs" />
     <Compile Include="EnumerableUtil.cs" />
     <Compile Include="EnumUtil.cs" />
     <Compile Include="FileParsing\BracketFile.cs" />
-    <Compile Include="FileParsing\JsonParser.cs" />
     <Compile Include="FileParsing\TagFile.cs" />
     <Compile Include="GlobalEvents.cs" />
     <Compile Include="CustomControls\HueFilter.cs">
@@ -73,21 +105,44 @@
     <Compile Include="CustomControls\HueFilter.Designer.cs">
       <DependentUpon>HueFilter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Json\JsonArray.cs" />
+    <Compile Include="Json\JsonDict.cs" />
+    <Compile Include="Json\JsonPackable.cs" />
+    <Compile Include="Json\JsonParser.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="MiscUtil.cs" />
     <Compile Include="MathUtil.cs" />
+    <Compile Include="MultiThreading\BackgroundQueue.cs" />
+    <Compile Include="MultiThreading\BackgroundThread.cs" />
+    <Compile Include="MultiThreading\Delegates.cs" />
+    <Compile Include="Networking\Destination.cs" />
+    <Compile Include="Permuatate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="RateTracker.cs" />
     <Compile Include="ScreenCapture.cs" />
     <Compile Include="Statistics.cs" />
     <Compile Include="StringUtil.cs" />
+    <Compile Include="TableLayoutPanelUtil.cs" />
     <Compile Include="UnitConverter.cs" />
+    <EmbeddedResource Include="CustomControls\CenteringControl.resx">
+      <DependentUpon>CenteringControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\CheckedListBoxUpDown.resx">
+      <DependentUpon>CheckedListBoxUpDown.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\FilePicker.resx">
+      <DependentUpon>FilePicker.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomControls\HueFilter.resx">
       <DependentUpon>HueFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomControls\ListBoxUpDown.resx">
+      <DependentUpon>ListBoxUpDown.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -106,6 +161,16 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SpriteDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SpriteUp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Error.png" />
+    <None Include="Resources\Plus.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -56,8 +56,7 @@ namespace SamSeifert.Utilities.FileParsing
 
                 length = start - contextstart - 1;
 
-                if (false) ;
-                else if (s.Equals(bracketType1Open))
+                if (s.Equals(bracketType1Open))
                 {
                     list.Add(BracketFile.ParseText(
                         ref input,

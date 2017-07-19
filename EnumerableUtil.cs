@@ -73,5 +73,9 @@ namespace SamSeifert.Utilities
             return result;
         }
 
+        public static T[] SubArray<T>(this T[] data, int index)
+        {
+            return data.SubArray(index, data.Length - index);
+        }
     }
 }
