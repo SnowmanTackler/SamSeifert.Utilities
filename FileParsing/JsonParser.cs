@@ -182,6 +182,17 @@ namespace SamSeifert.Utilities.FileParsing
                         }
                         else throw new Exception("Invalid f");
                         break;
+                    case 'n': // null
+                        if (key_off && sb.Length == 0)
+                        {
+                            key_off = false;
+                            if ('u' != (char)sr.Read()) throw new Exception("Invalid n");
+                            if ('l' != (char)sr.Read()) throw new Exception("Invalid nu");
+                            if ('l' != (char)sr.Read()) throw new Exception("Invalid nul");
+                            ret[key] = null;
+                        }
+                        else throw new Exception("Invalid n");
+                        break;
                     default:
                         if (sb.Length != 0)
                         {
@@ -219,6 +230,13 @@ namespace SamSeifert.Utilities.FileParsing
                     case '[':
                         ret.Add(JsonParser.parseArray(sr));
                         break;
+                    case ']':
+                        if (sb.Length != 0)
+                        {
+                            ret.Add(Double.Parse(sb.ToString()));
+                            sb.Length = 0;
+                        }
+                        return ret.ToArray();
                     case '0':
                     case '1':
                     case '2':
@@ -234,6 +252,37 @@ namespace SamSeifert.Utilities.FileParsing
                     case 'E': // Exponent
                         sb.Append(next);
                         break;
+                    case 't': // true
+                        if (sb.Length == 0)
+                        {
+                            if ('r' != (char)sr.Read()) throw new Exception("Invalid tr");
+                            if ('u' != (char)sr.Read()) throw new Exception("Invalid tru");
+                            if ('e' != (char)sr.Read()) throw new Exception("Invalid true");
+                            ret.Add(true);
+                        }
+                        else throw new Exception("Invalid t + ");
+                        break;
+                    case 'f': // false
+                        if (sb.Length == 0)
+                        {
+                            if ('a' != (char)sr.Read()) throw new Exception("Invalid fa");
+                            if ('l' != (char)sr.Read()) throw new Exception("Invalid fal");
+                            if ('s' != (char)sr.Read()) throw new Exception("Invalid fals");
+                            if ('e' != (char)sr.Read()) throw new Exception("Invalid false");
+                            ret.Add(false);
+                        }
+                        else throw new Exception("Invalid f");
+                        break;
+                    case 'n': // null
+                        if (sb.Length == 0)
+                        {
+                            if ('u' != (char)sr.Read()) throw new Exception("Invalid n");
+                            if ('l' != (char)sr.Read()) throw new Exception("Invalid nu");
+                            if ('l' != (char)sr.Read()) throw new Exception("Invalid nul");
+                            ret.Add(null);
+                        }
+                        else throw new Exception("Invalid n");
+                        break;
                     default:
                         if (sb.Length != 0)
                         {
@@ -241,13 +290,6 @@ namespace SamSeifert.Utilities.FileParsing
                             sb.Length = 0;
                         }
                         break;
-                    case ']':
-                        if (sb.Length != 0)
-                        {
-                            ret.Add(Double.Parse(sb.ToString()));
-                            sb.Length = 0;
-                        }
-                        return ret.ToArray();
                 }
             }
         }
@@ -327,7 +369,8 @@ namespace SamSeifert.Utilities.FileParsing
 
         public static void print(Object o, CharWriter cw, StringWriter sw, string indent = "")
         {
-            if (o is String) JsonParser.ToLiteral(o as String, cw);
+            if (o == null) sw("null");
+            else if (o is String) JsonParser.ToLiteral(o as String, cw);
             else if (o is float) sw(o.ToString());
             else if (o is double) sw(o.ToString());
             else if (o is int) sw(o.ToString());
