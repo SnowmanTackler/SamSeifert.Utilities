@@ -110,6 +110,7 @@
     <Compile Include="Json\JsonPackable.cs" />
     <Compile Include="Json\JsonParser.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="LowPassFilter.cs" />
     <Compile Include="MiscUtil.cs" />
     <Compile Include="MathUtil.cs" />
     <Compile Include="MultiThreading\BackgroundQueue.cs" />
