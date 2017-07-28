@@ -27,7 +27,6 @@ namespace SamSeifert.Utilities.Json
                 nud.Value = ((decimal)(double)outo).Clampp(nud.Minimum, nud.Maximum);
         }
 
-
         public static void Pack(this NumericUpDown nud, JsonDict dict, string key)
         {
             dict[key] = (double)nud.Value;

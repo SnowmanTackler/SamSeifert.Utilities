@@ -25,7 +25,6 @@ namespace SamSeifert.Utilities
             return System.Reflection.Assembly.GetEntryAssembly().Location;
         }
 
-
         public struct Merge
         {
             /// <summary>
