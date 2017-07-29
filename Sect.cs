@@ -32,8 +32,6 @@ namespace SamSeifert.CSCV
                         float val = s[y, x];
                         this._Min = Math.Min(val, this._Min);
                         this._Max = Math.Max(val, this._Max);
-                        this._Mean += val;
-
                         xi += val;
                         xi2 += val * val;
                     }
@@ -41,8 +39,9 @@ namespace SamSeifert.CSCV
 
                 int pixels = sz.Height * sz.Width;
 
-                this._Mean /= pixels;
-                this._StandardDeviation = (float)Math.Sqrt(this._Mean + (xi2 - 2 * this._Mean * xi) / pixels);
+                float mean = xi / pixels;
+                this._Mean = mean;                
+                this._StandardDeviation = (float)Math.Sqrt(xi2 / pixels - mean * mean);
             }
         }
 

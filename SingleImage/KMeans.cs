@@ -65,10 +65,11 @@ namespace SamSeifert.CSCV
 
                 for (int s = 0; s < in_sects.Count; s++)
                 {
+                    var sect = in_sects[s];
                     int p = 0;
                     for (int y = 0; y < h; y++)
                         for (int x = 0; x < w; x++)
-                            pixels_vectors[p++][s] = in_sects[s][y, x];
+                            pixels_vectors[p++][s] = sect[y, x];
                 }
 
 
@@ -148,9 +149,10 @@ namespace SamSeifert.CSCV
                 for (int s = 0; s < out_sects.Count; s++)
                 {
                     int p = 0;
+                    var sect = out_sects[s];
                     for (int y = 0; y < h; y++)
                         for (int x = 0; x < w; x++)
-                            out_sects[s][y, x] = cluster_centers[pixels_cluster[p++]][s];
+                            sect[y, x] = cluster_centers[pixels_cluster[p++]][s];
                 }
 
 
