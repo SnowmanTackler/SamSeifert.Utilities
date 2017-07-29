@@ -82,6 +82,11 @@ namespace SamSeifert.Utilities
             return ClampByte((int)Math.Round(val));
         }
 
+        public static byte ClampByte(this double val)
+        {
+            return ClampByte((int)Math.Round(val));
+        }
+
 
 
 

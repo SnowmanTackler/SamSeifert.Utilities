@@ -168,6 +168,22 @@ namespace SamSeifert.Utilities
         }
 
         /// <summary>
+        /// HSV and RGB both on scale of 0 to 1.
+        /// </summary>
+        /// <param name="h"></param>
+        /// <param name="s"></param>
+        /// <param name="v"></param>
+        /// <param name="c"></param>
+        public static void hsv2rgb(float h, float s, float v, out byte rr, out byte gg, out byte bb)
+        {
+            float r, g, b;
+            ColorUtil.hsv2rgb(h, s, v, out r, out g, out b);
+            rr = (byte)(255 * r);
+            gg = (byte)(255 * g);
+            bb = (byte)(255 * b);
+        }
+
+        /// <summary>
         /// HSV scale 0 to 1, RGB scale 0 to 1
         /// </summary>
         /// <param name="h"></param>
@@ -238,7 +254,19 @@ namespace SamSeifert.Utilities
         /// <param name="v"></param>
         public static void rgb2hsv(Color c, out float h, out float s, out float v)
         {
-            ColorUtil.rgb2hsv(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, out h, out s, out v);
+            ColorUtil.rgb2hsv(c.R, c.G, c.B, out h, out s, out v);
+        }
+
+        /// <summary>
+        /// HSV on scale of 0 to 1.
+        /// </summary>
+        /// <param name="c"></param>
+        /// <param name="h"></param>
+        /// <param name="s"></param>
+        /// <param name="v"></param>
+        public static void rgb2hsv(byte r, byte g, byte b, out float h, out float s, out float v)
+        {
+            ColorUtil.rgb2hsv(r / 255.0f, g / 255.0f, b / 255.0f, out h, out s, out v);
         }
 
         /// <summary>
