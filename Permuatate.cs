@@ -8,6 +8,11 @@ namespace SamSeifert.Utilities
 {
     public static class Permutate<T>
     {
+        /// <summary>
+        /// Maintains Length, Just Reorders
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static IEnumerable<T[]> AllOrderingsOf(T[] data)
         {
             var ls = new List<int>();
@@ -73,6 +78,28 @@ namespace SamSeifert.Utilities
                 foreach (var r in AllOnAndOffs(index - 1, ret))
                     yield return r;
 
+        }
+
+        public static IEnumerable<T[]> AllSubsetsOfSize_MaintainOrder(T[] data, int size)
+        {
+            if (size <= 0) yield break;
+               
+            for (int i = 0; i < data.Length + 1 - size; i++)
+            {
+                T[] ret = new T[size];
+                ret[0] = data[i];
+
+                if (size > 1)
+                {
+                    foreach (var sa in AllSubsetsOfSize_MaintainOrder(data.SubArray(i + 1), size - 1))
+                    {
+                        Array.Copy(sa, 0, ret, 1, size - 1);
+                        yield return ret;
+                    }
+                }
+                else yield return ret;
+            }
+    
         }
     }
 
