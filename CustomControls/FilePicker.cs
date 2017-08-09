@@ -22,8 +22,26 @@ namespace SamSeifert.Utilities.CustomControls
             FilePicker._Values = JsonDict.FromString(Properties.Settings.Default.FilePickers);
         }
 
+        /// <summary>
+        /// Happens on all files
+        /// </summary>
         public event EventHandler _ValidFile;
+
+        /// <summary>
+        /// Happens on all directories
+        /// </summary>
         public event EventHandler _ValidFolder;
+
+        /// <summary>
+        /// Happens on all files or directories
+        /// </summary>
+        public event EventHandler _ValidEntry;
+
+        public enum FileType { File, Directory, Invalid };
+        public delegate void FileTypeEventHandler(object sender, FileType ft);
+        public event FileTypeEventHandler _Changed;
+
+
         public String _SaveIdentifier { get; set; } = "Default";
         public String _Text
         {
@@ -61,20 +79,23 @@ namespace SamSeifert.Utilities.CustomControls
             if (File.Exists(fn))
             {
                 this.textBox1.ForeColor = Color.Green;
-                if (this._ValidFile != null)
-                    this._ValidFile(this, EventArgs.Empty);
+                this._ValidFile?.Invoke(this, EventArgs.Empty);
+                this._Changed?.Invoke(this, FileType.File);
             }
             else if (Directory.Exists(fn))
             {
                 this.textBox1.ForeColor = Color.Blue;
-                if (this._ValidFolder != null)
-                    this._ValidFolder(this, EventArgs.Empty);
+                this._ValidFolder?.Invoke(this, EventArgs.Empty);
+                this._Changed?.Invoke(this, FileType.Directory);
             }
             else
             {
                 this.textBox1.ForeColor = Color.Red;
+                this._Changed?.Invoke(this, FileType.Invalid);
                 return;
             }
+
+            this._ValidEntry?.Invoke(this, EventArgs.Empty);
 
             FilePicker._Values[this._SaveIdentifier] = this.textBox1.Text;
             Properties.Settings.Default.FilePickers = FilePicker._Values.ToString();
