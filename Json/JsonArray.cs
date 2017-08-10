@@ -66,6 +66,25 @@ namespace SamSeifert.Utilities.Json
                 return JsonArray.FromStream(sr, false);
         }
 
+        /// <summary>
+        /// Calls function on each object in first level of array.  Use this on huge Json Files
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="act"></param>
+        public static void FromFile(String path, Action<Object> act)
+        {
+            using (StreamReader sr = new StreamReader(path))
+            {
+                while (!sr.EndOfStream)
+                    if (sr.Read() == '[')
+                        break;
+
+                if (sr.EndOfStream) return;
+
+                FromStream(sr, act);
+            }
+        }
+
         public static Object[] FromString(String data)
         {
             if (data == null)
@@ -73,6 +92,7 @@ namespace SamSeifert.Utilities.Json
             using (StreamReader sr = new StreamReader(data.AsStream()))
                 return JsonArray.FromStream(sr, false);
         }
+
 
         public static Object[] FromStream(StreamReader sr, bool first_bracket_found = true)
         {
@@ -86,7 +106,13 @@ namespace SamSeifert.Utilities.Json
             }
 
             var ret = new List<Object>();
+            FromStream(sr, (Object o) => { ret.Add(o); });
+            return ret.ToArray();
+        }
 
+
+        private static void FromStream(StreamReader sr, Action<Object> act)
+        {
             StringBuilder sb = new StringBuilder();
 
             while (true)
@@ -96,21 +122,21 @@ namespace SamSeifert.Utilities.Json
                 switch (next)
                 {
                     case '"':
-                        ret.Add(JsonParser.ParseString(sr));
+                        act(JsonParser.ParseString(sr));
                         break;
                     case '{':
-                        ret.Add(JsonDict.FromStream(sr));
+                        act(JsonDict.FromStream(sr));
                         break;
                     case '[':
-                        ret.Add(JsonArray.FromStream(sr));
+                        act(JsonArray.FromStream(sr));
                         break;
                     case ']':
                         if (sb.Length != 0)
                         {
-                            ret.Add(Double.Parse(sb.ToString()));
+                            act(Double.Parse(sb.ToString()));
                             sb.Length = 0;
                         }
-                        return ret.ToArray();
+                        return;
                     case '0':
                     case '1':
                     case '2':
@@ -129,7 +155,7 @@ namespace SamSeifert.Utilities.Json
                     default:
                         if (sb.Length != 0)
                         {
-                            ret.Add(Double.Parse(sb.ToString()));
+                            act(Double.Parse(sb.ToString()));
                             sb.Length = 0;
                         }
                         break;
@@ -139,7 +165,7 @@ namespace SamSeifert.Utilities.Json
                             if ('r' != (char)sr.Read()) throw new Exception("Invalid tr");
                             if ('u' != (char)sr.Read()) throw new Exception("Invalid tru");
                             if ('e' != (char)sr.Read()) throw new Exception("Invalid true");
-                            ret.Add(true);
+                            act(true);
                         }
                         else throw new Exception("Invalid t + ");
                         break;
@@ -150,7 +176,7 @@ namespace SamSeifert.Utilities.Json
                             if ('l' != (char)sr.Read()) throw new Exception("Invalid fal");
                             if ('s' != (char)sr.Read()) throw new Exception("Invalid fals");
                             if ('e' != (char)sr.Read()) throw new Exception("Invalid false");
-                            ret.Add(false);
+                            act(false);
                         }
                         else throw new Exception("Invalid f");
                         break;
@@ -160,7 +186,7 @@ namespace SamSeifert.Utilities.Json
                             if ('u' != (char)sr.Read()) throw new Exception("Invalid nu");
                             if ('l' != (char)sr.Read()) throw new Exception("Invalid nul");
                             if ('l' != (char)sr.Read()) throw new Exception("Invalid nul");
-                            ret.Add(null);
+                            act(null);
                         }
                         else throw new Exception("Invalid f");
                         break;
