@@ -133,6 +133,39 @@ namespace SamSeifert.Utilities
 
 
 
+        public static int Min(params int[] values)
+        {
+            return values.Min();
+        }
+
+        public static float Min(params float[] values)
+        {
+            return values.Min();
+        }
+
+        public static double Min(params double[] values)
+        {
+            return values.Min();
+        }
+
+        public static int Max(params int[] values)
+        {
+            return values.Max();
+        }
+
+        public static float Max(params float[] values)
+        {
+            return values.Max();
+        }
+
+        public static double Max(params double[] values)
+        {
+            return values.Max();
+        }
+
+
+
+
 
         public class Continuous360_Radians
         {

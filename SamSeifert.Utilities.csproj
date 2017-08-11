@@ -93,6 +93,8 @@
       <DependentUpon>ListBoxUpDown.cs</DependentUpon>
     </Compile>
     <Compile Include="DataStructures\DefaultDict.cs" />
+    <Compile Include="DataStructures\DictUtil.cs" />
+    <Compile Include="DataStructures\EditDistanceDict.cs" />
     <Compile Include="DataStructures\ImpulseManager.cs" />
     <Compile Include="EnumerableUtil.cs" />
     <Compile Include="EnumUtil.cs" />
@@ -117,6 +119,7 @@
     <Compile Include="MultiThreading\BackgroundThread.cs" />
     <Compile Include="MultiThreading\Delegates.cs" />
     <Compile Include="Networking\Destination.cs" />
+    <Compile Include="NLP\EditDistance.cs" />
     <Compile Include="Permuatate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
