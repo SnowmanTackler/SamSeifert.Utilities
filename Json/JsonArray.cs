@@ -19,6 +19,8 @@ namespace SamSeifert.Utilities.Json
             {
                 var o = arg[0];
 
+                bool first = true;
+
                 if ((o is bool) ||
                     (o is byte) ||
                     (o is sbyte) ||
@@ -33,7 +35,6 @@ namespace SamSeifert.Utilities.Json
                     (o is decimal)
                     )
                 {
-                    bool first = true;
                     foreach (var obj in arg)
                     {
                         if (first) first = false;
@@ -45,7 +46,6 @@ namespace SamSeifert.Utilities.Json
                 {
                     var sep = "," + Environment.NewLine + nindent;
                     sw(Environment.NewLine + nindent);
-                    bool first = true;
                     foreach (var obj in arg)
                     {
                         if (first) first = false;

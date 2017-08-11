@@ -20,11 +20,16 @@ namespace SamSeifert.Utilities.Json
 
     public static class Extensions
     {
+        public static void SetValueMinMaxSafe(this NumericUpDown nud, Decimal value)
+        {
+            nud.Value = value.Clampp(nud.Minimum, nud.Maximum);
+        }
+
         public static void Unpack(this NumericUpDown nud, JsonDict dict, string key)
         {
             object outo;
             if (dict.TryGetValue(key, out outo))
-                nud.Value = ((decimal)(double)outo).Clampp(nud.Minimum, nud.Maximum);
+                nud.SetValueMinMaxSafe((decimal)(double)outo);
         }
 
         public static void Pack(this NumericUpDown nud, JsonDict dict, string key)
