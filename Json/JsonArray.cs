@@ -66,25 +66,6 @@ namespace SamSeifert.Utilities.Json
                 return JsonArray.FromStream(sr, false);
         }
 
-        /// <summary>
-        /// Calls function on each object in first level of array.  Use this on huge Json Files
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="act"></param>
-        public static void FromFile(String path, Action<Object> act)
-        {
-            using (StreamReader sr = new StreamReader(path))
-            {
-                while (!sr.EndOfStream)
-                    if (sr.Read() == '[')
-                        break;
-
-                if (sr.EndOfStream) return;
-
-                FromStream(sr, act);
-            }
-        }
-
         public static Object[] FromString(String data)
         {
             if (data == null)
@@ -108,6 +89,45 @@ namespace SamSeifert.Utilities.Json
             var ret = new List<Object>();
             FromStream(sr, (Object o) => { ret.Add(o); });
             return ret.ToArray();
+        }
+
+
+        /// <summary>
+        /// Calls function on each object in first level of array.  Use this on huge Json Files
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="act"></param>
+        public static void FromFile(String path, Action<Object> act)
+        {
+            using (StreamReader sr = new StreamReader(path))
+            {
+                while (!sr.EndOfStream)
+                    if (sr.Read() == '[')
+                        break;
+
+                if (sr.EndOfStream) return;
+
+                FromStream(sr, act);
+            }
+        }
+
+        /// <summary>
+        /// Calls function on each object in first level of array.  Use this on huge Json Files
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="act"></param>
+        public static void FromStream(Stream str, Action<Object> act)
+        {
+            using (StreamReader sr = new StreamReader(str))
+            {
+                while (!sr.EndOfStream)
+                    if (sr.Read() == '[')
+                        break;
+
+                if (sr.EndOfStream) return;
+
+                FromStream(sr, act);
+            }
         }
 
 
