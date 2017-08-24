@@ -127,7 +127,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="RateTracker.cs" />
+    <Compile Include="Timing\MaxRate.cs" />
+    <Compile Include="Timing\RateTracker.cs" />
     <Compile Include="ScreenCapture.cs" />
     <Compile Include="Statistics.cs" />
     <Compile Include="StringUtil.cs" />

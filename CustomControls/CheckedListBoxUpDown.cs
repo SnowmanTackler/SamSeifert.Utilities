@@ -124,8 +124,8 @@ namespace SamSeifert.Utilities.CustomControls
         {
             var si = this.checkedListBox1.SelectedItem;
 
-            if (si == null) this.bRemove.Enabled = false;
-            else this.bRemove.Enabled = this.checkedListBox1.Items.Count != 0;
+            this.bRemove.Enabled = (si != null) && (this.checkedListBox1.Items.Count != 0);
+            this.duplicateToolStripMenuItem.Enabled = this.bRemove.Enabled && (this._Duplicate != null);
 
             this.bUp.Enabled = si != null;
             this.bDown.Enabled = si != null;
@@ -237,5 +237,16 @@ namespace SamSeifert.Utilities.CustomControls
         {
             this.checkedListBox1.ContextMenuStrip = this.contextMenuStrip1;
         }
+
+        public event DuplicateEvent _Duplicate;
+        private void duplicateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var sel = this.checkedListBox1.SelectedItem;
+            if (sel != null)
+                this._Duplicate?.Invoke(this, sel);
+        }
     }
+
+    public delegate void DuplicateEvent(object sender, object args);
+
 }
