@@ -47,5 +47,18 @@ namespace SamSeifert.Utilities.DataStructures
                 base[key] = value;
             }
         }
+
+        /// <summary>
+        /// Returns value for key if in dictionary, or default value (null).
+        /// Handing when using dict.TryGetValue(key)?.Method();
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public TValue TryGetValue(TKey key)
+        {
+            TValue t;
+            if (this.TryGetValue(key, out t)) return t;
+            else return default(TValue); // Null or Zero typically
+        }
     }
 }
