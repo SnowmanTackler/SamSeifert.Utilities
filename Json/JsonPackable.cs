@@ -37,6 +37,9 @@ namespace SamSeifert.Utilities.Json
             dict[key] = (double)nud.Value;
         }
 
+
+
+
         public static void Unpack(this CheckBox cb, JsonDict dict, string key)
         {
             object outo;
@@ -49,6 +52,24 @@ namespace SamSeifert.Utilities.Json
             dict[key] = cb.Checked;
         }
 
+
+
+        public static void Unpack(this TextBox cb, JsonDict dict, string key)
+        {
+            object outo;
+            if (dict.TryGetValue(key, out outo))
+                cb.Text = outo as String;
+        }
+
+        public static void Pack(this TextBox cb, JsonDict dict, string key)
+        {
+            dict[key] = cb.Text;
+        }
+
+
+
+
+
         public static void Unpack(this ComboBox cb, JsonDict dict, string key)
         {
             object outo;
@@ -60,6 +81,8 @@ namespace SamSeifert.Utilities.Json
         {
             dict[key] = cb.SelectedIndex;
         }
+
+
 
 
         public static T asGeneric<T>(this JsonDict d, String key)

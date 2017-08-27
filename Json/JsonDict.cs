@@ -19,6 +19,29 @@ namespace SamSeifert.Utilities.Json
 
         }
 
+        /// <summary>
+        /// Sends the JsonDict to a stream and 
+        /// back to memory.  Useful for converting float[] (unparsed)
+        /// to object[] filled with doubles (parsed)
+        /// </summary>
+        /// <returns></returns>
+        public JsonDict Cycle()
+        {
+            using (var ms = new MemoryStream())
+            {
+                { // Don't dispose the streamwriter, it will dispose the memory stream
+                    var sw = new StreamWriter(ms, Encoding.ASCII);
+                    this.Print(sw.Write, sw.Write, "");
+                    sw.Flush();
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var sr = new StreamReader(ms, Encoding.ASCII))
+                    return JsonDict.FromStream(sr, false);
+            }
+        }
+
         public void Print(CharWriter cw, StringWriter sw, string indent = "")
         {
             String nindent = indent + "\t";
