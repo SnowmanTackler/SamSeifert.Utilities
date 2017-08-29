@@ -77,5 +77,14 @@ namespace SamSeifert.Utilities
         {
             return data.SubArray(index, data.Length - index);
         }
+
+
+        public static T[] Sorted<T>(this IEnumerable<T> ie)
+        {
+            var arg = ie.ToArray();
+            Array.Sort(arg);
+            return arg;
+        }
+       
     }
 }
