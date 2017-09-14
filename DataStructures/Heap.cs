@@ -86,7 +86,7 @@ namespace SamSeifert.Utilities.DataStructures
             int index = 0;
             while (hasLeftChild(index))
             {
-                int smallerChildIndex = (hasRightChild(index) && this._Func(leftChild(index), rightChild(index)))?
+                int smallerChildIndex = (hasRightChild(index) && this._Func(rightChild(index), leftChild(index))) ?
                     getRightChildIndex(index) :
                     getLeftChildIndex(index);
 
