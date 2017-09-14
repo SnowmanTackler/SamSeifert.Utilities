@@ -95,6 +95,7 @@
     <Compile Include="DataStructures\DefaultDict.cs" />
     <Compile Include="DataStructures\DictUtil.cs" />
     <Compile Include="DataStructures\EditDistanceDict.cs" />
+    <Compile Include="DataStructures\Heap.cs" />
     <Compile Include="DataStructures\ImpulseManager.cs" />
     <Compile Include="EnumerableUtil.cs" />
     <Compile Include="EnumUtil.cs" />
