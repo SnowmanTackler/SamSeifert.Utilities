@@ -155,6 +155,59 @@ namespace SamSeifert.GLE
 
         }
 
+        public static class LineSegment
+        {
+            public static bool InteresectsLineSegment(
+                Vector2 line_segment_1_p1,
+                Vector2 line_segment_1_p2,
+                Vector2 line_segment_2_p1,
+                Vector2 line_segment_2_p2)
+            {
+                Vector2 intersection;
+                return LineSegment.InteresectsLineSegment(
+                    line_segment_1_p1,
+                    line_segment_1_p2,
+                    line_segment_2_p1,
+                    line_segment_2_p2,
+                    out intersection);
+            }
+
+            public static bool InteresectsLineSegment(
+                Vector2 line_segment_1_p1, 
+                Vector2 line_segment_1_p2,
+                Vector2 line_segment_2_p1, 
+                Vector2 line_segment_2_p2,
+                out Vector2 intersection)
+            {
+                // Get the segments' parameters.
+                float dx12 = line_segment_1_p2.X - line_segment_1_p1.X;
+                float dy12 = line_segment_1_p2.Y - line_segment_1_p1.Y;
+                float dx34 = line_segment_2_p2.X - line_segment_2_p1.X;
+                float dy34 = line_segment_2_p2.Y - line_segment_2_p1.Y;
+
+                // Solve for t1 and t2
+                float denominator = (dy12 * dx34 - dx12 * dy34);
+
+                float t1 = ((line_segment_1_p1.X - line_segment_2_p1.X) * dy34 + (line_segment_2_p1.Y - line_segment_1_p1.Y) * dx34) / denominator;
+                if (float.IsInfinity(t1))
+                {
+                    // The lines are parallel (or close enough to it).
+                    intersection = new Vector2(float.NaN, float.NaN);
+                    return false;
+                }
+
+                // lines_intersect = true;
+
+                float t2 = ((line_segment_2_p1.X - line_segment_1_p1.X) * dy12 + (line_segment_1_p1.Y - line_segment_2_p1.Y) * dx12) / -denominator;
+
+                // Find the point of intersection.
+                intersection = new Vector2(line_segment_1_p1.X + dx12 * t1, line_segment_1_p1.Y + dy12 * t1);
+
+                // The segments intersect if t1 and t2 are between 0 and 1.
+                return ((t1 >= 0) && (t1 <= 1) && (t2 >= 0) && (t2 <= 1));
+            }
+        }
+
 
 
     }
