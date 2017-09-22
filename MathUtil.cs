@@ -108,6 +108,17 @@ namespace SamSeifert.Utilities
 
 
 
+        public static float SquareRoot(this float f)
+        {
+            return (float)Math.Sqrt(f);
+        }
+
+        public static double SquareRoot(this double f)
+        {
+            return Math.Sqrt(f);
+        }
+
+
 
 
         public static void Clamp(this int[] val, int min, int max)
