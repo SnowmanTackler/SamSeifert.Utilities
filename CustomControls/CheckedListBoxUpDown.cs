@@ -93,7 +93,21 @@ namespace SamSeifert.Utilities.CustomControls
         {
             this.checkedListBox1.Items.Add(o, v);
         }
-
+        public void RemoveAt(int index ) {
+            this.checkedListBox1.Items.RemoveAt(index);
+        }
+        public void Insert(int index, object o,bool check) {
+            this.checkedListBox1.Items.Insert(index, o);
+            this.checkedListBox1.SetItemChecked(index, check);
+        }
+        public void ReplaceAt(int index, object o, bool check) {
+            this.SuspendLayout();
+            int i=this.SelectedIndex;
+            this.Insert(index, o, check);
+            this.RemoveAt(index + 1);
+            this.SelectedIndex = i;
+            this.ResumeLayout();
+        }
         public Object SelectedItem
         {
             get
