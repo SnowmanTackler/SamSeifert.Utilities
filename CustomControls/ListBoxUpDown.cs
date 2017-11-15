@@ -95,6 +95,65 @@ namespace SamSeifert.Utilities.CustomControls
             }
         }
 
+        public System.Windows.Forms.SelectionMode SelectionMode
+        {
+            get
+            {
+                return this.listBox1.SelectionMode;
+            }
+            set
+            {
+                this.listBox1.SelectionMode = value;
+            }
+        }
+
+        public ListBox.SelectedObjectCollection SelectedItems
+        {
+            get
+            {
+                return this.listBox1.SelectedItems;
+            }
+        }
+
+        public string DisplayMember
+        {
+            set
+            {
+                this.listBox1.DisplayMember = value;
+            }
+        }
+
+        public object DataSource
+        {
+            set
+            {
+                this.listBox1.DataSource = value;
+            }
+        }
+
+        /// <summary>
+        /// Only works with DataSource!
+        /// </summary>
+        public void RefreshNames()
+        {
+            var temp_event = this._SelectedItemChanged;
+            this._SelectedItemChanged = null;
+
+            int cnt = this.listBox1.Items.Count;
+            var sel = new bool[cnt];
+            for (int i = 0; i < cnt; i++)
+                sel[i] = this.listBox1.GetSelected(i);
+
+            String temp_member = this.listBox1.DisplayMember;
+            this.listBox1.DisplayMember = "";
+            this.listBox1.DisplayMember = temp_member;
+
+            for (int i = 0; i < cnt; i++)
+                this.listBox1.SetSelected(i, sel[i]);
+
+            this._SelectedItemChanged = temp_event;
+        }
+
         public event EventHandler _SelectedItemChanged;
 
         private void clb_SelectedIndexChanged(object sender, EventArgs e)
@@ -148,8 +207,19 @@ namespace SamSeifert.Utilities.CustomControls
 
             if (si != null)
             {
-                this.listBox1.Items.Remove(si);
-                if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
+                if (this.listBox1.DataSource == null)
+                {
+                    this.listBox1.Items.Remove(si);
+                    if (this._ObjectRemoved != null)
+                        this._ObjectRemoved(this, si);
+                }
+                else
+                {
+                    if (this._ObjectRemoved != null)
+                        this._ObjectRemoved(this, si);
+                    else Logger.WriteLine("ListBoxUpDown with DataSource needs to implement _ObjectRemoved");
+                }
+
             }
         }
 

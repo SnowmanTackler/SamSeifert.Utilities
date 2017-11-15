@@ -157,6 +157,7 @@ namespace SamSeifert.Utilities
 
 
 
+
         public static float ValueF(this System.Windows.Forms.NumericUpDown nud)
         {
             return (float)nud.Value;

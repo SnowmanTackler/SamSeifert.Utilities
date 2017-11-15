@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace SamSeifert.Utilities.CustomControls
 {
-    public delegate void ObjectRemoved(object sender, object Removed);
+    public delegate void ObjectRemoved(object sender, object removed);
 
     public partial class CheckedListBoxUpDown : UserControl
     {
@@ -93,21 +93,28 @@ namespace SamSeifert.Utilities.CustomControls
         {
             this.checkedListBox1.Items.Add(o, v);
         }
-        public void RemoveAt(int index ) {
+
+        public void RemoveAt(int index )
+        {
             this.checkedListBox1.Items.RemoveAt(index);
         }
-        public void Insert(int index, object o,bool check) {
+
+        public void Insert(int index, object o,bool check)
+        {
             this.checkedListBox1.Items.Insert(index, o);
             this.checkedListBox1.SetItemChecked(index, check);
         }
-        public void ReplaceAt(int index, object o, bool check) {
+
+        public void ReplaceAt(int index, object o, bool check)
+        {
             this.SuspendLayout();
-            int i=this.SelectedIndex;
+            int i = this.SelectedIndex;
             this.Insert(index, o, check);
             this.RemoveAt(index + 1);
             this.SelectedIndex = i;
             this.ResumeLayout();
         }
+
         public Object SelectedItem
         {
             get
@@ -132,7 +139,61 @@ namespace SamSeifert.Utilities.CustomControls
             }
         }
 
-        public event EventHandler _SelectedValueChanged;
+        public System.Windows.Forms.SelectionMode SelectionMode
+        {
+            get
+            {
+                return this.checkedListBox1.SelectionMode;
+            }
+            set
+            {
+                this.checkedListBox1.SelectionMode = value;
+            }
+        }
+
+        public ListBox.SelectedObjectCollection SelectedItems
+        {
+            get
+            {
+                return this.checkedListBox1.SelectedItems;
+            }
+        }
+
+        public string DisplayMember
+        {
+            set
+            {
+                this.checkedListBox1.DisplayMember = value;
+            }
+        }
+
+        public object DataSource
+        {
+            set
+            {
+                this.checkedListBox1.DataSource = value;
+            }
+        }
+
+        /// <summary>
+        /// Only works with DataSource!
+        /// </summary>
+        public void RefreshNames()
+        {
+            int cnt = this.checkedListBox1.Items.Count;
+            var sel = new bool[cnt];
+            for (int i = 0; i < cnt; i++)
+                sel[i] = this.checkedListBox1.GetSelected(i);
+
+            String temp = this.checkedListBox1.DisplayMember;
+            this.checkedListBox1.DisplayMember = "";
+            this.checkedListBox1.DisplayMember = temp;
+
+            for (int i = 0; i < cnt; i++)
+                this.checkedListBox1.SetSelected(i, sel[i]);
+        }
+
+        public event EventHandler _SelectedItemChanged;
 
         private void clb_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -144,8 +205,8 @@ namespace SamSeifert.Utilities.CustomControls
             this.bUp.Enabled = si != null;
             this.bDown.Enabled = si != null;
 
-            if (this._SelectedValueChanged != null)
-                this._SelectedValueChanged(this, e);
+            if (this._SelectedItemChanged != null)
+                this._SelectedItemChanged(this, e);
         }
 
         public void SetItemChecked(int index, bool is_checked)
@@ -198,8 +259,18 @@ namespace SamSeifert.Utilities.CustomControls
 
             if (si != null)
             {
-                this.checkedListBox1.Items.Remove(si);
-                if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
+                if (this.checkedListBox1.DataSource == null)
+                {
+                    this.checkedListBox1.Items.Remove(si);
+                    if (this._ObjectRemoved != null)
+                        this._ObjectRemoved(this, si);
+                }
+                else
+                {
+                    if (this._ObjectRemoved != null)
+                        this._ObjectRemoved(this, si);
+                    else Logger.WriteLine("CheckedListBoxUpDown with DataSource needs to implement _ObjectRemoved");
+                }
             }
         }
 
