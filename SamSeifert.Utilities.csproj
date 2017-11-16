@@ -81,12 +81,14 @@
     <Compile Include="CustomControls\EnumPicker.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="CustomControls\EventSuspender.cs" />
     <Compile Include="CustomControls\FilePicker.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CustomControls\FilePicker.Designer.cs">
       <DependentUpon>FilePicker.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\LayoutSuspender.cs" />
     <Compile Include="CustomControls\ListBoxUpDown.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -98,6 +100,7 @@
     <Compile Include="DataStructures\EditDistanceDict.cs" />
     <Compile Include="DataStructures\Heap.cs" />
     <Compile Include="DataStructures\ImpulseManager.cs" />
+    <Compile Include="DisposableCollection.cs" />
     <Compile Include="EnumerableUtil.cs" />
     <Compile Include="EnumUtil.cs" />
     <Compile Include="FileParsing\BracketFile.cs" />

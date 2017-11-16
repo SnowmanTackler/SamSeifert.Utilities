@@ -19,6 +19,19 @@ namespace SamSeifert.Utilities
             Logger.Writer(s);
         }
 
+        public static void WriteError(Object o, String s)
+        {
+            Type t = (o is Type) ? (o as Type) : o.GetType();
+            Logger.Writer("Error -" + t.FullName + ": " + s);
+        }
+
+        public static void WriteException(Object o, String s, Exception exc)
+        {
+            Type t = (o is Type) ? (o as Type) : o.GetType();
+            Logger.Writer("Exception -" + t.FullName + ": " + s + ", " + exc.ToString());
+        }
+
+
         private static volatile Action<String> _Writer = (String s) => {
             Trace.WriteLine(s);
         };
@@ -33,6 +46,7 @@ namespace SamSeifert.Utilities
             {
                 return Logger._Writer;
             }
-        } 
+        }
+
     }
 }

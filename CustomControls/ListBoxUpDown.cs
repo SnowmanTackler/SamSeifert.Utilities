@@ -12,6 +12,11 @@ namespace SamSeifert.Utilities.CustomControls
 {
     public partial class ListBoxUpDown : UserControl
     {
+        public event EventHandler _SelectedItemChanged;
+        public event ObjectRemoved _ObjectRemoved;
+        public event EventHandler _AddClick;
+        public event DuplicateEvent _Duplicate;
+
         public bool _AddEnabled
         {
             get
@@ -136,25 +141,27 @@ namespace SamSeifert.Utilities.CustomControls
         /// </summary>
         public void RefreshNames()
         {
-            var temp_event = this._SelectedItemChanged;
-            this._SelectedItemChanged = null;
+            if (this.listBox1.DataSource == null) return;
 
-            int cnt = this.listBox1.Items.Count;
-            var sel = new bool[cnt];
-            for (int i = 0; i < cnt; i++)
-                sel[i] = this.listBox1.GetSelected(i);
+            using (new DisposableCollection(
+                new LayoutSuspender(this),
+                new EventSuspender(this, nameof(this._SelectedItemChanged))
+                ))
+            {
+                int cnt = this.listBox1.Items.Count;
+                var sel = new bool[cnt];
+                for (int i = 0; i < cnt; i++)
+                    sel[i] = this.listBox1.GetSelected(i);
 
-            String temp_member = this.listBox1.DisplayMember;
-            this.listBox1.DisplayMember = "";
-            this.listBox1.DisplayMember = temp_member;
+                String temp_member = this.listBox1.DisplayMember;
+                this.listBox1.DisplayMember = "";
+                this.listBox1.DisplayMember = temp_member;
 
-            for (int i = 0; i < cnt; i++)
-                this.listBox1.SetSelected(i, sel[i]);
-
-            this._SelectedItemChanged = temp_event;
+                for (int i = 0; i < cnt; i++)
+                    this.listBox1.SetSelected(i, sel[i]);
+            }
         }
 
-        public event EventHandler _SelectedItemChanged;
 
         private void clb_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -166,61 +173,88 @@ namespace SamSeifert.Utilities.CustomControls
             this.bUp.Enabled = si != null;
             this.bDown.Enabled = si != null;
 
-            if (this._SelectedItemChanged != null)
-                this._SelectedItemChanged(this, e);
+            this._SelectedItemChanged?.Invoke(this, e);
         }
 
 
         private void bUp_Click(object sender, EventArgs e)
         {
-            int current_index = this.listBox1.SelectedIndex;
-            if (current_index < 1) return;
+            if (this.listBox1.DataSource == null)
+            {
+                using (new DisposableCollection(
+                    new LayoutSuspender(this),
+                    new EventSuspender(this, nameof(this._SelectedItemChanged))
+                    ))
+                {
+                    int current_index = this.listBox1.SelectedIndex;
+                    if (current_index < 1) return;
 
-            var item = this.listBox1.SelectedItem;
-            this.listBox1.Items.RemoveAt(current_index);
+                    var item = this.listBox1.SelectedItem;
+                    this.listBox1.Items.RemoveAt(current_index);
 
-            current_index--;
+                    current_index--;
 
-            this.listBox1.Items.Insert(current_index, item);
-            this.listBox1.SelectedIndex = current_index;
+                    this.listBox1.Items.Insert(current_index, item);
+                    this.listBox1.SelectedIndex = current_index;
+                }
+            }
+            else
+            {
+                Logger.WriteError(this, "Up Click With DataSource");
+            }
         }
 
         private void bDown_Click(object sender, EventArgs e)
         {
-            int current_index = this.listBox1.SelectedIndex;
-            if (current_index < 0) return;
-            if (current_index == this.listBox1.Items.Count - 1) return;
+            if (this.listBox1.DataSource == null)
+            {
+                using (new DisposableCollection(
+                    new LayoutSuspender(this),
+                    new EventSuspender(this, nameof(this._SelectedItemChanged))
+                    ))
+                {
+                    int current_index = this.listBox1.SelectedIndex;
+                    if (current_index < 0) return;
+                    if (current_index == this.listBox1.Items.Count - 1) return;
 
-            var item = this.listBox1.SelectedItem;
-            this.listBox1.Items.RemoveAt(current_index);
+                    var item = this.listBox1.SelectedItem;
+                    this.listBox1.Items.RemoveAt(current_index);
 
-            current_index++;
+                    current_index++;
 
-            this.listBox1.Items.Insert(current_index, item);
-            this.listBox1.SelectedIndex = current_index;
+                    this.listBox1.Items.Insert(current_index, item);
+                    this.listBox1.SelectedIndex = current_index;
+                }
+            }
+            else
+            {
+                Logger.WriteError(this, "Down Click With DataSource");
+            }
         }
 
-        public event ObjectRemoved _ObjectRemoved;
         private void bRemove_Click(object sender, EventArgs e)
         {
-            var si = this.listBox1.SelectedItem;
-
-            if (si != null)
+            using (new DisposableCollection(
+                new LayoutSuspender(this),
+                new EventSuspender(this, nameof(this._SelectedItemChanged))
+                ))
             {
-                if (this.listBox1.DataSource == null)
+                foreach (var si in this.listBox1.SelectedItems.Cast<object>().ToArray()) // Cast to array so we can modify the control
                 {
-                    this.listBox1.Items.Remove(si);
-                    if (this._ObjectRemoved != null)
-                        this._ObjectRemoved(this, si);
+                    if (this.listBox1.DataSource == null)
+                    {
+                        this.listBox1.Items.Remove(si);
+                        this._ObjectRemoved?.Invoke(this, si);
+                    }
+                    else
+                    {
+                        if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
+                        else Logger.WriteLine("ListBoxUpDown with DataSource needs to implement _ObjectRemoved");
+                    }
                 }
-                else
-                {
-                    if (this._ObjectRemoved != null)
-                        this._ObjectRemoved(this, si);
-                    else Logger.WriteLine("ListBoxUpDown with DataSource needs to implement _ObjectRemoved");
-                }
-
             }
+
+            this._SelectedItemChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void ListBoxUpDown_Load(object sender, EventArgs e)
@@ -243,7 +277,6 @@ namespace SamSeifert.Utilities.CustomControls
             }
         }
 
-        public event EventHandler _AddClick;
         private void bAdd_Click(object sender, EventArgs e)
         {
             if (this._AddClick != null)
@@ -256,7 +289,6 @@ namespace SamSeifert.Utilities.CustomControls
                 this.listBox1.SelectedItem = null;
         }
 
-        public event DuplicateEvent _Duplicate;
         private void duplicateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var sel = this.listBox1.SelectedItem;
