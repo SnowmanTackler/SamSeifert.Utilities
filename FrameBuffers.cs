@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using GL = SamSeifert.GLE.GLR;
+using SamSeifert.Utilities;
 
 namespace SamSeifert.GLE
 {
@@ -83,7 +84,7 @@ namespace SamSeifert.GLE
                         success = true;
                         break;
                     default:
-                        Console.WriteLine("FrameBufferIndices Error");
+                        Logger.WriteError(this, "Initialization");
                         success = false;
                         break;
                 }

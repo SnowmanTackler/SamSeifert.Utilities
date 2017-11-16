@@ -9,6 +9,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using GLO = OpenTK.Graphics.OpenGL.GL;
 using GL = SamSeifert.GLE.GLR;
+using SamSeifert.Utilities;
 
 namespace SamSeifert.GLE
 {
@@ -92,7 +93,7 @@ namespace SamSeifert.GLE
                         success = true;
                         break;
                     default:
-                        Console.WriteLine("CubeColorMap Error");
+                        Logger.WriteError(this, "Initialization");
                         success = false;
                         break;
                 }

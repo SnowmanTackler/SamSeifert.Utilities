@@ -47,7 +47,7 @@ namespace SamSeifert.GLE
             }
             else
             {
-                Logger.WriteLine("Error - Shaders - No uniform for key:" + key);
+                Logger.WriteError(this, "no uniform for key:" + key);
                 return 0;
             }
         }
@@ -59,7 +59,7 @@ namespace SamSeifert.GLE
             GL.GetProgram(this._GL_Program, GetProgramParameterName.ValidateStatus, out param);
             if (param == 0)
             {
-                Logger.WriteLine("SamSeifert.GLE.Shaders: CATASTOPHIC ERROR");
+                Logger.WriteError(this, "Validate");
                 Logger.WriteLine(GLO.GetProgramInfoLog(this._GL_Program));
                 return false;
             }
@@ -86,7 +86,7 @@ namespace SamSeifert.GLE
                     GL.GetProgram(shader, GetProgramParameterName.LinkStatus, out param);
                     if (param == 0)
                     {
-                        Logger.WriteLine("SamSeifert.GLE.Shaders: CATASTOPHIC ERROR");
+                        Logger.WriteError(this, "Compiling Shaders");
                         Logger.WriteLine(GLO.GetProgramInfoLog(shader));
                         Logger.WriteLine("********" + Environment.NewLine + vertexShader);
                         Logger.WriteLine("********" + Environment.NewLine + fragmentShader);
@@ -387,7 +387,7 @@ namespace SamSeifert.GLE
             if (param == 0)
             {
                 Logger.WriteLine("*****************************************");
-                Logger.WriteLine("Vert Shader Compile Error");
+                Logger.WriteError(typeof(Shaders), "Vert Shader Compile");
                 Logger.WriteLine("*****************************************");
                 Logger.WriteLine();
                 Logger.WriteLine(vertexCode);
@@ -414,7 +414,7 @@ namespace SamSeifert.GLE
             if (param == 0)
             {
                 Logger.WriteLine("*****************************************");
-                Logger.WriteLine("Frag Shader Compile Error");
+                Logger.WriteError(typeof(Shaders), "Frag Shader Compile");
                 Logger.WriteLine("*****************************************");
                 Logger.WriteLine();
                 Logger.WriteLine(fragCode);
