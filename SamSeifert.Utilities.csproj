@@ -118,6 +118,7 @@
     <Compile Include="Json\JsonParser.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LowPassFilter.cs" />
+    <Compile Include="MinMax.cs" />
     <Compile Include="MiscUtil.cs" />
     <Compile Include="MathUtil.cs" />
     <Compile Include="MultiThreading\BackgroundQueue.cs" />

@@ -269,12 +269,29 @@ namespace SamSeifert.Utilities.CustomControls
 
         public void ClearAll()
         {
-            while (this.listBox1.Items.Count > 0)
-            {
-                object si = this.listBox1.Items[0];
-                this.listBox1.Items.RemoveAt(0);
-                if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
+            using (new DisposableCollection(
+                new LayoutSuspender(this),
+                new EventSuspender(this, nameof(this._SelectedItemChanged))
+                ))
+            { 
+                while (this.listBox1.Items.Count > 0)
+                {
+                    object si = this.listBox1.Items[0];
+
+                    if (this.listBox1.DataSource == null)
+                    {
+                        this.listBox1.Items.RemoveAt(0);
+                        this._ObjectRemoved?.Invoke(this, si);
+                    }
+                    else
+                    {
+                        if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
+                        else Logger.WriteLine("ListBoxUpDown with DataSource needs to implement _ObjectRemoved");
+                    }
+                }
             }
+
+            this._SelectedItemChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void bAdd_Click(object sender, EventArgs e)

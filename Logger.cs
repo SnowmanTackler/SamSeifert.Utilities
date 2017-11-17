@@ -19,16 +19,16 @@ namespace SamSeifert.Utilities
             Logger.Writer(s);
         }
 
-        public static void WriteError(Object o, String s)
+        public static void WriteError(Object sender, String hint)
         {
-            Type t = (o is Type) ? (o as Type) : o.GetType();
-            Logger.Writer("Error -" + t.FullName + ": " + s);
+            Type t = (sender is Type) ? (sender as Type) : sender.GetType();
+            Logger.Writer("Error -" + t.FullName + ": " + hint);
         }
 
-        public static void WriteException(Object o, String s, Exception exc)
+        public static void WriteException(Object sender, String hint, Exception exc)
         {
-            Type t = (o is Type) ? (o as Type) : o.GetType();
-            Logger.Writer("Exception -" + t.FullName + ": " + s + ", " + exc.ToString());
+            Type t = (sender is Type) ? (sender as Type) : sender.GetType();
+            Logger.Writer("Exception -" + t.FullName + ": " + hint + ", " + exc.ToString());
         }
 
 
