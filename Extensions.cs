@@ -32,6 +32,5 @@ namespace SamSeifert.GLE
                 (float)Math.Cos(angle),
                 (float)Math.Sin(angle));
         }
-
     }
 }
