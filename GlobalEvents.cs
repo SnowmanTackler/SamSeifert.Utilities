@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
+using SamSeifert.Utilities.DataStructures;
 
 namespace SamSeifert.Utilities
 {
+    public delegate void GlobalWheel(GlobalEvents.WheelArgs evnt);
+
     public class GlobalEvents : IMessageFilter
     {
         private static GlobalEvents Instance = new GlobalEvents();
@@ -17,7 +20,46 @@ namespace SamSeifert.Utilities
         }
 
         private bool clickedL = false;
-        private Point pointL = new Point();
+        private Point _LastCursorPosition = new Point();
+        private static DefaultDict<Keys, bool> _KeysPressed = new DefaultDict<Keys, bool>(false);
+
+        public class WheelArgs
+        {
+            /// <summary>
+            /// Set to true if you want this event to not continue propogating
+            /// </summary>
+            public bool _Handled = false;
+            public readonly int _Delta;
+            public readonly Point _CursorPosition;
+            public readonly IntPtr _Target;
+
+            public WheelArgs(int delta, IntPtr target, Point cursor_position)
+            {
+//                this._Delta = delta;
+//                this._Target = target;
+//                this._CursorPosition = cursor_position;
+            }
+        }
+
+        private event GlobalWheel _MouseWheel;
+        public static event GlobalWheel MouseWheel
+        {
+            add
+            {
+                lock (Instance)
+                {
+                    Instance._MouseWheel += value;
+                }
+            }
+            remove
+            {
+                lock (Instance)
+                {
+                    Instance._MouseWheel -= value;
+                }
+            }
+        }
+
 
         private event MouseEventHandler _LMouseDown;
         public static event MouseEventHandler LMouseDown
@@ -142,79 +184,144 @@ namespace SamSeifert.Utilities
             {
                 lock (Instance)
                 {
-                    return Instance.pointL;
+                    return Instance._LastCursorPosition;
                 }
             }
-        }
-
-        private MouseEventArgs getMouseEventArgs()
-        {
-            return new MouseEventArgs(MouseButtons.Left, 1, Cursor.Position.X, Cursor.Position.Y, 0);
         }
 
         public bool PreFilterMessage(ref Message m)
         {
+            Keys ks;
             lock (this)
             {
-                if (m.Msg == WM_LBUTTONDOWN)
+                switch (m.Msg)
                 {
-                    if (this._LMouseDown != null) this._LMouseDown(null, this.getMouseEventArgs());
-                    this.pointL = Cursor.Position;
-                    this.clickedL = true;
-                }
-                else if (m.Msg == WM_LBUTTONUP)
-                {
-                    if (this._LMouseUp != null) this._LMouseUp(null, this.getMouseEventArgs());
-                    this.clickedL = false;
-                }
-                else if (m.Msg == WM_MOUSEMOVE)
-                {
-                    Point drag = new Point(Cursor.Position.X - this.pointL.X, Cursor.Position.Y - this.pointL.Y);
+                    case WM_LBUTTONDOWN:
+                        this._LMouseDown?.Invoke(null, new MouseEventArgs(
+                            MouseButtons.Left,
+                            1,
+                            this._LastCursorPosition.X,
+                            this._LastCursorPosition.Y,
+                            0));
+                        this._LastCursorPosition = Cursor.Position;
+                        this.clickedL = true;
+                        break;
+                    case WM_LBUTTONUP:
+                        this._LMouseUp?.Invoke(null, new MouseEventArgs(
+                            MouseButtons.Left,
+                            1,
+                            this._LastCursorPosition.X,
+                            this._LastCursorPosition.Y,
+                            0));
+                        this.clickedL = false;
+                        break;
+                    case WM_MOUSEMOVE:
+                        var new_pos = Cursor.Position;
+                        Point drag = new Point(
+                            new_pos.X - this._LastCursorPosition.X,
+                            new_pos.Y - this._LastCursorPosition.Y);
+                        this._LastCursorPosition = new_pos;
 
-                    if (this.clickedL)
-                    {
-                        if (this._LMouseDrag != null)
-                            this._LMouseDrag(this, new MouseEventArgs(MouseButtons.Left, 1, drag.X, drag.Y, 0));
-                    }
+                        if (this.clickedL)
+                            this._LMouseDrag?.Invoke(this, new MouseEventArgs(MouseButtons.Left, 1, drag.X, drag.Y, 0));
 
-                    if (this._MouseMove != null)
-                        this._MouseMove(this, this.getMouseEventArgs());
+                        this._MouseMove?.Invoke(this, new MouseEventArgs(
+                            MouseButtons.None,
+                            1,
+                            this._LastCursorPosition.X,
+                            this._LastCursorPosition.Y,
+                            0));
 
-                    this.pointL = Cursor.Position;
-                }
-                else if (m.Msg == WM_KEYDOWN)
-                {
-                    Keys ks = (Keys)(m.WParam);
-                    GlobalEvents.keyTable[ks] = true;
+                        break;
+                    case WM_MOUSEWHEEL:
+                        {
+                            // m.HWnd corresponds to a control.
+                            // m.WParam corresponds to wheel
+                            
+                            // Point mouseAbsolutePosition = new Point(m.LParam.ToInt32());
+                            // Point mouseRelativePosition = mCtrl.PointToClient(mouseAbsolutePosition);
 
-                    //                if (!this.isKeyPressed(ks))
-                    if (this._KeyDown != null)
-                        this._KeyDown(null, EventArgs.Empty);
+                            // IntPtr hControlUnderMouse = WindowFromPoint(mouseAbsolutePosition);
+                            // Control controlUnderMouse = Control.FromHandle(hControlUnderMouse);
+
+                            // MouseButtons buttons = GetMouseButtons(m.WParam.ToInt32());
+
+                            /*
+                            Logger.WriteLine(Convert.ToString(m.WParam.ToInt64(), 2));
+                            var e = new WheelArgs(
+                                (int)(m.WParam.ToInt64() >> 16), // delta
+                                m.HWnd,
+                                this._LastCursorPosition
+                                );
+                            this._MouseWheel?.Invoke(e);
+                            if (e._Handled) return true;
+                            */
+                            break;
+                        }
+                    case WM_KEYDOWN:
+                        ks = (Keys)(m.WParam);
+                        GlobalEvents._KeysPressed[ks] = true;
+                        // if (!this.isKeyPressed(ks))
+                        this._KeyDown?.Invoke(null, EventArgs.Empty);
+                        break;
+                    case WM_KEYUP:
+                        ks = (Keys)(m.WParam);
+                        GlobalEvents._KeysPressed[ks] = false;
+                        this._KeyUp?.Invoke(null, EventArgs.Empty);
+                        break;
                 }
-                else if (m.Msg == WM_KEYUP)
-                {
-                    Keys ks = (Keys)(m.WParam);
-                    GlobalEvents.keyTable[ks] = false;
-                    if (this._KeyUp != null) this._KeyUp(null, EventArgs.Empty);
-                }
-                return false;
             }
+            return false;
         }
 
+        private static MouseButtons GetMouseButtons(int wParam)
+        {
+            MouseButtons buttons = MouseButtons.None;
 
-        private static Dictionary<Keys, bool> keyTable = new Dictionary<Keys, bool>();
+            if (HasFlag(wParam, 0x0001)) buttons |= MouseButtons.Left;
+            if (HasFlag(wParam, 0x0010)) buttons |= MouseButtons.Middle;
+            if (HasFlag(wParam, 0x0002)) buttons |= MouseButtons.Right;
+            if (HasFlag(wParam, 0x0020)) buttons |= MouseButtons.XButton1;
+            if (HasFlag(wParam, 0x0040)) buttons |= MouseButtons.XButton2;
+
+            return buttons;
+        }
+
+        private static bool HasFlag(int input, int flag)
+        {
+            return (input & flag) == flag;
+        }
 
         public static bool isKeyPressed(Keys k)
         {
             lock (Instance)
             {
-                bool pressed = false;
-                GlobalEvents.keyTable.TryGetValue(k, out pressed);
-                return pressed;
+                return GlobalEvents._KeysPressed[k];
             }
         }
 
-        private static Keys[] _NumberKeys = new Keys[]
+        public static bool isNumberPressed(int i)
+        {
+            if (i < 0) return false;
+            if (i > 9) return false;
+            lock (Instance)
+                return GlobalEvents._KeysPressed[_NumberKeys[i]];
+        }
+
+        /// <summary>
+        /// When we are crossing multiple forms the key presses can get lost on new forms.
+        /// </summary>
+        /// <param name="p"></param>
+        public static void ForceDown(Keys p)
+        {
+            lock (Instance)
+            {
+                GlobalEvents._KeysPressed[p] = false;
+            }
+        }
+
+
+        private readonly static Keys[] _NumberKeys = new Keys[]
         {
             Keys.D0,
             Keys.D1,
@@ -227,31 +334,6 @@ namespace SamSeifert.Utilities
             Keys.D8,
             Keys.D9,
         };
-
-        public static bool isNumberPressed(int i)
-        {
-            if (i < 0) return false;
-            if (i > 9) return false;
-            lock (Instance)
-            {
-                bool pressed = false;
-                GlobalEvents.keyTable.TryGetValue(_NumberKeys[i], out pressed);
-                return pressed;
-            }
-        }
-
-        /// <summary>
-        /// When we are crossing multiple forms the key presses can get lost on new forms.
-        /// </summary>
-        /// <param name="p"></param>
-        public static void ForceDown(Keys p)
-        {
-            lock (Instance)
-            {
-                GlobalEvents.keyTable[p] = false;
-            }
-        }
-
 
         #region Windows constants
 
