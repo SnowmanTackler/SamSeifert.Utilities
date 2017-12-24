@@ -73,9 +73,27 @@ namespace SamSeifert.Utilities
             return result;
         }
 
+        /// <summary>
+        /// Get a sub array from data!
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <param name="index"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static List<T> SubList<T>(this List<T> data, int index, int length)
+        {
+            return data.GetRange(index, length);
+        }
+
         public static T[] SubArray<T>(this T[] data, int index)
         {
             return data.SubArray(index, data.Length - index);
+        }
+
+        public static List<T> SubList<T>(this List<T> data, int index)
+        {
+            return data.GetRange(index, data.Count - index);
         }
 
 
@@ -85,6 +103,40 @@ namespace SamSeifert.Utilities
             Array.Sort(arg);
             return arg;
         }
-       
+
+        public static void Fill<T>(this T[] ie, T t)
+        {
+            for (int i = 0; i < ie.Length; i++)
+                ie[i] = t;
+        }
+
+        public static void Fill<T>(this T[] ie, Func<T> t)
+        {
+            for (int i = 0; i < ie.Length; i++)
+                ie[i] = t();
+        }
+
+        public static void Fill<T>(this T[] ie, Func<int, T> t)
+        {
+            for (int i = 0; i < ie.Length; i++)
+                ie[i] = t(i);
+        }
+
+
+
+
+
+
+
+
+
+
+
+        public static void Add<T>(this HashSet<T> t, IEnumerable<T> ie)
+        {
+            foreach (var i in ie)
+                t.Add(i);
+        }
+
     }
 }

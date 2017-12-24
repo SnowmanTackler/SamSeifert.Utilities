@@ -83,10 +83,7 @@
     </Compile>
     <Compile Include="CustomControls\EventSuspender.cs" />
     <Compile Include="CustomControls\FilePicker.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CustomControls\FilePicker.Designer.cs">
-      <DependentUpon>FilePicker.cs</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="CustomControls\LayoutSuspender.cs" />
     <Compile Include="CustomControls\ListBoxUpDown.cs">
