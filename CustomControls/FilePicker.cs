@@ -62,6 +62,8 @@ namespace SamSeifert.Utilities.CustomControls
             this.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.DoubleClick += new System.EventHandler(this.textBox1_DoubleClick);
 
+            this.openFileDialog1.FileOk += this.openFileDialog1_FileOk;
+
             object outo;
             if (FilePicker._Values.TryGetValue(this._SaveIdentifier, out outo))
                 if (outo is String)
