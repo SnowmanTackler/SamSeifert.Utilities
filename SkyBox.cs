@@ -47,7 +47,7 @@ namespace SamSeifert.GLE
 
             if (f != null)
             {
-                foreach (var search in f.getMatches(ref kPos))
+                foreach (var search in f.getGapMatches(kPos))
                 {
                     if (search._Params.TryGetValue(kX, out output))
                         if (Double.TryParse(output, out outputD))
@@ -60,7 +60,7 @@ namespace SamSeifert.GLE
                             this._LightPos[2] = (float)outputD;
                 }
 
-                foreach (var search in f.getMatches(ref kDir))
+                foreach (var search in f.getGapMatches(kDir))
                 {
                     if (search._Params.TryGetValue(kX, out output))
                         if (Double.TryParse(output, out outputD))
@@ -73,8 +73,8 @@ namespace SamSeifert.GLE
                             this._LightDir[2] = (float)outputD;
                 }
 
-                foreach (var search in f.getMatches(ref kExt)) search._Params.TryGetValue(kType, out this._StringExt);
-                foreach (var search in f.getMatches(ref kHalf)) this._BoolFull = false;
+                foreach (var search in f.getGapMatches(kExt)) search._Params.TryGetValue(kType, out this._StringExt);
+                foreach (var search in f.getGapMatches(kHalf)) this._BoolFull = false;
             }
         }
 

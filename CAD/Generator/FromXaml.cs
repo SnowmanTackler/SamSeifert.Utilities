@@ -30,7 +30,7 @@ namespace SamSeifert.GLE.CAD.Generator
         {
             var f = TagFile.ParseText(FileText);
             String match0 = "ModelVisual3D";
-            var match0L = f.getMatches(ref match0);
+            var match0L = f.getGapMatches(match0).ToList();
 
             TagFile parent = null;
 
@@ -538,10 +538,10 @@ namespace SamSeifert.GLE.CAD.Generator
             String matchE = "EmissionMaterial";
             String matchX = "SolidColorBrush";
 
-            var matchD_ = f0.getMatches(ref matchD, ref matchX);
-            var matchS_ = f0.getMatches(ref matchS, ref matchX);
-            var matchA_ = f0.getMatches(ref matchA, ref matchX);
-            var matchE_ = f0.getMatches(ref matchE, ref matchX);
+            var matchD_ = f0.getGapMatches(matchD, matchX).ToList();
+            var matchS_ = f0.getGapMatches(matchS, matchX).ToList();
+            var matchA_ = f0.getGapMatches(matchA, matchX).ToList();
+            var matchE_ = f0.getGapMatches(matchE, matchX).ToList();
 
             Color diffuse = Color.Black;
             Color specular = Color.Black;
