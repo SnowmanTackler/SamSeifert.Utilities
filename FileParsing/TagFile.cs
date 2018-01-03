@@ -5,18 +5,73 @@ using System.Text;
 
 namespace SamSeifert.Utilities.FileParsing
 {
-    public interface TagItem
+    public abstract class TagItem
     {
-        void Display();
-        void Display(String prec);
-        IEnumerable<TagItem> Enumerate();
+        protected abstract bool MatchesName(String name);
+        protected readonly WeakReference<TagFile> _Parent = new WeakReference<TagFile>(null);
+
+        public void Display()
+        {
+            this.Display(" ");
+        }
+
+        public abstract void Display(String prec);
+        public abstract IEnumerable<TagItem> Enumerate();
+
+        public TagFile GetParent(int levels = 1)
+        {
+            if (levels < 1) throw new Exception("TagItem GetParent levels less than 1");
+            TagFile parent;
+            if (this._Parent.TryGetTarget(out parent))
+            {
+                if (levels == 1) return parent;
+                else return parent.GetParent(levels - 1);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Current level is first, highest parent is last.
+        /// Tag Text will only match the name "Null"
+        /// Tag Files will only match their given name
+        /// </summary>
+        /// <param name="hits"></param>
+        /// <returns></returns>
+        public bool MatchesHeirarchicalNaming(params String[] hits)
+        {
+            if (hits == null) throw new Exception("TagItem MatchesHeirarchicalNaming null input");
+            if (hits.Length == 0) throw new Exception("TagItem MatchesHeirarchicalNaming 0 length input");
+
+            if (this.MatchesName(hits[0]))
+            {
+                if (hits.Length == 1) return true;
+                else
+                {
+                    TagFile parent;
+                    if (this._Parent.TryGetTarget(out parent))
+                    {
+                        return parent.MatchesHeirarchicalNaming(hits.SubArray(1));
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return false;
+        }
+
     }
 
     public class TagText : TagItem
     {
-        public String text;
+        public String _Text;
 
-        public TagText(String input, out bool valid)
+        public TagText(TagFile parent, String input, out bool valid)
         {
             valid = false;
             input = input.Trim();
@@ -27,26 +82,27 @@ namespace SamSeifert.Utilities.FileParsing
                 last_lens = input.Length;
                 input = input.Replace("\n\n", "\n");
             }
-            this.text = input.Replace("\n", " ");;
+            this._Text = input.Replace("\n", " ");;
+            this._Parent.SetTarget(parent);
             valid = true;
         }
 
-        public void Display()
-        {
-            this.Display(" ");
-        }
-
-        public void Display(String prec)
+        public override void Display(String prec)
         {
             Console.Write((prec.Length - 1).ToString("00"));
             Console.Write(prec);
             Console.Write("\"");
-            Console.Write(this.text);
+            Console.Write(this._Text);
             Console.Write("\"");
             Console.Write(Environment.NewLine);
         }
 
-        public IEnumerable<TagItem> Enumerate()
+        protected override bool MatchesName(string name)
+        {
+            return null == name;
+        }
+
+        public override IEnumerable<TagItem> Enumerate()
         {
             yield return this;
         }
@@ -56,8 +112,8 @@ namespace SamSeifert.Utilities.FileParsing
     {
         public String _Name = "";
         public TagItem[] _Children = new TagItem[] { };
-        public Dictionary<String, String> _Params = new Dictionary<String, String>();
-        public List<String> _ParamsOrder = new List<String>();
+        public readonly Dictionary<String, String> _Params = new Dictionary<String, String>();
+        public readonly List<String> _ParamsOrder = new List<String>();
 
         const char TB_OPEN = '<';
         const char TB_CLOSE = '>';
@@ -67,9 +123,9 @@ namespace SamSeifert.Utilities.FileParsing
         const char FSLASH = '/';
         const char QMARK = '?';
 
-        private TagFile()
+        private TagFile(TagFile parent)
         {
-
+            this._Parent.SetTarget(parent);
         }
 
         public TagFile(params TagFile[] children)
@@ -77,7 +133,7 @@ namespace SamSeifert.Utilities.FileParsing
             this._Children = children;
         }
 
-        public IEnumerable<TagItem> Enumerate()
+        public override IEnumerable<TagItem> Enumerate()
         {
             yield return this;
             foreach (var child in this._Children)
@@ -215,7 +271,7 @@ namespace SamSeifert.Utilities.FileParsing
                         {
                             bool add;
                             String so = new String(input, text_start, text_length);
-                            var tfa = new TagText(so, out add);
+                            var tfa = new TagText(this, so, out add);
                             if (add) chillis.Add(tfa);
                             text_start = -1;
                         }
@@ -229,7 +285,7 @@ namespace SamSeifert.Utilities.FileParsing
                         else
                         {
                             inBracketName = true;
-                            cTBF = new TagFile();
+                            cTBF = new TagFile(this);
                             cStart = start;
                         }
                     }
@@ -248,13 +304,12 @@ namespace SamSeifert.Utilities.FileParsing
             this._Children = chillis.ToArray();
         }
 
-
-        public void Display()
+        protected override bool MatchesName(string name)
         {
-            this.Display(" ");
+            return String.Equals(name, this._Name);
         }
 
-        public void Display(String prec)
+        public override void Display(String prec)
         {
             Console.Write((prec.Length - 1).ToString("00"));
             Console.Write(prec);
@@ -292,40 +347,57 @@ namespace SamSeifert.Utilities.FileParsing
 
 
 
-
-        public List<TagFile> getMatches(String hit)
+        // Finds all children 
+        public IEnumerable<TagFile> getMatchesAtAnyDepth(params String[] hits)
         {
-            return this.getMatches(ref hit);
+            return this.getMatches(false, hits);
         }
 
-
-        public List<TagFile> getMatches(ref String hit)
+        public IEnumerable<TagFile> getMatchesAtZeroDepth(params String[] hits)
         {
-            var ls = new List<TagFile>();
+            string[] nhits = new string[hits.Length + 1];
+            Array.Copy(hits, 0, nhits, 1, hits.Length);
+            nhits[0] = this._Name;
+            return this.getMatches(true, nhits);
+        }
 
-            if (this._Name.Equals(hit)) ls.Add(this);
-            else 
+        private IEnumerable<TagFile> getMatches(bool found_root, String[] hits)
+        {
+            if (hits == null) throw new Exception("TagFile getMatches null input");
+            if (hits.Length == 0) throw new Exception("TagFile getMatches 0 length input");
+
+            String hit = hits[0];
+
+            if (this._Name.Equals(hit))
+            {
+                if (hits.Length == 1) yield return this;
+                else
+                {
+                    var new_hits = hits.SubArray(1);
+                    foreach (var c in this._Children)
+                        if (c is TagFile)
+                            foreach (var cc in (c as TagFile).getMatches(true, new_hits))
+                                yield return cc;
+                }
+            }
+            else if (!found_root) // has to be sequential once we find root, otherwise, go deeper
+            {
                 foreach (var c in this._Children)
                     if (c is TagFile)
-                        ls.AddRange((c as TagFile).getMatches(ref hit));
-
-            return ls;
+                        foreach (var cc in (c as TagFile).getMatches(false, hits))
+                            yield return cc;
+            }
         }
 
         public List<TagFile> getMatches(String hit1, String hit2)
         {
-            return this.getMatches(ref hit1, ref hit2);            
-        }
-
-        public List<TagFile> getMatches(ref String hit1, ref String hit2)
-        {
             var ls = new List<TagFile>();
 
-            if (this._Name.Equals(hit1)) ls.AddRange(this.getMatches(ref hit2));
+            if (this._Name.Equals(hit1)) ls.AddRange(this.getMatchesAtAnyDepth(hit2));
             else
                 foreach (var c in this._Children) 
                     if (c is TagFile)
-                        ls.AddRange((c as TagFile).getMatches(ref hit1, ref hit2));
+                        ls.AddRange((c as TagFile).getMatches(hit1, hit2));
 
             return ls;
         }

@@ -33,7 +33,7 @@ namespace SamSeifert.Utilities
 
 
         private static volatile Action<String> _Writer = (String s) => {
-            Trace.WriteLine(s);
+            Console.WriteLine(s);
         };
 
         public static Action<String> Writer

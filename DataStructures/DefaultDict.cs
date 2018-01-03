@@ -50,7 +50,7 @@ namespace SamSeifert.Utilities.DataStructures
 
         /// <summary>
         /// Returns value for key if in dictionary, or default value (null).
-        /// Handing when using dict.TryGetValue(key)?.Method();
+        /// Handy when using dict.TryGetValue(key)?.Method();
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>

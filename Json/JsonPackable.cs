@@ -25,6 +25,11 @@ namespace SamSeifert.Utilities.Json
             nud.Value = value.Clampp(nud.Minimum, nud.Maximum);
         }
 
+        public static void AddValueMinMaxSafe(this NumericUpDown nud, Decimal value)
+        {
+            nud.SetValueMinMaxSafe(nud.Value + value);
+        }
+
         public static void Unpack(this NumericUpDown nud, JsonDict dict, string key)
         {
             object outo;
