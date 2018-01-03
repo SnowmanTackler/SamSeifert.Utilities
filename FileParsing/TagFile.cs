@@ -347,12 +347,21 @@ namespace SamSeifert.Utilities.FileParsing
 
 
 
-        // Finds all children 
+        /// <summary>
+        /// Forces all children to be sequential depths, not neccesarily right after root.
+        /// </summary>
+        /// <param name="hits"></param>
+        /// <returns></returns>
         public IEnumerable<TagFile> getMatchesAtAnyDepth(params String[] hits)
         {
             return this.getMatches(false, hits);
         }
 
+        /// <summary>
+        /// Forces all children to be sequential depths, and right after root.
+        /// </summary>
+        /// <param name="hits"></param>
+        /// <returns></returns>
         public IEnumerable<TagFile> getMatchesAtZeroDepth(params String[] hits)
         {
             string[] nhits = new string[hits.Length + 1];
@@ -361,7 +370,19 @@ namespace SamSeifert.Utilities.FileParsing
             return this.getMatches(true, nhits);
         }
 
-        private IEnumerable<TagFile> getMatches(bool found_root, String[] hits)
+        /// <summary>
+        /// Doesn't force sequential at all!
+        /// Can go hit1, deep1, deep2, hit2, deep3, hit3
+        /// </summary>
+        /// <param name="hits"></param>
+        /// <returns></returns>
+        public IEnumerable<TagFile> getGapMatches(params String[] hits)
+        {
+            bool irrelevant = false;
+            return getMatches(irrelevant, hits, true);
+        }
+
+        private IEnumerable<TagFile> getMatches(bool force_next, String[] hits, bool gap_allowed = false)
         {
             if (hits == null) throw new Exception("TagFile getMatches null input");
             if (hits.Length == 0) throw new Exception("TagFile getMatches 0 length input");
@@ -376,30 +397,17 @@ namespace SamSeifert.Utilities.FileParsing
                     var new_hits = hits.SubArray(1);
                     foreach (var c in this._Children)
                         if (c is TagFile)
-                            foreach (var cc in (c as TagFile).getMatches(true, new_hits))
+                            foreach (var cc in (c as TagFile).getMatches(true, new_hits, gap_allowed))
                                 yield return cc;
                 }
             }
-            else if (!found_root) // has to be sequential once we find root, otherwise, go deeper
+            else if ((!force_next) || gap_allowed) // has to be sequential once we find root, otherwise, go deeper
             {
                 foreach (var c in this._Children)
                     if (c is TagFile)
-                        foreach (var cc in (c as TagFile).getMatches(false, hits))
+                        foreach (var cc in (c as TagFile).getMatches(false, hits, gap_allowed))
                             yield return cc;
             }
-        }
-
-        public List<TagFile> getMatches(String hit1, String hit2)
-        {
-            var ls = new List<TagFile>();
-
-            if (this._Name.Equals(hit1)) ls.AddRange(this.getMatchesAtAnyDepth(hit2));
-            else
-                foreach (var c in this._Children) 
-                    if (c is TagFile)
-                        ls.AddRange((c as TagFile).getMatches(hit1, hit2));
-
-            return ls;
         }
 
         public void getStringXML(out String front, out string back)
