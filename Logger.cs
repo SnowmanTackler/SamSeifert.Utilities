@@ -22,13 +22,13 @@ namespace SamSeifert.Utilities
         public static void WriteError(Object sender, String hint)
         {
             Type t = (sender is Type) ? (sender as Type) : sender.GetType();
-            Logger.Writer("Error -" + t.FullName + ": " + hint);
+            Logger.Writer("Error - " + t.FullName + ": " + hint);
         }
 
         public static void WriteException(Object sender, String hint, Exception exc)
         {
             Type t = (sender is Type) ? (sender as Type) : sender.GetType();
-            Logger.Writer("Exception -" + t.FullName + ": " + hint + ", " + exc.ToString());
+            Logger.Writer("Exception - " + t.FullName + ": " + hint + ", " + exc.ToString());
         }
 
 

@@ -157,6 +157,9 @@ namespace SamSeifert.Utilities.MultiThreading
             }
         }
 
+        /// <summary>
+        /// Returns false if the queue is either currently working or has more items to do
+        /// </summary>
         public bool _ThreadSafe_Waiting
         {
             get

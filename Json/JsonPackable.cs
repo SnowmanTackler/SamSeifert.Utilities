@@ -90,11 +90,48 @@ namespace SamSeifert.Utilities.Json
 
 
 
+        /// <summary>
+        /// No exception
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static bool asGeneric<T>(this JsonDict d, String key, out T t)
+        {
+            object outo;
+            if (d.TryGetValue(key, out outo))
+                if (outo is T)
+                {
+                    t = (T)outo;
+                    return true;
+                }
+
+            t = default(T);
+            return false;
+        }
+
+        /// <summary>
+        /// Throws exception if key isn't there.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public static T asGeneric<T>(this JsonDict d, String key)
         {
             return (T)d[key];
         }
 
+        /// <summary>
+        /// No exception
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <param name="empty_or_error_value"></param>
+        /// <returns></returns>
         public static T asGeneric<T>(this JsonDict d, String key, T empty_or_error_value)
         {
             object outo;
