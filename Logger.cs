@@ -19,6 +19,11 @@ namespace SamSeifert.Utilities
             Logger.Writer(s);
         }
 
+        public static void WriteLine(params object[] doug)
+        {            
+            Logger.Writer(String.Join(", ", doug));
+        }
+
         public static void WriteError(Object sender, String hint)
         {
             Type t = (sender is Type) ? (sender as Type) : sender.GetType();

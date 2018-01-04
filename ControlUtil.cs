@@ -181,8 +181,6 @@ namespace SamSeifert.Utilities
             else Properties.Settings.Default.FormWindowState = Convert.ToInt32(f.WindowState);
 
             Properties.Settings.Default.Save();
-
         }
-
     }
 }
