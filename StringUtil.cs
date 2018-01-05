@@ -19,5 +19,17 @@ namespace SamSeifert.Utilities
             return new MemoryStream(e.GetBytes(s));
         }
 
+        public static String RemoveDoubleSpaces(this string s)
+        {
+            int lens = -1;
+
+            while (lens != s.Length)
+            {
+                lens = s.Length;
+                s = s.Replace("  ", " ");
+            }
+
+            return s;
+        }
     }
 }

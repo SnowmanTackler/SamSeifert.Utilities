@@ -14,14 +14,35 @@ namespace SamSeifert.Utilities
         {
             get
             {
-                var pa = System.IO.Path.Combine(
-                    Application.ExecutablePath,
-                    "..",
-                    "..",
-                    "..",
-                    "Settings");
+                var exe_path = Application.ExecutablePath;
 
-                return Path.GetFullPath(pa);
+                const string pf = "Program Files";
+                if (exe_path.Contains(pf)) // When Installed!  Use same directory structure as EXE in Program files, but in AppData (all users)
+                {
+                    var ls = new List<String>();
+
+                    String dir = exe_path;
+                    String last_part = null;
+
+                    while (true)
+                    {
+                        dir = Path.GetDirectoryName(dir);
+                        if (dir == null) break;
+                        last_part = Path.GetFileName(dir);
+                        if (last_part.Contains(pf)) break;
+                        ls.Insert(0, last_part);
+                    }
+
+                    ls.Insert(0, Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData));
+
+                    return Path.Combine(ls.ToArray());
+                }
+                else return Path.GetFullPath(Path.Combine(
+                        exe_path,
+                        "..",
+                        "..",
+                        "..",
+                        "Settings"));
             }
         }
 
@@ -42,6 +63,7 @@ namespace SamSeifert.Utilities
         public static String Read(string file_name)
         {
             string path = Path.Combine(Folder, file_name);
+
             if (File.Exists(path))
                 return File.ReadAllText(path);
             else return null;
