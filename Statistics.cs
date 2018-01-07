@@ -14,7 +14,7 @@ namespace SamSeifert.Utilities
         /// <param name="std"></param>
         /// <param name="rand"></param>
         /// <returns></returns>
-        public static float NextGaussian(Random rand, Single std = 1.0f, Single mean = 0.0f)
+        public static float NextGaussian(this Random rand, Single std = 1.0f, Single mean = 0.0f)
         {
             double u1 = rand.NextDouble(); //these are uniform(0,1) random doubles
             double u2 = rand.NextDouble();
@@ -29,24 +29,13 @@ namespace SamSeifert.Utilities
         /// <param name="std"></param>
         /// <param name="rand"></param>
         /// <returns></returns>
-        public static Double NextGaussian(Random rand, Double std = 1.0f, Double mean = 0.0f)
+        public static Double NextGaussian(this Random rand, Double std = 1.0f, Double mean = 0.0f)
         {
             double u1 = rand.NextDouble(); //these are uniform(0,1) random doubles
             double u2 = rand.NextDouble();
             double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2);
             return mean + std * randStdNormal;
             // double randNormal = mean + stdDev * randStdNormal;
-        }
-
-        /// <summary>
-        /// Returns -1 to 1
-        /// </summary>
-        /// <param name="std"></param>
-        /// <param name="rand"></param>
-        /// <returns></returns>
-        public static float NextNormal(Single std, Random rand)
-        {
-            return std * (1 - 2 * ((float)(rand.NextDouble())));
         }
 
         /// <summary>
@@ -72,17 +61,6 @@ namespace SamSeifert.Utilities
             return entropy;
         }
 
-        /// <summary>
-        /// Samples will be normalized to sum to 1, so do whatever you want!
-        /// </summary>
-        /// <param name="a"></param>
-        /// <returns></returns>
-        public static double Entropy(params int[] a)
-        {
-            return Statistics.Entropy(a);
-        }
-
-
 
         /// <summary>
         /// Samples will be normalized to sum to 1, so do whatever you want!
@@ -105,16 +83,6 @@ namespace SamSeifert.Utilities
             }
 
             return entropy;
-        }
-
-        /// <summary>
-        /// Samples will be normalized to sum to 1, so do whatever you want!
-        /// </summary>
-        /// <param name="a"></param>
-        /// <returns></returns>
-        public static double Entropy(params float[] a)
-        {
-            return Statistics.Entropy(a);
         }
     }
 }

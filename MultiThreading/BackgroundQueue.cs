@@ -118,7 +118,7 @@ namespace SamSeifert.Utilities.MultiThreading
                 }
             }
 
-            form.Invoke(
+            form.BeginInvoke(
                 (Action)(() => {
                     form.FormClosing -= this.FormClosing;
                 }));
@@ -172,6 +172,9 @@ namespace SamSeifert.Utilities.MultiThreading
             }
         }
 
+        /// <summary>
+        /// BEc
+        /// </summary>
         public void _ThreadSafe_Join()
         {
             this._Thread?.Join();
