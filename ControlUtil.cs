@@ -147,8 +147,14 @@ namespace SamSeifert.Utilities
 
 
 
+        public static IEnumerable<T> GetChildren<T>(this Control c) where T : Control
+        {
+            foreach (var child in c.Controls)
+                if (child is T)
+                    yield return child as T;
+        }
 
-        public static T GetParent<T>(this Control c) where T : class
+        public static T GetParent<T>(this Control c) where T : Control
         {
             if (c is T) return c as T;
             else if (c.Parent == null) return null;

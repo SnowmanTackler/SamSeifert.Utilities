@@ -80,31 +80,39 @@ namespace SamSeifert.Utilities.Json
 
         public int asInt(String key)
         {
-            return (int)Math.Round((double)this[key]);
+            object outo = this[key];
+            if (outo is double) return (int)Math.Round((double)outo);
+            else if (outo is int) return (int)outo;
+            else throw new NotImplementedException();
         }
 
         public int asInt(String key, int empty_or_error_value)
         {
             object outo;
             if (this.TryGetValue(key, out outo))
-                if (outo is double)
-                    return (int)Math.Round((double)outo);
-
+            {
+                if (outo is double) return (int)Math.Round((double)outo); // when Unpack() does doubles
+                else if (outo is int) return (int)outo; // when user adds int
+            }
             return empty_or_error_value;
         }
 
         public float asFloat(String key)
         {
-            return (float)(double)this[key];
+            object outo = this[key];
+            if (outo is double) return (float)(double)outo;
+            else if (outo is float) return (float)outo;
+            else throw new NotImplementedException();
         }
 
         public float asFloat(String key, float empty_or_error_value)
         {
             object outo;
             if (this.TryGetValue(key, out outo))
-                if (outo is double)
-                    return (float)(double)outo;
-
+            {
+                if (outo is double) return (float)(double)outo; // when Unpack() does doubles
+                else if (outo is float) return (float)outo; // user adds float
+            }
             return empty_or_error_value;
         }
 
@@ -139,6 +147,9 @@ namespace SamSeifert.Utilities.Json
         }
 
 
+
+
+
         // //////////////////// DEFAULTS
 
         public string asString(String key)
@@ -149,30 +160,6 @@ namespace SamSeifert.Utilities.Json
         public string asString(String key, string empty_or_error_value)
         {
             return this.asGeneric(key, empty_or_error_value);
-        }
-
-
-
-        // /////////////////// ADDERS
-
-        public void addInt(String key, int f)
-        {
-            this[key] = (double)f;
-        }
-
-        public void addFloat(String key, float f)
-        {
-            this[key] = (double)f;
-        }
-
-        public void addDouble(String key, double f)
-        {
-            this[key] = f;
-        }
-
-        public void addBool(String key, bool f)
-        {
-            this[key] = f;
         }
 
 
