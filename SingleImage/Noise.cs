@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using SamSeifert.Utilities;
 
 namespace SamSeifert.CSCV
 {
@@ -16,9 +17,15 @@ namespace SamSeifert.CSCV
         SaltAndPepper
     };
 
+    public enum RandomSeed
+    {
+        TimeVarying,
+        Constant
+    }
+
     public static partial class SingleImage
     {
-        public static ToolboxReturn Noise(Sect inpt, NoiseType nt, Single p, ref Sect outp)
+        public static ToolboxReturn Noise(Sect inpt, NoiseType nt, RandomSeed rs, Single p, ref Sect outp)
         {
             if (inpt == null)
             {
@@ -27,7 +34,12 @@ namespace SamSeifert.CSCV
             }
             else
             {
-                Random r = new Random(Environment.TickCount);
+                int seed = Environment.TickCount;
+
+                if (rs == RandomSeed.Constant)
+                    seed = 0;
+
+                Random r = new Random(seed);               
 
                 Action<Sect, SectArray> act = (Sect anon_inpt, SectArray anon_outp) =>
                 {
@@ -55,13 +67,15 @@ namespace SamSeifert.CSCV
                                 {
                                     for (int x = 0; x < w; x++)
                                     {
-                                        anon_outp[y, x] = anon_inpt[y, x] + Utilities.Statistics.NextGaussian(r, p);
+                                        anon_outp[y, x] = anon_inpt[y, x] + p * (1 - 2 *  (float)r.NextDouble());
                                     }
                                 }
                                 break;
                             }
                         case NoiseType.SaltAndPepper:
                             {
+                                r = new Random(0); // So each image has same pixels firing
+                                p = p.Clampp(0, 1);
                                 for (int y = 0; y < h; y++)
                                 {
                                     for (int x = 0; x < w; x++)

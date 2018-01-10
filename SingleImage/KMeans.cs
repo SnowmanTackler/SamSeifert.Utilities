@@ -136,7 +136,7 @@ namespace SamSeifert.CSCV
                         }
                     }
 
-                    if (no_changes) // We're done here!
+                    if ((no_changes) && (iterations != 0)) // We're done here!
                         break;
 
                     for (int k = 0; k < K; k++)
@@ -144,6 +144,9 @@ namespace SamSeifert.CSCV
                         if (new_cluster_counts[k] == 0) return ToolboxReturn.SpecialError; // Nothing in cluster!
                         cluster_centers[k] = new_cluster_centers[k] / new_cluster_counts[k];
                     }
+
+                    if (no_changes) // We're done here!
+                        break;
                 }
 
                 for (int s = 0; s < out_sects.Count; s++)
