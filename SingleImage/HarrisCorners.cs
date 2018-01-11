@@ -31,7 +31,11 @@ namespace SamSeifert.CSCV
             ref HarrisCornersMemory memory, 
             ref Sect outp)
         {
-            if (inpt == null)
+            if (span % 2 == 0)
+            {
+                return ToolboxReturn.SpecialError;
+            }
+            else if (inpt == null)
             {
                 outp = null;
                 return ToolboxReturn.NullInput;

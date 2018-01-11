@@ -189,19 +189,48 @@ namespace SamSeifert.CSCV
 
 
 
-
-
-        public void NormalizeMax()
+        public static void Normalize(SectArray[] sects, float min_value = 0, float max_value = 1)
         {
+            if (max_value <= min_value) throw new Exception();
+
             float max = float.MinValue;
+            float min = float.MaxValue;
+
+            foreach (var s in sects)
+                for (int i = 0; i < s._Height; i++)
+                    for (int j = 0; j < s._Width; j++)
+                    {
+                        max = Math.Max(max, s.Data[i, j]);
+                        min = Math.Min(min, s.Data[i, j]);
+                    }
+
+            float scalar = (max == min) ? 0 : (max_value - min_value) / (max - min);
+
+            foreach (var s in sects)
+                for (int i = 0; i < s._Height; i++)
+                    for (int j = 0; j < s._Width; j++)
+                        s.Data[i, j] = (s.Data[i, j] - min) * scalar + min_value;
+        }
+
+        public void Normalize(float min_value = 0, float max_value = 1)
+        {
+            if (max_value <= min_value) throw new Exception();
+
+            float max = float.MinValue;
+            float min = float.MaxValue;
 
             for (int i = 0; i < this._Height; i++)
                 for (int j = 0; j < this._Width; j++)
+                {
                     max = Math.Max(max, this.Data[i, j]);
+                    min = Math.Min(min, this.Data[i, j]);
+                }
 
+            float scalar = (max == min) ? 0 : (max_value - min_value) / (max - min);
+                               
             for (int i = 0; i < this._Height; i++)
                 for (int j = 0; j < this._Width; j++)
-                    this.Data[i, j] /= max;
+                    this.Data[i, j] = (this.Data[i, j] - min) * scalar + min_value;
         }
 
         public void NormalizeSum()
@@ -289,7 +318,7 @@ namespace SamSeifert.CSCV
                 public static SectArray NormalizedMax1D(SectType t, Single sigma, int span)
                 {
                     SectArray sa = G(t, sigma, 1, span);
-                    sa.NormalizeMax();
+                    sa.Normalize();
                     return sa;
                 }
 
@@ -317,7 +346,7 @@ namespace SamSeifert.CSCV
                 public static SectArray NormalizedMax2D(SectType t, Single sigma, int span)
                 {
                     SectArray sa = G(t, sigma, span, span);
-                    sa.NormalizeMax();
+                    sa.Normalize();
                     return sa;
                 }
             }
