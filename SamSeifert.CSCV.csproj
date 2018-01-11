@@ -56,11 +56,11 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="HistogramViewer.cs" />
     <Compile Include="HoughTransform.cs" />
-    <Compile Include="MultipleImages\Add.cs" />
+    <Compile Include="MultipleImages\Sum.cs" />
     <Compile Include="MultipleImages\Convolute.cs" />
     <Compile Include="MultipleImages\ErodeDilate.cs" />
     <Compile Include="MultipleImages\Helpers.cs" />
-    <Compile Include="MultipleImages\Multiply.cs" />
+    <Compile Include="MultipleImages\Product.cs" />
     <Compile Include="SingleImage\Anonymous.cs" />
     <Compile Include="SingleImage\AnonymousExtensions.cs" />
     <Compile Include="SingleImage\BitsPerPixel.cs" />

@@ -32,7 +32,7 @@ namespace SamSeifert.CSCV
             return Anonymous(inpt, ref outp, func);
         }
 
-        public static ToolboxReturn Threshold(Sect inpt, ref Sect outp, Single thresh)
+        public static ToolboxReturn Threshold(Sect inpt, Single thresh, ref Sect outp)
         {
             Func<Single, Single> func = (float f) => { return f < thresh ? 0 : 1; };
             return Anonymous(inpt, ref outp, func);

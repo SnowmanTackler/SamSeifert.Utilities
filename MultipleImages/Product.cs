@@ -8,7 +8,14 @@ namespace SamSeifert.CSCV
 {
     public static partial class MultipleImages
     {
-        public static ToolboxReturn Multiply(Sect[] inpt, ref Sect outp)
+        /// <summary>
+        /// Postive signs are multiplied, negative signs are inverted then multiplied
+        /// </summary>
+        /// <param name="inpt"></param>
+        /// <param name="signs"></param>
+        /// <param name="outp"></param>
+        /// <returns></returns>
+        public static ToolboxReturn Product(Sect[] inpt, Boolean[] signs, ref Sect outp)
         {
             var ret = MatchSectTypes(inpt, ref outp);
             if (ret != ToolboxReturn.Good) return ret;
@@ -17,19 +24,20 @@ namespace SamSeifert.CSCV
             int w = sz.Width;
             int h = sz.Height;
 
-            Action<Sect, Sect, Boolean> act = (Sect anon_inpt, Sect anon_outp, bool first) =>
+            Action<Sect, Sect, Boolean> act = (Sect anon_inpt, Sect anon_outp, bool sign) =>
             {
-                if (first)
+                if (sign)
                 {
                     for (int y = 0; y < h; y++)
                         for (int x = 0; x < w; x++)
-                            anon_outp[y, x] = anon_inpt[y, x];
+                            anon_outp[y, x] *= anon_inpt[y, x];
                 }
                 else
                 {
                     for (int y = 0; y < h; y++)
                         for (int x = 0; x < w; x++)
-                            anon_outp[y, x] *= anon_inpt[y, x];
+                            anon_outp[y, x] /= anon_inpt[y, x];
+
                 }
             };
 
@@ -37,26 +45,22 @@ namespace SamSeifert.CSCV
             {
                 foreach (var sect_out in (outp as SectHolder).Sects.Values)
                 {
-                    bool first = true;
-
+                    (sect_out as SectArray).SetValue(1);
                     for (int i = 0; i < inpt.Length; i++)
                     {
                         Sect sect_in = inpt[i];
                         if (sect_in._Type == SectType.Holder) sect_in = (sect_in as SectHolder).Sects[sect_out._Type];
-                        act(sect_in, sect_out, first);
-                        first = false;
+                        act(sect_in, sect_out, signs[i]);
                     }
                 }
             }
             else
             {
-                bool first = true;
-
+                (outp as SectArray).SetValue(1);
                 for (int i = 0; i < inpt.Length; i++)
                 {
                     Sect sect_in = inpt[i];
-                    act(sect_in, outp, first);
-                    first = false;
+                    act(sect_in, outp, signs[i]);
                 }
             }
 
