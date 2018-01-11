@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SamSeifert.Utilities
+namespace SamSeifert.Utilities.Extensions
 {
-    public static class TableLayoutPanelUtil
+    public static class TableLayoutPanelE
     {
         public static void RemoveColumn(this TableLayoutPanel p, int column)
         {

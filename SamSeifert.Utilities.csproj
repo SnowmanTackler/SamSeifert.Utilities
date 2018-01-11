@@ -55,7 +55,8 @@
   <ItemGroup>
     <Compile Include="ArrayUtil.cs" />
     <Compile Include="ColorUtil.cs" />
-    <Compile Include="ControlUtil.cs" />
+    <Compile Include="Continuous360.cs" />
+    <Compile Include="ControlHolder.cs" />
     <Compile Include="CustomControls\AbstractControlDescriptionProvider.cs" />
     <Compile Include="CustomControls\ButtonDown.cs">
       <SubType>Component</SubType>
@@ -99,8 +100,15 @@
     <Compile Include="DataStructures\ImpulseManager.cs" />
     <Compile Include="DateTimeUtil.cs" />
     <Compile Include="DisposableCollection.cs" />
-    <Compile Include="EnumerableUtil.cs" />
     <Compile Include="EnumUtil.cs" />
+    <Compile Include="Extensions\ArrayE.cs" />
+    <Compile Include="Extensions\ControlE.cs" />
+    <Compile Include="Extensions\DictionaryE.cs" />
+    <Compile Include="Extensions\FormE.cs" />
+    <Compile Include="Extensions\HashSetE.cs" />
+    <Compile Include="Extensions\ListE.cs" />
+    <Compile Include="Extensions\NumericUpDownE.cs" />
+    <Compile Include="Extensions\RichTextBoxE.cs" />
     <Compile Include="FileParsing\BracketFile.cs" />
     <Compile Include="FileParsing\TagFile.cs" />
     <Compile Include="GlobalEvents.cs" />
@@ -137,7 +145,7 @@
     <Compile Include="ScreenCapture.cs" />
     <Compile Include="Statistics.cs" />
     <Compile Include="StringUtil.cs" />
-    <Compile Include="TableLayoutPanelUtil.cs" />
+    <Compile Include="Extensions\TableLayoutPanelE.cs" />
     <Compile Include="UnitConverter.cs" />
     <EmbeddedResource Include="CustomControls\CenteringControl.resx">
       <DependentUpon>CenteringControl.cs</DependentUpon>

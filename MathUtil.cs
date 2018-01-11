@@ -91,31 +91,58 @@ namespace SamSeifert.Utilities
 
 
 
+
+
+
+
+        public static int ToThe(this int f, double power)
+        {
+            return (int)Math.Round(Math.Pow(f, power));
+        }
+
+        public static float ToThe(this float f, double power)
+        {
+            return (float) Math.Pow(f, power);
+        }
+
+        public static double ToThe(this double f, double power)
+        {
+            return Math.Pow(f, power);
+        }
+
+
+
         public static int Squared(this int f)
         {
-            return f * f;
+            return f.ToThe(2);
         }
 
         public static float Squared(this float f)
         {
-            return f * f;
+            return f.ToThe(2);
         }
 
         public static double Squared(this double f)
         {
-            return f * f;
+            return f.ToThe(2);
         }
 
 
 
+
+        public static int SquareRoot(this int f)
+        {
+            return f.ToThe(0.5);
+        }
+
         public static float SquareRoot(this float f)
         {
-            return (float)Math.Sqrt(f);
+            return f.ToThe(0.5);
         }
 
         public static double SquareRoot(this double f)
         {
-            return Math.Sqrt(f);
+            return f.ToThe(0.5);
         }
 
 
@@ -176,53 +203,79 @@ namespace SamSeifert.Utilities
 
 
 
-
-
-        public class Continuous360_Radians
+        public static int NumberOfNonZeros(this IEnumerable<int> nums)
         {
-            protected readonly float _Increment;
-
-            private float _Angle = 0;
-            private int _TurnCount = 0;
-
-            protected Continuous360_Radians(float inc)
-            {
-                this._Increment = inc;
-            }
-
-            public Continuous360_Radians() : this(UnitConverter.PIF * 2)
-            {
-            }
-
-            public void SetAngle(float raw_angle)
-            {
-                this._Angle = raw_angle;
-            }
-
-            public float UpdateAngle(float raw_angle)
-            {
-                float angle;
-
-                while (true)
-                {
-                    angle = raw_angle + this._TurnCount * this._Increment;
-                    float yawP1 = angle + this._Increment;
-                    float yawM1 = angle - this._Increment;
-                    if (Math.Abs(yawP1 - this._Angle) < Math.Abs(angle - this._Angle)) this._TurnCount++;
-                    else if (Math.Abs(yawM1 - this._Angle) < Math.Abs(angle - this._Angle)) this._TurnCount--;
-                    else break;
-                }
-
-                this._Angle = angle;
-                return angle;
-            }
+            int ret = 0;
+            foreach (var num in nums)
+                if (num != 0)
+                    ret++;
+            return ret;
         }
 
-        public class Continuous360 : Continuous360_Radians
+        public static int NumberOfNonZeros(this IEnumerable<float> nums)
         {
-            public Continuous360() : base(360)
+            int ret = 0;
+            foreach (var num in nums)
+                if (num != 0)
+                    ret++;
+            return ret;
+        }
+        public static int NumberOfNonZeros(this IEnumerable<double> nums)
+        {
+            int ret = 0;
+            foreach (var num in nums)
+                if (num != 0)
+                    ret++;
+            return ret;
+        }
+
+
+
+        /// <summary>
+        /// Samples will be normalized to sum to 1, so do whatever you want!
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static double Entropy(this IEnumerable<int> a)
+        {
+            double sum = a.Sum();
+
+            if (sum == 0) throw new Exception("No Input!");
+
+            double entropy = 0;
+
+            foreach (var i in a)
             {
+                if (i == 0) continue;
+                double p = i / sum;
+                entropy -= p * Math.Log(p, 2);
             }
+
+            return entropy;
+        }
+
+
+        /// <summary>
+        /// Samples will be normalized to sum to 1, so do whatever you want!
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static double Entropy(this IEnumerable<float> a)
+        {
+            double sum = a.Sum();
+
+            if (sum == 0) throw new Exception("No Input!");
+
+            double entropy = 0;
+
+            foreach (var i in a)
+            {
+                if (i == 0) continue;
+                double p = i / sum;
+                entropy -= p * Math.Log(p, 2);
+            }
+
+            return entropy;
         }
     }
 }
