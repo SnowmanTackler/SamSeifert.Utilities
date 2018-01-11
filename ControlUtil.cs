@@ -144,6 +144,26 @@ namespace SamSeifert.Utilities
             return (float)nud.Value;
         }
 
+        public static void AppendText(this RichTextBox box, char text, Color color)
+        {
+            box.AppendText(text.ToString(), color);
+        }
+
+        public static void AppendText(this RichTextBox box, string text, Color color)
+        {
+            box.SelectionStart = box.TextLength;
+            box.SelectionLength = 0;
+            box.SelectionColor = color;
+
+            box.AppendText(text);
+            box.SelectionColor = box.ForeColor;
+        }
+
+
+
+
+
+
 
 
 
@@ -160,6 +180,16 @@ namespace SamSeifert.Utilities
             else if (c.Parent == null) return null;
             else return c.Parent.GetParent<T>();
         }
+
+
+
+
+
+
+
+
+
+
 
         public static void LoadFormState(this Form f)
         {
