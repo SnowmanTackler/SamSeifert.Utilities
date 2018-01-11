@@ -17,27 +17,35 @@ namespace SamSeifert.CSCV
             public readonly float _Mean = 0;
             public readonly float _StandardDeviation = 0;
 
-            public Stats(Sect s)
+            public Stats(Sect input_sect)
             {
-                if (s is SectHolder) throw new Exception();
-                var sz = s.getPrefferedSize();
+                var ls = new List<Sect>();
+
+                if (input_sect is SectHolder) ls.AddRange((input_sect as SectHolder).Sects.Values);
+                else ls.Add(input_sect);
+
+                var sz = input_sect.getPrefferedSize();
 
                 float xi2 = 0;
                 float xi = 0;
 
-                for (int y = 0; y < sz.Height; y++)
+
+                foreach (var s in ls)
                 {
-                    for (int x = 0; x < sz.Width; x++)
+                    for (int y = 0; y < sz.Height; y++)
                     {
-                        float val = s[y, x];
-                        this._Min = Math.Min(val, this._Min);
-                        this._Max = Math.Max(val, this._Max);
-                        xi += val;
-                        xi2 += val * val;
+                        for (int x = 0; x < sz.Width; x++)
+                        {
+                            float val = s[y, x];
+                            this._Min = Math.Min(val, this._Min);
+                            this._Max = Math.Max(val, this._Max);
+                            xi += val;
+                            xi2 += val * val;
+                        }
                     }
                 }
 
-                int pixels = sz.Height * sz.Width;
+                int pixels = sz.Height * sz.Width * ls.Count;
 
                 float mean = xi / pixels;
                 this._Mean = mean;                
@@ -51,6 +59,9 @@ namespace SamSeifert.CSCV
         public abstract Boolean isSquishy();
         public abstract Size getPrefferedSize();
         public abstract Sect Transpose();
+        public abstract void Normalize(float min_value, float max_value);
+        public void Normalize() { this.Normalize(0, 1); }
+
 
         public Sect(SectType t)
         {
@@ -73,6 +84,7 @@ namespace SamSeifert.CSCV
                 throw new NotImplementedException();
             }
         }
+
 
 
         /// <summary>

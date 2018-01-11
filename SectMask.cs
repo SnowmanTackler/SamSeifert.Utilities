@@ -19,6 +19,11 @@ namespace SamSeifert.CSCV
             this._Sect = s;
         }
 
+        public override void Normalize(float min_value, float max_value)
+        {
+            this._Sect.Normalize(min_value, max_value);
+        }
+
         public override Boolean isSquishy()
         {
             return this._Sect.isSquishy();

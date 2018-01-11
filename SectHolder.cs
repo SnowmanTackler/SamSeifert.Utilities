@@ -73,6 +73,26 @@ namespace SamSeifert.CSCV
             }
         }
 
+        public override void Normalize(float min_value, float max_value)
+        {
+            if (max_value <= min_value) throw new Exception();
+
+            var stats = this.getStats();
+
+            float scalar = (stats._Max == stats._Min) ? 0 : (max_value - min_value) / (stats._Max - stats._Min);
+
+            foreach (var s in _Sects.Values)
+            {
+                if (!(s is SectArray))
+                    throw new Exception();
+                var sa = s as SectArray;
+                for (int i = 0; i < this.Height; i++)
+                    for (int j = 0; j < this.Width; j++)
+                        sa.Data[i, j] = (sa.Data[i, j] - stats._Min) * scalar + min_value;
+
+            }
+        }
+
         public override Boolean isSquishy()
         {
             return false;

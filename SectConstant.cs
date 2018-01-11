@@ -15,6 +15,11 @@ namespace SamSeifert.CSCV
             this.value = v;
         }
 
+        public override void Normalize(float min_value, float max_value)
+        {
+            throw new Exception();
+        }
+
         public override Boolean isSquishy()
         {
             return true;

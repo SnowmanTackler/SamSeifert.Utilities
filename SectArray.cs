@@ -188,49 +188,17 @@ namespace SamSeifert.CSCV
 
 
 
-
-        public static void Normalize(SectArray[] sects, float min_value = 0, float max_value = 1)
+        public override void Normalize(float min_value, float max_value)
         {
             if (max_value <= min_value) throw new Exception();
 
-            float max = float.MinValue;
-            float min = float.MaxValue;
+            var stats = this.getStats();
 
-            foreach (var s in sects)
-                for (int i = 0; i < s._Height; i++)
-                    for (int j = 0; j < s._Width; j++)
-                    {
-                        max = Math.Max(max, s.Data[i, j]);
-                        min = Math.Min(min, s.Data[i, j]);
-                    }
-
-            float scalar = (max == min) ? 0 : (max_value - min_value) / (max - min);
-
-            foreach (var s in sects)
-                for (int i = 0; i < s._Height; i++)
-                    for (int j = 0; j < s._Width; j++)
-                        s.Data[i, j] = (s.Data[i, j] - min) * scalar + min_value;
-        }
-
-        public void Normalize(float min_value = 0, float max_value = 1)
-        {
-            if (max_value <= min_value) throw new Exception();
-
-            float max = float.MinValue;
-            float min = float.MaxValue;
-
-            for (int i = 0; i < this._Height; i++)
-                for (int j = 0; j < this._Width; j++)
-                {
-                    max = Math.Max(max, this.Data[i, j]);
-                    min = Math.Min(min, this.Data[i, j]);
-                }
-
-            float scalar = (max == min) ? 0 : (max_value - min_value) / (max - min);
+            float scalar = (stats._Max == stats._Min) ? 0 : (max_value - min_value) / (stats._Max - stats._Min);
                                
             for (int i = 0; i < this._Height; i++)
                 for (int j = 0; j < this._Width; j++)
-                    this.Data[i, j] = (this.Data[i, j] - min) * scalar + min_value;
+                    this.Data[i, j] = (this.Data[i, j] - stats._Min) * scalar + min_value;
         }
 
         public void NormalizeSum()
