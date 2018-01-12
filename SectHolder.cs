@@ -23,7 +23,7 @@ namespace SamSeifert.CSCV
         }
         public int Height
         {
-            get { return this._Size.Width; }
+            get { return this._Size.Height; }
         }
 
         public SectHolder(Size sz, params SectType[] sects)
@@ -81,13 +81,16 @@ namespace SamSeifert.CSCV
 
             float scalar = (stats._Max == stats._Min) ? 0 : (max_value - min_value) / (stats._Max - stats._Min);
 
+            int height = this.Height;
+            int width = this.Width;
+
             foreach (var s in _Sects.Values)
             {
                 if (!(s is SectArray))
                     throw new Exception();
                 var sa = s as SectArray;
-                for (int i = 0; i < this.Height; i++)
-                    for (int j = 0; j < this.Width; j++)
+                for (int i = 0; i < height; i++)
+                    for (int j = 0; j < width; j++)
                         sa.Data[i, j] = (sa.Data[i, j] - stats._Min) * scalar + min_value;
 
             }
