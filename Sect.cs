@@ -120,73 +120,76 @@ namespace SamSeifert.CSCV
 
         public unsafe static Sect FromImage(Image input, bool grayscale = false)
         {
-            int w = input.Width;
-            int h = input.Height;
-
-            if (grayscale)
+            lock (input) // So we don't try to lock bitmap data twice on same image
             {
-                bool create = false;
+                int w = input.Width;
+                int h = input.Height;
 
-                Bitmap b = input as Bitmap;
-
-                if (b == null) create = true;
-                else if (b.Size != new Size(w, h)) create = true;
-                if (create) b = new Bitmap(input, w, h);
-
-                var of_jaffar = new SectArray(SectType.Gray, w, h);
-
-                BitmapData bmd = b.LockBits(
-                    new Rectangle(0, 0, input.Width, input.Height),
-                     System.Drawing.Imaging.ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-
-                Byte* row;
-                int xx = 0, x;
-
-                for (int y = 0; y < h; y++)
+                if (grayscale)
                 {
-                    row = (Byte*)bmd.Scan0 + (y * bmd.Stride);
+                    bool create = false;
 
-                    for (x = 0, xx = 0; x < w; x++, xx += 3)
+                    Bitmap b = input as Bitmap;
+
+                    if (b == null) create = true;
+                    else if (b.Size != new Size(w, h)) create = true;
+                    if (create) b = new Bitmap(input, w, h);
+
+                    var of_jaffar = new SectArray(SectType.Gray, w, h);
+
+                    BitmapData bmd = b.LockBits(
+                        new Rectangle(0, 0, input.Width, input.Height),
+                         System.Drawing.Imaging.ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+
+                    Byte* row;
+                    int xx = 0, x;
+
+                    for (int y = 0; y < h; y++)
                     {
-                        of_jaffar[y, x] = row[xx + 0] / 255.0f;
+                        row = (Byte*)bmd.Scan0 + (y * bmd.Stride);
+
+                        for (x = 0, xx = 0; x < w; x++, xx += 3)
+                        {
+                            of_jaffar[y, x] = row[xx + 0] / 255.0f;
+                        }
                     }
+
+                    b.UnlockBits(bmd);
+
+                    return of_jaffar;
                 }
-
-                b.UnlockBits(bmd);
-
-                return of_jaffar;
-            }
-            else
-            {
-                var ls = new List<Sect>();
-                ls.Add(new SectArray(SectType.RGB_R, w, h));
-                ls.Add(new SectArray(SectType.RGB_G, w, h));
-                ls.Add(new SectArray(SectType.RGB_B, w, h));
-
-                bool create = false;
-
-                Bitmap b = input as Bitmap;
-
-                if (b == null) create = true;
-                else if (b.Size != new Size(w, h)) create = true;
-                if (create) b = new Bitmap(input, w, h);
-
-                var ret = new SectHolder(ls.ToArray());
-
-                ret.setImage(b);
-
-                Sect comparer = null;
-                foreach (var s in ls)
+                else
                 {
-                    if (comparer == null) comparer = s;
-                    else
-                        for (int y = 0; y < h; y++)
-                            for (int x = 0; x < w; x++)
-                                if (comparer[y, x] != s[y, x])
-                                    return ret;
-                }
+                    var ls = new List<Sect>();
+                    ls.Add(new SectArray(SectType.RGB_R, w, h));
+                    ls.Add(new SectArray(SectType.RGB_G, w, h));
+                    ls.Add(new SectArray(SectType.RGB_B, w, h));
 
-                return new SectMask(SectType.Gray, ls[0]); // Gray Scale Anyway
+                    bool create = false;
+
+                    Bitmap b = input as Bitmap;
+
+                    if (b == null) create = true;
+                    else if (b.Size != new Size(w, h)) create = true;
+                    if (create) b = new Bitmap(input, w, h);
+
+                    var ret = new SectHolder(ls.ToArray());
+
+                    ret.setImage(b);
+
+                    Sect comparer = null;
+                    foreach (var s in ls)
+                    {
+                        if (comparer == null) comparer = s;
+                        else
+                            for (int y = 0; y < h; y++)
+                                for (int x = 0; x < w; x++)
+                                    if (comparer[y, x] != s[y, x])
+                                        return ret;
+                    }
+
+                    return new SectMask(SectType.Gray, ls[0]); // Gray Scale Anyway (if all pixels match)
+                }
             }
         }
 
