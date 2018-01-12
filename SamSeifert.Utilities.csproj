@@ -109,6 +109,7 @@
     <Compile Include="Extensions\ListE.cs" />
     <Compile Include="Extensions\NumericUpDownE.cs" />
     <Compile Include="Extensions\RichTextBoxE.cs" />
+    <Compile Include="Extensions\TimerE.cs" />
     <Compile Include="FileParsing\BracketFile.cs" />
     <Compile Include="FileParsing\TagFile.cs" />
     <Compile Include="GlobalEvents.cs" />
