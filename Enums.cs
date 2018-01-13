@@ -27,7 +27,7 @@ namespace SamSeifert.CSCV
 
         [Description("Saturation")]
         HSL_S,
-        [Description("Ligtness")]
+        [Description("Lightness")]
         HSL_L,
 
         [Description("Saturation")]

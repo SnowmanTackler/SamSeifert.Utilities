@@ -10,22 +10,14 @@ namespace SamSeifert.CSCV
 {
     public partial class SingleImage
     {
-        public static ToolboxReturn RGB2HSV(Sect inpt, ref Sect outp)
+        public static ToolboxReturn RGB2HSV(SectHolder inpt, ref Sect outp)
         {
             if (inpt == null)
             {
                 outp = null;
                 return ToolboxReturn.NullInput;
             }
-            else if (inpt._Type != SectType.Holder)
-            {
-                outp = null;
-                return ToolboxReturn.SpecialError;
-            }
-
-            var sh_in = inpt as SectHolder;
-
-            if (!sh_in.hasRGB())
+            else if (!inpt.hasRGB())
             {
                 outp = null;
                 return ToolboxReturn.SpecialError;
@@ -34,9 +26,9 @@ namespace SamSeifert.CSCV
             {
                 Size sz = inpt.getPrefferedSize();
 
-                var R = sh_in.Sects[SectType.RGB_R];
-                var G = sh_in.Sects[SectType.RGB_G];
-                var B = sh_in.Sects[SectType.RGB_B];
+                var R = inpt.Sects[SectType.RGB_R];
+                var G = inpt.Sects[SectType.RGB_G];
+                var B = inpt.Sects[SectType.RGB_B];
 
                 MatchOutputToSizeAndSectTypes(ref outp, sz, SectType.Hue, SectType.HSV_S, SectType.HSV_V);
 
@@ -74,22 +66,14 @@ namespace SamSeifert.CSCV
             }
         }
 
-        public static ToolboxReturn HSV2RGB(Sect inpt, ref Sect outp)
+        public static ToolboxReturn HSV2RGB(SectHolder inpt, ref Sect outp)
         {
             if (inpt == null)
             {
                 outp = null;
                 return ToolboxReturn.NullInput;
             }
-            else if (inpt._Type != SectType.Holder)
-            {
-                outp = null;
-                return ToolboxReturn.SpecialError;
-            }
-
-            var sh_in = inpt as SectHolder;
-
-            if (!sh_in.hasHSV())
+            else if (!inpt.hasHSV())
             {
                 outp = null;
                 return ToolboxReturn.SpecialError;
@@ -105,9 +89,9 @@ namespace SamSeifert.CSCV
 
                 var sh_out = outp as SectHolder;
 
-                var H = sh_in.Sects[SectType.Hue];
-                var S = sh_in.Sects[SectType.HSV_S];
-                var V = sh_in.Sects[SectType.HSV_V];
+                var H = inpt.Sects[SectType.Hue];
+                var S = inpt.Sects[SectType.HSV_S];
+                var V = inpt.Sects[SectType.HSV_V];
 
                 var R = (sh_out.Sects[SectType.RGB_R] as SectArray).Data;
                 var G = (sh_out.Sects[SectType.RGB_G] as SectArray).Data;
