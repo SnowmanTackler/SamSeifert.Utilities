@@ -102,6 +102,8 @@
     <Compile Include="DisposableCollection.cs" />
     <Compile Include="EnumUtil.cs" />
     <Compile Include="Extensions\ArrayE.cs" />
+    <Compile Include="Extensions\CheckBoxE.cs" />
+    <Compile Include="Extensions\ComboBoxE.cs" />
     <Compile Include="Extensions\ControlE.cs" />
     <Compile Include="Extensions\DictionaryE.cs" />
     <Compile Include="Extensions\FormE.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Extensions\ListE.cs" />
     <Compile Include="Extensions\NumericUpDownE.cs" />
     <Compile Include="Extensions\RichTextBoxE.cs" />
+    <Compile Include="Extensions\TextBoxE.cs" />
     <Compile Include="Extensions\TimerE.cs" />
     <Compile Include="FileParsing\BracketFile.cs" />
     <Compile Include="FileParsing\TagFile.cs" />

@@ -78,6 +78,19 @@ namespace SamSeifert.Utilities.Json
             return JsonParser.ToString(this);
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
         public int asInt(String key)
         {
             object outo = this[key];
@@ -131,17 +144,57 @@ namespace SamSeifert.Utilities.Json
             return empty_or_error_value;
         }
 
-        public bool asBool(String key)
-        {
-            return (bool)this[key];
-        }
-
-        public bool asBool(String key, bool empty_or_error_value)
+        /// <summary>
+        /// No exception thrown.
+        /// Do not use for int, float, double
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public bool asGeneric<T>(String key, out T t)
         {
             object outo;
             if (this.TryGetValue(key, out outo))
-                if (outo is bool)
-                    return (bool)outo;
+                if (outo is T)
+                {
+                    t = (T)outo;
+                    return true;
+                }
+
+            t = default(T);
+            return false;
+        }
+
+        /// <summary>
+        /// Throws exception if key isn't there.
+        /// Do not use for int, float, double
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public T asGeneric<T>(String key)
+        {
+            return (T)this[key];
+        }
+
+        /// <summary>
+        /// No exception thrown.  
+        /// Do not use for int, float, double
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <param name="empty_or_error_value"></param>
+        /// <returns></returns>
+        public T asGeneric<T>(String key, T empty_or_error_value)
+        {
+            object outo;
+            if (this.TryGetValue(key, out outo))
+                if (outo is T)
+                    return (T)outo;
 
             return empty_or_error_value;
         }
