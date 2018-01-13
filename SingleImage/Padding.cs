@@ -243,6 +243,9 @@ namespace SamSeifert.CSCV
                 outp_sz.Width -= pad * 2;
                 outp_sz.Height -= pad * 2;
 
+                if (outp_sz.Width <= 0) return ToolboxReturn.SpecialError;
+                if (outp_sz.Height <= 0) return ToolboxReturn.SpecialError;
+
                 Action<Sect, SectArray> act = (Sect anon_inpt, SectArray anon_outp) =>
                 {
                     for (int y = 0; y < outp_sz.Height; y++)
