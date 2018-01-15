@@ -56,5 +56,9 @@ namespace SamSeifert.CSCV
             return new SectMask(this._Type, this._Sect.Transpose());
         }
 
+        public override bool Is<T>()
+        {
+            return this._Sect.Is<T>();
+        }
     }
 }

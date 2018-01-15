@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SamSeifert.Utilities;
+using System.IO;
 
 namespace SamSeifert.CSCV
 {
@@ -61,7 +62,8 @@ namespace SamSeifert.CSCV
         public abstract Sect Transpose();
         public abstract void Normalize(float min_value, float max_value);
         public void Normalize() { this.Normalize(0, 1); }
-
+        public virtual bool Is<T>() { return this is T; }
+        public bool Isnt<T>() { return !this.Is<T>(); }
 
         public Sect(SectType t)
         {
@@ -116,6 +118,12 @@ namespace SamSeifert.CSCV
 
                 }
             }
+        }
+
+        public unsafe static Sect FromFile(String path, bool grayscale = false)
+        {
+            using (var im = Image.FromFile(path))
+                return FromImage(im, grayscale);           
         }
 
         public unsafe static Sect FromImage(Image input, bool grayscale = false)
@@ -493,10 +501,12 @@ namespace SamSeifert.CSCV
 
         public void SaveToFile(string path)
         {
+            var directory = Directory.GetParent(path);
+            if (!directory.Exists)
+                directory.Create();
+
             using (var bp = this.getImage())
-            {
                 bp.Save(path);
-            }
         }
     }
 }
