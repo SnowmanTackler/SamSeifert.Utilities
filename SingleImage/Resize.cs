@@ -20,6 +20,21 @@ namespace SamSeifert.CSCV
 
     public static partial class SingleImage
     {
+        public static ToolboxReturn Resize(Sect inpt, float scale, ResizeType t, ref Sect outp)
+        {
+            if (inpt == null)
+            {
+                outp = null;
+                return ToolboxReturn.NullInput;
+            }
+
+            Size sz = inpt.getPrefferedSize();
+            sz.Width = (int)Math.Round(sz.Width * scale);
+            sz.Height = (int)Math.Round(sz.Height * scale);
+
+            return Resize(inpt, sz, t, ref outp);
+        }
+
         public static ToolboxReturn Resize(Sect inpt, Size sz_out, ResizeType t, ref Sect outp)
         {
             if (inpt == null)
