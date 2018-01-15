@@ -238,6 +238,20 @@ namespace SamSeifert.CSCV
                 return sa;
             }
 
+            public static SectArray FromSquishy(Sect squish, Size sz)
+            {
+                if (!squish.isSquishy()) throw new NotImplementedException();
+                if (squish._Type == SectType.Holder) throw new NotImplementedException();
+                SectArray sa = new SectArray(squish._Type, sz);
+                for (int y = 0; y < sz.Height; y++)
+                {
+                    for (int x = 0; x < sz.Width; x++)
+                    {
+                        sa.Data[y, x] = squish[y, x];
+                    }
+                }
+                return sa;
+            }
 
             public static class Gaussian
             {
