@@ -12,16 +12,16 @@ namespace SamSeifert.Utilities.CustomControls
 {
     public partial class HueFilter : UserControl
     {
-        public float BandWidth { get; private set; } = 0.5f;
-        public float BandCenter { get; private set; } = 0.5f;
+        public float _BandWidth { get; private set; } = 0.5f;
+        public float _BandCenter { get; private set; } = 0.5f;
 
         public void setInitialValues(float band_center, float band_width)
         {
-            this.BandWidth = band_width;
-            this.BandCenter = band_center;
+            this._BandWidth = band_width;
+            this._BandCenter = band_center;
         }
 
-        public event EventHandler ValueChanged;
+        public event EventHandler _ValueChanged;
 
         public HueFilter()
         {
@@ -115,7 +115,7 @@ namespace SamSeifert.Utilities.CustomControls
       
         public Boolean checkHue(float hue)
         {
-            return ColorUtil.CheckHue(hue, this.BandCenter, this.BandWidth);
+            return ColorUtil.CheckHue(hue, this._BandCenter, this._BandWidth);
         }
 
 
@@ -126,7 +126,7 @@ namespace SamSeifert.Utilities.CustomControls
             nud.Maximum = 1;
             nud.Increment = 0.01m;
             nud.DecimalPlaces = 2;
-            nud.Value = (Decimal)this.BandCenter;
+            nud.Value = (Decimal)this._BandCenter;
             nud.ValueChanged += CenterValueChanged;
         }
 
@@ -137,9 +137,9 @@ namespace SamSeifert.Utilities.CustomControls
             else if (nud.Value == -.01m) nud.Value = 0.99m;
             else
             {
-                this.BandCenter = (float)nud.Value;
+                this._BandCenter = (float)nud.Value;
                 this.setImageForControl();
-                if (this.ValueChanged != null) this.ValueChanged(this, EventArgs.Empty);
+                if (this._ValueChanged != null) this._ValueChanged(this, EventArgs.Empty);
             }
         }
 
@@ -149,16 +149,16 @@ namespace SamSeifert.Utilities.CustomControls
             nud.Maximum = 1;
             nud.Increment = 0.01m;
             nud.DecimalPlaces = 2;
-            nud.Value = (Decimal)this.BandWidth;
+            nud.Value = (Decimal)this._BandWidth;
             nud.ValueChanged += WidthValueChanged;
         }
 
         private void WidthValueChanged(object sender, EventArgs e)
         {
             var nud = sender as NumericUpDown;
-            this.BandWidth = (float)nud.Value;
+            this._BandWidth = (float)nud.Value;
             this.setImageForControl();
-            if (this.ValueChanged != null) this.ValueChanged(this, EventArgs.Empty);
+            if (this._ValueChanged != null) this._ValueChanged(this, EventArgs.Empty);
         }
 
     }
