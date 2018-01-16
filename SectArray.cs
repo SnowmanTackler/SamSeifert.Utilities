@@ -255,6 +255,13 @@ namespace SamSeifert.CSCV
 
             public static class Gaussian
             {
+                public static float GetSigmaForFilterSize(int filter_width)
+                {
+                    var sigma = filter_width / 4.0f;
+                    sigma *= sigma;
+                    return sigma;
+                }
+
                 private static SectArray G(SectType t, Single sigma, int w, int h)
                 {
                     SectArray sa = new SectArray(t, w, h);
@@ -330,6 +337,26 @@ namespace SamSeifert.CSCV
                     SectArray sa = G(t, sigma, span, span);
                     sa.Normalize();
                     return sa;
+                }
+
+                public static SectArray NormalizedSum1D(SectType t, int span)
+                {
+                    return NormalizedSum1D(t, GetSigmaForFilterSize(span), span);
+                }
+
+                public static SectArray NormalizedMax1D(SectType t, int span)
+                {
+                    return NormalizedMax1D(t, GetSigmaForFilterSize(span), span);
+                }
+
+                public static SectArray NormalizedSum2D(SectType t, int span)
+                {
+                    return NormalizedSum2D(t, GetSigmaForFilterSize(span), span);
+                }
+
+                public static SectArray NormalizedMax2D(SectType t, int span)
+                {
+                    return NormalizedMax2D(t, GetSigmaForFilterSize(span), span);
                 }
             }
         }

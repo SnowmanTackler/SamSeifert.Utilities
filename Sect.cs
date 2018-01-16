@@ -484,11 +484,12 @@ namespace SamSeifert.CSCV
             }
         }
 
-        public void ShowDialog()
+        public void ShowDialog(String title = "Sect")
         {
             using (var bp = this.getImage())
             {
                 var frm = new System.Windows.Forms.Form();
+                frm.Text = title;
 
                 var pb = new System.Windows.Forms.PictureBox();
                 pb.Image = bp;
