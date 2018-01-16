@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="CAD\GUI\Program.cs" />
     <Compile Include="CAD\Helpers.cs" />
+    <Compile Include="CameraDescriptor.cs" />
     <Compile Include="CubeColorMap.cs" />
     <Compile Include="CubeDepthMap.cs" />
     <Compile Include="DeleteableObject.cs" />

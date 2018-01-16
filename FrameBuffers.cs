@@ -14,9 +14,10 @@ namespace SamSeifert.GLE
 {
     public class FrameBuffers : DeleteableObject
     {
-        public int _ColorText { get; private set; } = 0;
+        public readonly Size _Resolution;
         private int _FrameBuffer = 0;
         public int _DepthBuffer { get; private set; } = 0;
+        public int _ColorText { get; private set; } = 0;
 
         /// <summary>
         /// 
@@ -38,6 +39,8 @@ namespace SamSeifert.GLE
         {
             try
             {
+                this._Resolution = resolution;
+
                 this._FrameBuffer = GL.GenFramebuffer();
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, this._FrameBuffer);
 

@@ -54,34 +54,7 @@ namespace SamSeifert.GLE.CAD.GUI
 
             //            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
 
-            this.glControl1_Resize(sender, e);
-
             Application.Idle += new EventHandler(this.Application_Idle);
-        }
-
-        private void glControl1_Resize(object sender, EventArgs e)
-        {
-            if (this.GLB) return;
-            this.setViewPort();
-        }
-
-        private void setViewPort()
-        {
-            int w = this.glControl1.Width;
-            int h = this.glControl1.Height;
-
-            float aspect = w;
-            aspect /= h;
-
-            GL.setProjection(
-                w,
-                h,
-                60.0f,
-                .1f,
-                1000.0f
-                );
-
-
         }
 
         private void glControl1_Paint(object sender, PaintEventArgs e)
@@ -90,7 +63,14 @@ namespace SamSeifert.GLE.CAD.GUI
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            GL.LoadIdentity();
+            new CameraDescriptor(
+                this.glControl1.Width,
+                this.glControl1.Height,
+                60,
+                true,
+                0.1f,
+                1000f,
+                Matrix4.Identity).SendToGL();
 
             GL.Translate(0, 0, -ObserveDistance);
 

@@ -45,6 +45,5 @@ namespace SamSeifert.GLE
             GL.Enable(EnableCap.DepthTest);
             GL.DepthMask(true);
         }
-
     }
 }
