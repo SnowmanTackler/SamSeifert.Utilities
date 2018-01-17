@@ -11,7 +11,7 @@ using MaterialFace = OpenTK.Graphics.OpenGL.MaterialFace;
 
 namespace SamSeifert.GLE
 {
-    public class Textures
+    public class Textures : DeleteableObject
     {
         public static void BindTexture(int program, TextureUnit textureUnit, string UniformName)
         {
@@ -89,6 +89,25 @@ namespace SamSeifert.GLE
             GL.BindTexture(TextureTarget.Texture2D, 0);
 
             return output;
+        }
+
+        public int _Int { get; private set; } = 0;
+
+        public Textures(Image im, out bool success)
+        {
+            if (im is Bitmap) this._Int = getGLTextureBitmap(im as Bitmap);
+            else this._Int = getGLTexture(im);
+            success = this._Int != 0;
+        }
+
+
+        public void GLDelete()
+        {
+            if (this._Int != 0)
+            {
+                GL.DeleteTexture(this._Int);
+                this._Int = 0;
+            }
         }
     }
 }
