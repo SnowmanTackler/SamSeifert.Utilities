@@ -161,6 +161,7 @@ namespace SamSeifert.CSCV
                 }
 
                 b.UnlockBits(bmd);
+                if (create) b.Dispose();
 
                 return of_jaffar;
             }
@@ -193,6 +194,8 @@ namespace SamSeifert.CSCV
                                 if (comparer[y, x] != s[y, x])
                                     return ret;
                 }
+
+                if (create) b.Dispose();
 
                 return new SectMask(SectType.Gray, ls[0]); // Gray Scale Anyway (if all pixels match)
             }
