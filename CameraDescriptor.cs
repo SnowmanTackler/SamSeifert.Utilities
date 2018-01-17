@@ -12,14 +12,22 @@ namespace SamSeifert.GLE
 {
     public class CameraDescriptor
     {
-        public readonly Size _Resolution;
         public readonly Rectangle _Viewport;
         public readonly Matrix4 _Projection;
         public readonly float _zFar;
         public readonly float _ZNear;
-        public readonly float _HorizontalFOV;
-        public readonly float _VerticalFOV;
+        public readonly float _HorizontalFOV_Radians;
+        public readonly float _VerticalFOV_Radians;
         public readonly Matrix4 _ModelView;
+
+        public readonly Vector3 _ModelView_Eye;
+        public readonly Vector3 _ModelView_Target;
+        public readonly Vector3 _ModelView_Up;
+        public readonly bool _ModelView_Extras;
+
+        public Size _Resolution { get { return this._Viewport.Size; } }
+        public float _HorizontalFOV_Degrees { get { return MathHelper.RadiansToDegrees(this._HorizontalFOV_Radians); } }
+        public float _VerticalFOV_Degrees { get { return MathHelper.RadiansToDegrees(this._VerticalFOV_Radians); } }
 
         private CameraDescriptor(
             int viewport_width,
@@ -39,12 +47,12 @@ namespace SamSeifert.GLE
             if (!fov_vertical_true__fov_horizontal_false)
                 fov_degrees /= aspect;
 
-            this._VerticalFOV = MathHelper.DegreesToRadians(fov_degrees);
-            this._HorizontalFOV = this._VerticalFOV * aspect;
-            this._zFar = zFar;
+            this._VerticalFOV_Radians = MathHelper.DegreesToRadians(fov_degrees);
+            this._HorizontalFOV_Radians = this._VerticalFOV_Radians * aspect;
             this._ZNear = zNear;
+            this._zFar = zFar;
 
-            this._Projection = Matrix4.CreatePerspectiveFieldOfView(this._VerticalFOV, aspect, zNear, zFar);
+            this._Projection = Matrix4.CreatePerspectiveFieldOfView(this._VerticalFOV_Radians, aspect, zNear, zFar);
         }
 
         public CameraDescriptor(
@@ -58,6 +66,11 @@ namespace SamSeifert.GLE
             int viewport_x = 0,
             int viewport_y = 0) : this(viewport_width, viewport_height, vertical_fov_degrees, fov_vertical_true__fov_horizontal_false, zNear, zFar, viewport_x, viewport_y)
         {
+            this._ModelView_Eye = Vector3.Zero;
+            this._ModelView_Target = -Vector3.UnitZ;
+            this._ModelView_Up = Vector3.UnitY;
+            this._ModelView_Extras = false;
+
             this._ModelView = eye;
         }
 
@@ -74,6 +87,10 @@ namespace SamSeifert.GLE
             int viewport_x = 0,
             int viewport_y = 0) : this(viewport_width, viewport_height, vertical_fov_degrees, fov_vertical_true__fov_horizontal_false, zNear, zFar, viewport_x, viewport_y)
         {
+            this._ModelView_Eye = eye;
+            this._ModelView_Target = target;
+            this._ModelView_Up = up;
+            this._ModelView_Extras = true;
             this._ModelView = Matrix4.LookAt(eye, target, up);
         }
 

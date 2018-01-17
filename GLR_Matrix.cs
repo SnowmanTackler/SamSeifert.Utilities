@@ -140,8 +140,8 @@ namespace SamSeifert.GLE
 
         internal static void LoadCamera(CameraDescriptor cameraDescriptor)
         {
-            GLR.Projection_vFOV = cameraDescriptor._VerticalFOV;
-            GLR.Projection_hFOV = cameraDescriptor._HorizontalFOV;
+            GLR.Projection_vFOV = cameraDescriptor._VerticalFOV_Radians;
+            GLR.Projection_hFOV = cameraDescriptor._HorizontalFOV_Radians;
             GLR.Projection_zFar = cameraDescriptor._zFar;
             GLR.Projection_zNear = cameraDescriptor._ZNear;
 
