@@ -15,6 +15,9 @@ namespace SamSeifert.GLE
     public class FrameBuffers : DeleteableObject
     {
         public readonly Size _Resolution;
+        public float _Width { get { return this._Resolution.Width; } }
+        public float _Height { get { return this._Resolution.Height; } }
+
         private int _FrameBuffer = 0;
         public int _DepthBuffer { get; private set; } = 0;
         public int _ColorText { get; private set; } = 0;

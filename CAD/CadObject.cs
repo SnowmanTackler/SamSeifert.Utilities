@@ -66,7 +66,7 @@ namespace SamSeifert.GLE.CAD
 
 
 
-        public void SetMatrix(ref Matrix4 m)
+        public void SetMatrix(Matrix4 m)
         {
             this._Matrix = m;
             this._BoolUseTranslationAndRotation = true;

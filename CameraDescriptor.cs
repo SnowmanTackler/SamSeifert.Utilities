@@ -26,6 +26,9 @@ namespace SamSeifert.GLE
         public readonly bool _ModelView_Extras;
 
         public Size _Resolution { get { return this._Viewport.Size; } }
+        public float _Width { get { return this._Viewport.Width; } }
+        public float _Height { get { return this._Viewport.Height; } }
+
         public float _HorizontalFOV_Degrees { get { return MathHelper.RadiansToDegrees(this._HorizontalFOV_Radians); } }
         public float _VerticalFOV_Degrees { get { return MathHelper.RadiansToDegrees(this._VerticalFOV_Radians); } }
 
