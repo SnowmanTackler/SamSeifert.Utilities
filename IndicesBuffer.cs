@@ -41,6 +41,7 @@ namespace SamSeifert.GLE
         {
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, this._Int);
             GL.DrawElements(pt, this._Count, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
         }
     }
 
