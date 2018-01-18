@@ -9,6 +9,19 @@ namespace SamSeifert.GLE
 {
     public partial class GLR
     {
-        public static Vector4 _ClippingPlane0 = Vector4.Zero;
+        private static Vector4 __ClippingPlane0 = Vector4.Zero;
+        public static Vector4 _ClippingPlane0
+        {
+            get
+            {
+                return GLR.__ClippingPlane0;
+            }
+            set
+            {
+                GLR.ClipPlane(OpenTK.Graphics.OpenGL.ClipPlaneName.ClipDistance0, ref value);
+                GLR.__ClippingPlane0 = value;
+            }
+        }
+
     }
 }

@@ -143,12 +143,27 @@ namespace SamSeifert.GLE
             GLO.Uniform2(this.UniformLocation(uniform_name), ref v);
         }
 
+        public void Uniform(String uniform_name, Vector2 v)
+        {
+            GLO.Uniform2(this.UniformLocation(uniform_name), ref v);
+        }
+
         public void Uniform(String uniform_name, ref Vector3 v)
         {
             GLO.Uniform3(this.UniformLocation(uniform_name), ref v);
         }
 
+        public void Uniform(String uniform_name, Vector3 v)
+        {
+            GLO.Uniform3(this.UniformLocation(uniform_name), ref v);
+        }
+
         public void Uniform(String uniform_name, ref Vector4 v)
+        {
+            GLO.Uniform4(this.UniformLocation(uniform_name), ref v);
+        }
+
+        public void Uniform(String uniform_name, Vector4 v)
         {
             GLO.Uniform4(this.UniformLocation(uniform_name), ref v);
         }
