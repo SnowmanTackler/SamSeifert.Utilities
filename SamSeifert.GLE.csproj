@@ -57,6 +57,7 @@
     <Compile Include="CAD\Generator\Anonymous.cs" />
     <Compile Include="CAD\Generator\Generic.cs" />
     <Compile Include="CAD\Generator\FromXaml.cs" />
+    <Compile Include="GLR_StaticVariables.cs" />
     <Compile Include="CAD\GUI\CadHandler.cs">
       <SubType>UserControl</SubType>
     </Compile>
