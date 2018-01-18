@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using SamSeifert.Utilities;
 using System.IO;
+using SamSeifert.Utilities.Extensions;
 
 namespace SamSeifert.CSCV
 {
@@ -51,6 +52,11 @@ namespace SamSeifert.CSCV
                 float mean = xi / pixels;
                 this._Mean = mean;                
                 this._StandardDeviation = (float)Math.Sqrt(xi2 / pixels - mean * mean);
+            }
+
+            public float Normalize(float f)
+            {
+                return (f - this._Min) / (this._Max - this._Min);
             }
         }
 
@@ -143,24 +149,24 @@ namespace SamSeifert.CSCV
 
                 var of_jaffar = new SectArray(SectType.Gray, w, h);
 
-                BitmapData bmd = b.LockBits(
-                    new Rectangle(0, 0, input.Width, input.Height),
-                        System.Drawing.Imaging.ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-
-                Byte* row;
-                int xx = 0, x;
-
-                for (int y = 0; y < h; y++)
+                using (var bmd = b.Locked(
+                    ImageLockMode.ReadOnly, 
+                    PixelFormat.Format24bppRgb))
                 {
-                    row = (Byte*)bmd.Scan0 + (y * bmd.Stride);
 
-                    for (x = 0, xx = 0; x < w; x++, xx += 3)
+                    Byte* row;
+                    int xx = 0, x;
+
+                    for (int y = 0; y < h; y++)
                     {
-                        of_jaffar[y, x] = row[xx + 0] / 255.0f;
+                        row = (Byte*)bmd.Scan0 + (y * bmd.Stride);
+
+                        for (x = 0, xx = 0; x < w; x++, xx += 3)
+                        {
+                            of_jaffar[y, x] = row[xx + 0] / 255.0f;
+                        }
                     }
                 }
-
-                b.UnlockBits(bmd);
                 if (create) b.Dispose();
 
                 return of_jaffar;
@@ -324,165 +330,161 @@ namespace SamSeifert.CSCV
 
                 if (bmp.Size == sz)
                 {
-                    BitmapData bmd = bmp.LockBits(
-                    new Rectangle(0, 0, sz.Width, sz.Height),
-                    System.Drawing.Imaging.ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
-
-                    Single r, g, b;
-                    Byte* row;
-                    for (int y = 0; y < sz.Height; y++)
+                    using (var bmd = bmp.Locked(
+                    System.Drawing.Imaging.ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb))
                     {
-                        row = (byte*)bmd.Scan0 + (y * bmd.Stride);
-
-                        for (int x = 0, xx = 0; x < sz.Width; x++, xx += 3)
-                        {
-                            anonFunc(y, x, out r, out g, out b);
-                            row[xx + 2] = Helpers.castByte(r * 255);
-                            row[xx + 1] = Helpers.castByte(g * 255);
-                            row[xx + 0] = Helpers.castByte(b * 255);
-                        }
-                    }
-
-                    bmp.UnlockBits(bmd);
-                }
-                else
-                {
-                    Rectangle rect = Sizing.fitAinB(new Size(sz.Width, sz.Height), bmp.Size);
-
-                    BitmapData bmdNew = bmp.LockBits(
-                        new Rectangle(0, 0, bmp.Width, bmp.Height),
-                        System.Drawing.Imaging.ImageLockMode.ReadWrite,
-                        PixelFormat.Format24bppRgb);
-
-                    byte* row;
-                    int xx = 0, x;
-
-                    // Nearest Neighbor [Expansion]
-                    if (rect.Width > sz.Width || rect.Height > sz.Height)
-                    {
-                        int yA, xA;
                         Single r, g, b;
-                        float temp;
-
-                        for (int y = 0; y < bmp.Height; y++)
+                        Byte* row;
+                        for (int y = 0; y < sz.Height; y++)
                         {
-                            temp = y;
-                            temp /= bmp.Height;
-                            temp += 1.0f / (2 * bmp.Height);
-                            // temp is now scaled 0 to 1 on large image 
-                            temp -= 1.0f / (2 * sz.Height);
-                            temp *= sz.Height;
-                            yA = Helpers.Clamp((int)Math.Round(temp), 0, sz.Height - 1);
+                            row = (byte*)bmd.Scan0 + (y * bmd.Stride);
 
-                            row = (Byte*)bmdNew.Scan0 + (y * bmdNew.Stride);
-
-                            for (x = 0, xx = 0; x < bmp.Width; x++, xx += 3)
+                            for (int x = 0, xx = 0; x < sz.Width; x++, xx += 3)
                             {
-                                temp = x;
-                                temp /= bmp.Width;
-                                temp += 1.0f / (2 * bmp.Width);
-                                // temp is now scaled 0 to 1 on large image 
-                                temp -= 1.0f / (2 * sz.Width);
-                                temp *= sz.Width;
-                                xA = Helpers.Clamp((int)Math.Round(temp), 0, sz.Width - 1);
-
-                                anonFunc(yA, xA, out r, out g, out b);
+                                anonFunc(y, x, out r, out g, out b);
                                 row[xx + 2] = Helpers.castByte(r * 255);
                                 row[xx + 1] = Helpers.castByte(g * 255);
                                 row[xx + 0] = Helpers.castByte(b * 255);
                             }
                         }
                     }
-                    // Bilinear [Compression]
-                    else  // TODO: FIX BILINEAR (PIXELS ON BORDER)
+                }
+                else
+                {
+                    Rectangle rect = Sizing.fitAinB(new Size(sz.Width, sz.Height), bmp.Size);
+
+                    using (var bmdNew = bmp.Locked(
+                        ImageLockMode.ReadWrite,
+                        PixelFormat.Format24bppRgb))
                     {
-                        Single rYuXu, gYuXu, bYuXu;
-                        Single rYuXd, gYuXd, bYuXd;
-                        Single rYdXd, gYdXd, bYdXd;
-                        Single rYdXu, gYdXu, bYdXu;
+                        byte* row;
+                        int xx = 0, x;
 
-                        int yUp, yDown;
-                        int xUp, xDown;
-
-                        Single fR = 0;
-                        Single fG = 0;
-                        Single fB = 0;
-                        Single yAdj2 = 0;
-                        Single xAdj2 = 0;
-
-                        Single xAdj, yAdj;
-
-                        for (int y = 0; y < bmp.Height; y++)
+                        // Nearest Neighbor [Expansion]
+                        if (rect.Width > sz.Width || rect.Height > sz.Height)
                         {
-                            yAdj = y * (sz.Height - 1);
-                            yAdj /= (bmp.Height - 1);
-                            yAdj2 = yAdj % 1;
+                            int yA, xA;
+                            Single r, g, b;
+                            float temp;
 
-                            yUp = (int)Math.Ceiling((double)yAdj);
-                            yDown = (int)yAdj;
-
-                            row = (Byte*)bmdNew.Scan0 + (y * bmdNew.Stride);
-
-                            for (x = 0, xx = 0; x < bmp.Width; x++, xx += 3)
+                            for (int y = 0; y < bmp.Height; y++)
                             {
-                                xAdj = x * (sz.Width - 1);
-                                xAdj /= (bmp.Width - 1);
-                                xAdj2 = xAdj % 1;
-                                xUp = (int)Math.Ceiling((double)xAdj);
-                                xDown = (int)xAdj;
+                                temp = y;
+                                temp /= bmp.Height;
+                                temp += 1.0f / (2 * bmp.Height);
+                                // temp is now scaled 0 to 1 on large image 
+                                temp -= 1.0f / (2 * sz.Height);
+                                temp *= sz.Height;
+                                yA = Helpers.Clamp((int)Math.Round(temp), 0, sz.Height - 1);
 
-                                if (xUp == xDown && yUp == yDown)
-                                {
-                                    anonFunc(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
-                                    fR = rYuXu;
-                                    fG = gYuXu;
-                                    fB = bYuXu;
-                                }
-                                else if (xUp == xDown)
-                                {
-                                    anonFunc(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
-                                    anonFunc(yDown, xUp, out rYdXu, out gYdXu, out bYdXu);
-                                    fR = Helpers.getLinearEstimate(rYdXu, rYuXu, yAdj2);
-                                    fG = Helpers.getLinearEstimate(gYdXu, gYuXu, yAdj2);
-                                    fB = Helpers.getLinearEstimate(bYdXu, bYuXu, yAdj2);
-                                }
-                                else if (yUp == yDown)
-                                {
-                                    anonFunc(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
-                                    anonFunc(yUp, xDown, out rYuXd, out gYuXd, out bYuXd);
-                                    fR = Helpers.getLinearEstimate(rYuXd, rYuXu, xAdj2);
-                                    fG = Helpers.getLinearEstimate(gYuXd, gYuXu, xAdj2);
-                                    fB = Helpers.getLinearEstimate(bYuXd, bYuXu, xAdj2);
-                                }
-                                else
-                                {
-                                    anonFunc(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
-                                    anonFunc(yUp, xDown, out rYuXd, out gYuXd, out bYuXd);
-                                    anonFunc(yDown, xDown, out rYdXd, out gYdXd, out bYdXd);
-                                    anonFunc(yDown, xUp, out rYdXu, out gYdXu, out bYdXu);
+                                row = (Byte*)bmdNew.Scan0 + (y * bmdNew.Stride);
 
-                                    fR = Helpers.getLinearEstimate(
-                                         Helpers.getLinearEstimate(rYdXd, rYuXd, yAdj2),
-                                         Helpers.getLinearEstimate(rYdXu, rYuXu, yAdj2),
-                                         xAdj2);
-                                    fG = Helpers.getLinearEstimate(
-                                         Helpers.getLinearEstimate(gYdXd, gYuXd, yAdj2),
-                                         Helpers.getLinearEstimate(gYdXu, gYuXu, yAdj2),
-                                         xAdj2);
-                                    fB = Helpers.getLinearEstimate(
-                                         Helpers.getLinearEstimate(bYdXd, bYuXd, yAdj2),
-                                         Helpers.getLinearEstimate(bYdXu, bYuXu, yAdj2),
-                                         xAdj2);
-                                }
+                                for (x = 0, xx = 0; x < bmp.Width; x++, xx += 3)
+                                {
+                                    temp = x;
+                                    temp /= bmp.Width;
+                                    temp += 1.0f / (2 * bmp.Width);
+                                    // temp is now scaled 0 to 1 on large image 
+                                    temp -= 1.0f / (2 * sz.Width);
+                                    temp *= sz.Width;
+                                    xA = Helpers.Clamp((int)Math.Round(temp), 0, sz.Width - 1);
 
-                                row[xx + 2] = Helpers.castByte(fR * 255);
-                                row[xx + 1] = Helpers.castByte(fG * 255);
-                                row[xx + 0] = Helpers.castByte(fB * 255);
+                                    anonFunc(yA, xA, out r, out g, out b);
+                                    row[xx + 2] = Helpers.castByte(r * 255);
+                                    row[xx + 1] = Helpers.castByte(g * 255);
+                                    row[xx + 0] = Helpers.castByte(b * 255);
+                                }
+                            }
+                        }
+                        // Bilinear [Compression]
+                        else  // TODO: FIX BILINEAR (PIXELS ON BORDER)
+                        {
+                            Single rYuXu, gYuXu, bYuXu;
+                            Single rYuXd, gYuXd, bYuXd;
+                            Single rYdXd, gYdXd, bYdXd;
+                            Single rYdXu, gYdXu, bYdXu;
+
+                            int yUp, yDown;
+                            int xUp, xDown;
+
+                            Single fR = 0;
+                            Single fG = 0;
+                            Single fB = 0;
+                            Single yAdj2 = 0;
+                            Single xAdj2 = 0;
+
+                            Single xAdj, yAdj;
+
+                            for (int y = 0; y < bmp.Height; y++)
+                            {
+                                yAdj = y * (sz.Height - 1);
+                                yAdj /= (bmp.Height - 1);
+                                yAdj2 = yAdj % 1;
+
+                                yUp = (int)Math.Ceiling((double)yAdj);
+                                yDown = (int)yAdj;
+
+                                row = (Byte*)bmdNew.Scan0 + (y * bmdNew.Stride);
+
+                                for (x = 0, xx = 0; x < bmp.Width; x++, xx += 3)
+                                {
+                                    xAdj = x * (sz.Width - 1);
+                                    xAdj /= (bmp.Width - 1);
+                                    xAdj2 = xAdj % 1;
+                                    xUp = (int)Math.Ceiling((double)xAdj);
+                                    xDown = (int)xAdj;
+
+                                    if (xUp == xDown && yUp == yDown)
+                                    {
+                                        anonFunc(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
+                                        fR = rYuXu;
+                                        fG = gYuXu;
+                                        fB = bYuXu;
+                                    }
+                                    else if (xUp == xDown)
+                                    {
+                                        anonFunc(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
+                                        anonFunc(yDown, xUp, out rYdXu, out gYdXu, out bYdXu);
+                                        fR = Helpers.getLinearEstimate(rYdXu, rYuXu, yAdj2);
+                                        fG = Helpers.getLinearEstimate(gYdXu, gYuXu, yAdj2);
+                                        fB = Helpers.getLinearEstimate(bYdXu, bYuXu, yAdj2);
+                                    }
+                                    else if (yUp == yDown)
+                                    {
+                                        anonFunc(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
+                                        anonFunc(yUp, xDown, out rYuXd, out gYuXd, out bYuXd);
+                                        fR = Helpers.getLinearEstimate(rYuXd, rYuXu, xAdj2);
+                                        fG = Helpers.getLinearEstimate(gYuXd, gYuXu, xAdj2);
+                                        fB = Helpers.getLinearEstimate(bYuXd, bYuXu, xAdj2);
+                                    }
+                                    else
+                                    {
+                                        anonFunc(yUp, xUp, out rYuXu, out gYuXu, out bYuXu);
+                                        anonFunc(yUp, xDown, out rYuXd, out gYuXd, out bYuXd);
+                                        anonFunc(yDown, xDown, out rYdXd, out gYdXd, out bYdXd);
+                                        anonFunc(yDown, xUp, out rYdXu, out gYdXu, out bYdXu);
+
+                                        fR = Helpers.getLinearEstimate(
+                                             Helpers.getLinearEstimate(rYdXd, rYuXd, yAdj2),
+                                             Helpers.getLinearEstimate(rYdXu, rYuXu, yAdj2),
+                                             xAdj2);
+                                        fG = Helpers.getLinearEstimate(
+                                             Helpers.getLinearEstimate(gYdXd, gYuXd, yAdj2),
+                                             Helpers.getLinearEstimate(gYdXu, gYuXu, yAdj2),
+                                             xAdj2);
+                                        fB = Helpers.getLinearEstimate(
+                                             Helpers.getLinearEstimate(bYdXd, bYuXd, yAdj2),
+                                             Helpers.getLinearEstimate(bYdXu, bYuXu, yAdj2),
+                                             xAdj2);
+                                    }
+
+                                    row[xx + 2] = Helpers.castByte(fR * 255);
+                                    row[xx + 1] = Helpers.castByte(fG * 255);
+                                    row[xx + 0] = Helpers.castByte(fB * 255);
+                                }
                             }
                         }
                     }
-
-                    bmp.UnlockBits(bmdNew);
                 }
             }
         }

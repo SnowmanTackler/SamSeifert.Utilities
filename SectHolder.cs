@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using SamSeifert.Utilities;
-
+using SamSeifert.Utilities.Extensions;
 
 namespace SamSeifert.CSCV
 {
@@ -135,26 +135,26 @@ namespace SamSeifert.CSCV
                 var g = this._Sects[SectType.RGB_G] as SectArray;
                 var b = this._Sects[SectType.RGB_B] as SectArray;
 
-                BitmapData bmd = input.LockBits(
-                    new Rectangle(0, 0, input.Width, input.Height),
-                    System.Drawing.Imaging.ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
-
-                Byte * row;
-                int xx = 0, x;
-
-                for (int y = 0; y < this._Size.Height; y++)
+                using (var bmd = input.Locked(
+                    ImageLockMode.ReadOnly, 
+                    PixelFormat.Format24bppRgb))
                 {
-                    row = (Byte*)bmd.Scan0 + (y * bmd.Stride);
 
-                    for (x = 0, xx = 0; x < this._Size.Width; x++, xx += 3)
+                    Byte* row;
+                    int xx = 0, x;
+
+                    for (int y = 0; y < this._Size.Height; y++)
                     {
-                        r[y, x] = row[xx + 2] / 255.0f;
-                        g[y, x] = row[xx + 1] / 255.0f;
-                        b[y, x] = row[xx + 0] / 255.0f;
+                        row = (Byte*)bmd.Scan0 + (y * bmd.Stride);
+
+                        for (x = 0, xx = 0; x < this._Size.Width; x++, xx += 3)
+                        {
+                            r[y, x] = row[xx + 2] / 255.0f;
+                            g[y, x] = row[xx + 1] / 255.0f;
+                            b[y, x] = row[xx + 0] / 255.0f;
+                        }
                     }
                 }
-
-                input.UnlockBits(bmd);
             }
         }
 

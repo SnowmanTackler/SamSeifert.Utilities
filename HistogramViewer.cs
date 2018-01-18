@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.Data;
 using System.Linq;
 using System.Text;
+using SamSeifert.Utilities.Extensions;
 
 namespace SamSeifert.CSCV
 {
@@ -50,28 +51,28 @@ namespace SamSeifert.CSCV
                 for (x = 0; x < picWidth; x++)
                     histogram[c, x] = ((histogram[c, x]) * imh) / max;
 
-            BitmapData bmd = bmp.LockBits(
-                new Rectangle(0, 0, bmp.Width, bmp.Height),
-                System.Drawing.Imaging.ImageLockMode.ReadWrite, bmp.PixelFormat);
-
-            byte* row;
-            int xx = 0;
-
-            for (int c = 0; c < 3; c++)
+            using (var bmd = bmp.Locked(
+                ImageLockMode.ReadWrite,
+                bmp.PixelFormat))
             {
-                for (int y = 0; y < bmd.Height; y++)
-                {
-                    row = (byte*)bmd.Scan0 + (y * bmd.Stride);
 
-                    for (x = 0, xx = 2 - c; x < bmd.Width; x++, xx += 3)
+                byte* row;
+                int xx = 0;
+
+                for (int c = 0; c < 3; c++)
+                {
+                    for (int y = 0; y < bmd.Height; y++)
                     {
-                        if (y < histogram[c, x]) row[xx] = 255;
-                        else row[xx] = 0;
+                        row = (byte*)bmd.Scan0 + (y * bmd.Stride);
+
+                        for (x = 0, xx = 2 - c; x < bmd.Width; x++, xx += 3)
+                        {
+                            if (y < histogram[c, x]) row[xx] = 255;
+                            else row[xx] = 0;
+                        }
                     }
                 }
             }
-
-            bmp.UnlockBits(bmd);
 
             bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
         }
