@@ -324,6 +324,17 @@ namespace SamSeifert.GLE
             GL.ClipPlane(cpn, plane);
         }
 
+        public static void ClipPlane(ClipPlaneName cpn, ref Vector4 plane)
+        {
+            GL.ClipPlane(cpn, new double[]
+            {
+                plane.X,
+                plane.Y,
+                plane.Z,
+                plane.W
+            });
+        }
+
         public static void VertexPointer(int size, VertexPointerType vpt, int stride, IntPtr zero)
         {
             GL.VertexPointer(size, vpt, stride, zero);

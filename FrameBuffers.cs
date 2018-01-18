@@ -31,9 +31,8 @@ namespace SamSeifert.GLE
         /// <param name="color_texture_pixel_type"></param>
         /// <param name="depth_texture_pixel_type"></param>
         /// <param name="interpolation_mode">InterpolationMode</param>
-        public FrameBuffers(
+        public FrameBuffers(out bool success,
             Size resolution,
-            out bool success,
             PixelFormat color_texture_pixel_format = PixelFormat.Rgb,
             PixelType color_texture_pixel_type = PixelType.Byte,
             PixelInternalFormat depth_texture_pixel_type = PixelInternalFormat.DepthComponent24,

@@ -11,6 +11,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using GL = SamSeifert.GLE.GLR;
 using SamSeifert.Utilities.FileParsing;
+using SamSeifert.Utilities.Extensions;
 
 namespace SamSeifert.GLE
 {
@@ -100,8 +101,8 @@ namespace SamSeifert.GLE
                 var pt = Path.Combine(this._StringPath, n + this._StringExt);
                 if (File.Exists(pt))
                 {
-                    var im = Image.FromFile(pt);
-                    this._Textures[i] = SkyBox.getGLTexture(im);
+                    using (var im = Image.FromFile(pt))
+                        this._Textures[i] = SkyBox.getGLTexture(im);
                 }
                 else this._Textures[i] = 0;
             }
@@ -318,49 +319,46 @@ namespace SamSeifert.GLE
             using (Graphics g = Graphics.FromImage(TextureBitmap)) g.DrawImage(im, 0, 0, w, h);
             im.Dispose();
 
-            System.Drawing.Imaging.BitmapData TextureData = TextureBitmap.LockBits(
-                new System.Drawing.Rectangle(0, 0, w, h),
-                System.Drawing.Imaging.ImageLockMode.ReadOnly,
-                TextureBitmap.PixelFormat);
-
             int output;
 
-            GL.GenTextures(1, out output);
-            GL.BindTexture(TextureTarget.Texture2D, output);
+            using (var TextureData = TextureBitmap.Locked(
+                System.Drawing.Imaging.ImageLockMode.ReadOnly,
+                TextureBitmap.PixelFormat))
+            {
 
-            // Get Rid of Texture Edges on Sky Dome
-            int param;
 
-            param = (int)TextureWrapMode.ClampToEdge;
-            GL.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, ref param);
-            GL.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, ref param);
+                GL.GenTextures(1, out output);
+                GL.BindTexture(TextureTarget.Texture2D, output);
 
-            param = (int)All.Nearest;
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, param);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, param);
+                // Get Rid of Texture Edges on Sky Dome
+                int param;
 
-            //the following code sets certian parameters for the texture
-            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
+                param = (int)TextureWrapMode.ClampToEdge;
+                GL.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, ref param);
+                GL.TexParameterI(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, ref param);
 
-            // tell OpenGL to build mipmaps out of the bitmap data
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, (float)1.0f);
+                param = (int)All.Nearest;
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, param);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, param);
 
-            // load the texture
-            GL.TexImage2D(
-                TextureTarget.Texture2D,
-                0, // level
-                PixelInternalFormat.Three,
-                TextureBitmap.Width, TextureBitmap.Height,
-                0, // border
-                OpenTK.Graphics.OpenGL.PixelFormat.Bgr,
-                PixelType.UnsignedByte,
-                TextureData.Scan0
-                );
+                //the following code sets certian parameters for the texture
+                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
 
-            //free the bitmap data (we dont need it anymore because it has been passed to the OpenGL driver
-            TextureBitmap.UnlockBits(TextureData);
-            TextureBitmap.Dispose();
+                // tell OpenGL to build mipmaps out of the bitmap data
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, (float)1.0f);
 
+                // load the texture
+                GL.TexImage2D(
+                    TextureTarget.Texture2D,
+                    0, // level
+                    PixelInternalFormat.Three,
+                    TextureBitmap.Width, TextureBitmap.Height,
+                    0, // border
+                    OpenTK.Graphics.OpenGL.PixelFormat.Bgr,
+                    PixelType.UnsignedByte,
+                    TextureData.Scan0
+                    );
+            }
             return output;
         }
     }

@@ -40,7 +40,7 @@ namespace SamSeifert.GLE
         private int _FrameBuffer = 0;
         private int _DepthBuffer = 0;
 
-        public CubeColorMap(int resolution, out bool success)
+        public CubeColorMap(out bool success, int resolution)
         {
             try
             {

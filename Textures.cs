@@ -5,9 +5,15 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-using OpenTK.Graphics.OpenGL; using GL = SamSeifert.GLE.GLR;
+using PF = System.Drawing.Imaging.PixelFormat;
+
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
+using GL = SamSeifert.GLE.GLR;
+
 using TextureUnit = OpenTK.Graphics.OpenGL.TextureUnit;
 using MaterialFace = OpenTK.Graphics.OpenGL.MaterialFace;
+using SamSeifert.Utilities.Extensions;
 
 namespace SamSeifert.GLE
 {
@@ -18,19 +24,16 @@ namespace SamSeifert.GLE
             GL.Uniform1(GL.GetUniformLocation(program, UniformName), textureUnit - TextureUnit.Texture0);
         }
 
-        public static int getGLTexture(Image im)
+        private static int GetGLTexture(Image im)
         {
-            if (im == null) return 0;
-            else if (im is Bitmap) return getGLTextureBitmap(im as Bitmap);
-
             int w = im.Width, h = im.Height;
 
-            Bitmap bmp = new Bitmap(w, h, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            Bitmap bmp = new Bitmap(w, h, PF.Format24bppRgb);
             using (Graphics g = Graphics.FromImage(bmp)) g.DrawImage(im, 0, 0, w, h);
 
             try
             {
-                return getGLTextureBitmap(bmp);
+                return GetGLTextureBitmap(bmp, PF.Format24bppRgb);
             }
             finally
             {
@@ -39,65 +42,85 @@ namespace SamSeifert.GLE
         }
 
 
-        public static int getGLTextureBitmap(
+        private static int GetGLTextureBitmap(
             Bitmap im,
+            PF format,
             bool mipmap = true
             )
         {
-            if (im == null) return 0;
-
             int w = im.Width, h = im.Height;
 
-            //get the data out of the bitmap
-            System.Drawing.Imaging.BitmapData TextureData = im.LockBits(
-                new System.Drawing.Rectangle(0, 0, w, h),
-                System.Drawing.Imaging.ImageLockMode.ReadOnly,
-                System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            PixelFormat glpf;
+            PixelInternalFormat pif;
 
-            //Code to get the data to the OpenGL Driver
+            switch (format)
+            {
+                case PF.Format24bppRgb:
+                    pif = PixelInternalFormat.Three;
+                    glpf = PixelFormat.Bgr;
+                    break;
+                case PF.Format32bppArgb:
+                    pif = PixelInternalFormat.Four;
+                    glpf = PixelFormat.Bgra;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
 
             int output;
 
-            //generate one texture and put its ID number into the "Texture" variable
-            GL.GenTextures(1, out output);
-            //tell OpenGL that this is a 2D texture
-            GL.BindTexture(TextureTarget.Texture2D, output);
+            //get the data out of the bitmap
+            using (var TextureData = im.Locked(
+               System.Drawing.Imaging.ImageLockMode.ReadOnly,
+               format))
+            {
+                //Code to get the data to the OpenGL Driver
 
-            //the following code sets certian parameters for the texture
-            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
+                //generate one texture and put its ID number into the "Texture" variable
+                GL.GenTextures(1, out output);
+                //tell OpenGL that this is a 2D texture
+                GL.BindTexture(TextureTarget.Texture2D, output);
 
-            // tell OpenGL to build mipmaps out of the bitmap data
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, mipmap ? 1.0f : 0.0f);
+                //the following code sets certian parameters for the texture
+                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (float)TextureEnvMode.Modulate);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.LinearMipmapLinear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Linear);
 
-            // load the texture
-            GL.TexImage2D(
-                TextureTarget.Texture2D,
-                0, // level
-                PixelInternalFormat.Three,
-                w, h,
-                0, // border
-                OpenTK.Graphics.OpenGL.PixelFormat.Bgr,
-                PixelType.UnsignedByte,
-                TextureData.Scan0
-                );
+                // tell OpenGL to build mipmaps out of the bitmap data
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.GenerateMipmap, mipmap ? 1.0f : 0.0f);
 
-            //free the bitmap data (we dont need it anymore because it has been passed to the OpenGL driver
-            im.UnlockBits(TextureData);
+                // load the texture
+                GL.TexImage2D(
+                    TextureTarget.Texture2D,
+                    0, // level
+                    pif,
+                    w,
+                    h,
+                    0, // border
+                    glpf,
+                    PixelType.UnsignedByte,
+                    TextureData.Scan0
+                    );
 
-            GL.BindTexture(TextureTarget.Texture2D, 0);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
+            }
 
             return output;
         }
 
         public int _Int { get; private set; } = 0;
+        public readonly Size _Size;
 
-        public Textures(Image im, out bool success)
+        public Textures(out bool success, Image im, PF pf)
         {
-            if (im is Bitmap) this._Int = getGLTextureBitmap(im as Bitmap);
-            else this._Int = getGLTexture(im);
-            success = this._Int != 0;
+            if (im == null) success = false;
+            else
+            {
+                if (im is Bitmap) this._Int = GetGLTextureBitmap(im as Bitmap, pf);
+                else this._Int = GetGLTexture(im);
+                this._Size = im.Size;
+                success = this._Int != 0;
+            }
         }
 
 

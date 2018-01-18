@@ -94,9 +94,7 @@
     <Compile Include="GLR.cs" />
     <Compile Include="GLR_Matrix.cs" />
     <Compile Include="GLR_Simple.cs" />
-    <Compile Include="HeightMap.cs" />
-    <Compile Include="HeightMapCircle.cs" />
-    <Compile Include="HeightMapRectangle.cs" />
+    <Compile Include="IndicesBuffer.cs" />
     <Compile Include="Intersect.cs" />
     <Compile Include="Shaders.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

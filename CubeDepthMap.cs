@@ -19,7 +19,7 @@ namespace SamSeifert.GLE
         private int _FrameBuffer = 0;
         private int _DepthBuffer = 0;
 
-        public CubeDepthMap(int resolution, out bool success)
+        public CubeDepthMap(out bool success, int resolution)
         {
             try
             {
