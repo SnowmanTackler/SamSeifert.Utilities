@@ -17,5 +17,13 @@ namespace SamSeifert.Utilities.Extensions
         {
             return data.GetRange(index, data.Count - index);
         }
+
+        public static T PopLast<T>(this List<T> data)
+        {
+            int last = data.Count - 1;
+            var ret = data[last];
+            data.RemoveAt(last);
+            return ret;
+        }
     }
 }
