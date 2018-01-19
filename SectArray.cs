@@ -82,7 +82,7 @@ namespace SamSeifert.CSCV
         {
             get
             {
-#if DEBUG
+#if DEBUG_X
                 return this._Data[y, x];
 #else
                 return this._Data.At(y, x);                  
@@ -90,7 +90,7 @@ namespace SamSeifert.CSCV
             }
             set
             {
-#if DEBUG
+#if DEBUG_X
                 this._Data[y, x] = value;
 #else
                 this._Data.At(y, x, value);
