@@ -8,14 +8,15 @@ using OpenTK.Graphics.OpenGL;
 using GLO = OpenTK.Graphics.OpenGL.GL;
 using GL = SamSeifert.GLE.GLR;
 using SamSeifert.Utilities;
+using SamSeifert.Utilities.Extensions;
 
 namespace SamSeifert.GLE
 {
     public class Shaders : DeleteableObject
     {
-        public int _GL_Program { get; private set; } = 0;
-        public int _GL_Vertex { get; private set; } = 0;
-        public int _GL_Frag { get; private set; } = 0;
+        private int _GL_Program  = 0;
+        private int _GL_Vertex = 0;
+        private int _GL_Frag = 0;
 
         private Dictionary<String, int> UniformLocations = new Dictionary<String, int>();
        
@@ -117,7 +118,7 @@ namespace SamSeifert.GLE
                         this.UniformLocations[s] = GL.GetUniformLocation(this._GL_Program, s);
                 }
 
-                GL.UseProgram(0);
+                Program.Revert();
             }
         }
 
@@ -128,9 +129,9 @@ namespace SamSeifert.GLE
         /// <param name="texture_index"></param>
         public void SetTextureLocation(String uniform_name, int texture_index)
         {
-            GL.UseProgram(this._GL_Program);
+            GLO.UseProgram(this._GL_Program);
             GLO.Uniform1(this.UniformLocation(uniform_name), texture_index);
-            GL.UseProgram(0);
+            Program.Revert();
         }
 
         public void Uniform(String uniform_name, float f)
@@ -193,14 +194,31 @@ namespace SamSeifert.GLE
         /// </summary>
         public class Program : IDisposable
         {
-            public Program(int program_index)
+            private static readonly List<int> _CurrentPrograms = new List<int>();
+
+            internal Program(int program_index, bool replace_current_program)
             {
-                GL.UseProgram(program_index);
+                if (_CurrentPrograms.Count > 0)
+                    if (!replace_current_program)
+                        throw new Exception("Attempting To Use Multiple Pograms");
+
+                Program._CurrentPrograms.Add(program_index);
+
+                GLO.UseProgram(program_index);
+            }
+
+            internal static void Revert()
+            {
+                GLO.UseProgram(
+                    Program._CurrentPrograms.Count == 0 ? 
+                    0 :
+                    Program._CurrentPrograms.Last());
             }
 
             public void Dispose()
             {
-                GL.UseProgram(0);
+                Program._CurrentPrograms.PopLast();
+                Program.Revert();
             }
         }
 
@@ -208,12 +226,9 @@ namespace SamSeifert.GLE
         /// <summary>
         /// Make sure you wrap this is an using()
         /// </summary>
-        public Program AsProgram
+        public Program AsProgram(bool replace_current_program = false)
         {
-            get
-            {
-                return new Program(this._GL_Program);
-            }
+            return new Program(this._GL_Program, replace_current_program);
         }
 
 

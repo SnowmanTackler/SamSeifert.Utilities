@@ -173,11 +173,6 @@ namespace SamSeifert.GLE
             GL.DrawElements(pt, v1, det, v2);
         }
 
-        public static void UseProgram(int program)
-        {
-            GL.UseProgram(program);
-        }
-
         public static void Color3(float v1, float v2, float v3)
         {
             GL.Color3(v1, v2, v3);

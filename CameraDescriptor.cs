@@ -23,7 +23,6 @@ namespace SamSeifert.GLE
         public readonly Vector3 _ModelView_Eye;
         public readonly Vector3 _ModelView_Target;
         public readonly Vector3 _ModelView_Up;
-        public readonly bool _ModelView_Extras;
 
         public Size _Resolution { get { return this._Viewport.Size; } }
         public float _Width { get { return this._Viewport.Width; } }
@@ -69,12 +68,15 @@ namespace SamSeifert.GLE
             int viewport_x = 0,
             int viewport_y = 0) : this(viewport_width, viewport_height, vertical_fov_degrees, fov_vertical_true__fov_horizontal_false, zNear, zFar, viewport_x, viewport_y)
         {
-            this._ModelView_Eye = Vector3.Zero;
+            this._ModelView = eye;
+
+            eye.Invert();
+
+            this._ModelView_Eye = eye.Row3.Xyz;
+
+            // TODO: CALCULATE THESE CORRECTLY.
             this._ModelView_Target = -Vector3.UnitZ;
             this._ModelView_Up = Vector3.UnitY;
-            this._ModelView_Extras = false;
-
-            this._ModelView = eye;
         }
 
         public CameraDescriptor(
@@ -93,7 +95,6 @@ namespace SamSeifert.GLE
             this._ModelView_Eye = eye;
             this._ModelView_Target = target;
             this._ModelView_Up = up;
-            this._ModelView_Extras = true;
             this._ModelView = Matrix4.LookAt(eye, target, up);
         }
 

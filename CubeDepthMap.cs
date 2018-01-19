@@ -94,31 +94,40 @@ namespace SamSeifert.GLE
         /// <param name="zNear"></param>
         /// <param name="zFar"></param>
         /// <param name="m">Model View Should to Straight Forward</param>
-        public void Render(Action render, float zNear, float zFar, Matrix4 m)
+        public void Render(Action<CameraDescriptor> render, float zNear, float zFar, Matrix4 m)
         {
             m.Invert();
-
-            GL.loadProjection(90, 90, zNear, zFar);
-            GL.Viewport(0, 0, this._Resolution, this._Resolution);
 
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, this._FrameBuffer);
             GL.DrawBuffer(DrawBufferMode.None);
 
             for (int i = 0; i < 6; i++)
             {
-                GL.FramebufferTexture2D(
-                    FramebufferTarget.Framebuffer,
-                    FramebufferAttachment.DepthAttachment,
-                    CubeColorMap._TextureTargets[i],
-                    this._ColorText,
-                    0);
+                if (this._Use[i])
+                {
+                    var eye = m * CubeColorMap._Matrices[i];
 
-                GL.Clear(ClearBufferMask.DepthBufferBit);
+                    var cam = new CameraDescriptor(
+                        this._Resolution,
+                        this._Resolution,
+                        90,
+                        true,
+                        zNear,
+                        zFar,
+                        eye
+                        );
 
-                GL.LoadMatrix(ref CubeColorMap._Matrices[i]);
-                GL.MultMatrix(ref m);
+                    GL.FramebufferTexture2D(
+                        FramebufferTarget.Framebuffer,
+                        FramebufferAttachment.DepthAttachment,
+                        CubeColorMap._TextureTargets[i],
+                        this._ColorText,
+                        0);
 
-                render();
+                    GL.Clear(ClearBufferMask.DepthBufferBit);
+                    cam.SendToGL();
+                    render(cam);
+                }
             }
 
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
