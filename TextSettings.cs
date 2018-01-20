@@ -42,7 +42,7 @@ namespace SamSeifert.Utilities
                         "..",
                         "..",
                         "..",
-                        "Settings"));
+                        "Resources Generated"));
             }
         }
 

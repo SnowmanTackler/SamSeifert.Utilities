@@ -86,9 +86,17 @@ namespace SamSeifert.Utilities
             lock (this._Dict)
             {
                 T o;
-                if (inp == null) return default_return;
-                else if (this._Dict.TryGetValue(inp, out o)) return o;
+                if (this._Dict.TryGetValue(inp, out o)) return o;
                 else return default_return;
+            }
+        }
+
+        public bool TryParse(String inp, out T o)
+        {
+            lock (this._Dict)
+            {
+                if (this._Dict.TryGetValue(inp, out o)) return true;
+                else return false;
             }
         }
 
