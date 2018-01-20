@@ -102,6 +102,7 @@
     <Compile Include="DisposableCollection.cs" />
     <Compile Include="EnumUtil.cs" />
     <Compile Include="Extensions\ArrayE.cs" />
+    <Compile Include="Extensions\BitmapE.cs" />
     <Compile Include="Extensions\CheckBoxE.cs" />
     <Compile Include="Extensions\ComboBoxE.cs" />
     <Compile Include="Extensions\ControlE.cs" />

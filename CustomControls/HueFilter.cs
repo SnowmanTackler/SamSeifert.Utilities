@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using SamSeifert.Utilities.Extensions;
 
 namespace SamSeifert.Utilities.CustomControls
 {
@@ -65,49 +66,46 @@ namespace SamSeifert.Utilities.CustomControls
 
             unsafe
             {
-                BitmapData bmdNew = i.LockBits(
-                    new Rectangle(0, 0, w, h),
-                    System.Drawing.Imaging.ImageLockMode.ReadWrite, i.PixelFormat);
-
-                byte * rowNew;
-                int y, x, xx;
-
-                float wD = (float)(w - 1);
-                float hD = (float)(h - 1);
-                float hue, lum;
-
-                float r, g, b;
-
-                for (y = 0; y < h; y++)
+                using (var bmdNew = i.Locked(ImageLockMode.ReadWrite, i.PixelFormat))
                 {
-                    rowNew = (Byte*)bmdNew.Scan0 + (y * bmdNew.Stride);
+                    byte* rowNew;
+                    int y, x, xx;
 
-                    lum = 1 - y / hD;
+                    float wD = (float)(w - 1);
+                    float hD = (float)(h - 1);
+                    float hue, lum;
 
-                    for (x = 0, xx = 0; x < w; x++, xx += 3)
+                    float r, g, b;
+
+                    for (y = 0; y < h; y++)
                     {
-                        hue = x / wD;
+                        rowNew = (Byte*)bmdNew.Scan0 + (y * bmdNew.Stride);
 
-                        ColorUtil.hsl2rgb(hue, 0.5f, lum, out r, out g, out b);
+                        lum = 1 - y / hD;
 
-
-                        if (this.checkHue(hue))
+                        for (x = 0, xx = 0; x < w; x++, xx += 3)
                         {
-                            rowNew[xx + 2] = castByte(r);
-                            rowNew[xx + 1] = castByte(g);
-                            rowNew[xx + 0] = castByte(b);
-                        }
-                        else
-                        {
-                            Byte temp = castByte((r + g + b) / 3);
-                            rowNew[xx + 2] = temp;
-                            rowNew[xx + 1] = temp;
-                            rowNew[xx + 0] = temp;
+                            hue = x / wD;
+
+                            ColorUtil.hsl2rgb(hue, 0.5f, lum, out r, out g, out b);
+
+
+                            if (this.checkHue(hue))
+                            {
+                                rowNew[xx + 2] = castByte(r);
+                                rowNew[xx + 1] = castByte(g);
+                                rowNew[xx + 0] = castByte(b);
+                            }
+                            else
+                            {
+                                Byte temp = castByte((r + g + b) / 3);
+                                rowNew[xx + 2] = temp;
+                                rowNew[xx + 1] = temp;
+                                rowNew[xx + 0] = temp;
+                            }
                         }
                     }
                 }
-
-                i.UnlockBits(bmdNew);
             }
 
             this.pictureBox1.Invalidate();
