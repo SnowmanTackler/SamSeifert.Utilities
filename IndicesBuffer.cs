@@ -13,7 +13,7 @@ namespace SamSeifert.GLE
     public class IndicesBuffer : DeleteableObject
     {
         private int _Int = 0;
-        private int _Count = 0;
+        public readonly int _Count = 0;
 
         public IndicesBuffer(out bool success, uint[] indices)
         {
@@ -48,6 +48,7 @@ namespace SamSeifert.GLE
     public class VerticesBuffer : DeleteableObject
     {
         private int _Int = 0;
+        public readonly int _Count = 0;
 
         public VerticesBuffer(out bool success, Vector3[] vertices)
         {
@@ -59,6 +60,7 @@ namespace SamSeifert.GLE
             GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out bufferSize);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             success = bufferSizeE == bufferSize;
+            this._Count = vertices.Length;
         }
 
         public void GLDelete()
