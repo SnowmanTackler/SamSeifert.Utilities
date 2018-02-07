@@ -155,6 +155,17 @@ namespace SamSeifert.Utilities.CustomControls
             set
             {
                 this.checkedListBox1.SelectionMode = value;
+
+                switch (value)
+                {
+                    case SelectionMode.MultiExtended:
+                    case SelectionMode.MultiSimple:
+                        this.selectAllToolStripMenuItem.Enabled = true;
+                        break;
+                    default:
+                        this.selectAllToolStripMenuItem.Enabled = false;
+                        break;
+                }
             }
         }
 
@@ -189,10 +200,7 @@ namespace SamSeifert.Utilities.CustomControls
         {
             if (this.checkedListBox1.DataSource == null) return;
 
-            using (new DisposableCollection(
-                new LayoutSuspender(this),
-                new EventSuspender(this, nameof(this._SelectedItemChanged))
-                ))
+            using (this.Suspender())
             {
                 int cnt = this.checkedListBox1.Items.Count;
                 var sel = new bool[cnt];
@@ -235,10 +243,7 @@ namespace SamSeifert.Utilities.CustomControls
         {
             if (this.checkedListBox1.DataSource == null)
             {
-                using (new DisposableCollection(
-                    new LayoutSuspender(this),
-                    new EventSuspender(this, nameof(this._SelectedItemChanged))
-                    ))
+                using (this.Suspender())
                 {
                     int current_index = this.checkedListBox1.SelectedIndex;
                     if (current_index < 1) return;
@@ -264,10 +269,7 @@ namespace SamSeifert.Utilities.CustomControls
         {
             if (this.checkedListBox1.DataSource == null)
             {
-                using (new DisposableCollection(
-                    new LayoutSuspender(this),
-                    new EventSuspender(this, nameof(this._SelectedItemChanged))
-                    ))
+                using (this.Suspender())
                 {
                     int current_index = this.checkedListBox1.SelectedIndex;
                     if (current_index < 0) return;
@@ -292,10 +294,7 @@ namespace SamSeifert.Utilities.CustomControls
 
         private void bRemove_Click(object sender, EventArgs e)
         {
-            using (new DisposableCollection(
-                new LayoutSuspender(this),
-                new EventSuspender(this, nameof(this._SelectedItemChanged))
-                ))
+            using (this.Suspender())
             {
                 foreach (var si in this.checkedListBox1.SelectedItems.Cast<object>().ToArray()) // Cast to array so we can modify the control
                 {
@@ -326,12 +325,17 @@ namespace SamSeifert.Utilities.CustomControls
             this.ClearAll();
         }
 
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (this.Suspender())
+                for (int i = 0; i < this.checkedListBox1.Items.Count; i++)
+                    this.checkedListBox1.SetSelected(i, true);
+            this._SelectedItemChanged?.Invoke(this, e);
+        }
+
         public void ClearAll()
         {
-            using (new DisposableCollection(
-                new LayoutSuspender(this),
-                new EventSuspender(this, nameof(this._SelectedItemChanged))
-                ))
+            using (this.Suspender())
             {
                 while (this.checkedListBox1.Items.Count > 0)
                 {
@@ -386,5 +390,28 @@ namespace SamSeifert.Utilities.CustomControls
             if (sel != null)
                 this._Duplicate?.Invoke(this, sel);
         }
+
+        public void ClearSelected()
+        {
+            this.checkedListBox1.ClearSelected();
+        }
+
+        public void SetSelected(int index, bool v)
+        {
+            this.checkedListBox1.SetSelected(index, v);
+        }
+
+        public bool GetSelected(int i)
+        {
+            return this.checkedListBox1.GetSelected(i);
+        }
+
+        public IDisposable Suspender()
+        {
+            return new DisposableCollection(
+                new LayoutSuspender(this),
+                new EventSuspender(this, nameof(this._SelectedItemChanged))
+                );
+        }    
     }
 }

@@ -170,6 +170,19 @@ namespace SamSeifert.Utilities
 
 
 
+        public static bool isInfinityOrNan(this float f)
+        {
+            return float.IsInfinity(f) || float.IsNaN(f);
+        }
+
+        public static bool isInfOrNan(this double f)
+        {
+            return double.IsInfinity(f) || double.IsNaN(f);
+        }
+
+
+
+
 
         public static int Min(params int[] values)
         {

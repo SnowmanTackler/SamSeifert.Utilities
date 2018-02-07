@@ -24,6 +24,12 @@ namespace SamSeifert.Utilities
             Logger._Writer(String.Join(", ", doug), _IndentLock_Indent);
         }
 
+        public static void WriteWarning(Object sender, String hint)
+        {
+            Type t = (sender is Type) ? (sender as Type) : sender.GetType();
+            Logger._Writer("Warning - " + t.FullName + ": " + hint, _IndentLock_Indent);
+        }
+
         public static void WriteError(Object sender, String hint)
         {
             Type t = (sender is Type) ? (sender as Type) : sender.GetType();

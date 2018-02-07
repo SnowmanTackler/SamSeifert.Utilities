@@ -44,5 +44,16 @@ namespace SamSeifert.Utilities.Extensions
         {
             return data.SubArray(index, data.Length - index);
         }
+
+        public static void Shuffle<T>(this T[] array, Random rand)
+        {
+            int n = array.Length;
+            for (int i = 0; i < n; i++)
+            {
+                // Pick a new index higher than current for each item in the array
+                int r = i + rand.Next(0, n - i);
+                MiscUtil.Swap(ref array[r], ref array[i]);
+            }
+        }
     }
 }
