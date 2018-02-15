@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SamSeifert.GLE
 {
-    public class Intersect
+    public class Geometry
     {
         /// <summary>
         /// Computes the cross product of two 2d vectors
@@ -38,7 +38,6 @@ namespace SamSeifert.GLE
         }
 
 
-
         public static class Polygon
         {
             /// <summary>
@@ -46,7 +45,7 @@ namespace SamSeifert.GLE
             /// </summary>
             /// <param name="polygon"></param>
             /// <returns></returns>
-            private static IEnumerable<Tuple<Vector2, Vector2>> EnumeratePolygonEdges(IEnumerable<Vector2> polygon)
+            public static IEnumerable<Tuple<Vector2, Vector2>> EnumerateEdges(IEnumerable<Vector2> polygon)
             {
                 bool f = true;
                 Vector2 first = Vector2.Zero;
@@ -70,6 +69,21 @@ namespace SamSeifert.GLE
                 yield return new Tuple<Vector2, Vector2>(previous, first);
             }
 
+            public static bool ContainsPoint(
+                IEnumerable<Vector2> polygon,
+                Vector2 pt,
+                Vector2 pt_outside_polygon)
+            {
+                int count = 0;
+                foreach (var edge in EnumerateEdges(polygon))
+                    if (LineSegment.InteresectsLineSegment(pt, pt_outside_polygon, edge.Item1, edge.Item2))
+                        count++;
+                return count % 2 == 1;
+            }
+        }
+
+        public static class PolygonConvex
+        {
             /// <summary>
             /// Check if pt is inside closed polygon defined by polygon.  Polygon should be concave out always.
             /// </summary>
@@ -105,7 +119,7 @@ namespace SamSeifert.GLE
                 // If they are, return true.
                 // If they aren't, return false.
 
-                foreach (var edge in EnumeratePolygonEdges(polygon))
+                foreach (var edge in Polygon.EnumerateEdges(polygon))
                     if (!SameSide(edge.Item1, edge.Item2, pt, polygon_center))
                         return false;
 
@@ -129,7 +143,7 @@ namespace SamSeifert.GLE
                         return true;
 
                 // Check if edge of polygon intersects circle
-                foreach (var edge in EnumeratePolygonEdges(polygon))
+                foreach (var edge in Polygon.EnumerateEdges(polygon))
                 {
                     var point = circle_center - edge.Item1;
                     var line = edge.Item2 - edge.Item1;
@@ -151,10 +165,11 @@ namespace SamSeifert.GLE
 
                 return false;
             }
-
-
         }
 
+        /// <summary>
+        /// Non infinte lines
+        /// </summary>
         public static class LineSegment
         {
             public static bool InteresectsLineSegment(
