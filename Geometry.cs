@@ -69,6 +69,33 @@ namespace SamSeifert.GLE
                 yield return new Tuple<Vector2, Vector2>(previous, first);
             }
 
+            public static Vector2 PointOutside(IEnumerable<Vector2> polygon)
+            {
+                float minX = float.MaxValue;
+                float minY = float.MaxValue;
+
+                foreach (var c in polygon)
+                {
+                    minX = Math.Min(minX, c.X);
+                    minY = Math.Min(minY, c.Y);
+                }
+
+                minX -= 1;
+                minY -= 1;
+
+                return new Vector2(minX, minY);
+            }
+
+            public static bool ContainsPoint(
+                IEnumerable<Vector2> polygon,
+                Vector2 pt)
+            {
+                return Polygon.ContainsPoint(
+                    polygon,
+                    pt,
+                    PointOutside(polygon));
+            }
+
             public static bool ContainsPoint(
                 IEnumerable<Vector2> polygon,
                 Vector2 pt,
