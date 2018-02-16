@@ -25,5 +25,26 @@ namespace SamSeifert.Utilities.Extensions
             data.RemoveAt(last);
             return ret;
         }
+
+        public static void Shuffle<T>(this List<T> array, Random rand)
+        {
+            int n = array.Count;
+            for (int i = 0; i < n; i++)
+            {
+                // Pick a new index higher than current for each item in the array
+                int r = i + rand.Next(0, n - i);
+                T temp = array[r];
+                array[r] = array[i];
+                array[i] = temp;
+            }
+        }
+
+        public static void MatchLength<T>(this List<T> ls, int length, Func<T> func)
+        {
+            while (ls.Count < length)
+                ls.Add(func());
+            while (ls.Count > length)
+                ls.RemoveAt(ls.Count - 1);
+        }
     }
 }
