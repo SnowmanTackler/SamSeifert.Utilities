@@ -216,6 +216,23 @@ namespace SamSeifert.Utilities
 
 
 
+
+
+
+
+        public static float Blend01(this float alpha, float value_at_0, float value_at_1)
+        {
+            return alpha * value_at_1 + (1 - alpha) * value_at_0;
+        }
+
+
+
+
+
+
+
+
+
         public static int NumberOfNonZeros(this IEnumerable<int> nums)
         {
             int ret = 0;
