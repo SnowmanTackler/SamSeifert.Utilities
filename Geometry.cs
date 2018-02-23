@@ -199,6 +199,24 @@ namespace SamSeifert.GLE
         /// </summary>
         public static class LineSegment
         {
+            public static float Distance(Vector2 line_pt1, Vector2 line_pt2, Vector2 pt)
+            {
+                var line_dir = line_pt2 - line_pt1;
+                var line_lens = line_dir.Length;
+                if (line_lens == 0)
+                    return (line_pt1 - pt).Length;
+
+                line_dir /= line_lens;
+
+                var pt_dir = pt - line_pt1;
+
+                var dot = Vector2.Dot(line_dir, pt_dir);
+
+                if (dot < 0) return (line_pt1 - pt).Length;
+                else if (dot > line_lens) return (line_pt2 - pt).Length;
+                else return (pt_dir - dot * line_dir).Length;
+            }
+
             public static bool InteresectsLineSegment(
                 Vector2 line_segment_1_p1,
                 Vector2 line_segment_1_p2,
