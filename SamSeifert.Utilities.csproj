@@ -101,6 +101,7 @@
     <Compile Include="DateTimeUtil.cs" />
     <Compile Include="DisposableCollection.cs" />
     <Compile Include="EnumUtil.cs" />
+    <Compile Include="Extensions\Array2E.cs" />
     <Compile Include="Extensions\ArrayE.cs" />
     <Compile Include="Extensions\BitmapE.cs" />
     <Compile Include="Extensions\CheckBoxE.cs" />
