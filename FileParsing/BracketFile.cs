@@ -20,7 +20,7 @@ namespace SamSeifert.Utilities.FileParsing
         {
             try
             {
-                Console.WriteLine(input.Length);
+                Logger.WriteLine(input.Length);
 
                 var ca = input.ToCharArray();
                 int start = 0;
@@ -153,7 +153,7 @@ namespace SamSeifert.Utilities.FileParsing
             if ((contents) || (this.text.Length < 150)) s += this.text;
             else s += " XXXX " + this.text.Length;
 
-            Console.WriteLine(s);
+            Logger.WriteLine(s);
 
             if (this._Children.Length > 0)
             {
