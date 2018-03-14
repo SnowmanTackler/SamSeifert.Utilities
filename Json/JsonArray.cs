@@ -213,5 +213,121 @@ namespace SamSeifert.Utilities.Json
                 }
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public static int asInt(this object[] arg, int index)
+        {
+            object outo = arg[index];
+            if (outo is double) return (int)Math.Round((double)outo);
+            else if (outo is int) return (int)outo;
+            else throw new NotImplementedException();
+        }
+
+        public static int asInt(this object[] arg, int index, int empty_or_error_value)
+        {
+            object outo = arg[index];
+            if (outo is double) return (int)Math.Round((double)outo);
+            else if (outo is int) return (int)outo;
+            else return empty_or_error_value;
+        }
+
+        public static float asFloat(this object[] arg, int index)
+        {
+            object outo = arg[index];
+            if (outo is double) return (float)(double)outo;
+            else if (outo is float) return (float)outo;
+            else throw new NotImplementedException();
+        }
+
+        public static float asFloat(this object[] arg, int index, float empty_or_error_value)
+        {
+            object outo = arg[index];
+            if (outo is double) return (float)(double)outo;
+            else if (outo is float) return (float)outo;
+            else return empty_or_error_value;
+        }
+
+        public static double asDouble(this object[] arg, int index)
+        {
+            object outo = arg[index];
+            if (outo is double) return (double)outo;
+            else throw new NotImplementedException();
+        }
+
+        public static double asDouble(this object[] arg, int index, double empty_or_error_value)
+        {
+            object outo = arg[index];
+            if (outo is double) return (double)outo;
+            else return empty_or_error_value;
+        }
+
+        /// <summary>
+        /// No exception thrown.
+        /// Do not use for int, float, double
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static bool asGeneric<T>(this object[] arg, int index, out T t)
+        {
+            object outo = arg[index];
+            if (outo is T)
+            {
+                t = (T)outo;
+                return true;
+            }
+            t = default(T);
+            return false;
+        }
+
+        /// <summary>
+        /// Throws exception if key isn't there.
+        /// Do not use for int, float, double
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static T asGeneric<T>(this object[] arg, int index)
+        {
+            return (T)arg[index];
+        }
+
+        /// <summary>
+        /// No exception thrown.  
+        /// Do not use for int, float, double
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <param name="empty_or_error_value"></param>
+        /// <returns></returns>
+        public static T asGeneric<T>(this object[] arg, int index, T empty_or_error_value)
+        {
+            object outo = arg[index];
+            if (outo is T) return (T)outo;
+            return empty_or_error_value;
+        }
+
     }
 }

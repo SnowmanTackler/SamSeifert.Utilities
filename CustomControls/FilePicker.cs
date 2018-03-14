@@ -15,11 +15,11 @@ namespace SamSeifert.Utilities.CustomControls
 {
     public partial class FilePicker : TextBox
     {
+        const string default_save_name = "default_file_pickers.local.json";
         private static JsonDict _Values = null;
-
         static FilePicker()
         {
-            FilePicker._Values = JsonDict.FromString(Properties.Settings.Default.FilePickers);
+            FilePicker._Values = JsonDict.FromString(TextSettings.Read(default_save_name));
         }
 
         /// <summary>
@@ -96,8 +96,7 @@ namespace SamSeifert.Utilities.CustomControls
             this._ValidEntry?.Invoke(this, EventArgs.Empty);
 
             FilePicker._Values[this._SaveIdentifier] = this.Text;
-            Properties.Settings.Default.FilePickers = FilePicker._Values.ToString();
-            Properties.Settings.Default.Save();
+            TextSettings.Save(default_save_name, FilePicker._Values.ToString());
         }
 
         private void textBox1_DoubleClick(object sender, EventArgs e)

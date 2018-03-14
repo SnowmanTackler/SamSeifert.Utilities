@@ -203,22 +203,6 @@ namespace SamSeifert.Utilities.Json
 
 
 
-        // //////////////////// DEFAULTS
-
-        public string asString(String key)
-        {
-            return (string)this[key];
-        }
-
-        public string asString(String key, string empty_or_error_value)
-        {
-            return this.asGeneric(key, empty_or_error_value);
-        }
-
-
-
-
-
 
         // ///////////////////// CONSTRUCTORS BELOW
 
