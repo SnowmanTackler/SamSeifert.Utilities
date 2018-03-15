@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SamSeifert.Utilities.DataStructures
 {
-    public class Heap<T>
+    public class Heap<T> : IEnumerable<T>
     {
         private int _Capacity = 10;
         public int _Size { get; private set; } = 0;
@@ -100,6 +101,17 @@ namespace SamSeifert.Utilities.DataStructures
                 }
                 index = smallerChildIndex;
             }
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (int i = 0; i < this._Size; i++)
+                yield return this._Items[i];
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
     }
 }
