@@ -55,5 +55,27 @@ namespace SamSeifert.Utilities.Extensions
                 MiscUtil.Swap(ref array[r], ref array[i]);
             }
         }
+
+
+
+        public static void ArgMax<T>(this T[] array, out int index, out float value, Func<T, float> f)
+        {
+            array.ArgMin(out index, out value, (nf) => -f(nf));
+        }
+
+        public static void ArgMin<T>(this T[] array, out int index, out float value, Func<T, float> f)
+        {
+            value = float.MaxValue;
+            index = -1;
+            for (int j = 0; j < array.Length; j++)
+            {
+                float dist = f(array[j]);
+                if (dist < value)
+                {
+                    index = j;
+                    value = dist;
+                }
+            }
+        }
     }
 }

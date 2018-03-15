@@ -46,5 +46,31 @@ namespace SamSeifert.Utilities.Extensions
             while (ls.Count > length)
                 ls.RemoveAt(ls.Count - 1);
         }
+
+
+
+
+
+
+
+        public static void ArgMax<T>(this List<T> ls, out int index, out float value, Func<T, float> f)
+        {
+            ls.ArgMin(out index, out value, (nf) => -f(nf));
+        }
+
+        public static void ArgMin<T>(this List<T> ls, out int index, out float value, Func<T, float> f)
+        {
+            value = float.MaxValue;
+            index = -1;
+            for (int j = 0; j < ls.Count; j++)
+            {
+                float dist = f(ls[j]);
+                if (dist < value)
+                {
+                    index = j;
+                    value = dist;
+                }
+            }
+        }
     }
 }
