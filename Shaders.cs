@@ -34,7 +34,11 @@ namespace SamSeifert.GLE
             }
             if (this._GL_Program != 0)
             {
-                GL.DeleteShader(this._GL_Program);
+                // The next line is commented because of 
+                // ARCS 2018 / 03 / 15 Error when deleting shader (Sam Desktop)
+                // Occurs when switching environments in debug
+
+                // GL.DeleteShader(this._GL_Program);
                 this._GL_Program = 0;
             }
         }
