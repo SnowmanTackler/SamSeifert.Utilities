@@ -173,6 +173,16 @@ namespace SamSeifert.GLE
             GLO.Uniform4(this.UniformLocation(uniform_name), ref v);
         }
 
+        public void Uniform(String uniform_name, ref Quaternion q)
+        {
+            GLO.Uniform4(this.UniformLocation(uniform_name), q.X, q.Y, q.Z, q.W);
+        }
+
+        public void Uniform(String uniform_name, Quaternion q)
+        {
+            GLO.Uniform4(this.UniformLocation(uniform_name), q.X, q.Y, q.Z, q.W);
+        }
+
         public void Uniform(String uniform_name, ref Matrix2 mat)
         {
             GLO.UniformMatrix2(this.UniformLocation(uniform_name), false, ref mat);
