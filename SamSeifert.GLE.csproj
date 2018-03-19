@@ -90,7 +90,6 @@
     <Compile Include="DeleteableObject.cs" />
     <Compile Include="Draw.cs" />
     <Compile Include="ColorGL.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="FrameBuffers.cs" />
     <Compile Include="GLR.cs" />
     <Compile Include="GLR_Matrix.cs" />
@@ -103,11 +102,11 @@
     <Compile Include="Textures.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenTK\Source\GLControl\OpenTK.GLControl.csproj">
+    <ProjectReference Include="..\OpenTK\src\OpenTK.GLControl\OpenTK.GLControl.csproj">
       <Project>{a625be88-0000-0000-0000-000000000000}</Project>
       <Name>OpenTK.GLControl</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OpenTK\Source\OpenTK\OpenTK.csproj">
+    <ProjectReference Include="..\OpenTK\src\OpenTK\OpenTK.csproj">
       <Project>{a37a7e14-0000-0000-0000-000000000000}</Project>
       <Name>OpenTK</Name>
     </ProjectReference>

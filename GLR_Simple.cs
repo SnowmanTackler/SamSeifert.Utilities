@@ -254,14 +254,14 @@ namespace SamSeifert.GLE
         }
 
 
-        public static void BlendFunc(BlendingFactorSrc src, BlendingFactorDest dst)
+        public static void BlendFunc(BlendingFactor src, BlendingFactor dst)
         {
             GL.BlendFunc(src, dst);
         }
 
         public static void DefaultBlendFunc()
         {
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
         }
 
         public static void TexCoord2(int v1, int v2)

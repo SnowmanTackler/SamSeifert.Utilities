@@ -35,10 +35,6 @@ namespace SamSeifert.GLE.CAD
         private Vector3 _BoundingSphereCenter = Vector3.Zero;
         private float _BoundingSphereRadius = 0;
 
-        private static int UseColorTracker = 0;
-        public static void NoColorOn() { UseColorTracker++; }
-        public static void NoColorOff() { UseColorTracker--; }
-
         internal Action AnonymousDraw = null;
 
         public CadObject(CadObject[] cos, String name = "Group")
@@ -111,7 +107,7 @@ namespace SamSeifert.GLE.CAD
         public void GetBoundingSphere(out Vector3 center, out float radius)
         {
             this.UpdateBoundingSphere();
-            center = Vector3.Transform(this._BoundingSphereCenter, this._Matrix);
+            center =  (this._Matrix * new Vector4(this._BoundingSphereCenter, 1)).Xyz;
             radius = this._BoundingSphereRadius;
         }
 
@@ -228,7 +224,7 @@ namespace SamSeifert.GLE.CAD
 
                 if (this._BoundingSphereRadius == 0) return;
 
-                var pos = Vector3.Transform(this._BoundingSphereCenter, GL.getMatrix(MatrixMode.Modelview)); // Convert to Camera POV
+                var pos = (GL.getMatrix(MatrixMode.Modelview) * new Vector4(this._BoundingSphereCenter, 1)).Xyz;
 
                 if (pos.Length > this._BoundingSphereRadius) // If camera is not inside object
                 {
@@ -279,7 +275,7 @@ namespace SamSeifert.GLE.CAD
             {
                 if (this.AnonymousDraw == null)
                 {
-                    if ((CadObject.UseColorTracker == 0) && (useColor) && (this._Color != null)) this._Color.sendToGL();
+                    if ((useColor) && (this._Color != null)) this._Color.sendToGL();
 
                     switch (this._GLType)
                     {
