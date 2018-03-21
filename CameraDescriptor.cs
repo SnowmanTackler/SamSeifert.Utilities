@@ -47,10 +47,10 @@ namespace SamSeifert.GLE
             aspect /= viewport_height;
 
             if (!fov_vertical_true__fov_horizontal_false)
-                fov_degrees /= aspect;
+                fov_degrees = CalculateVerticalFov(fov_degrees, aspect);
 
             this._VerticalFOV_Radians = MathHelper.DegreesToRadians(fov_degrees);
-            this._HorizontalFOV_Radians = this._VerticalFOV_Radians * aspect;
+            this._HorizontalFOV_Radians = CalculateHorizontalFov(this._VerticalFOV_Radians, aspect);
             this._zNear = zNear;
             this._zFar = zFar;
 
@@ -104,6 +104,86 @@ namespace SamSeifert.GLE
         public void SendToGL()
         {
             GLR.LoadCamera(this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="horizontal_fov_radians"></param>
+        /// <param name="aspect"> width / height</param>
+        /// <returns>radians</returns>
+        public static float CalculateVerticalFov(float horizontal_fov_radians, float aspect)
+        {
+            // tan(fovy / 2) = (h / 2) / L
+            // tan(fovx / 2) = (w / 2) / L
+            return 2 * (float)Math.Atan(((float)Math.Tan(horizontal_fov_radians / 2)) / aspect);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vertical_fov_radians"></param>
+        /// <param name="aspect"> width / height</param>
+        /// <returns>radians</returns>
+        public static float CalculateHorizontalFov(float vertical_fov_radians, float aspect)
+        {
+            // tan(fovy / 2) = (h / 2) / L
+            // tan(fovx / 2) = (w / 2) / L
+            return 2 * (float)Math.Atan(((float)Math.Tan(vertical_fov_radians / 2)) * aspect);
+        }
+
+
+
+
+
+
+
+        private Vector3[][] _PolygonMesh = null;
+        private Vector3 _PolygonMeshCenter = Vector3.Zero;
+        /// <summary>
+        /// Returns a set of polygons that enclose the visible region of the camera
+        /// </summary>
+        /// <param name="valid_region_faces"></param>
+        /// <param name="valid_region_center"></param>
+        public void GetVisiblePolygonMesh(out Vector3[][] valid_region_faces, out Vector3 valid_region_center)
+        {
+            if (this._PolygonMesh == null)
+            {
+                float half_angle_horiz = this._HorizontalFOV_Radians / 2;
+                float half_angle_vert = this._VerticalFOV_Radians / 2;
+
+                // Unit Vectors to top left, right, etc corners of view port
+                Vector3 bot_r, bot_l, top_l, top_r = new Vector3(
+                    (float)Math.Tan(half_angle_horiz),
+                    (float)Math.Tan(half_angle_vert),
+                    -1
+                    ).Normalized();
+                top_l = top_r;
+                top_l.X *= -1;
+                bot_r = top_r;
+                bot_r.Y *= -1;
+                bot_l = top_l;
+                bot_l.Y *= -1;
+
+                this._PolygonMeshCenter = -Vector3.UnitZ * (this._zNear + this._zFar) / 2;
+
+                float zn = this._zNear / Math.Abs(top_r.Z); // Adjust zNear and zFar because we'll be multiplying 
+                float zf = this._zFar / Math.Abs(top_r.Z); // them by a vector that doesn't point directly to z
+
+                this._PolygonMesh = new Vector3[][]
+                {
+                    new Vector3[] { top_l * zn, top_l * zf, top_r * zf, top_r * zn }, // Top
+                    new Vector3[] { bot_l * zn, bot_l * zf, bot_r * zf, bot_r * zn }, // Bottom
+
+                    new Vector3[] { top_l * zn, top_l * zf, bot_l * zf, bot_l * zn }, // Left
+                    new Vector3[] { top_r * zn, top_r * zf, bot_r * zf, bot_r * zn }, // Right
+
+                    new Vector3[] { top_l * zn, top_r * zn, bot_r * zn, bot_l * zn }, // Near
+                    new Vector3[] { top_l * zf, top_r * zf, bot_r * zf, bot_l * zf }, // Far
+                };
+            }
+            valid_region_faces = this._PolygonMesh;
+            valid_region_center = this._PolygonMeshCenter;
         }
     }
 }
