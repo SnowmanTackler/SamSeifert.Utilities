@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL; using GL = SamSeifert.GLE.GLR;
+using OpenTK.Graphics.OpenGL;
+using GL = SamSeifert.GLE.GLR;
+using SamSeifert.Utilities;
 
 namespace SamSeifert.GLE.CAD
 {
@@ -144,20 +146,6 @@ namespace SamSeifert.GLE.CAD
             }
         }
 
-        public void Draw(bool useColor = true)
-        {
-            if (this._BoolDisplay)
-            {
-                if (this._BoolUseTranslationAndRotation)
-                {
-                    GL.PushMatrix();
-                    GL.MultMatrix(ref this._Matrix);
-                    this.Draw2(useColor);
-                    GL.PopMatrix();
-                }
-                else this.Draw2(useColor);
-            }
-        }
 
 
 
@@ -210,38 +198,139 @@ namespace SamSeifert.GLE.CAD
         }
 
 
+
+
+
         /// <summary>
         /// Checks The Viewport to see if we're inside.
         /// Requires using SamSeifert.GLE.GLR everywhere
         /// </summary>
         /// <param name="useColor"></param>
         public static bool RenderOnlyOnscreenObjects = false;
+
+        public void Draw(bool useColor = true)
+        {
+            if (this._BoolDisplay)
+            {
+                if (this._BoolUseTranslationAndRotation)
+                {
+                    GL.PushMatrix();
+                    GL.MultMatrix(ref this._Matrix);
+                    this.Draw2(useColor);
+                    GL.PopMatrix();
+                }
+                else this.Draw2(useColor);
+            }
+        }
+
         private void Draw2(bool useColor)
         {
-            if (CadObject.RenderOnlyOnscreenObjects)
+            bool draw = true;
+
+            try
             {
+                if (!CadObject.RenderOnlyOnscreenObjects) return;
+
+                var current_camera = GL._Camera;
+                if (current_camera == null) return;
+
+                draw = false;
+
                 this.UpdateBoundingSphere();
 
                 if (this._BoundingSphereRadius == 0) return;
 
-                var pos = (GL.getMatrix(MatrixMode.Modelview) * new Vector4(this._BoundingSphereCenter, 1)).Xyz;
+                var current_model_view_matrix = GL.getMatrix(MatrixMode.Modelview);
+                var pos_camera_frame = (current_model_view_matrix * new Vector4(this._BoundingSphereCenter, 1)).Xyz;
 
-                if (pos.Length > this._BoundingSphereRadius) // If camera is not inside object
+                float half_angle_horiz = current_camera._HorizontalFOV_Radians / 2;
+                float half_angle_vert = current_camera._VerticalFOV_Degrees / 2;
+                float zn = current_camera._zNear;
+                float zf = current_camera._zFar;
+
+                // Unit Vectors to top left, right, etc corners of view port
+                Vector3 bot_r, bot_l, top_l, top_r = new Vector3(
+                    (float)  Math.Tan(half_angle_horiz),
+                    (float)  Math.Tan(half_angle_vert),
+                    -1
+                    ).Normalized();
+                top_l = top_r;
+                top_l.X *= -1;
+                bot_r = top_r;
+                bot_r.Y *= -1;
+                bot_l = top_l;
+                bot_l.Y *= -1;
+
+                Vector3[][] valid_region_faces = new Vector3[][]
                 {
-                    if (pos.Z + this._BoundingSphereRadius < -GLR.Projection_zFar) return; // Too far in front
-                    if (pos.Z - this._BoundingSphereRadius > 0) return; // behind camera
+                    new Vector3[] { top_l * zn, top_l * zf, top_r * zf, top_r * zn }, // Top
+                    new Vector3[] { bot_l * zn, bot_l * zf, bot_r * zf, bot_r * zn }, // Bottom
+
+                    new Vector3[] { top_l * zn, top_l * zf, bot_l * zf, bot_l * zn }, // Left
+                    new Vector3[] { top_r * zn, top_r * zf, bot_r * zf, bot_r * zn }, // Right
+
+                    new Vector3[] { top_l * zn, top_r * zn, bot_r * zn, bot_l * zn }, // Near
+                    new Vector3[] { top_l * zf, top_r * zf, bot_r * zf, bot_l * zf }, // Far
+                };
+
+                Vector3 valid_region_center = -Vector3.UnitZ * (zn + zf) / 2;
+
+
+                { // Check if center of sphere is within valid_region_faces;
+                    int same_side_count = 0;
+
+                    foreach (var face in valid_region_faces)
+                    {
+                        var cross = Vector3.Cross(face[0] - face[1], face[2] - face[1]);
+
+                        // true if both negative, both positive, or if either is 0
+                        // valid_region_center can't be zero
+                        bool same_side = 0 <=
+                            Vector3.Dot(cross, this._BoundingSphereCenter) *
+                            Vector3.Dot(cross, valid_region_center);
+
+                        if (same_side) same_side_count++;
+                        else break;
+                    }
+
+                    if (same_side_count == valid_region_faces.Length)
+                    {
+                        draw = true;
+                        return;
+                    }
+                }
+
+                draw = true;
+
+
+
+
+                /*
+
+
+
+                Vector2[,] faces = 
+
+
+
+
+
+                if (pos_camera_frame.Length > this._BoundingSphereRadius) // If camera is not inside object
+                {
+                    if (pos_camera_frame.Z + this._BoundingSphereRadius < -GLR.Projection_zFar) return; // Too far in front
+                    if (pos_camera_frame.Z - this._BoundingSphereRadius > 0) return; // behind camera
 
                     {
                         // Check if object is to the right of the camera.
                         float angle = GLR.Projection_hFOV / 2;
                         angle -= MathHelper.DegreesToRadians(90);
                         Vector3 mover = new Vector3((float)Math.Sin(angle), 0, -(float)Math.Cos(angle));
-                        if (Vector3.Dot(pos + this._BoundingSphereRadius * mover, mover) < 0) return;
+                        if (Vector3.Dot(pos_camera_frame + this._BoundingSphereRadius * mover, mover) < 0) return;
 
                         // Check if object is to the left of the camera.
                         mover.X *= -1;
                         // Object is to the left of fov
-                        if (Vector3.Dot(pos + this._BoundingSphereRadius * mover, mover) < 0) return;
+                        if (Vector3.Dot(pos_camera_frame + this._BoundingSphereRadius * mover, mover) < 0) return;
                     }
 
                     {
@@ -249,17 +338,19 @@ namespace SamSeifert.GLE.CAD
                         float angle = GLR.Projection_vFOV / 2;
                         angle -= MathHelper.DegreesToRadians(90);
                         Vector3 mover = new Vector3(0, (float)Math.Sin(angle), -(float)Math.Cos(angle));
-                        if (Vector3.Dot(pos + this._BoundingSphereRadius * mover, mover) < 0) return;
+                        if (Vector3.Dot(pos_camera_frame + this._BoundingSphereRadius * mover, mover) < 0) return;
 
                         // Check if object is below the camera.
                         mover.Y *= -1;
                         // Object is to the left of fov
-                        if (Vector3.Dot(pos + this._BoundingSphereRadius * mover, mover) < 0) return;
+                        if (Vector3.Dot(pos_camera_frame + this._BoundingSphereRadius * mover, mover) < 0) return;
                     }
-                }
+                }*/
             }
-
-            this.Draw3(useColor);                            
+            finally
+            {
+                if (draw) this.Draw3(useColor);
+            }
         }
 
         private void Draw3(bool useColor)

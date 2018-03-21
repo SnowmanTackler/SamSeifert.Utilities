@@ -15,7 +15,7 @@ namespace SamSeifert.GLE
         public readonly Rectangle _Viewport;
         public readonly Matrix4 _Projection;
         public readonly float _zFar;
-        public readonly float _ZNear;
+        public readonly float _zNear;
         public readonly float _HorizontalFOV_Radians;
         public readonly float _VerticalFOV_Radians;
         public readonly Matrix4 _ModelView;
@@ -51,7 +51,7 @@ namespace SamSeifert.GLE
 
             this._VerticalFOV_Radians = MathHelper.DegreesToRadians(fov_degrees);
             this._HorizontalFOV_Radians = this._VerticalFOV_Radians * aspect;
-            this._ZNear = zNear;
+            this._zNear = zNear;
             this._zFar = zFar;
 
             this._Projection = Matrix4.CreatePerspectiveFieldOfView(this._VerticalFOV_Radians, aspect, zNear, zFar);
