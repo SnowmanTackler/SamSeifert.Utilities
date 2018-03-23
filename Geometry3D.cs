@@ -52,6 +52,10 @@ namespace SamSeifert.GLE
 
                 if (count <= 2) throw new Exception("Polygons need more than 2 vertices");
 
+                // Check if polygon is completely within circle (if it is, all of the vertices will be within circle, so only check one)
+                if ((first_three[0] - sphere_center).Length < sphere_radius)
+                    return true;
+
                 point_inside_polygon /= count;
 
                 Vector3 plane_normal;
