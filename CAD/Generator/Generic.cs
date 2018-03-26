@@ -133,12 +133,16 @@ namespace SamSeifert.GLE.CAD.Generator
             Vector3 v3,
             Vector3 v4,
             Vector3 n,
-            String name = "Plane")
+            String name = "Plane",
+            bool reverse = false)
         {
             List<Vector3> vs = new List<Vector3>();
             List<Vector3> ns = new List<Vector3>();
 
             Face(v1, v2, v3, v4, n, vs, ns);
+
+            if (reverse)
+                Face(v4, v3, v2, v1, n, vs, ns);
 
             return new CadObject(vs.ToArray(), ns.ToArray(), name);
         }
