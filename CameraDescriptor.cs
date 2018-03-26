@@ -46,10 +46,11 @@ namespace SamSeifert.GLE
             float aspect = viewport_width;
             aspect /= viewport_height;
 
-            if (!fov_vertical_true__fov_horizontal_false)
-                fov_degrees = CalculateVerticalFov(fov_degrees, aspect);
-
             this._VerticalFOV_Radians = MathHelper.DegreesToRadians(fov_degrees);
+
+            if (!fov_vertical_true__fov_horizontal_false)
+                this._VerticalFOV_Radians = CalculateVerticalFov(this._VerticalFOV_Radians, aspect);
+
             this._HorizontalFOV_Radians = CalculateHorizontalFov(this._VerticalFOV_Radians, aspect);
             this._zNear = zNear;
             this._zFar = zFar;
@@ -69,14 +70,11 @@ namespace SamSeifert.GLE
             int viewport_y = 0) : this(viewport_width, viewport_height, vertical_fov_degrees, fov_vertical_true__fov_horizontal_false, zNear, zFar, viewport_x, viewport_y)
         {
             this._ModelView = eye;
-
-            eye.Invert();
-
-            this._ModelView_Eye = eye.Row3.Xyz;
+            this._ModelView_Eye = -eye.ExtractTranslation();
 
             // TODO: CALCULATE THESE CORRECTLY.
-            this._ModelView_Target = -Vector3.UnitZ;
-            this._ModelView_Up = Vector3.UnitY;
+            this._ModelView_Target = Vector3.Zero;
+            this._ModelView_Up = Vector3.Zero;
         }
 
         public CameraDescriptor(

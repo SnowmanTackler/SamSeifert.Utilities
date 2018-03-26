@@ -9,6 +9,8 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using GLO = OpenTK.Graphics.OpenGL.GL;
 using GL = SamSeifert.GLE.GLR;
+using SamSeifert.Utilities;
+using SamSeifert.GLE.Extensions;
 
 namespace SamSeifert.GLE
 {
@@ -19,8 +21,23 @@ namespace SamSeifert.GLE
         private int _FrameBuffer = 0;
         private int _DepthBuffer = 0;
 
-        public CubeDepthMap(out bool success, int resolution,
-            int image_sample_style = (int)All.Nearest)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="success"></param>
+        /// <param name="resolution"></param>
+        /// <param name="min_interpolate_mode">All.Nearest or All.Linear casted to int</param>
+        /// <param name="max_interpolate_mode">All.Nearest or All.Linear casted to int</param>
+        /// <param name="pif"></param>
+        /// <param name="pt"></param>
+        public CubeDepthMap(
+            out bool success, 
+            int resolution,
+            int min_interpolate_mode = (int)All.Nearest,
+            int max_interpolate_mode = (int)All.Nearest,
+            PixelInternalFormat pif = PixelInternalFormat.DepthComponent32f,
+            PixelType pt = PixelType.Float)
         {
             try
             {
@@ -29,17 +46,32 @@ namespace SamSeifert.GLE
                 this._FrameBuffer = GL.GenFramebuffer();
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, this._FrameBuffer);
 
+                // For Frame Buffer
+                GL.Enable(EnableCap.DepthTest);
+                GL.Enable(EnableCap.CullFace);
+                GL.CullFace(CullFaceMode.Back);
+                GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
+                GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
+
                 {
                     this._ColorText = GL.GenTexture();
                     GL.BindTexture(TextureTarget.TextureCubeMap, this._ColorText);
 
+                    // Warning: if you want to read the depth values directly as floats, 
+                    // you must disable depth comparison mode using GL_TEXTURE_COMPARE_MODE. 
+                    // Reading a depth texture as a color texture without disabling depth comparison is undefined behavior.
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureCompareMode, (int)TextureCompareMode.None);
+
+                    // PRevent black lines around edge of map.
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, image_sample_style);
-                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, image_sample_style);
-                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureBaseLevel, 0);
+
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureBaseLevel, 0); // Prevents Mip Maps
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMaxLevel, 0);
+
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, min_interpolate_mode); 
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, max_interpolate_mode);
 
                     //Define all 6 faces
                     for (int i = 0; i < 6; i++)
@@ -48,12 +80,12 @@ namespace SamSeifert.GLE
                         GL.TexImage2D(
                             CubeColorMap._TextureTargets[i],
                             0,
-                            PixelInternalFormat.DepthComponent,
+                            pif,
                             this._Resolution,
                             this._Resolution,
                             0,
                             PixelFormat.DepthComponent,
-                            PixelType.UnsignedByte,
+                            pt,
                             IntPtr.Zero);
                     }
                 }
@@ -97,10 +129,14 @@ namespace SamSeifert.GLE
         /// <param name="m">Model View Should to Straight Forward</param>
         public void Render(Action<CameraDescriptor> render, float zNear, float zFar, Matrix4 m)
         {
-            m.Invert();
+            // var actual_inverse = m.Inverted(); // To Compare
+
+            m = m.InvertedViewMatrix();
+
+            // Logger.WriteLine(m.ToString());
 
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, this._FrameBuffer);
-            GL.DrawBuffer(DrawBufferMode.None);
+            GL.DrawBuffer(DrawBufferMode.None); // Don't draw color on anything?
 
             for (int i = 0; i < 6; i++)
             {

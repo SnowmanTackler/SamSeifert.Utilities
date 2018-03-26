@@ -10,6 +10,7 @@ using OpenTK.Graphics.OpenGL;
 using GLO = OpenTK.Graphics.OpenGL.GL;
 using GL = SamSeifert.GLE.GLR;
 using SamSeifert.Utilities;
+using SamSeifert.GLE.Extensions;
 
 namespace SamSeifert.GLE
 {
@@ -41,7 +42,23 @@ namespace SamSeifert.GLE
         private int _FrameBuffer = 0;
         private int _DepthBuffer = 0;
 
-        public CubeColorMap(out bool success, int resolution)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="success"></param>
+        /// <param name="resolution"></param>
+        /// <param name="interpolate_mode">All.Nearest or All.Linear casted to int</param>
+        /// <param name="pif"></param>
+        /// <param name="pt"></param>
+        public CubeColorMap(
+            out bool success,
+            int resolution,
+            int min_interpolate_mode = (int)All.Nearest,
+            int max_interpolate_mode = (int)All.Nearest,
+            PixelInternalFormat pif = PixelInternalFormat.Rgb,
+            PixelFormat pf = PixelFormat.Bgr,
+            PixelType pt = PixelType.UnsignedByte)
         {
             try
             {
@@ -49,6 +66,13 @@ namespace SamSeifert.GLE
 
                 this._FrameBuffer = GL.GenFramebuffer();
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, this._FrameBuffer);
+                
+                // For Frame Buffer
+                GL.Enable(EnableCap.DepthTest);
+                GL.Enable(EnableCap.CullFace);
+                GL.CullFace(CullFaceMode.Back);
+                GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
+                GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
 
                 {
                     this._ColorText = GL.GenTexture();
@@ -57,10 +81,11 @@ namespace SamSeifert.GLE
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (int)All.Linear);
-                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)All.Linear);
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureBaseLevel, 0);
                     GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMaxLevel, 0);
+
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, min_interpolate_mode);
+                    GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, max_interpolate_mode);
 
                     //Define all 6 faces
                     for (int i = 0; i < 6; i++)
@@ -69,12 +94,12 @@ namespace SamSeifert.GLE
                         GL.TexImage2D(
                             CubeColorMap._TextureTargets[i],
                             0,
-                            PixelInternalFormat.Rgb,
+                            pif,
                             this._Resolution,
                             this._Resolution,
                             0,
-                            PixelFormat.Bgr,
-                            PixelType.UnsignedByte,
+                            pf,
+                            pt,
                             IntPtr.Zero);
                     }
                 }
@@ -138,7 +163,7 @@ namespace SamSeifert.GLE
         /// <param name="m">Model View Should to Straight Forward</param>
         public void Render(Action<CameraDescriptor> render, float zNear, float zFar, Matrix4 m)
         {
-            m.Invert();
+            m = m.InvertedViewMatrix();
 
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, this._FrameBuffer);
             GL.DrawBuffer((DrawBufferMode)FramebufferAttachment.ColorAttachment0);
@@ -148,6 +173,9 @@ namespace SamSeifert.GLE
                 if (this._Use[i])
                 {
                     var eye = m * CubeColorMap._Matrices[i];
+
+
+
 
                     var cam = new CameraDescriptor(
                         this._Resolution,
