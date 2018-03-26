@@ -58,6 +58,8 @@
     <Compile Include="CAD\Generator\Generic.cs" />
     <Compile Include="CAD\Generator\FromXaml.cs" />
     <Compile Include="Extensions\Matrix4E.cs" />
+    <Compile Include="Extensions\Vector2E.cs" />
+    <Compile Include="Extensions\Vector3E.cs" />
     <Compile Include="Geometry.cs" />
     <Compile Include="Geometry3D.cs" />
     <Compile Include="GLR_StaticVariables.cs" />
