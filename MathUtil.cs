@@ -225,6 +225,11 @@ namespace SamSeifert.Utilities
             return alpha * value_at_1 + (1 - alpha) * value_at_0;
         }
 
+        public static double Blend01(this double alpha, double value_at_0, double value_at_1)
+        {
+            return alpha * value_at_1 + (1 - alpha) * value_at_0;
+        }
+
 
 
 

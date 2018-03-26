@@ -38,9 +38,16 @@ namespace SamSeifert.Utilities.DataStructures
         public bool TryGetValue(String key, out TValue t)
         {
             Tuple<TValue, String, float> tup;
-            bool returned = base.TryGetValue(key, out tup);
-            t = tup.Item1;
-            return returned;
+            if (base.TryGetValue(key, out tup))
+            {
+                t = tup.Item1;
+                return true;
+            }
+            else
+            {
+                t = default(TValue);
+                return false;
+            }
         }
 
         public float Get(String key, out String best_key, out TValue best_value)
