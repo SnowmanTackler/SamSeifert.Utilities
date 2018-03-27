@@ -25,7 +25,8 @@ namespace SamSeifert.GLE.CAD.Generator
             bool useDiffuse = true,
             bool useSpecular = true,
             bool useEmission = true,
-            bool reduceComplexity = true
+            bool reduceComplexity = true,
+            bool reverseFace = false
             )
         {
             var f = TagFile.ParseText(FileText);
@@ -53,7 +54,8 @@ namespace SamSeifert.GLE.CAD.Generator
                 useAmbient,
                 useDiffuse,
                 useSpecular,
-                useEmission
+                useEmission,
+                reverseFace
                 );
 
             co.SetUseTranslationAndRotation(true, false);
@@ -125,7 +127,8 @@ namespace SamSeifert.GLE.CAD.Generator
             bool useAmbient,
             bool useDiffuse,
             bool useSpecular,
-            bool useEmission
+            bool useEmission,
+            bool reverseFace
             )
         {
             CadObject co = new CadObject();
@@ -145,7 +148,7 @@ namespace SamSeifert.GLE.CAD.Generator
                             }
                         case "ModelVisual3D.Content":
                             {
-                                xamlModelVisual3DContent(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, ret);
+                                xamlModelVisual3DContent(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, reverseFace, ret);
                                 break;
                             }
                         case "ModelVisual3D.Children":
@@ -158,7 +161,7 @@ namespace SamSeifert.GLE.CAD.Generator
                                         switch (f2._Name)
                                         {
                                             case "ModelVisual3D":
-                                                ret.Add(xamlModelVisual3D(f2, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission));
+                                                ret.Add(xamlModelVisual3D(f2, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, reverseFace));
                                                 break;
                                             
                                             default:
@@ -208,7 +211,9 @@ namespace SamSeifert.GLE.CAD.Generator
             bool useDiffuse,
             bool useSpecular,
             bool useEmission,
-            List<CadObject> ls)
+            bool reverseFace,
+            List<CadObject> ls
+            )
         {
             var u1 = new HashSet<string>();
             foreach (var e1 in f0._Children)
@@ -223,7 +228,7 @@ namespace SamSeifert.GLE.CAD.Generator
                         switch (f1._Name)
                         {
                             case "Model3DGroup":
-                                xamlModel3DGroup(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, ls);
+                                xamlModel3DGroup(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, reverseFace, ls);
                                 break;
                             default:
 #if DEBUG
@@ -245,6 +250,7 @@ namespace SamSeifert.GLE.CAD.Generator
             bool useDiffuse,
             bool useSpecular,
             bool useEmission,
+            bool reverseFace,
             List<CadObject> ls)
         {
             var u1 = new HashSet<string>();
@@ -260,7 +266,7 @@ namespace SamSeifert.GLE.CAD.Generator
                         switch (f1._Name)
                         {
                             case "Model3DGroup.Children":
-                                xamlModelVisual3DGroupChildren(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, ls);
+                                xamlModelVisual3DGroupChildren(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, reverseFace, ls);
                                 break;
                             default:
 #if DEBUG
@@ -282,6 +288,7 @@ namespace SamSeifert.GLE.CAD.Generator
             bool useDiffuse,
             bool useSpecular,
             bool useEmission,
+            bool reverseFace,
             List<CadObject> ls)
         {
             // var u3 = new HashSet<string>();
@@ -297,7 +304,7 @@ namespace SamSeifert.GLE.CAD.Generator
                     switch (f1._Name)
                     {
                         case "GeometryModel3D":
-                            ls.Add(xamlModelGeometryModel3D(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission));
+                            ls.Add(xamlModelGeometryModel3D(f1, xScale, yScale, zScale, useAmbient, useDiffuse, useSpecular, useEmission, reverseFace));
                             break;
                         case "AmbientLight":
                             // f1.display();
@@ -324,7 +331,8 @@ namespace SamSeifert.GLE.CAD.Generator
             bool useAmbient,
             bool useDiffuse,
             bool useSpecular,
-            bool useEmission)
+            bool useEmission,
+            bool reverseFace)
         {
             var co = new CadObject();
 
@@ -364,7 +372,7 @@ namespace SamSeifert.GLE.CAD.Generator
                                                         var data = f2._Params;
                                                         var verts = new List<Vector3>();
                                                         var norms = new List<Vector3>();
-                                                        xamlParseDict(ref data, ref verts, ref norms);
+                                                        xamlParseDict(ref data, ref verts, ref norms, reverseFace);
                                                         var verts2array = verts.ToArray();
                                                         var norms2array = norms.ToArray();
                                                         for (int j = 0; j < verts.Count; j++)
@@ -647,7 +655,7 @@ namespace SamSeifert.GLE.CAD.Generator
             co._Color._Emission[3] = emission.A / 255.0f;
         }
 
-        private static void xamlParseDict(ref Dictionary<String, String> dict, ref List<Vector3> verts, ref List<Vector3> norms)
+        private static void xamlParseDict(ref Dictionary<String, String> dict, ref List<Vector3> verts, ref List<Vector3> norms, bool reverseFace)
         {
             String nos, ves, ins;
 
@@ -670,8 +678,9 @@ namespace SamSeifert.GLE.CAD.Generator
                     {
                         for (int j = 0; j < 3; j++)
                         {
-                            verts.Add(v[trn[j]]);
-                            norms.Add(n[trn[j]]);
+                            int aj = reverseFace ? (2 - j) : j;
+                            verts.Add(v[trn[aj]]);
+                            norms.Add(n[trn[aj]]);
                         }
                     }
                 }
