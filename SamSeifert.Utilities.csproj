@@ -112,6 +112,7 @@
     <Compile Include="Extensions\HashSetE.cs" />
     <Compile Include="Extensions\ListE.cs" />
     <Compile Include="Extensions\NumericUpDownE.cs" />
+    <Compile Include="Extensions\Random.cs" />
     <Compile Include="Extensions\RichTextBoxE.cs" />
     <Compile Include="Extensions\TextBoxE.cs" />
     <Compile Include="Extensions\TimerE.cs" />
