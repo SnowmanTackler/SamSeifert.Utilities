@@ -168,6 +168,7 @@ namespace SamSeifert.Utilities.Json
                     case '8':
                     case '9':
                     case '-': // Negative
+                    case '+': // Postive(Expondent) i.e. 4.0542E+38
                     case '.': // Decimal
                     case 'E': // Exponent
                         sb.Append(next);
