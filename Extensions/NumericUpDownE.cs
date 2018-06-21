@@ -59,6 +59,18 @@ namespace SamSeifert.Utilities.Extensions
 
 
 
+        public static void SetDecimalPlaces(this NumericUpDown nud, int decimal_places)
+        {
+            decimal increment = 1;
+            for (int i = 0; i < decimal_places; i++)
+                increment /= 10;
+
+            nud.Increment = increment;
+            nud.DecimalPlaces = decimal_places;
+        }
+
+
+
 
 
 

@@ -20,7 +20,7 @@ namespace SamSeifert.Utilities.Extensions
 
         public static void Pack(this ComboBox cb, JsonDict dict, string key)
         {
-            dict[key] = cb.SelectedIndex;
+            dict[key] = (double)cb.SelectedIndex;
         }
     }
 }
