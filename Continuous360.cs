@@ -10,27 +10,35 @@ namespace SamSeifert.Utilities
     {
         protected readonly float _Increment;
 
+        public float _StartingAngle { get; private set; }
         private float _Angle = 0;
         private int _TurnCount = 0;
 
-        protected Continuous360(float inc)
+        protected Continuous360(float inc, float starting_angle)
         {
             this._Increment = inc;
+            this.SetAngle(starting_angle);
         }
 
-        public static Continuous360 Radians()
+        public static Continuous360 Radians(float starting_angle = 0)
         {
-            return new Continuous360(UnitConverter.PIF * 2);
+            return new Continuous360(UnitConverter.PIF * 2, starting_angle);
         }
 
-        public static Continuous360 Degrees()
+        public static Continuous360 Degrees(float starting_angle = 0)
         {
-            return new Continuous360(360);
+            return new Continuous360(360, starting_angle);
         }
 
+        /// <summary>
+        /// Resets
+        /// </summary>
+        /// <param name="raw_angle"></param>
         public void SetAngle(float raw_angle)
         {
+            this._StartingAngle = raw_angle;
             this._Angle = raw_angle;
+            this._TurnCount = 0;
         }
 
         public float UpdateAngle(float raw_angle)
