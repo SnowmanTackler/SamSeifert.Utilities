@@ -65,6 +65,7 @@ namespace SamSeifert.Utilities.Json
                             case 'v': sb.Append('\v'); break;
                             case '0': sb.Append('\0'); break;
                             case '"': sb.Append('"'); break;
+                            case 'u': sb.Append("\\u"); break; // Unicode
                             case '\\': sb.Append('\\'); break;
                             default:
                                 Console.WriteLine("Unsupported Char After Escape Char: *" + temper + "*");
