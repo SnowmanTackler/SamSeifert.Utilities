@@ -29,46 +29,6 @@ namespace SamSeifert.Utilities.DataStructures
             this._DefaultFunc = (TKey k) => default_value;            
         }
 
-        public bool ArgMax(out TKey key, out TValue value)
-        {
-            key = default(TKey);
-            value = default(TValue);
-
-            if (!typeof(IComparable).IsAssignableFrom(typeof(TValue)))
-                return false;
-
-            bool first = true;
-            foreach (var kvp in this)
-            {
-                if (first) first = false;
-                else if ((kvp.Value as IComparable).CompareTo(value) < 0) continue;
-                key = kvp.Key;
-                value = kvp.Value;
-            }
-
-            return true;
-        }
-
-        public bool ArgMin(out TKey key, out TValue value)
-        {
-            key = default(TKey);
-            value = default(TValue);
-
-            if (!typeof(IComparable).IsAssignableFrom(typeof(TValue)))
-                return false;
-
-            bool first = true;
-            foreach (var kvp in this)
-            {
-                if (first) first = false;
-                else if ((kvp.Value as IComparable).CompareTo(value) > 0) continue;
-                key = kvp.Key;
-                value = kvp.Value;
-            }
-
-            return true;
-        }
-
         public new TValue this[TKey key]
         {
             get
@@ -86,6 +46,19 @@ namespace SamSeifert.Utilities.DataStructures
             {
                 base[key] = value;
             }
+        }
+
+        /// <summary>
+        /// Returns value for key if in dictionary, or default value (null).
+        /// Handy when using dict.TryGetValue(key)?.Method();
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public TValue TryGetValue(TKey key)
+        {
+            TValue t;
+            if (this.TryGetValue(key, out t)) return t;
+            else return default(TValue); // Null or Zero typically
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using SamSeifert.Utilities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -7,28 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SamSeifert.Utilities
+namespace SamSeifert.Utilities.Extensions
 {
-    public class ControlHolder<T>
-    {
-        private String _String;
-        public T _Held;
-
-        public override string ToString()
-        {
-            return this._String;
-        }
-
-        public ControlHolder(T ai, String s = null)
-        {
-            this._Held = ai;
-
-            if (s == null) this._String = this._Held.ToString();
-            else this._String = s;
-        }
-    }
-
-    public static class ControlUtil
+    public static class ControlE
     {
         public static void WireAllControls_MouseDown(this Control parent, MouseEventHandler eh)
         {
@@ -136,68 +116,28 @@ namespace SamSeifert.Utilities
 
 
 
-        public class LayoutSuspender : IDisposable
+
+
+
+
+
+
+
+
+
+
+        public static IEnumerable<T> GetChildren<T>(this Control c) where T : Control
         {
-            private Control[] ccs;
-
-            public LayoutSuspender(params Control[] controls)
-            {
-                this.ccs = controls;
-
-                foreach (var c in this.ccs) c.SuspendLayout();
-            }
-
-            public void Dispose()
-            {
-                foreach (var c in this.ccs) c.ResumeLayout();
-                this.ccs = null;
-            }
+            foreach (var child in c.Controls)
+                if (child is T)
+                    yield return child as T;
         }
 
-
-
-
-
-
-
-
-
-
-        public static T GetParent<T>(this Control c) where T : class
+        public static T GetParent<T>(this Control c) where T : Control
         {
             if (c is T) return c as T;
             else if (c.Parent == null) return null;
             else return c.Parent.GetParent<T>();
         }
-
-        public static void LoadFormState(this Form f)
-        {
-            if (Properties.Settings.Default.FormPositionSaved)
-            {
-                f.Location = Properties.Settings.Default.FormLocation;
-                f.StartPosition = FormStartPosition.Manual;
-                f.Size = Properties.Settings.Default.FormSize;
-
-                if ((Properties.Settings.Default.FormWindowState != -1) &&
-                    (((FormWindowState)(Properties.Settings.Default.FormWindowState)) == FormWindowState.Maximized))
-                {
-                    f.WindowState = FormWindowState.Maximized;
-                }
-            }
-        }
-
-        public static void SaveFormState(this Form f)
-        {
-            Properties.Settings.Default.FormPositionSaved = true;
-            Properties.Settings.Default.FormLocation = f.Location;
-            Properties.Settings.Default.FormSize = f.Size;
-
-            if (f.WindowState == FormWindowState.Minimized) Properties.Settings.Default.FormWindowState = Convert.ToInt32(FormWindowState.Normal);
-            else Properties.Settings.Default.FormWindowState = Convert.ToInt32(f.WindowState);
-
-            Properties.Settings.Default.Save();
-
-        }
-
     }
 }

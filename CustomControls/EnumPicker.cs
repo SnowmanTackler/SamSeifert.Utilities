@@ -40,8 +40,7 @@ namespace SamSeifert.Utilities.CustomControls
             int select = 0;
             foreach (var tup in ls_sort)
             {
-                this.Items.Add(tup.Item2);
-
+                this.Items.Add(tup.Item2.Replace('_', ' '));
                 if (this._Default.Equals(tup.Item1))
                     select = ls.Count;
 

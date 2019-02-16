@@ -19,6 +19,8 @@ namespace SamSeifert.Utilities.Json
             {
                 var o = arg[0];
 
+                bool first = true;
+
                 if ((o is bool) ||
                     (o is byte) ||
                     (o is sbyte) ||
@@ -33,7 +35,6 @@ namespace SamSeifert.Utilities.Json
                     (o is decimal)
                     )
                 {
-                    bool first = true;
                     foreach (var obj in arg)
                     {
                         if (first) first = false;
@@ -45,7 +46,6 @@ namespace SamSeifert.Utilities.Json
                 {
                     var sep = "," + Environment.NewLine + nindent;
                     sw(Environment.NewLine + nindent);
-                    bool first = true;
                     foreach (var obj in arg)
                     {
                         if (first) first = false;
@@ -74,6 +74,7 @@ namespace SamSeifert.Utilities.Json
                 return JsonArray.FromStream(sr, false);
         }
 
+
         public static Object[] FromStream(StreamReader sr, bool first_bracket_found = true)
         {
             if (!first_bracket_found)
@@ -86,7 +87,52 @@ namespace SamSeifert.Utilities.Json
             }
 
             var ret = new List<Object>();
+            FromStream(sr, (Object o) => { ret.Add(o); });
+            return ret.ToArray();
+        }
 
+
+        /// <summary>
+        /// Calls function on each object in first level of array.  Use this on huge Json Files
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="act"></param>
+        public static void FromFile(String path, Action<Object> act)
+        {
+            using (StreamReader sr = new StreamReader(path))
+            {
+                while (!sr.EndOfStream)
+                    if (sr.Read() == '[')
+                        break;
+
+                if (sr.EndOfStream) return;
+
+                FromStream(sr, act);
+            }
+        }
+
+        /// <summary>
+        /// Calls function on each object in first level of array.  Use this on huge Json Files
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="act"></param>
+        public static void FromStream(Stream str, Action<Object> act)
+        {
+            using (StreamReader sr = new StreamReader(str))
+            {
+                while (!sr.EndOfStream)
+                    if (sr.Read() == '[')
+                        break;
+
+                if (sr.EndOfStream) return;
+
+                FromStream(sr, act);
+            }
+        }
+
+
+        private static void FromStream(StreamReader sr, Action<Object> act)
+        {
             StringBuilder sb = new StringBuilder();
 
             while (true)
@@ -96,21 +142,21 @@ namespace SamSeifert.Utilities.Json
                 switch (next)
                 {
                     case '"':
-                        ret.Add(JsonParser.ParseString(sr));
+                        act(JsonParser.ParseString(sr));
                         break;
                     case '{':
-                        ret.Add(JsonDict.FromStream(sr));
+                        act(JsonDict.FromStream(sr));
                         break;
                     case '[':
-                        ret.Add(JsonArray.FromStream(sr));
+                        act(JsonArray.FromStream(sr));
                         break;
                     case ']':
                         if (sb.Length != 0)
                         {
-                            ret.Add(Double.Parse(sb.ToString()));
+                            act(Double.Parse(sb.ToString()));
                             sb.Length = 0;
                         }
-                        return ret.ToArray();
+                        return;
                     case '0':
                     case '1':
                     case '2':
@@ -122,6 +168,7 @@ namespace SamSeifert.Utilities.Json
                     case '8':
                     case '9':
                     case '-': // Negative
+                    case '+': // Postive(Expondent) i.e. 4.0542E+38
                     case '.': // Decimal
                     case 'E': // Exponent
                         sb.Append(next);
@@ -129,7 +176,7 @@ namespace SamSeifert.Utilities.Json
                     default:
                         if (sb.Length != 0)
                         {
-                            ret.Add(Double.Parse(sb.ToString()));
+                            act(Double.Parse(sb.ToString()));
                             sb.Length = 0;
                         }
                         break;
@@ -139,7 +186,7 @@ namespace SamSeifert.Utilities.Json
                             if ('r' != (char)sr.Read()) throw new Exception("Invalid tr");
                             if ('u' != (char)sr.Read()) throw new Exception("Invalid tru");
                             if ('e' != (char)sr.Read()) throw new Exception("Invalid true");
-                            ret.Add(true);
+                            act(true);
                         }
                         else throw new Exception("Invalid t + ");
                         break;
@@ -150,7 +197,7 @@ namespace SamSeifert.Utilities.Json
                             if ('l' != (char)sr.Read()) throw new Exception("Invalid fal");
                             if ('s' != (char)sr.Read()) throw new Exception("Invalid fals");
                             if ('e' != (char)sr.Read()) throw new Exception("Invalid false");
-                            ret.Add(false);
+                            act(false);
                         }
                         else throw new Exception("Invalid f");
                         break;
@@ -160,12 +207,128 @@ namespace SamSeifert.Utilities.Json
                             if ('u' != (char)sr.Read()) throw new Exception("Invalid nu");
                             if ('l' != (char)sr.Read()) throw new Exception("Invalid nul");
                             if ('l' != (char)sr.Read()) throw new Exception("Invalid nul");
-                            ret.Add(null);
+                            act(null);
                         }
                         else throw new Exception("Invalid f");
                         break;
                 }
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public static int asInt(this object[] arg, int index)
+        {
+            object outo = arg[index];
+            if (outo is double) return (int)Math.Round((double)outo);
+            else if (outo is int) return (int)outo;
+            else throw new NotImplementedException();
+        }
+
+        public static int asInt(this object[] arg, int index, int empty_or_error_value)
+        {
+            object outo = arg[index];
+            if (outo is double) return (int)Math.Round((double)outo);
+            else if (outo is int) return (int)outo;
+            else return empty_or_error_value;
+        }
+
+        public static float asFloat(this object[] arg, int index)
+        {
+            object outo = arg[index];
+            if (outo is double) return (float)(double)outo;
+            else if (outo is float) return (float)outo;
+            else throw new NotImplementedException();
+        }
+
+        public static float asFloat(this object[] arg, int index, float empty_or_error_value)
+        {
+            object outo = arg[index];
+            if (outo is double) return (float)(double)outo;
+            else if (outo is float) return (float)outo;
+            else return empty_or_error_value;
+        }
+
+        public static double asDouble(this object[] arg, int index)
+        {
+            object outo = arg[index];
+            if (outo is double) return (double)outo;
+            else throw new NotImplementedException();
+        }
+
+        public static double asDouble(this object[] arg, int index, double empty_or_error_value)
+        {
+            object outo = arg[index];
+            if (outo is double) return (double)outo;
+            else return empty_or_error_value;
+        }
+
+        /// <summary>
+        /// No exception thrown.
+        /// Do not use for int, float, double
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static bool asGeneric<T>(this object[] arg, int index, out T t)
+        {
+            object outo = arg[index];
+            if (outo is T)
+            {
+                t = (T)outo;
+                return true;
+            }
+            t = default(T);
+            return false;
+        }
+
+        /// <summary>
+        /// Throws exception if key isn't there.
+        /// Do not use for int, float, double
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static T asGeneric<T>(this object[] arg, int index)
+        {
+            return (T)arg[index];
+        }
+
+        /// <summary>
+        /// No exception thrown.  
+        /// Do not use for int, float, double
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <param name="empty_or_error_value"></param>
+        /// <returns></returns>
+        public static T asGeneric<T>(this object[] arg, int index, T empty_or_error_value)
+        {
+            object outo = arg[index];
+            if (outo is T) return (T)outo;
+            return empty_or_error_value;
+        }
+
     }
 }

@@ -7,21 +7,22 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using SamSeifert.Utilities.Extensions;
 
 namespace SamSeifert.Utilities.CustomControls
 {
     public partial class HueFilter : UserControl
     {
-        public float BandWidth { get; private set; } = 0.5f;
-        public float BandCenter { get; private set; } = 0.5f;
+        public float _BandWidth { get; private set; } = 0.5f;
+        public float _BandCenter { get; private set; } = 0.5f;
 
         public void setInitialValues(float band_center, float band_width)
         {
-            this.BandWidth = band_width;
-            this.BandCenter = band_center;
+            this._BandWidth = band_width;
+            this._BandCenter = band_center;
         }
 
-        public event EventHandler ValueChanged;
+        public event EventHandler _ValueChanged;
 
         public HueFilter()
         {
@@ -65,49 +66,46 @@ namespace SamSeifert.Utilities.CustomControls
 
             unsafe
             {
-                BitmapData bmdNew = i.LockBits(
-                    new Rectangle(0, 0, w, h),
-                    System.Drawing.Imaging.ImageLockMode.ReadWrite, i.PixelFormat);
-
-                byte * rowNew;
-                int y, x, xx;
-
-                float wD = (float)(w - 1);
-                float hD = (float)(h - 1);
-                float hue, lum;
-
-                float r, g, b;
-
-                for (y = 0; y < h; y++)
+                using (var bmdNew = i.Locked(ImageLockMode.ReadWrite, i.PixelFormat))
                 {
-                    rowNew = (Byte*)bmdNew.Scan0 + (y * bmdNew.Stride);
+                    byte* rowNew;
+                    int y, x, xx;
 
-                    lum = 1 - y / hD;
+                    float wD = (float)(w - 1);
+                    float hD = (float)(h - 1);
+                    float hue, lum;
 
-                    for (x = 0, xx = 0; x < w; x++, xx += 3)
+                    float r, g, b;
+
+                    for (y = 0; y < h; y++)
                     {
-                        hue = x / wD;
+                        rowNew = (Byte*)bmdNew.Scan0 + (y * bmdNew.Stride);
 
-                        ColorUtil.hsl2rgb(hue, 0.5f, lum, out r, out g, out b);
+                        lum = 1 - y / hD;
 
-
-                        if (this.checkHue(hue))
+                        for (x = 0, xx = 0; x < w; x++, xx += 3)
                         {
-                            rowNew[xx + 2] = castByte(r);
-                            rowNew[xx + 1] = castByte(g);
-                            rowNew[xx + 0] = castByte(b);
-                        }
-                        else
-                        {
-                            Byte temp = castByte((r + g + b) / 3);
-                            rowNew[xx + 2] = temp;
-                            rowNew[xx + 1] = temp;
-                            rowNew[xx + 0] = temp;
+                            hue = x / wD;
+
+                            ColorUtil.hsl2rgb(hue, 0.5f, lum, out r, out g, out b);
+
+
+                            if (this.checkHue(hue))
+                            {
+                                rowNew[xx + 2] = castByte(r);
+                                rowNew[xx + 1] = castByte(g);
+                                rowNew[xx + 0] = castByte(b);
+                            }
+                            else
+                            {
+                                Byte temp = castByte((r + g + b) / 3);
+                                rowNew[xx + 2] = temp;
+                                rowNew[xx + 1] = temp;
+                                rowNew[xx + 0] = temp;
+                            }
                         }
                     }
                 }
-
-                i.UnlockBits(bmdNew);
             }
 
             this.pictureBox1.Invalidate();
@@ -115,7 +113,7 @@ namespace SamSeifert.Utilities.CustomControls
       
         public Boolean checkHue(float hue)
         {
-            return ColorUtil.CheckHue(hue, this.BandCenter, this.BandWidth);
+            return ColorUtil.CheckHue(hue, this._BandCenter, this._BandWidth);
         }
 
 
@@ -126,7 +124,7 @@ namespace SamSeifert.Utilities.CustomControls
             nud.Maximum = 1;
             nud.Increment = 0.01m;
             nud.DecimalPlaces = 2;
-            nud.Value = (Decimal)this.BandCenter;
+            nud.Value = (Decimal)this._BandCenter;
             nud.ValueChanged += CenterValueChanged;
         }
 
@@ -137,9 +135,9 @@ namespace SamSeifert.Utilities.CustomControls
             else if (nud.Value == -.01m) nud.Value = 0.99m;
             else
             {
-                this.BandCenter = (float)nud.Value;
+                this._BandCenter = (float)nud.Value;
                 this.setImageForControl();
-                if (this.ValueChanged != null) this.ValueChanged(this, EventArgs.Empty);
+                if (this._ValueChanged != null) this._ValueChanged(this, EventArgs.Empty);
             }
         }
 
@@ -149,16 +147,16 @@ namespace SamSeifert.Utilities.CustomControls
             nud.Maximum = 1;
             nud.Increment = 0.01m;
             nud.DecimalPlaces = 2;
-            nud.Value = (Decimal)this.BandWidth;
+            nud.Value = (Decimal)this._BandWidth;
             nud.ValueChanged += WidthValueChanged;
         }
 
         private void WidthValueChanged(object sender, EventArgs e)
         {
             var nud = sender as NumericUpDown;
-            this.BandWidth = (float)nud.Value;
+            this._BandWidth = (float)nud.Value;
             this.setImageForControl();
-            if (this.ValueChanged != null) this.ValueChanged(this, EventArgs.Empty);
+            if (this._ValueChanged != null) this._ValueChanged(this, EventArgs.Empty);
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SamSeifert.Utilities.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,13 +9,18 @@ namespace SamSeifert.Utilities
 {
     public static class Permutate<T>
     {
+        /// <summary>
+        /// Maintains Length, Just Reorders
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static IEnumerable<T[]> AllOrderingsOf(T[] data)
         {
-            var ls = new List<int>();
+            var arg = new int[data.Length];
             for (int i = 0; i < data.Length; i++)
-                ls.Add(i);
+                arg[i] = i;
 
-            return AllOrderingsOf(ls.ToArray(), new int[0], data);
+            return AllOrderingsOf(arg, new int[0], data);
         }
 
         private static IEnumerable<T[]> AllOrderingsOf(int[] to_select, int[] selected, T[] data)
@@ -39,6 +45,40 @@ namespace SamSeifert.Utilities
 
                     foreach (var t in AllOrderingsOf(new_to_select.ToArray(), new_selected.ToArray(), data))
                         yield return t;
+                }
+            }
+        }
+
+
+        public static IEnumerable<T[]> AllSubsetsOfSize_MaintainOrder(T[] data, int size)
+        {
+            if (size <= 0) yield break;
+
+            for (int i = 0; i < data.Length + 1 - size; i++)
+            {
+                T[] ret = new T[size];
+                ret[0] = data[i];
+
+                if (size > 1)
+                {
+                    foreach (var sa in AllSubsetsOfSize_MaintainOrder(data.SubArray(i + 1), size - 1))
+                    {
+                        Array.Copy(sa, 0, ret, 1, size - 1);
+                        yield return ret;
+                    }
+                }
+                else yield return ret;
+            }
+
+        }
+
+        public static IEnumerable<T[]> AllSubsetsOfSize_AllOrders(T[] data, int size)
+        {
+            foreach (var subset in AllSubsetsOfSize_MaintainOrder(data, size))
+            {
+                foreach (var ordering in AllOrderingsOf(subset))
+                {
+                    yield return ordering;
                 }
             }
         }
@@ -74,6 +114,8 @@ namespace SamSeifert.Utilities
                     yield return r;
 
         }
+
+
     }
 
 }

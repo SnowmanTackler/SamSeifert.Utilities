@@ -7,24 +7,24 @@ using System.Collections;
 
 namespace SamSeifert.Utilities.DataStructures
 {
-    public class Impulse<T>
-    {
-        public readonly float _Time;
-        public T _T;
-        public Impulse(T t, float current_time_seconds)
-        {
-            this._T = t;
-            this._Time = current_time_seconds;
-        }
-    }
-
     public class ImpulseManager<T> : IEnumerable<T>
     {
+        private class Impulse
+        {
+            public readonly float _Time;
+            public T _T;
+            public Impulse(T t, float current_time_seconds)
+            {
+                this._T = t;
+                this._Time = current_time_seconds;
+            }
+        }
+
         public float _ExpireTime { get; set; }
 
         private int _Index = 0;
         public int _Length { get; private set; }
-        private Impulse<T>[] _Data = new Impulse<T>[8];
+        private Impulse[] _Data = new Impulse[8];
 
         public ImpulseManager(float expire_time = 0.0f)
         {
@@ -48,24 +48,30 @@ namespace SamSeifert.Utilities.DataStructures
         {
             if (this._Length == _Data.Length)
             {
-                var rep = new Impulse<T>[this._Length * 2];
+                var rep = new Impulse[this._Length * 2];
                 int l1 = this._Length - _Index;
                 Array.Copy(_Data, _Index, rep, 0, this._Length - _Index);
                 Array.Copy(_Data, 0, rep, this._Length - _Index, _Index);
                 _Data = rep;
                 _Index = 0;
             }
-            _Data[(_Index + this._Length) % _Data.Length] = new Impulse<T>(t, current_time_seconds);
+            _Data[(_Index + this._Length) % _Data.Length] = new Impulse(t, current_time_seconds);
             this._Length++;
         }
 
-        public Impulse<T> this[int dex]
+        public T this[int dex]
         {
             get
             {
-                if (dex < this._Length) return this._Data[(this._Index + dex) % this._Data.Length];
+                if (dex < this._Length) return this._Data[(this._Index + dex) % this._Data.Length]._T;
                 else throw new IndexOutOfRangeException("In ImpulseManager");
             }
+        }
+
+        private Impulse At(int dex)
+        {
+            if (dex < this._Length) return this._Data[(this._Index + dex) % this._Data.Length];
+            else throw new IndexOutOfRangeException("In ImpulseManager");
         }
 
         /// <summary>
@@ -101,15 +107,16 @@ namespace SamSeifert.Utilities.DataStructures
         {
             get
             {
-                return this.OldestImpulse._T;
+                return this[0];
             }
         }
 
-        public Impulse<T> OldestImpulse
+        public Tuple<float, T> OldestImpulse
         {
             get
             {
-                return this[0];
+                var impulse = this.At(0);
+                return new Tuple<float, T>(impulse._Time, impulse._T);
             }
         }
 
@@ -117,15 +124,16 @@ namespace SamSeifert.Utilities.DataStructures
         {
             get
             {
-                return this.NewestImpulse._T;
+                return this[this._Length - 1];
             }
         }
 
-        public Impulse<T> NewestImpulse
+        public Tuple<float, T> NewestImpulse
         {
             get
             {
-                return this[this._Length - 1];
+                var impulse = this.At(this._Length - 1);
+                return new Tuple<float, T>(impulse._Time, impulse._T);
             }
         }
 
@@ -134,5 +142,31 @@ namespace SamSeifert.Utilities.DataStructures
             this._Length = 0;
         }
 
+        public IEnumerable<Tuple<float, T>> EnumerateTimes()
+        {
+            for (int i = 0; i < this._Length; i++)
+            {
+                var impulse = this._Data[(this._Index + i) % this._Data.Length];
+                yield return new Tuple<float, T>(impulse._Time, impulse._T);
+            }
+        }
+        /*
+        public bool En(float time, out T t)
+        {
+            // Should implement quick search;
+            for (int i = 0; i < this._Length; i++)
+            {
+                var impulse = this._Data[(this._Index + i) % this._Data.Length];
+
+                if (impulse._Time == time)
+                {
+                    t = impulse._T;
+                    return true;
+                }
+            }
+
+            t = default(T);
+            return false;
+        }*/
     }
 }

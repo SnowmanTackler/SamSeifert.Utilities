@@ -68,7 +68,7 @@ namespace SamSeifert.Utilities.Json
                             case 'u': sb.Append("\\u"); break; // Unicode
                             case '\\': sb.Append('\\'); break;
                             default:
-                                Console.WriteLine("Unsupported Char After Escape Char: *" + temper + "*");
+                                Logger.WriteError(typeof(JsonParser), "Unsupported Char After Escape Char: *" + temper + "*");
                                 throw new NotImplementedException();
                         }
                         break;

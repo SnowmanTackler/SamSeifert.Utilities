@@ -19,6 +19,29 @@ namespace SamSeifert.Utilities.Json
 
         }
 
+        /// <summary>
+        /// Sends the JsonDict to a stream and 
+        /// back to memory.  Useful for converting float[] (unparsed)
+        /// to object[] filled with doubles (parsed)
+        /// </summary>
+        /// <returns></returns>
+        public JsonDict Cycle()
+        {
+            using (var ms = new MemoryStream())
+            {
+                { // Don't dispose the streamwriter, it will dispose the memory stream
+                    var sw = new StreamWriter(ms, Encoding.ASCII);
+                    this.Print(sw.Write, sw.Write, "");
+                    sw.Flush();
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var sr = new StreamReader(ms, Encoding.ASCII))
+                    return JsonDict.FromStream(sr, false);
+            }
+        }
+
         public void Print(CharWriter cw, StringWriter sw, string indent = "")
         {
             String nindent = indent + "\t";
@@ -55,33 +78,54 @@ namespace SamSeifert.Utilities.Json
             return JsonParser.ToString(this);
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
         public int asInt(String key)
         {
-            return (int)Math.Round((double)this[key]);
+            object outo = this[key];
+            if (outo is double) return (int)Math.Round((double)outo);
+            else if (outo is int) return (int)outo;
+            else throw new NotImplementedException();
         }
 
         public int asInt(String key, int empty_or_error_value)
         {
             object outo;
             if (this.TryGetValue(key, out outo))
-                if (outo is double)
-                    return (int)Math.Round((double)outo);
-
+            {
+                if (outo is double) return (int)Math.Round((double)outo); // when Unpack() does doubles
+                else if (outo is int) return (int)outo; // when user adds int
+            }
             return empty_or_error_value;
         }
 
         public float asFloat(String key)
         {
-            return (float)(double)this[key];
+            object outo = this[key];
+            if (outo is double) return (float)(double)outo;
+            else if (outo is float) return (float)outo;
+            else throw new NotImplementedException();
         }
 
         public float asFloat(String key, float empty_or_error_value)
         {
             object outo;
             if (this.TryGetValue(key, out outo))
-                if (outo is double)
-                    return (float)(double)outo;
-
+            {
+                if (outo is double) return (float)(double)outo; // when Unpack() does doubles
+                else if (outo is float) return (float)outo; // user adds float
+            }
             return empty_or_error_value;
         }
 
@@ -100,56 +144,59 @@ namespace SamSeifert.Utilities.Json
             return empty_or_error_value;
         }
 
-        public bool asBool(String key)
-        {
-            return (bool)this[key];
-        }
-
-        public bool asBool(String key, bool empty_or_error_value)
+        /// <summary>
+        /// No exception thrown.
+        /// Do not use for int, float, double
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public bool asGeneric<T>(String key, out T t)
         {
             object outo;
             if (this.TryGetValue(key, out outo))
-                if (outo is bool)
-                    return (bool)outo;
+                if (outo is T)
+                {
+                    t = (T)outo;
+                    return true;
+                }
+
+            t = default(T);
+            return false;
+        }
+
+        /// <summary>
+        /// Throws exception if key isn't there.
+        /// Do not use for int, float, double
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public T asGeneric<T>(String key)
+        {
+            return (T)this[key];
+        }
+
+        /// <summary>
+        /// No exception thrown.  
+        /// Do not use for int, float, double
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="d"></param>
+        /// <param name="key"></param>
+        /// <param name="empty_or_error_value"></param>
+        /// <returns></returns>
+        public T asGeneric<T>(String key, T empty_or_error_value)
+        {
+            object outo;
+            if (this.TryGetValue(key, out outo))
+                if (outo is T)
+                    return (T)outo;
 
             return empty_or_error_value;
-        }
-
-
-        // //////////////////// DEFAULTS
-
-        public string asString(String key)
-        {
-            return (string)this[key];
-        }
-
-        public string asString(String key, string empty_or_error_value)
-        {
-            return this.asGeneric(key, empty_or_error_value);
-        }
-
-
-
-        // /////////////////// ADDERS
-
-        public void addInt(String key, int f)
-        {
-            this[key] = (double)f;
-        }
-
-        public void addFloat(String key, float f)
-        {
-            this[key] = (double)f;
-        }
-
-        public void addDouble(String key, double f)
-        {
-            this[key] = f;
-        }
-
-        public void addBool(String key, bool f)
-        {
-            this[key] = f;
         }
 
 
@@ -237,6 +284,7 @@ namespace SamSeifert.Utilities.Json
                     case '8':
                     case '9':
                     case '-': // Negative
+                    case '+': // Postive(Expondent) i.e. 4.0542E+38
                     case '.': // Decimal
                     case 'E': // Exponent
                         sb.Append(next);

@@ -10,10 +10,17 @@ using System.Windows.Forms;
 
 namespace SamSeifert.Utilities.CustomControls
 {
-    public delegate void ObjectRemoved(object sender, object Removed);
+    public delegate void ObjectRemoved(object sender, object removed);
+    public delegate void DuplicateEvent(object sender, object args);
 
     public partial class CheckedListBoxUpDown : UserControl
     {
+        public event ItemCheckEventHandler _ItemCheck;
+        public event DuplicateEvent _Duplicate;
+        public event ObjectRemoved _ObjectRemoved;
+        public event EventHandler _SelectedItemChanged;
+        public event EventHandler _AddClick;
+
         public bool _AddEnabled
         {
             get
@@ -94,6 +101,27 @@ namespace SamSeifert.Utilities.CustomControls
             this.checkedListBox1.Items.Add(o, v);
         }
 
+        public void RemoveAt(int index )
+        {
+            this.checkedListBox1.Items.RemoveAt(index);
+        }
+
+        public void Insert(int index, object o,bool check)
+        {
+            this.checkedListBox1.Items.Insert(index, o);
+            this.checkedListBox1.SetItemChecked(index, check);
+        }
+
+        public void ReplaceAt(int index, object o, bool check)
+        {
+            this.SuspendLayout();
+            int i = this.SelectedIndex;
+            this.Insert(index, o, check);
+            this.RemoveAt(index + 1);
+            this.SelectedIndex = i;
+            this.ResumeLayout();
+        }
+
         public Object SelectedItem
         {
             get
@@ -118,20 +146,87 @@ namespace SamSeifert.Utilities.CustomControls
             }
         }
 
-        public event EventHandler _SelectedValueChanged;
+        public System.Windows.Forms.SelectionMode SelectionMode
+        {
+            get
+            {
+                return this.checkedListBox1.SelectionMode;
+            }
+            set
+            {
+                this.checkedListBox1.SelectionMode = value;
+
+                switch (value)
+                {
+                    case SelectionMode.MultiExtended:
+                    case SelectionMode.MultiSimple:
+                        this.selectAllToolStripMenuItem.Enabled = true;
+                        break;
+                    default:
+                        this.selectAllToolStripMenuItem.Enabled = false;
+                        break;
+                }
+            }
+        }
+
+        public ListBox.SelectedObjectCollection SelectedItems
+        {
+            get
+            {
+                return this.checkedListBox1.SelectedItems;
+            }
+        }
+
+        public string DisplayMember
+        {
+            set
+            {
+                this.checkedListBox1.DisplayMember = value;
+            }
+        }
+
+        public object DataSource
+        {
+            set
+            {
+                this.checkedListBox1.DataSource = value;
+            }
+        }
+
+        /// <summary>
+        /// Only works with DataSource!
+        /// </summary>
+        public void RefreshNames()
+        {
+            if (this.checkedListBox1.DataSource == null) return;
+
+            using (this.Suspender())
+            {
+                int cnt = this.checkedListBox1.Items.Count;
+                var sel = new bool[cnt];
+                for (int i = 0; i < cnt; i++)
+                    sel[i] = this.checkedListBox1.GetSelected(i);
+
+                String temp = this.checkedListBox1.DisplayMember;
+                this.checkedListBox1.DisplayMember = "";
+                this.checkedListBox1.DisplayMember = temp;
+
+                for (int i = 0; i < cnt; i++)
+                    this.checkedListBox1.SetSelected(i, sel[i]);
+            }
+        }
 
         private void clb_SelectedIndexChanged(object sender, EventArgs e)
         {
             var si = this.checkedListBox1.SelectedItem;
 
-            if (si == null) this.bRemove.Enabled = false;
-            else this.bRemove.Enabled = this.checkedListBox1.Items.Count != 0;
+            this.bRemove.Enabled = (si != null) && (this.checkedListBox1.Items.Count != 0);
+            this.duplicateToolStripMenuItem.Enabled = this.bRemove.Enabled && (this._Duplicate != null);
 
             this.bUp.Enabled = si != null;
             this.bDown.Enabled = si != null;
 
-            if (this._SelectedValueChanged != null)
-                this._SelectedValueChanged(this, e);
+            this._SelectedItemChanged?.Invoke(this, e);
         }
 
         public void SetItemChecked(int index, bool is_checked)
@@ -146,47 +241,77 @@ namespace SamSeifert.Utilities.CustomControls
 
         private void bUp_Click(object sender, EventArgs e)
         {
-            int current_index = this.checkedListBox1.SelectedIndex;
-            if (current_index < 1) return;
+            if (this.checkedListBox1.DataSource == null)
+            {
+                using (this.Suspender())
+                {
+                    int current_index = this.checkedListBox1.SelectedIndex;
+                    if (current_index < 1) return;
 
-            bool is_checked = this.checkedListBox1.GetItemChecked(current_index);
-            var item = this.checkedListBox1.SelectedItem;
-            this.checkedListBox1.Items.RemoveAt(current_index);
+                    bool is_checked = this.checkedListBox1.GetItemChecked(current_index);
+                    var item = this.checkedListBox1.SelectedItem;
+                    this.checkedListBox1.Items.RemoveAt(current_index);
 
-            current_index--;
+                    current_index--;
 
-            this.checkedListBox1.Items.Insert(current_index, item);
-            this.checkedListBox1.SetItemChecked(current_index, is_checked);
-            this.checkedListBox1.SelectedIndex = current_index;
+                    this.checkedListBox1.Items.Insert(current_index, item);
+                    this.checkedListBox1.SetItemChecked(current_index, is_checked);
+                    this.checkedListBox1.SelectedIndex = current_index;
+                }
+            }
+            else
+            {
+                Logger.WriteError(this, "Down Click With DataSource");
+            }
         }
 
         private void bDown_Click(object sender, EventArgs e)
         {
-            int current_index = this.checkedListBox1.SelectedIndex;
-            if (current_index < 0) return;
-            if (current_index == this.checkedListBox1.Items.Count - 1) return;
+            if (this.checkedListBox1.DataSource == null)
+            {
+                using (this.Suspender())
+                {
+                    int current_index = this.checkedListBox1.SelectedIndex;
+                    if (current_index < 0) return;
+                    if (current_index == this.checkedListBox1.Items.Count - 1) return;
 
-            bool is_checked = this.checkedListBox1.GetItemChecked(current_index);
-            var item = this.checkedListBox1.SelectedItem;
-            this.checkedListBox1.Items.RemoveAt(current_index);
+                    bool is_checked = this.checkedListBox1.GetItemChecked(current_index);
+                    var item = this.checkedListBox1.SelectedItem;
+                    this.checkedListBox1.Items.RemoveAt(current_index);
 
-            current_index++;
+                    current_index++;
 
-            this.checkedListBox1.Items.Insert(current_index, item);
-            this.checkedListBox1.SetItemChecked(current_index, is_checked);
-            this.checkedListBox1.SelectedIndex = current_index;
+                    this.checkedListBox1.Items.Insert(current_index, item);
+                    this.checkedListBox1.SetItemChecked(current_index, is_checked);
+                    this.checkedListBox1.SelectedIndex = current_index;
+                }
+            }
+            else
+            {
+                Logger.WriteError(this, "Down Click With DataSource");
+            }
         }
 
-        public event ObjectRemoved _ObjectRemoved;
         private void bRemove_Click(object sender, EventArgs e)
         {
-            var si = this.checkedListBox1.SelectedItem;
-
-            if (si != null)
+            using (this.Suspender())
             {
-                this.checkedListBox1.Items.Remove(si);
-                if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
+                foreach (var si in this.checkedListBox1.SelectedItems.Cast<object>().ToArray()) // Cast to array so we can modify the control
+                {
+                    if (this.checkedListBox1.DataSource == null)
+                    {
+                        this.checkedListBox1.Items.Remove(si);
+                        this._ObjectRemoved?.Invoke(this, si);
+                    }
+                    else
+                    {
+                        if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
+                        else Logger.WriteLine("CheckedListBoxUpDown with DataSource needs to implement _ObjectRemoved");
+                    }
+                }
             }
+
+            this._SelectedItemChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void CheckedListBoxUpDown_KeyDown(object sender, KeyEventArgs e)
@@ -200,24 +325,45 @@ namespace SamSeifert.Utilities.CustomControls
             this.ClearAll();
         }
 
-        public void ClearAll()
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            while (this.checkedListBox1.Items.Count > 0)
-            {
-                object si = this.checkedListBox1.Items[0];
-                this.checkedListBox1.Items.RemoveAt(0);
-                if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
-            }
+            using (this.Suspender())
+                for (int i = 0; i < this.checkedListBox1.Items.Count; i++)
+                    this.checkedListBox1.SetSelected(i, true);
+            this._SelectedItemChanged?.Invoke(this, e);
         }
 
-        public event EventHandler _AddClick;
+        public void ClearAll()
+        {
+            using (this.Suspender())
+            {
+                while (this.checkedListBox1.Items.Count > 0)
+                {
+                    object si = this.checkedListBox1.Items[0];
+
+                    if (this.checkedListBox1.DataSource == null)
+                    {
+                        this.checkedListBox1.Items.RemoveAt(0);
+                        this._ObjectRemoved?.Invoke(this, si);
+                    }
+                    else
+                    {
+                        if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
+                        else Logger.WriteLine("ListBoxUpDown with DataSource needs to implement _ObjectRemoved");
+                    }
+                }
+            }
+
+            this._SelectedItemChanged?.Invoke(this, EventArgs.Empty);
+
+        }
+
         private void bAdd_Click(object sender, EventArgs e)
         {
             if (this._AddClick != null)
                 this._AddClick(this, e);
         }
 
-        public event ItemCheckEventHandler _ItemCheck;
         private bool _InCheckEvent = false;
         private void checkedListBox1_ItemCheck(object sender, ItemCheckEventArgs e)
         {
@@ -237,5 +383,35 @@ namespace SamSeifert.Utilities.CustomControls
         {
             this.checkedListBox1.ContextMenuStrip = this.contextMenuStrip1;
         }
+
+        private void duplicateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var sel = this.checkedListBox1.SelectedItem;
+            if (sel != null)
+                this._Duplicate?.Invoke(this, sel);
+        }
+
+        public void ClearSelected()
+        {
+            this.checkedListBox1.ClearSelected();
+        }
+
+        public void SetSelected(int index, bool v)
+        {
+            this.checkedListBox1.SetSelected(index, v);
+        }
+
+        public bool GetSelected(int i)
+        {
+            return this.checkedListBox1.GetSelected(i);
+        }
+
+        public IDisposable Suspender()
+        {
+            return new DisposableCollection(
+                new LayoutSuspender(this),
+                new EventSuspender(this, nameof(this._SelectedItemChanged))
+                );
+        }    
     }
 }

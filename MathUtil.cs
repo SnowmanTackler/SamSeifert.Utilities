@@ -82,25 +82,68 @@ namespace SamSeifert.Utilities
             return ClampByte((int)Math.Round(val));
         }
 
+        public static byte ClampByte(this double val)
+        {
+            return ClampByte((int)Math.Round(val));
+        }
 
+
+
+
+
+
+
+
+
+        public static int ToThe(this int f, double power)
+        {
+            return (int)Math.Round(Math.Pow(f, power));
+        }
+
+        public static float ToThe(this float f, double power)
+        {
+            return (float) Math.Pow(f, power);
+        }
+
+        public static double ToThe(this double f, double power)
+        {
+            return Math.Pow(f, power);
+        }
 
 
 
         public static int Squared(this int f)
         {
-            return f * f;
+            return f.ToThe(2);
         }
 
         public static float Squared(this float f)
         {
-            return f * f;
+            return f.ToThe(2);
         }
 
         public static double Squared(this double f)
         {
-            return f * f;
+            return f.ToThe(2);
         }
 
+
+
+
+        public static int SquareRoot(this int f)
+        {
+            return f.ToThe(0.5);
+        }
+
+        public static float SquareRoot(this float f)
+        {
+            return f.ToThe(0.5);
+        }
+
+        public static double SquareRoot(this double f)
+        {
+            return f.ToThe(0.5);
+        }
 
 
 
@@ -127,90 +170,147 @@ namespace SamSeifert.Utilities
 
 
 
-
-
-        public class Continuous360_Radians
+        public static bool isInfinityOrNan(this float f)
         {
-            protected readonly float _Increment;
-
-            private float _Angle = 0;
-            private int _TurnCount = 0;
-
-            protected Continuous360_Radians(float inc)
-            {
-                this._Increment = inc;
-            }
-
-            public Continuous360_Radians() : this(UnitConverter.PIF * 2)
-            {
-            }
-
-            public void SetAngle(float raw_angle)
-            {
-                this._Angle = raw_angle;
-            }
-
-            public float UpdateAngle(float raw_angle)
-            {
-                float angle;
-
-                while (true)
-                {
-                    angle = raw_angle + this._TurnCount * this._Increment;
-                    float yawP1 = angle + this._Increment;
-                    float yawM1 = angle - this._Increment;
-                    if (Math.Abs(yawP1 - this._Angle) < Math.Abs(angle - this._Angle)) this._TurnCount++;
-                    else if (Math.Abs(yawM1 - this._Angle) < Math.Abs(angle - this._Angle)) this._TurnCount--;
-                    else break;
-                }
-
-                this._Angle = angle;
-                return angle;
-            }
+            return float.IsInfinity(f) || float.IsNaN(f);
         }
 
-        public class Continuous360 : Continuous360_Radians
+        public static bool isInfOrNan(this double f)
         {
-            public Continuous360() : base(360)
-            {
-            }
+            return double.IsInfinity(f) || double.IsNaN(f);
         }
 
-        public class LowPassFilter
+
+
+
+
+        public static int Min(params int[] values)
         {
-            private readonly float _Alpha;
-            private bool _First = true;
-            private float _Value = 0;
+            return values.Min();
+        }
 
-            /// <summary>
-            /// New values multiplied by (alpha).  
-            /// Old Values multiplied by (alpha - 1).
-            /// </summary>
-            /// <param name="alpha"></param>
-            public LowPassFilter(float alpha = 0.1f)
+        public static float Min(params float[] values)
+        {
+            return values.Min();
+        }
+
+        public static double Min(params double[] values)
+        {
+            return values.Min();
+        }
+
+        public static int Max(params int[] values)
+        {
+            return values.Max();
+        }
+
+        public static float Max(params float[] values)
+        {
+            return values.Max();
+        }
+
+        public static double Max(params double[] values)
+        {
+            return values.Max();
+        }
+
+
+
+
+
+
+
+        public static float Blend01(this float alpha, float value_at_0, float value_at_1)
+        {
+            return alpha * value_at_1 + (1 - alpha) * value_at_0;
+        }
+
+        public static double Blend01(this double alpha, double value_at_0, double value_at_1)
+        {
+            return alpha * value_at_1 + (1 - alpha) * value_at_0;
+        }
+
+
+
+
+
+
+
+
+
+        public static int NumberOfNonZeros(this IEnumerable<int> nums)
+        {
+            int ret = 0;
+            foreach (var num in nums)
+                if (num != 0)
+                    ret++;
+            return ret;
+        }
+
+        public static int NumberOfNonZeros(this IEnumerable<float> nums)
+        {
+            int ret = 0;
+            foreach (var num in nums)
+                if (num != 0)
+                    ret++;
+            return ret;
+        }
+        public static int NumberOfNonZeros(this IEnumerable<double> nums)
+        {
+            int ret = 0;
+            foreach (var num in nums)
+                if (num != 0)
+                    ret++;
+            return ret;
+        }
+
+
+
+        /// <summary>
+        /// Samples will be normalized to sum to 1, so do whatever you want!
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static double Entropy(this IEnumerable<int> a)
+        {
+            double sum = a.Sum();
+
+            if (sum == 0) throw new Exception("No Input!");
+
+            double entropy = 0;
+
+            foreach (var i in a)
             {
-                this._Alpha = alpha;
+                if (i == 0) continue;
+                double p = i / sum;
+                entropy -= p * Math.Log(p, 2);
             }
 
-            public void Reset()
+            return entropy;
+        }
+
+
+        /// <summary>
+        /// Samples will be normalized to sum to 1, so do whatever you want!
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static double Entropy(this IEnumerable<float> a)
+        {
+            double sum = a.Sum();
+
+            if (sum == 0) throw new Exception("No Input!");
+
+            double entropy = 0;
+
+            foreach (var i in a)
             {
-                this._First = true;
+                if (i == 0) continue;
+                double p = i / sum;
+                entropy -= p * Math.Log(p, 2);
             }
 
-            public float Update(float input)
-            {
-                if (this._First)
-                {
-                    this._First = false;
-                    this._Value = input;
-                }
-                else
-                {
-                    this._Value *= (1 - this._Alpha);
-                    this._Value += this._Alpha * input;
-                }
-                return this._Value;
-            }
+            return entropy;
         }
     }
 }

@@ -12,6 +12,8 @@ namespace SamSeifert.Utilities.CustomControls
 {
     public partial class CenteringControl : Panel
     {
+        public event EventHandler _Centering;
+
         public CenteringControl()
         {
             InitializeComponent();
@@ -39,6 +41,8 @@ namespace SamSeifert.Utilities.CustomControls
             c.Anchor = AnchorStyles.Left | AnchorStyles.Top;
             c.Top = (this.Height - c.Height) / 2;
             c.Left = (this.Width - c.Width) / 2;
+
+            this._Centering?.Invoke(this, EventArgs.Empty);
         }
     }
 }
