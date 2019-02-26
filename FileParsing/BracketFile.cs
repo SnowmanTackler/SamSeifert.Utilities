@@ -32,7 +32,6 @@ namespace SamSeifert.Utilities.FileParsing
             }
             catch (Exception e)
             {
-                System.Windows.Forms.MessageBox.Show("Read VRML File Error: " + e.ToString());
                 return null;
             }
         }

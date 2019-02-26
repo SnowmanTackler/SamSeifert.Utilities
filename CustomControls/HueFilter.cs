@@ -87,7 +87,7 @@ namespace SamSeifert.Utilities.CustomControls
                         {
                             hue = x / wD;
 
-                            ColorUtil.hsl2rgb(hue, 0.5f, lum, out r, out g, out b);
+                            ColorE.hsl2rgb(hue, 0.5f, lum, out r, out g, out b);
 
 
                             if (this.checkHue(hue))
@@ -113,7 +113,7 @@ namespace SamSeifert.Utilities.CustomControls
       
         public Boolean checkHue(float hue)
         {
-            return ColorUtil.CheckHue(hue, this._BandCenter, this._BandWidth);
+            return ColorE.CheckHue(hue, this._BandCenter, this._BandWidth);
         }
 
 

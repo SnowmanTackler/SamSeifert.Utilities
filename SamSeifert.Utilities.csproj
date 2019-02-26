@@ -53,8 +53,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArrayUtil.cs" />
-    <Compile Include="ColorUtil.cs" />
     <Compile Include="Continuous360.cs" />
     <Compile Include="ControlHolder.cs" />
     <Compile Include="CustomControls\AbstractControlDescriptionProvider.cs" />
@@ -105,6 +103,7 @@
     <Compile Include="Extensions\ArrayE.cs" />
     <Compile Include="Extensions\BitmapE.cs" />
     <Compile Include="Extensions\CheckBoxE.cs" />
+    <Compile Include="Extensions\ColorE.cs" />
     <Compile Include="Extensions\ComboBoxE.cs" />
     <Compile Include="Extensions\ControlE.cs" />
     <Compile Include="Extensions\DictionaryE.cs" />
@@ -146,7 +145,7 @@
     <Compile Include="Timing\RateTracker.cs" />
     <Compile Include="ScreenCapture.cs" />
     <Compile Include="Statistics.cs" />
-    <Compile Include="StringUtil.cs" />
+    <Compile Include="Extensions\StringUtil.cs" />
     <Compile Include="Extensions\TableLayoutPanelE.cs" />
     <Compile Include="UnitConverter.cs" />
     <EmbeddedResource Include="CustomControls\CenteringControl.resx">

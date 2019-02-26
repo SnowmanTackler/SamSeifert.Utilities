@@ -5,14 +5,14 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace SamSeifert.Utilities
+namespace SamSeifert.Utilities.Extensions
 {
-    public static class ColorUtil
+    public static class ColorE
     {
         public static Boolean CheckHue(float hue, float BandCenter, float BandWidth)
         {
             hue = MathUtil.ModGuaranteePositive(hue, 1.0f);
-            return ColorUtil.GetDistanceWithRollOver(hue, BandCenter) < BandWidth / 2;
+            return ColorE.GetDistanceWithRollOver(hue, BandCenter) < BandWidth / 2;
         }
 
         public static float GetDistanceWithRollOver(float v1, float v2)
@@ -98,9 +98,9 @@ namespace SamSeifert.Utilities
         /// <param name="h"></param>
         /// <param name="s"></param>
         /// <param name="v"></param>
-        public static void rgb2hsl(Color c, out float h, out float s, out float l)
+        public static void rgb2hsl(this Color c, out float h, out float s, out float l)
         {
-            ColorUtil.rgb2hsl(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, out h, out s, out l);
+            ColorE.rgb2hsl(c.R / 255.0f, c.G / 255.0f, c.B / 255.0f, out h, out s, out l);
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace SamSeifert.Utilities
         public static Color hsv2rgb(float h, float s, float v)
         {
             Color c;
-            ColorUtil.hsv2rgb(h, s, v, out c);
+            ColorE.hsv2rgb(h, s, v, out c);
             return c;
         }
 
@@ -163,7 +163,7 @@ namespace SamSeifert.Utilities
         public static void hsv2rgb(float h, float s, float v, out Color c)
         {
             float r, g, b;
-            ColorUtil.hsv2rgb(h, s, v, out r, out g, out b);
+            ColorE.hsv2rgb(h, s, v, out r, out g, out b);
             c = Color.FromArgb((int)(r * 255), (int)(g * 255), (int)(b * 255));
         }
 
@@ -177,7 +177,7 @@ namespace SamSeifert.Utilities
         public static void hsv2rgb(float h, float s, float v, out byte rr, out byte gg, out byte bb)
         {
             float r, g, b;
-            ColorUtil.hsv2rgb(h, s, v, out r, out g, out b);
+            ColorE.hsv2rgb(h, s, v, out r, out g, out b);
             rr = (byte)(255 * r);
             gg = (byte)(255 * g);
             bb = (byte)(255 * b);
@@ -254,7 +254,7 @@ namespace SamSeifert.Utilities
         /// <param name="v"></param>
         public static void rgb2hsv(Color c, out float h, out float s, out float v)
         {
-            ColorUtil.rgb2hsv(c.R, c.G, c.B, out h, out s, out v);
+            ColorE.rgb2hsv(c.R, c.G, c.B, out h, out s, out v);
         }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace SamSeifert.Utilities
         /// <param name="v"></param>
         public static void rgb2hsv(byte r, byte g, byte b, out float h, out float s, out float v)
         {
-            ColorUtil.rgb2hsv(r / 255.0f, g / 255.0f, b / 255.0f, out h, out s, out v);
+            ColorE.rgb2hsv(r / 255.0f, g / 255.0f, b / 255.0f, out h, out s, out v);
         }
 
         /// <summary>
