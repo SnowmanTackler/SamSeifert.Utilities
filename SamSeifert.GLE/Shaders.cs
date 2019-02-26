@@ -7,7 +7,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using GLO = OpenTK.Graphics.OpenGL.GL;
 using GL = SamSeifert.GLE.GLR;
-using SamSeifert.Utilities;
+using SamSeifert.Utilities; using SamSeifert.Utilities.Maths;
 using SamSeifert.Utilities.Extensions;
 
 namespace SamSeifert.GLE

@@ -40,8 +40,8 @@ namespace SamSeifert.ComputerVision
                 else if ((s1.Width <= s2.Width) && (s1.Height <= s2.Height))
                 {
                     // Submitted in incorrect order, so just swap them
-                    SamSeifert.Utilities.MiscUtil.Swap(ref s1, ref s2);
-                    SamSeifert.Utilities.MiscUtil.Swap(ref in1, ref in2);
+                    SamSeifert.Utilities.Misc.Util.Swap(ref s1, ref s2);
+                    SamSeifert.Utilities.Misc.Util.Swap(ref in1, ref in2);
                 }
                 else
                 {

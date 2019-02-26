@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SamSeifert.Utilities
 {
-    public static class EnumUtil
+    public static class EnumE
     {
         public static IEnumerable<T> GetValues<T>()
         {
@@ -61,14 +61,14 @@ namespace SamSeifert.Utilities
         {
             this._Dict = new Dictionary<string, T>();
 
-            foreach (var e in EnumUtil.GetValues<T>())
+            foreach (var e in EnumE.GetValues<T>())
                 _Dict[e.GetDescription()] = e;
         }
 
         public EnumParser(T default_return)
         {
             this._Dict = new DefaultDict<String, T>(default_return);
-            foreach (var e in EnumUtil.GetValues<T>())
+            foreach (var e in EnumE.GetValues<T>())
                 _Dict[e.GetDescription()] = e;
         }
 
@@ -140,7 +140,7 @@ namespace SamSeifert.Utilities
 
         public override string ToString()
         {
-            return EnumUtil.GetDescription(this.e1) + " " + EnumUtil.GetDescription(this.e2);
+            return EnumE.GetDescription(this.e1) + " " + EnumE.GetDescription(this.e2);
         }
 
         public override int GetHashCode()
@@ -164,7 +164,7 @@ namespace SamSeifert.Utilities
 
             while (ls.Count < count)
             {
-                var new_symbol = new TwoEnums<Enum1, Enum2>(EnumUtil.Random<Enum1>(r), EnumUtil.Random<Enum2>(r));
+                var new_symbol = new TwoEnums<Enum1, Enum2>(EnumE.Random<Enum1>(r), EnumE.Random<Enum2>(r));
 
                 foreach (var old_symbol in ls)
                 {

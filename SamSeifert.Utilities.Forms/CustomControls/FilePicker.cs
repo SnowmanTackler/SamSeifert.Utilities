@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using SamSeifert.Utilities.Json;
+using SamSeifert.Utilities.Files.Json;
 
 namespace SamSeifert.Utilities.CustomControls
 {

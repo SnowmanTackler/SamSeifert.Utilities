@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using SamSeifert.Utilities.Json;
+using SamSeifert.Utilities.Files.Json;
 
 namespace SamSeifert.Utilities.Extensions
 {
@@ -16,7 +16,7 @@ namespace SamSeifert.Utilities.Extensions
         {
             try
             {
-                var jd = Json.JsonDict.FromString(TextSettings.Read(file_name));
+                var jd = Files.Json.JsonDict.FromString(TextSettings.Read(file_name));
 
                 var location = jd.asGeneric<object[]>("Location");
                 f.Location = new System.Drawing.Point(location.asInt(0), location.asInt(1));

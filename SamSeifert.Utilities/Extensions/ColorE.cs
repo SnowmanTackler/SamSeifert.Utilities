@@ -1,4 +1,5 @@
 ﻿
+using SamSeifert.Utilities.Maths;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,7 +12,7 @@ namespace SamSeifert.Utilities.Extensions
     {
         public static Boolean CheckHue(float hue, float BandCenter, float BandWidth)
         {
-            hue = MathUtil.ModGuaranteePositive(hue, 1.0f);
+            hue = PrimativeE.ModGuaranteePositive(hue, 1.0f);
             return ColorE.GetDistanceWithRollOver(hue, BandCenter) < BandWidth / 2;
         }
 
@@ -31,7 +32,7 @@ namespace SamSeifert.Utilities.Extensions
         /// <param name="b"></param>
         public static void hsl2rgb(float h, float s, float l, out float r, out float g, out float b)
         {
-            h = 6 * MathUtil.ModGuaranteePositive(h, 1);
+            h = 6 * PrimativeE.ModGuaranteePositive(h, 1);
             float c = s * (1 - Math.Abs(2 * l - 1));
             float x = c * (1 - Math.Abs(h % 2 - 1));
             float m = l - c / 2;
@@ -203,7 +204,7 @@ namespace SamSeifert.Utilities.Extensions
                 b = v;
                 return;
             }
-            h = 6 * MathUtil.ModGuaranteePositive(h, 1);
+            h = 6 * PrimativeE.ModGuaranteePositive(h, 1);
             i = (int)Math.Floor(h);
             f = h - i;          // factorial part of h
             p = v * (1 - s);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SamSeifert.Utilities.Maths;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,7 +41,7 @@ namespace SamSeifert.Utilities.NLP
                     }
                     else
                     {
-                        mat[r, c] = MathUtil.Min(
+                        mat[r, c] = PrimativesE.Min(
                             mat[r - 1, c - 1] + edit_weight,
                             mat[r - 1, c] + insert_weight,
                             mat[r, c - 1] + delete_weight

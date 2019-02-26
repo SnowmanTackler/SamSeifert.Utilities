@@ -6,7 +6,7 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using GL = SamSeifert.GLE.GLR;
-using SamSeifert.Utilities;
+using SamSeifert.Utilities; using SamSeifert.Utilities.Maths;
 
 namespace SamSeifert.GLE.CAD
 {

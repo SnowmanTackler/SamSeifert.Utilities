@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-using SamSeifert.Utilities.Json;
+using SamSeifert.Utilities.Files.Json;
 using OpenTK;
 
 namespace SamSeifert.GLE.CAD.Generator

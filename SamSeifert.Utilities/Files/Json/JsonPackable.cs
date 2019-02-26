@@ -1,4 +1,4 @@
-﻿namespace SamSeifert.Utilities.Json
+﻿namespace SamSeifert.Utilities.Files.Json
 {
     public interface JsonPackable
     {

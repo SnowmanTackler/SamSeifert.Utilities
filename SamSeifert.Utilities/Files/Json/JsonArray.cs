@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SamSeifert.Utilities.Json
+namespace SamSeifert.Utilities.Files.Json
 {
     public static class JsonArray
     {

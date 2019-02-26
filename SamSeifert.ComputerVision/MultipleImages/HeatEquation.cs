@@ -1,4 +1,4 @@
-﻿using SamSeifert.Utilities;
+﻿using SamSeifert.Utilities; using SamSeifert.Utilities.Maths;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -129,7 +129,7 @@ namespace SamSeifert.ComputerVision
                             act_middle(s1, filter, s2);
                             act_middle(s2, filterT, s3);
                         }
-                        MiscUtil.Swap(ref padded_image_1, ref padded_image_3);
+                        Utilities.Misc.Util.Swap(ref padded_image_1, ref padded_image_3);
                     }
                 }
                 else
@@ -138,7 +138,7 @@ namespace SamSeifert.ComputerVision
                     {
                         act_middle(padded_image_1, filter, padded_image_2);
                         act_middle(padded_image_2, filterT, padded_image_3);
-                        MiscUtil.Swap(ref padded_image_1, ref padded_image_3);
+                        Utilities.Misc.Util.Swap(ref padded_image_1, ref padded_image_3);
                     }
                 }
 

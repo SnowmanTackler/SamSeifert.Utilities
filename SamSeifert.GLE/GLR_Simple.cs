@@ -7,7 +7,8 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System.Runtime.InteropServices;
-using SamSeifert.Utilities;
+using SamSeifert.Utilities; using SamSeifert.Utilities.Maths;
+using SamSeifert.Utilities.Maths;
 
 namespace SamSeifert.GLE
 {

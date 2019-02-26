@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SamSeifert.Utilities
+namespace SamSeifert.Utilities.Maths.Combinatorics
 {
     public static class Permutate<T>
     {

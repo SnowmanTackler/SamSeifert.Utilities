@@ -4,10 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SamSeifert.Utilities
+namespace SamSeifert.Utilities.Extensions
 {
-    public static class Statistics
+    public static class RandomE
     {
+        public static float NextFloat(this Random r)
+        {
+            return (float) r.NextDouble();
+        }
+
         /// <summary>
         /// Returns a zero mean, 1 standard deviation gaussian.
         /// </summary>

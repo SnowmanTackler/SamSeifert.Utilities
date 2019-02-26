@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SamSeifert.Utilities
 {
-    public static class StringUtil
+    public static class StringE
     {
         public static Stream AsStream(this string s)
         {

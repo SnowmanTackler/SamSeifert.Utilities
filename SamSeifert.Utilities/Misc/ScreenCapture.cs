@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SamSeifert.Utilities
+namespace SamSeifert.Utilities.Misc
 {
     /// <summary>
     /// Provides functions to capture the entire screen, or a particular window, and save it to a file.

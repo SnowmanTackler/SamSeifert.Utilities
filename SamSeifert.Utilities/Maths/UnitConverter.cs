@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SamSeifert.Utilities
+namespace SamSeifert.Utilities.Maths
 {
     public class UnitConverter
     {

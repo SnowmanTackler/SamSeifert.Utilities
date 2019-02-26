@@ -35,7 +35,7 @@ namespace SamSeifert.Utilities.DataStructures
 
         private void SwapIndices(int indexOne, int indexTwo)
         {
-            MiscUtil.Swap(ref this._Items[indexOne], ref this._Items[indexTwo]);
+            Misc.Util.Swap(ref this._Items[indexOne], ref this._Items[indexTwo]);
         }
 
         private void EnsureExtraCapacity()

@@ -23,7 +23,7 @@ namespace SamSeifert.Utilities.CustomControls
             var dupes = new HashSet<T>();
             var ls_sort = new List<Tuple<T, String>>();
 
-            foreach (var ev in EnumUtil.GetValues<T>())
+            foreach (var ev in EnumE.GetValues<T>())
             {
                 if (dupes.Contains(ev)) continue;
                 if (ignore_t.Contains(ev)) continue;
@@ -73,7 +73,7 @@ namespace SamSeifert.Utilities.CustomControls
         {
             get
             {
-                return EnumUtil.GetDescription(this._T);
+                return EnumE.GetDescription(this._T);
             }
             set
             {

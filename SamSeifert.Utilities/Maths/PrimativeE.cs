@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SamSeifert.Utilities
+namespace SamSeifert.Utilities.Maths
 {
-    public static class MathUtil
+    /// <summary>
+    /// Extensions for Primatives
+    /// </summary>
+    public static class PrimativeE
     {
         public static int ModGuaranteePositive(this int x, int mod)
         {
@@ -49,22 +52,22 @@ namespace SamSeifert.Utilities
 
 
 
-        public static int Clampp(this int val, int min, int max)
+        public static int Clamp(this int val, int min, int max)
         {
             return Math.Min(max, Math.Max(min, val));
         }
 
-        public static float Clampp(this float val, float min, float max)
+        public static float Clamp(this float val, float min, float max)
         {
             return Math.Min(max, Math.Max(min, val));
         }
 
-        public static double Clampp(this double val, double min, double max)
+        public static double Clamp(this double val, double min, double max)
         {
             return Math.Min(max, Math.Max(min, val));
         }
 
-        public static Decimal Clampp(this Decimal val, Decimal min, Decimal max)
+        public static Decimal Clamp(this Decimal val, Decimal min, Decimal max)
         {
             return Math.Min(max, Math.Max(min, val));
         }
@@ -148,26 +151,6 @@ namespace SamSeifert.Utilities
 
 
 
-        public static void Clamp(this int[] val, int min, int max)
-        {
-            for (int i = 0; i < val.Length; i++)
-                val[i] = val[i].Clampp(min, max);
-        }
-
-        public static void Clamp(this float[] val, float min, float max)
-        {
-            for (int i = 0; i < val.Length; i++)
-                val[i] = val[i].Clampp(min, max);
-        }
-
-        public static void Clamp(this double[] val, double min, double max)
-        {
-            for (int i = 0; i < val.Length; i++)
-                val[i] = val[i].Clampp(min, max);
-        }
-
-
-
 
 
         public static bool isInfinityOrNan(this float f)
@@ -181,38 +164,6 @@ namespace SamSeifert.Utilities
         }
 
 
-
-
-
-        public static int Min(params int[] values)
-        {
-            return values.Min();
-        }
-
-        public static float Min(params float[] values)
-        {
-            return values.Min();
-        }
-
-        public static double Min(params double[] values)
-        {
-            return values.Min();
-        }
-
-        public static int Max(params int[] values)
-        {
-            return values.Max();
-        }
-
-        public static float Max(params float[] values)
-        {
-            return values.Max();
-        }
-
-        public static double Max(params double[] values)
-        {
-            return values.Max();
-        }
 
 
 
@@ -235,82 +186,19 @@ namespace SamSeifert.Utilities
 
 
 
-
-
-
-        public static int NumberOfNonZeros(this IEnumerable<int> nums)
+        public static bool InRange(this int i, int low, int high)
         {
-            int ret = 0;
-            foreach (var num in nums)
-                if (num != 0)
-                    ret++;
-            return ret;
+            return (i >= low) && (i < high);
         }
 
-        public static int NumberOfNonZeros(this IEnumerable<float> nums)
+        public static bool InRange(this float i, float low, float high)
         {
-            int ret = 0;
-            foreach (var num in nums)
-                if (num != 0)
-                    ret++;
-            return ret;
-        }
-        public static int NumberOfNonZeros(this IEnumerable<double> nums)
-        {
-            int ret = 0;
-            foreach (var num in nums)
-                if (num != 0)
-                    ret++;
-            return ret;
+            return (i >= low) && (i < high);
         }
 
-
-
-        /// <summary>
-        /// Samples will be normalized to sum to 1, so do whatever you want!
-        /// </summary>
-        /// <param name="a"></param>
-        /// <returns></returns>
-        public static double Entropy(this IEnumerable<int> a)
+        public static bool InRange(this double i, double low, double high)
         {
-            double sum = a.Sum();
-
-            if (sum == 0) throw new Exception("No Input!");
-
-            double entropy = 0;
-
-            foreach (var i in a)
-            {
-                if (i == 0) continue;
-                double p = i / sum;
-                entropy -= p * Math.Log(p, 2);
-            }
-
-            return entropy;
-        }
-
-
-        /// <summary>
-        /// Samples will be normalized to sum to 1, so do whatever you want!
-        /// </summary>
-        /// <param name="a"></param>
-        /// <returns></returns>
-        public static double Entropy(this IEnumerable<float> a)
-        {
-            double sum = a.Sum();
-
-            if (sum == 0) throw new Exception("No Input!");
-
-            double entropy = 0;
-
-            foreach (var i in a)
-            {
-                if (i == 0) continue;
-                double p = i / sum;
-                entropy -= p * Math.Log(p, 2);
-            }
-
-            return entropy;
+            return (i >= low) && (i < high);
         }
     }
 }

@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using SamSeifert.Utilities;
+using SamSeifert.Utilities.Maths;
+using SamSeifert.Utilities.Maths;
+using SamSeifert.Utilities.Extensions;
 
 namespace SamSeifert.ComputerVision
 {
@@ -56,7 +59,7 @@ namespace SamSeifert.ComputerVision
                                 {
                                     for (int x = 0; x < w; x++)
                                     {
-                                        anon_outp[y, x] = anon_inpt[y, x] + Utilities.Statistics.NextGaussian(r, p);
+                                        anon_outp[y, x] = anon_inpt[y, x] + r.NextGaussian(p);
                                     }
                                 }
                                 break;
@@ -67,7 +70,7 @@ namespace SamSeifert.ComputerVision
                                 {
                                     for (int x = 0; x < w; x++)
                                     {
-                                        anon_outp[y, x] = anon_inpt[y, x] + p * (1 - 2 *  (float)r.NextDouble());
+                                        anon_outp[y, x] = anon_inpt[y, x] + p * (1 - 2 * r.NextFloat());
                                     }
                                 }
                                 break;
@@ -75,7 +78,7 @@ namespace SamSeifert.ComputerVision
                         case NoiseType.SaltAndPepper:
                             {
                                 r = new Random(0); // So each image has same pixels firing
-                                p = p.Clampp(0, 1);
+                                p = p.Clamp(0, 1);
                                 for (int y = 0; y < h; y++)
                                 {
                                     for (int x = 0; x < w; x++)

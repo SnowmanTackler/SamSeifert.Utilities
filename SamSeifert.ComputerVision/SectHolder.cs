@@ -6,8 +6,9 @@ using System.Drawing.Imaging;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using SamSeifert.Utilities;
+using SamSeifert.Utilities; using SamSeifert.Utilities.Maths;
 using SamSeifert.Utilities.Extensions;
+using SamSeifert.Utilities.Maths;
 
 namespace SamSeifert.ComputerVision
 {
@@ -379,7 +380,7 @@ namespace SamSeifert.ComputerVision
                 {
                     for (int x = 0; x < this._Size.Width; x++)
                     {
-                        bytes[index] = MathUtil.ClampByte(255 * sect[y, x]);
+                        bytes[index] = PrimativeE.ClampByte(255 * sect[y, x]);
                         index += stride;
                     }
                 }

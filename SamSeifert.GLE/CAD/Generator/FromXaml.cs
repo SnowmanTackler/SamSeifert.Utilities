@@ -1,6 +1,7 @@
 ﻿using OpenTK;
-using SamSeifert.Utilities.FileParsing;
-using SamSeifert.Utilities.Json;
+using SamSeifert.Utilities.Files;
+using SamSeifert.Utilities.Files.Json;
+using SamSeifert.Utilities.Files.Xml;
 using System;
 using System.Collections.Generic;
 using System.Drawing;

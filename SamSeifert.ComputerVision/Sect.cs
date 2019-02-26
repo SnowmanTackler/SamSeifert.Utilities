@@ -4,9 +4,10 @@ using System.Drawing.Imaging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SamSeifert.Utilities;
+using SamSeifert.Utilities; using SamSeifert.Utilities.Maths;
 using System.IO;
 using SamSeifert.Utilities.Extensions;
+using SamSeifert.Utilities.Maths;
 
 namespace SamSeifert.ComputerVision
 {
@@ -110,15 +111,15 @@ namespace SamSeifert.ComputerVision
                 switch (rt)
                 {
                     case ResizeType.Bilinear: // TODO Real Bilinear
-                        int xh = ((int)Math.Ceiling(x)).Clampp(0, sz.Width - 1);
-                        int xl = ((int)Math.Floor(x)).Clampp(0, sz.Width - 1);
-                        int yh = ((int)Math.Ceiling(y)).Clampp(0, sz.Height - 1);
-                        int yl = ((int)Math.Floor(y)).Clampp(0, sz.Height - 1);
+                        int xh = ((int)Math.Ceiling(x)).Clamp(0, sz.Width - 1);
+                        int xl = ((int)Math.Floor(x)).Clamp(0, sz.Width - 1);
+                        int yh = ((int)Math.Ceiling(y)).Clamp(0, sz.Height - 1);
+                        int yl = ((int)Math.Floor(y)).Clamp(0, sz.Height - 1);
                         return this[yh, xh] + this[yh, xl] + this[yl, xl] + this[yl, xh];
                     case ResizeType.NearestNeighbor:
                         return this[
-                            ((int)Math.Round(y)).Clampp(0, sz.Height - 1),
-                            ((int)Math.Round(x)).Clampp(0, sz.Width - 1)];
+                            ((int)Math.Round(y)).Clamp(0, sz.Height - 1),
+                            ((int)Math.Round(x)).Clamp(0, sz.Width - 1)];
                     default:
                         return 0;
 

@@ -52,7 +52,7 @@ namespace SamSeifert.Utilities.Extensions
             {
                 // Pick a new index higher than current for each item in the array
                 int r = i + rand.Next(0, n - i);
-                MiscUtil.Swap(ref array[r], ref array[i]);
+                Misc.Util.Swap(ref array[r], ref array[i]);
             }
         }
 

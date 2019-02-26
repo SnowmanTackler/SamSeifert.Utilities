@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SamSeifert.Utilities.Json
+namespace SamSeifert.Utilities.Files.Json
 {
     public delegate void CharWriter(char x);
     public delegate void StringWriter(String x);

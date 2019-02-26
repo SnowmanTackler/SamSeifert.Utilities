@@ -52,15 +52,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Continuous360.cs" />
+    <Compile Include="Files\Xml\TagItem.cs" />
+    <Compile Include="Files\Xml\TagText.cs" />
+    <Compile Include="Maths\Combinatorics\Merge.cs" />
+    <Compile Include="Maths\Continuous360.cs" />
     <Compile Include="DataStructures\DefaultDict.cs" />
     <Compile Include="DataStructures\DictUtil.cs" />
     <Compile Include="DataStructures\EditDistanceDict.cs" />
     <Compile Include="DataStructures\Heap.cs" />
     <Compile Include="DataStructures\ImpulseManager.cs" />
-    <Compile Include="DateTimeUtil.cs" />
-    <Compile Include="DisposableCollection.cs" />
-    <Compile Include="EnumUtil.cs" />
+    <Compile Include="Extensions\DateTimeE.cs" />
+    <Compile Include="DataStructures\DisposableCollection.cs" />
+    <Compile Include="Extensions\EnumE.cs" />
     <Compile Include="Extensions\Array2E.cs" />
     <Compile Include="Extensions\ArrayE.cs" />
     <Compile Include="Extensions\BitmapE.cs" />
@@ -68,28 +71,29 @@
     <Compile Include="Extensions\DictionaryE.cs" />
     <Compile Include="Extensions\HashSetE.cs" />
     <Compile Include="Extensions\ListE.cs" />
-    <Compile Include="Extensions\Random.cs" />
-    <Compile Include="FileParsing\BracketFile.cs" />
-    <Compile Include="FileParsing\TagFile.cs" />
-    <Compile Include="Json\JsonArray.cs" />
-    <Compile Include="Json\JsonDict.cs" />
-    <Compile Include="Json\JsonPackable.cs" />
-    <Compile Include="Json\JsonParser.cs" />
+    <Compile Include="Extensions\RandomE.cs" />
+    <Compile Include="Files\BracketFile.cs" />
+    <Compile Include="Files\Xml\TagFile.cs" />
+    <Compile Include="Files\Json\JsonArray.cs" />
+    <Compile Include="Files\Json\JsonDict.cs" />
+    <Compile Include="Files\Json\JsonPackable.cs" />
+    <Compile Include="Files\Json\JsonParser.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="LowPassFilter.cs" />
-    <Compile Include="MinMax.cs" />
-    <Compile Include="MiscUtil.cs" />
-    <Compile Include="MathUtil.cs" />
+    <Compile Include="Maths\LowPassFilter.cs" />
+    <Compile Include="Maths\MinMax.cs" />
+    <Compile Include="Maths\PrimativesE.cs" />
+    <Compile Include="Misc\Util.cs" />
+    <Compile Include="Maths\PrimativeE.cs" />
     <Compile Include="Networking\Destination.cs" />
     <Compile Include="NLP\EditDistance.cs" />
-    <Compile Include="Permutate.cs" />
+    <Compile Include="Maths\Combinatorics\Permutate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Timing\MaxRate.cs" />
     <Compile Include="Timing\RateTracker.cs" />
-    <Compile Include="ScreenCapture.cs" />
-    <Compile Include="Statistics.cs" />
-    <Compile Include="Extensions\StringUtil.cs" />
-    <Compile Include="UnitConverter.cs" />
+    <Compile Include="Misc\ScreenCapture.cs" />
+    <Compile Include="Maths\Statistics.cs" />
+    <Compile Include="Extensions\StringE.cs" />
+    <Compile Include="Maths\UnitConverter.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -114,6 +118,7 @@
     <Content Include="Resources\Error.png" />
     <None Include="Resources\Plus.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

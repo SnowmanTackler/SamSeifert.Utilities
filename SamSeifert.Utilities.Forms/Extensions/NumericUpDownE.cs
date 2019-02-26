@@ -1,4 +1,5 @@
-﻿using SamSeifert.Utilities.Json;
+﻿using SamSeifert.Utilities.Files.Json;
+using SamSeifert.Utilities.Maths;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +47,7 @@ namespace SamSeifert.Utilities.Extensions
 
         public static void SetValueMinMaxSafe(this NumericUpDown nud, Decimal value)
         {
-            nud.Value = value.Clampp(nud.Minimum, nud.Maximum);
+            nud.Value = value.Clamp(nud.Minimum, nud.Maximum);
         }
 
 
