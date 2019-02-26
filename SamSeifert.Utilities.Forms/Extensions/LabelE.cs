@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SamSeifert.Utilities.Extensions
 {
-    static class LabelE
+    public static class LabelE
     {
-        public static void Update(this System.Windows.Forms.Label l, SamSeifert.Utilities.Timing.RateTracker rt)
+        public static void UpdateAndSetText(this System.Windows.Forms.Label l, Timing.RateTracker rt)
         {
             l.Text = rt.Update().ToString("00.00") + " Hz";
         }
