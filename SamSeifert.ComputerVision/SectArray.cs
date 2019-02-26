@@ -6,7 +6,7 @@ using System.Text;
 
 using MathNet.Numerics.LinearAlgebra;
 
-namespace SamSeifert.CSCV
+namespace SamSeifert.ComputerVision
 {
     public class SectArray : Sect
     {

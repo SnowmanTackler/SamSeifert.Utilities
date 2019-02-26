@@ -8,7 +8,7 @@ using SamSeifert.Utilities;
 using System.IO;
 using SamSeifert.Utilities.Extensions;
 
-namespace SamSeifert.CSCV
+namespace SamSeifert.ComputerVision
 {
     public abstract class Sect
     {
@@ -488,23 +488,7 @@ namespace SamSeifert.CSCV
                 }
             }
         }
-
-        public void ShowDialog(String title = "Sect")
-        {
-            using (var bp = this.getImage())
-            {
-                var frm = new System.Windows.Forms.Form();
-                frm.Text = title;
-
-                var pb = new System.Windows.Forms.PictureBox();
-                pb.Image = bp;
-                frm.Controls.Add(pb);
-                pb.Dock = System.Windows.Forms.DockStyle.Fill;
-                frm.ShowDialog();
-            }
-        }
-
-
+        
         public void SaveToFile(string path)
         {
             var directory = Directory.GetParent(path);

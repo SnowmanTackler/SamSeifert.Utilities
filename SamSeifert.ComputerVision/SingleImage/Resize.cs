@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 
-namespace SamSeifert.CSCV
+namespace SamSeifert.ComputerVision
 {
     public enum ResizeType
     {

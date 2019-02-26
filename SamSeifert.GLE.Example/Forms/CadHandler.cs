@@ -9,8 +9,9 @@ using System.Windows.Forms;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL; using GL = SamSeifert.GLE.GLR;
+using SamSeifert.GLE.CAD;
 
-namespace SamSeifert.GLE.CAD.GUI
+namespace SamSeifert.GLE.Forms
 {
     public partial class CadHandler : UserControl
     {

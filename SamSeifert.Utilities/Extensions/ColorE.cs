@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SamSeifert.Utilities.Extensions
 {
-    public static class ColorE
+    public static partial class ColorE
     {
         public static Boolean CheckHue(float hue, float BandCenter, float BandWidth)
         {

@@ -1,4 +1,4 @@
-﻿namespace SamSeifert.GLE.CAD.GUI
+﻿namespace SamSeifert.GLE.Forms
 {
     partial class FormCVBase
     {
@@ -33,7 +33,7 @@
             this.labelFPSX = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.glControl1 = new OpenTK.GLControl();
-            this.cadHandler1 = new SamSeifert.GLE.CAD.GUI.CadHandler();
+            this.cadHandler1 = new SamSeifert.GLE.Forms.CadHandler();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();

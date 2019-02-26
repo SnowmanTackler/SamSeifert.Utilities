@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace SamSeifert.GLE.CAD.GUI
+namespace SamSeifert.GLE.Forms
 {
     static class Program
     {
@@ -15,7 +15,7 @@ namespace SamSeifert.GLE.CAD.GUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new GUI.FormCVBase());
+            Application.Run(new FormCVBase());
         }
     }
 }

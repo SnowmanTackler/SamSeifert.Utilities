@@ -16,12 +16,12 @@ namespace SamSeifert.GLE.CAD
         public CadObject[] _Children = new CadObject[0];
 
 
-        internal String _Name = "Untitled";
-        internal Matrix4 _Matrix = Matrix4.Identity;
-        internal ColorGL _Color = null;
-        internal Vector3[] _Vertices;
-        internal Vector3[] _Normals;
-        internal uint[] _Indices;
+        public String _Name = "Untitled";
+        public Matrix4 _Matrix = Matrix4.Identity;
+        public ColorGL _Color = null;
+        public Vector3[] _Vertices;
+        public Vector3[] _Normals;
+        public uint[] _Indices;
 
         private bool _BoolUseTranslationAndRotation = false;
         private bool _BoolSetupGL3 = false;
@@ -30,8 +30,8 @@ namespace SamSeifert.GLE.CAD
         private int _IntInterleaveBufferID; // Used to support GL4
         private int _IntIndicesBufferID; // Used to support GL4
 
-        internal enum GLType { GL3, GL4, UNK };
-        internal GLType _GLType = GLType.UNK;
+        public enum GLType { GL3, GL4, UNK };
+        public GLType _GLType = GLType.UNK;
 
         private bool _BoundingSphereNeeded = true;
         private Vector3 _BoundingSphereCenter = Vector3.Zero;

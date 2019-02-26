@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace SamSeifert.CSCV
+namespace SamSeifert.ComputerVision
 {
     public class SectMask : Sect
     {

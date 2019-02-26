@@ -45,13 +45,9 @@
     <Reference Include="OpenTK">
       <HintPath>..\..\OpenTK\bin\OpenTK\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="OpenTK.GLControl">
-      <HintPath>..\..\OpenTK\bin\OpenTK.GLControl\OpenTK.GLControl.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -69,31 +65,6 @@
     <Compile Include="Geometry.cs" />
     <Compile Include="Geometry3D.cs" />
     <Compile Include="GLR_StaticVariables.cs" />
-    <Compile Include="CAD\GUI\CadHandler.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CAD\GUI\CadHandler.Designer.cs">
-      <DependentUpon>CadHandler.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CAD\GUI\FormCVBase.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CAD\GUI\FormCVBase.Designer.cs">
-      <DependentUpon>FormCVBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CAD\GUI\FormNewShape.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CAD\GUI\FormNewShape.designer.cs">
-      <DependentUpon>FormNewShape.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CAD\GUI\FormSaveAs.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CAD\GUI\FormSaveAs.designer.cs">
-      <DependentUpon>FormSaveAs.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CAD\GUI\Program.cs" />
     <Compile Include="CAD\Helpers.cs" />
     <Compile Include="CameraDescriptor.cs" />
     <Compile Include="CubeColorMap.cs" />
@@ -117,20 +88,6 @@
       <Project>{a9446cbe-818f-45f6-8894-068693da47ca}</Project>
       <Name>SamSeifert.Utilities</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CAD\GUI\CadHandler.resx">
-      <DependentUpon>CadHandler.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CAD\GUI\FormCVBase.resx">
-      <DependentUpon>FormCVBase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CAD\GUI\FormNewShape.resx">
-      <DependentUpon>FormNewShape.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CAD\GUI\FormSaveAs.resx">
-      <DependentUpon>FormSaveAs.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

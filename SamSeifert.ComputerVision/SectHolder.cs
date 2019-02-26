@@ -9,7 +9,7 @@ using System.Text;
 using SamSeifert.Utilities;
 using SamSeifert.Utilities.Extensions;
 
-namespace SamSeifert.CSCV
+namespace SamSeifert.ComputerVision
 {
     public class SectHolder : Sect
     {

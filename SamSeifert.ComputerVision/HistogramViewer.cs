@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using SamSeifert.Utilities.Extensions;
 
-namespace SamSeifert.CSCV
+namespace SamSeifert.ComputerVision
 {
     public partial class HistogramViewer
     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SamSeifert.GLE.CAD;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace SamSeifert.GLE.CAD.GUI
+namespace SamSeifert.GLE.Forms
 {
     public partial class FormSaveAs : Form
     {

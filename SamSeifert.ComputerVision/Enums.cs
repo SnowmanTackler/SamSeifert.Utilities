@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.ComponentModel;
 
-namespace SamSeifert.CSCV
+namespace SamSeifert.ComputerVision
 {
     public enum SectType
     {

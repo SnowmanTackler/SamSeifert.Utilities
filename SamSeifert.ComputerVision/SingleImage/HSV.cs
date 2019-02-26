@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using SamSeifert.Utilities;
 using SamSeifert.Utilities.Extensions;
 
-namespace SamSeifert.CSCV
+namespace SamSeifert.ComputerVision
 {
     public partial class SingleImage
     {

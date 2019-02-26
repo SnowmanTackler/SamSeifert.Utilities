@@ -30,7 +30,7 @@ namespace SamSeifert.Utilities.FileParsing
                 if (f._Children.Length == 1) return f._Children[0];
                 else return f;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }
@@ -109,18 +109,6 @@ namespace SamSeifert.Utilities.FileParsing
                 oldLength = this.text.Length;
                 this.text = this.text.Replace("  ", " ");
             }
-        }
-
-        public void Save()
-        {
-            var x = new List<String>();
-
-            this.Save(0, ref x);
-
-            var sf = new System.Windows.Forms.SaveFileDialog();
-
-            if (sf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                System.IO.File.WriteAllLines(sf.FileName, x);
         }
 
         private void Save(int level, ref List<string> str)

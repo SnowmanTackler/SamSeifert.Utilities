@@ -9,8 +9,9 @@ using System.Text;
 using System.Windows.Forms;
 
 using OpenTK;
+using SamSeifert.GLE.CAD;
 
-namespace SamSeifert.GLE.CAD.GUI
+namespace SamSeifert.GLE.Forms
 {
     public partial class FormNewShape : Form
     {
@@ -138,7 +139,7 @@ namespace SamSeifert.GLE.CAD.GUI
                     {
                         var name = Path.GetFileName(this.textBox1.Text);
                         var t = String.Join(" ", File.ReadAllLines(this.textBox1.Text));
-                        var co = Generator.FromXaml.Create(t, name);
+                        var co = CAD.Generator.FromXaml.Create(t, name);
                         if (co != null) list.Add(co);
                         break;
                     }

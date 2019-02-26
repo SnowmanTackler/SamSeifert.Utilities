@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using SamSeifert.Utilities;
 
-namespace SamSeifert.CSCV
+namespace SamSeifert.ComputerVision
 {
     public enum NoiseType
     {

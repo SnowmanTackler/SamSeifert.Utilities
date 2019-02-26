@@ -8,7 +8,7 @@
     <ProjectGuid>{A52E8045-E20A-4898-8D14-44885524EA05}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SamSeifert.CSCV</RootNamespace>
+    <RootNamespace>SamSeifert.ComputerVision</RootNamespace>
     <AssemblyName>SamSeifert.CSCV</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -46,7 +46,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -106,7 +105,7 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SamSeifert.MathNet.Numerics.Extensions\SamSeifert.MathNet.Numerics.Extensions.csproj">
+    <ProjectReference Include="..\SamSeifert.Mathnet.Numerics\SamSeifert.MathNet.Numerics.Extensions.csproj">
       <Project>{a74567df-9c75-4038-9785-cf6c0bbc17c4}</Project>
       <Name>SamSeifert.MathNet.Numerics.Extensions</Name>
     </ProjectReference>

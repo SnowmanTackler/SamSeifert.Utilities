@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace SamSeifert.Utilities
 {
@@ -62,34 +61,6 @@ namespace SamSeifert.Utilities
                 Logger._Writer = value;
             }
         }
-
-
-        /// <summary>
-        /// For Console Logging
-        /// </summary>
-        public static void LogToTextbox(TextBox tb, Func<String> get_prefix = null)
-        {
-            Logger._Writer = (String message, String indent) =>
-            {
-                if (message.Length != 0)
-                    if (get_prefix != null)
-                        message = get_prefix() + "  " + indent + message;
-
-                Console.WriteLine(message);
-                //Trace.WriteLine(message);
-
-                if (tb == null) return;
-                if (tb.IsDisposed) return;
-
-                var act = new Action(() => {
-                    tb.AppendText(message + Environment.NewLine);
-                });
-
-                if (tb.InvokeRequired) tb.BeginInvoke(act); // Don't Wait
-                else act();
-            };
-        }
-
 
         private Func<String> _DisposeFunction;
         private int _AddedIndentLength;

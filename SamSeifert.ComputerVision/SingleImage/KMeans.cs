@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 
-namespace SamSeifert.CSCV
+namespace SamSeifert.ComputerVision
 {
     public static partial class SingleImage
     {

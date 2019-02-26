@@ -21,11 +21,6 @@ namespace SamSeifert.Utilities.Timing
             this._Alpha = alpha;
         }
 
-        public void Update(System.Windows.Forms.Label l)
-        {
-            l.Text = this.Update().ToString("00.00") + " Hz";
-        }
-
         public float Update()
         {
             var now = DateTime.Now;

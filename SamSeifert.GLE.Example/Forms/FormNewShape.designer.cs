@@ -1,4 +1,4 @@
-﻿namespace SamSeifert.GLE.CAD.GUI
+﻿namespace SamSeifert.GLE.Forms
 {
     partial class FormNewShape
     {
