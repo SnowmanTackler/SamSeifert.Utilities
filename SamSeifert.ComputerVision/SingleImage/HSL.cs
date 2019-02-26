@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SamSeifert.Utilities;
+using SamSeifert.Utilities.Extensions;
 
 namespace SamSeifert.CSCV
 {
@@ -47,7 +48,7 @@ namespace SamSeifert.CSCV
                 {
                     for (int x = 0; x < w; x++)
                     {
-                        ColorUtil.rgb2hsl(
+                        ColorE.rgb2hsl(
                             Math.Max(0, Math.Min(1, R[y, x])),
                             Math.Max(0, Math.Min(1, G[y, x])),
                             Math.Max(0, Math.Min(1, B[y, x])),
@@ -102,7 +103,7 @@ namespace SamSeifert.CSCV
                 {
                     for (int x = 0; x < w; x++)
                     {
-                        ColorUtil.hsl2rgb(
+                        ColorE.hsl2rgb(
                             H[y, x],
                             Math.Max(0, Math.Min(1, S[y, x])),
                             Math.Max(0, Math.Min(1, L[y, x])),

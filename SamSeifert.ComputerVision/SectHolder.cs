@@ -219,7 +219,7 @@ namespace SamSeifert.CSCV
 
                 return delegate (int y, int x, out float r, out float g, out float b)
                 {
-                    ColorUtil.hsv2rgb(H[y, x], S[y, x], V[y, x], out r, out g, out b);
+                    ColorE.hsv2rgb(H[y, x], S[y, x], V[y, x], out r, out g, out b);
                 };
             }
 
@@ -231,7 +231,7 @@ namespace SamSeifert.CSCV
 
                 return delegate (int y, int x, out float r, out float g, out float b)
                 {
-                    ColorUtil.hsl2rgb(H[y, x], S[y, x], L[y, x], out r, out g, out b);
+                    ColorE.hsl2rgb(H[y, x], S[y, x], L[y, x], out r, out g, out b);
                 };
             }
 
