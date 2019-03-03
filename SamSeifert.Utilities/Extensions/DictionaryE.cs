@@ -31,5 +31,24 @@ namespace SamSeifert.Utilities.Extensions
 
             return ret;
         }
+
+        public static V GetOrDefault<K, V>(this Dictionary<K, V> dict, K key, V defaultValue)
+        {
+            V ret;
+            if (dict.TryGetValue(key, out ret)) return ret;
+            else return defaultValue;
+        }
+
+        public static V GetAndRemoveOrDefault<K, V>(this Dictionary<K, V> dict, K key, V defaultValue)
+        {
+            V ret;
+            if (dict.TryGetValue(key, out ret))
+            {
+                dict.Remove(key);
+                return ret;
+            }
+            else return defaultValue;
+        }
+
     }
 }

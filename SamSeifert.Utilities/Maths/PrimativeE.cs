@@ -200,6 +200,34 @@ namespace SamSeifert.Utilities.Maths
         {
             return (i >= low) && (i < high);
         }
+
+
+
+
+
+        public static int RoundToInt(this double d)
+        {
+            return (int)Math.Round(d);
+        }
+
+        public static int RoundToInt(this float f)
+        {
+            return (int)Math.Round(f);
+        }
+
+
+
+
+
+
+        public static void AssertEquals(this int has, int wants)
+        {
+            if (has != wants)
+            {
+                throw new Exception("Assertion failed. Want " + wants + " but have " + has);
+            }
+        }
+
     }
 }
 

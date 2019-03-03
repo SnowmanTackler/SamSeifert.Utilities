@@ -79,6 +79,8 @@ namespace SamSeifert.Utilities.Extensions
         }
 
 
+
+
         public static T[] Merge<T>(T[] a1, T[] a2)
         {
             int l1 = a1.Length;
