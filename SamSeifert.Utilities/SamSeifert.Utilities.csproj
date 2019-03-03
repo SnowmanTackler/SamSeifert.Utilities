@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\BooleanE.cs" />
     <Compile Include="Extensions\ObjectE.cs" />
     <Compile Include="Files\Vrml\Node.cs" />
     <Compile Include="Files\Vrml\Nodes\TransformNode.cs" />

@@ -31,7 +31,7 @@ namespace SamSeifert.Utilities.Files.Vrml
 
             var reader = new VrmlReader(sr);
 
-            return Node.From(null, null, reader);
+            return Node.From(null, null, reader, new Dictionary<String, Node>());
         }
 
 

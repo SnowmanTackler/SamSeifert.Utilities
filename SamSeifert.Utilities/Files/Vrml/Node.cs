@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SamSeifert.Utilities.Extensions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -38,7 +39,7 @@ namespace SamSeifert.Utilities.Files.Vrml
             }
         }
 
-        private static List<Node> ReadChildrenList(VrmlReader reader)
+        private static List<Node> ReadChildrenList(VrmlReader reader, Dictionary<string, Node> namedNodes)
         {
             var ls = new List<Node>();
             reader.nextShouldBe("[");
@@ -51,7 +52,7 @@ namespace SamSeifert.Utilities.Files.Vrml
                     var name = reader.nextToken();
                     var type = reader.nextToken();
                     reader.nextShouldBe("{");
-                    ls.Add(Node.From(name, type, reader));
+                    ls.Add(Node.From(name, type, reader, namedNodes));
                 }
                 else if (token == "]")
                 {
@@ -60,7 +61,7 @@ namespace SamSeifert.Utilities.Files.Vrml
                 else if (Char.IsUpper(token.First()))
                 {
                     reader.nextShouldBe("{");
-                    ls.Add(Node.From(null, token, reader));
+                    ls.Add(Node.From(null, token, reader, namedNodes));
                 } 
                 else
                 {
@@ -92,7 +93,11 @@ namespace SamSeifert.Utilities.Files.Vrml
             }
         }
 
-        private static Node From(string name, string type, List<Node> children, Dictionary<string, Node> fieldNodes, Dictionary<string, List<double>> fieldAttributes)
+        private static Node From(
+            string name,
+            string type, List<Node> children,
+            Dictionary<string, Node> fieldNodes, 
+            Dictionary<string, List<double>> fieldAttributes)
         {
 
             switch (type)
@@ -118,7 +123,11 @@ namespace SamSeifert.Utilities.Files.Vrml
             }
         }
 
-        internal static Node From(string name, string type, VrmlReader reader)
+        internal static Node From(
+            string name, 
+            string type,
+            VrmlReader reader,
+            Dictionary<string, Node> namedNodes)
         {
             List<Node> children = null;
             var fieldNodes = new Dictionary<String, Node>();
@@ -130,13 +139,17 @@ namespace SamSeifert.Utilities.Files.Vrml
                 switch (firstToken)
                 {
                     case "}":
-                        return From(name, type, children, fieldNodes, fieldAttributes);
-
-                        // return something
+                        var node = From(name, type, children, fieldNodes, fieldAttributes);
+                        if (name != null)
+                        {
+                            namedNodes.ContainsKey(name).AssertFalse();
+                            namedNodes[name] = node;
+                        }
+                        return node;
                     case "children":
                         if (children == null)
                         {
-                            children = ReadChildrenList(reader);
+                            children = ReadChildrenList(reader, namedNodes);
                         }
                         else
                         {
@@ -165,11 +178,14 @@ namespace SamSeifert.Utilities.Files.Vrml
                                 reader.nextShouldBe("{");
                                 if (fieldNodes.ContainsKey(firstToken))
                                     throw new Exception("Whoops");
-                                fieldNodes[firstToken] = Node.From(childName, childType, reader);
+                                fieldNodes[firstToken] = Node.From(childName, childType, reader, namedNodes);
                             }
                             else if (secondToken == "USE")
                             {
-                                reader.nextToken(); // USE AT SOME POINT;
+                                var matchedNodeName = reader.nextToken(); // USE AT SOME POINT;
+                                var matchedNode = namedNodes.GetOrDefault(matchedNodeName, null);
+                                matchedNode.AssertNotNull();
+                                fieldNodes[firstToken] = matchedNode;
                             }
                             else if ((secondValue = getValueForToken(secondToken)) == null)
                             {
@@ -177,7 +193,7 @@ namespace SamSeifert.Utilities.Files.Vrml
                                 reader.nextShouldBe("{");
                                 if (fieldNodes.ContainsKey(firstToken))
                                     throw new Exception("Whoops");
-                                fieldNodes[firstToken] = Node.From(null, secondToken, reader);
+                                fieldNodes[firstToken] = Node.From(null, secondToken, reader, namedNodes);
                             }
                             else
                             {

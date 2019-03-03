@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System.Runtime.InteropServices;
-using SamSeifert.Utilities; using SamSeifert.Utilities.Maths;
 using SamSeifert.Utilities.Maths;
 
 namespace SamSeifert.GLE
