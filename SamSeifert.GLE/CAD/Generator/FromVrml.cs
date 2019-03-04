@@ -128,59 +128,116 @@ namespace SamSeifert.GLE.CAD.Generator
 
                     polygonVertexCounts.Count.AssertEquals(1);
 
+                    CadObject co;
+
                     switch (polygonVertexCounts.First())
                     {
                         case 4:
-                            var inVerts = Vec3sFromDoubles(geometry.Coordinates);
-                            var inIndices = geometry.CoordinatesIndicies;
-
-                            (inIndices.Length % 5).AssertEquals(0);
-
-                            var verts = new List<Vector3>(inVerts.Length);
-                            var norms = new List<Vector3>(inVerts.Length);
-
-                            for (int i = 0; i < inIndices.Length; i += 5)
-                            {
-                                var v1 = inVerts[inIndices[i + 0]];
-                                var v2 = inVerts[inIndices[i + 1]];
-                                var v3 = inVerts[inIndices[i + 2]];
-                                var v4 = inVerts[inIndices[i + 3]];
-                                var v5 = v1;
-                                var v6 = v2;
-
-                                var c1 = Vector3.Cross(v1 - v2, v3 - v2).NormalizedSafe();
-                                var c2 = Vector3.Cross(v1 - v2, v3 - v2).NormalizedSafe();
-                                var c3 = Vector3.Cross(v1 - v2, v3 - v2).NormalizedSafe();
-                                var c4 = Vector3.Cross(v1 - v2, v3 - v2).NormalizedSafe();
-
-                                var norm = (c1 + c2 + c3 + c4).NormalizedSafe();
-
-                                if (geometry.Solid || !geometry.CounterClockWise)
-                                {
-                                    norm = -norm;
-                                    verts.AddRange(new Vector3[] { v1, v2, v3, v1, v3, v4 });
-                                    norms.AddRange(new Vector3[] { norm, norm, norm, norm, norm, norm });
-                                }
-                                else // Counter clockwise
-                                {
-                                    verts.AddRange(new Vector3[] { v1, v3, v2, v1, v4, v3 });
-                                    norms.AddRange(new Vector3[] { norm, norm, norm, norm, norm, norm });
-                                }
-                            }
-
-                            var co = new CadObject(verts.ToArray(), norms.ToArray(), node.Name ?? "Shape");
-                            co._CullFaceMode =  geometry.Solid ? (CullFaceMode?)null : 
-                                geometry.CounterClockWise ? CullFaceMode.Back : CullFaceMode.Front;
-                            co.SetColor(material);
-                            return co;
-
+                            co = CadObjectFromQuads(node.Name, geometry);
+                            break;
                         default:
                             throw new NotImplementedException();
                     }
+
+                    co._CullFaceMode = geometry.Solid ? (CullFaceMode?)null :
+                        geometry.CounterClockWise ? CullFaceMode.Back : CullFaceMode.Front;
+                    co.SetColor(material);
+                    return co;
                 }
                 else throw new NotImplementedException();
             }
             else return null;
+        }
+
+        private static CadObject CadObjectFromQuads(String name, IndexedFaceSetNode geometry)
+        {
+            var inVerts = Vec3sFromDoubles(geometry.Coordinates);
+            var inNorms = new List<Vector3>[inVerts.Length];
+
+            inNorms.Fill(() => new List<Vector3>());
+
+            var inIndices = geometry.CoordinatesIndicies;
+            (inIndices.Length % 5).AssertEquals(0);
+            var inIndicesNorms = new Vector3[inIndices.Length / 5];
+
+            var creaseAngle = (float) geometry.CreaseAngle;
+                       
+            for (int i = 0; i < inIndices.Length; i += 5)
+            {
+                var v1 = inVerts[inIndices[i + 0]];
+                var v2 = inVerts[inIndices[i + 1]];
+                var v3 = inVerts[inIndices[i + 2]];
+                var v4 = inVerts[inIndices[i + 3]];
+                var v5 = v1;
+                var v6 = v2;
+
+                var c1 = Vector3.Cross(v1 - v2, v3 - v2).NormalizedSafe();
+                var c2 = Vector3.Cross(v2 - v3, v4 - v3).NormalizedSafe();
+                var c3 = Vector3.Cross(v3 - v4, v5 - v4).NormalizedSafe();
+                var c4 = Vector3.Cross(v4 - v5, v6 - v5).NormalizedSafe();
+
+                var norm = (c1 + c2 + c3 + c4).NormalizedSafe();
+
+                if (geometry.CounterClockWise && geometry.Solid)
+                {
+                    norm = -norm;
+                }
+
+                inNorms[inIndices[i + 0]].Add(norm);
+                inNorms[inIndices[i + 1]].Add(norm);
+                inNorms[inIndices[i + 2]].Add(norm);
+                inNorms[inIndices[i + 3]].Add(norm);
+
+                inIndicesNorms[i / 5] = norm;
+            }
+
+            var verts = new List<Vector3>(inVerts.Length);
+            var norms = new List<Vector3>(inVerts.Length);
+
+            for (int i = 0; i < inIndices.Length; i += 5)
+            {
+                var v1 = inVerts[inIndices[i + 0]];
+                var v2 = inVerts[inIndices[i + 1]];
+                var v3 = inVerts[inIndices[i + 2]];
+                var v4 = inVerts[inIndices[i + 3]];
+
+                var norm = inIndicesNorms[i / 5];
+
+                var n1 = AverageOfNormsWithinCreaseAngle(inNorms[inIndices[i + 0]], norm, creaseAngle);
+                var n2 = AverageOfNormsWithinCreaseAngle(inNorms[inIndices[i + 1]], norm, creaseAngle);
+                var n3 = AverageOfNormsWithinCreaseAngle(inNorms[inIndices[i + 2]], norm, creaseAngle);
+                var n4 = AverageOfNormsWithinCreaseAngle(inNorms[inIndices[i + 3]], norm, creaseAngle);
+
+                if (!geometry.CounterClockWise)
+                {
+                    verts.AddRange(new Vector3[] { v1, v2, v3, v1, v3, v4 });
+                    norms.AddRange(new Vector3[] { n1, n2, n3, n1, n3, n4 });
+                }
+                else // Counter clockwise
+                {
+                    verts.AddRange(new Vector3[] { v1, v3, v2, v1, v4, v3 });
+                    norms.AddRange(new Vector3[] { n1, n3, n2, n1, n4, n3 });
+                }
+            }
+
+            return new CadObject(verts.ToArray(), norms.ToArray(), name ?? "Shape");
+        }
+
+        private static Vector3 AverageOfNormsWithinCreaseAngle(List<Vector3> list, Vector3 norm, float creaseAngle)
+        {
+            var beBiggerThanThisAngle = (float)Math.Cos(creaseAngle) - 0.001f; // For rounding's sake
+
+            var sum = Vector3.Zero;
+
+            foreach (var l in list)
+            {
+                if (Vector3.Dot(l, norm) > beBiggerThanThisAngle)
+                {
+                    sum += l;
+                }
+            }
+
+            return sum.NormalizedSafe();           
         }
     }
 }
