@@ -88,8 +88,18 @@ namespace SamSeifert.GLE.Forms
                     }
             }
 
+
             if (co != null)
-                this._CadHandler.addParts(new CadObject[] { co });
+            {
+                Vector3 center;
+                float size;
+                co.GetBoundingSphere(out center, out size);
+                Console.WriteLine("Size " + size);
+
+                co.Transform(Matrix4.CreateTranslation(-center));
+                this._CadHandler.addParts(co);
+
+            }
 
             this.Close();
         }

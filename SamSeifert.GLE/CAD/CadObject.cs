@@ -14,7 +14,7 @@ namespace SamSeifert.GLE.CAD
     {
         public bool _BoolDisplay = true;
         public CadObject[] _Children = new CadObject[0];
-    
+
         public String _Name = "Untitled";
         public Matrix4 _Matrix = Matrix4.Identity;
         public ColorGL _Color = null;
@@ -67,6 +67,7 @@ namespace SamSeifert.GLE.CAD
         public void SetMatrix(Matrix4 m)
         {
             this._Matrix = m;
+            this._BoundingSphereNeeded = true;
             this._BoolUseTranslationAndRotation = true;
         }
 
@@ -78,11 +79,13 @@ namespace SamSeifert.GLE.CAD
         public void Transform(ref Matrix4 m)
         {
             this._Matrix *= m;
+            this._BoundingSphereNeeded = true;
             this._BoolUseTranslationAndRotation = true;
         }
 
         public void SetUseTranslationAndRotation(bool arg, bool recursive = true)
         {
+            this._BoundingSphereNeeded = true;
             this._BoolUseTranslationAndRotation = arg;
             if (recursive) foreach (var e in this._Children) e.SetUseTranslationAndRotation(arg);
         }
@@ -112,6 +115,15 @@ namespace SamSeifert.GLE.CAD
             center =  (this._Matrix * new Vector4(this._BoundingSphereCenter, 1)).Xyz;
             radius = this._BoundingSphereRadius;
         }
+
+        public IEnumerable<Tuple<CadObject, int>> EnumerateAllChildren(int depth = 0)
+        {
+            yield return new Tuple<CadObject, int>(this, depth);
+            foreach (var child in this._Children)
+                foreach (var co in child.EnumerateAllChildren(depth + 1))
+                    yield return co;
+        }
+
 
 
 

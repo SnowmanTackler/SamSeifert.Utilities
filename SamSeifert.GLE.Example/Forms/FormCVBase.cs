@@ -88,8 +88,14 @@ namespace SamSeifert.GLE.Forms
 
                 foreach (var o in this.cadHandler1.checkedListBox1.Items)
                 {
-                    var co = o as CadObject;
-                    if (co != null) co.Draw(true);
+                    var co = o as CadHandler.CadObjectHolder;
+                    if (co != null)
+                    {
+                        if (co.indent == 0)
+                        {
+                            co.held.Draw(true);
+                        }
+                    }
                 }
 
                 GL.Enable(EnableCap.ColorMaterial);

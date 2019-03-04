@@ -119,16 +119,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\SpriteDown.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\SpriteUp.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\Error.png" />
-    <None Include="Resources\Plus.png" />
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -12,6 +12,9 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using GL = SamSeifert.GLE.GLR;
 using SamSeifert.GLE.Extensions;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace SamSeifert.GLE.CAD.Generator
 {
@@ -122,6 +125,19 @@ namespace SamSeifert.GLE.CAD.Generator
                 if (shapeNode.Geometry is IndexedFaceSetNode)
                 {
                     var material = glColorForVrmlMaterial(shapeNode.Appearance?.Material);
+
+                    var image = shapeNode.Appearance?.Texture?.Data;
+
+                    if (image != null)
+                    {
+                        using (var bmp = BytesToBitmap(image))
+                        {
+                            var path = Path.Combine(Utilities.Misc.Util.GetExecutablePath(), "..", i++ + ".jpeg");
+                            Console.WriteLine(path);
+                            bmp.Save(path);
+                        }
+                    }
+
                     var geometry = shapeNode.Geometry as IndexedFaceSetNode;
                     
                     var polygonVertexCounts = new HashSet<int>(getPolygonVertexCounts(geometry.CoordinatesIndicies));
@@ -133,7 +149,7 @@ namespace SamSeifert.GLE.CAD.Generator
                     switch (polygonVertexCounts.First())
                     {
                         case 4:
-                            co = CadObjectFromQuads(node.Name, geometry);
+                            co = CadObjectFromQuads(node.Name ?? "ShapeNode", geometry);
                             break;
                         default:
                             throw new NotImplementedException();
@@ -178,7 +194,7 @@ namespace SamSeifert.GLE.CAD.Generator
 
                 var norm = (c1 + c2 + c3 + c4).NormalizedSafe();
 
-                if (geometry.CounterClockWise && geometry.Solid)
+                if (!geometry.CounterClockWise && geometry.Solid)
                 {
                     norm = -norm;
                 }
@@ -220,7 +236,7 @@ namespace SamSeifert.GLE.CAD.Generator
                 }
             }
 
-            return new CadObject(verts.ToArray(), norms.ToArray(), name ?? "Shape");
+            return new CadObject(verts.ToArray(), norms.ToArray(), name);
         }
 
         private static Vector3 AverageOfNormsWithinCreaseAngle(List<Vector3> list, Vector3 norm, float creaseAngle)
@@ -238,6 +254,22 @@ namespace SamSeifert.GLE.CAD.Generator
             }
 
             return sum.NormalizedSafe();           
+        }
+
+        static int i = 0;
+        private static Bitmap BytesToBitmap(byte[,,] bytes)
+        {
+            bytes.GetLength(2).AssertEquals(3);
+            var width = bytes.GetLength(1);
+            var height = bytes.GetLength(0);
+
+            unsafe
+            {
+                fixed (byte* ptr = bytes)
+                {
+                    return new Bitmap(width, height, width * 3, System.Drawing.Imaging.PixelFormat.Format24bppRgb, new IntPtr(ptr));
+                }
+            }
         }
     }
 }
