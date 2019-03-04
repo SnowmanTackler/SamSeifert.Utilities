@@ -57,8 +57,10 @@
   <ItemGroup>
     <Compile Include="CAD\CadObject.cs" />
     <Compile Include="CAD\Generator\Anonymous.cs" />
+    <Compile Include="CAD\Generator\FromVrml.cs" />
     <Compile Include="CAD\Generator\Generic.cs" />
     <Compile Include="CAD\Generator\FromXaml.cs" />
+    <Compile Include="Extensions\CullFaceModeE.cs" />
     <Compile Include="Extensions\Matrix4E.cs" />
     <Compile Include="Extensions\Vector2E.cs" />
     <Compile Include="Extensions\Vector3E.cs" />

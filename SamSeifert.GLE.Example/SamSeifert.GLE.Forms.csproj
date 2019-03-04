@@ -122,6 +122,10 @@
       <Project>{fb6e9b5d-7a20-45f2-9ada-ddd12e70a967}</Project>
       <Name>SamSeifert.GLE</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SamSeifert.Utilities\SamSeifert.Utilities.csproj">
+      <Project>{a9446cbe-818f-45f6-8894-068693da47ca}</Project>
+      <Name>SamSeifert.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

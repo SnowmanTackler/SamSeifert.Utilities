@@ -33,8 +33,15 @@ namespace SamSeifert.Utilities.Files.Vrml.Nodes
             this.TranslationVec3.Length.AssertEquals(3);
 
             fieldNodes.Count.AssertEquals(0);
-            fieldAttributes.Count.AssertEquals(0);        
+            fieldAttributes.Count.AssertEquals(0);
+
             this.children = children.ToArray();
-        }        
+        }
+
+        public override ICollection<Node> Children()
+        {
+            return this.children;
+        }
+
     }
 }

@@ -201,7 +201,7 @@ namespace SamSeifert.Utilities.Files.Vrml
                                 // creaseAngle 3.141593
                                 // image 1024 512 3 7
                                 var fl = new List<double>();
-                                fl.Add(secondValue ?? 0);
+                                fl.Add(secondValue.Value);
 
                                 while (true)
                                 {
@@ -214,7 +214,7 @@ namespace SamSeifert.Utilities.Files.Vrml
                                     }
                                     else
                                     {
-                                        fl.Add(nextValue ?? 0);
+                                        fl.Add(nextValue.Value);
                                     }
                                 }
 
@@ -226,6 +226,11 @@ namespace SamSeifert.Utilities.Files.Vrml
                         } // end default case
                 } // end switch (token)
             } // end while loop
+        }
+
+        public virtual ICollection<Node> Children()
+        {
+            return new Node[0];
         }
 
         #region HelperFunctionsForDevelopingNewNodes

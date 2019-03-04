@@ -29,83 +29,88 @@
         private void InitializeComponent()
         {
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button0 = new System.Windows.Forms.Button();
+            this.buttonBrowse = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
-            this.openFileDialog3 = new System.Windows.Forms.OpenFileDialog();
-            this.radioButton4 = new System.Windows.Forms.RadioButton();
+            this.rbXAML = new System.Windows.Forms.RadioButton();
+            this.buttonGo = new System.Windows.Forms.Button();
+            this.rbVRML = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // textBox1
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(172, 41);
+            this.textBox1.Location = new System.Drawing.Point(118, 223);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(315, 20);
+            this.textBox1.Size = new System.Drawing.Size(448, 20);
             this.textBox1.TabIndex = 17;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
-            // button1
+            // buttonBrowse
             // 
-            this.button1.Location = new System.Drawing.Point(172, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(96, 23);
-            this.button1.TabIndex = 18;
-            this.button1.Text = "File 1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button0
-            // 
-            this.button0.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button0.Location = new System.Drawing.Point(12, 151);
-            this.button0.Name = "button0";
-            this.button0.Size = new System.Drawing.Size(92, 49);
-            this.button0.TabIndex = 22;
-            this.button0.Text = "Go";
-            this.button0.UseVisualStyleBackColor = true;
-            this.button0.Click += new System.EventHandler(this.button0_Click);
+            this.buttonBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonBrowse.Enabled = false;
+            this.buttonBrowse.Location = new System.Drawing.Point(12, 218);
+            this.buttonBrowse.Name = "buttonBrowse";
+            this.buttonBrowse.Size = new System.Drawing.Size(100, 28);
+            this.buttonBrowse.TabIndex = 18;
+            this.buttonBrowse.Text = "Browse";
+            this.buttonBrowse.UseVisualStyleBackColor = true;
+            this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
             // 
-            // openFileDialog2
+            // rbXAML
             // 
-            this.openFileDialog2.FileName = "openFileDialog1";
-            this.openFileDialog2.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog2_FileOk);
+            this.rbXAML.AutoSize = true;
+            this.rbXAML.Location = new System.Drawing.Point(12, 12);
+            this.rbXAML.Name = "rbXAML";
+            this.rbXAML.Size = new System.Drawing.Size(112, 17);
+            this.rbXAML.TabIndex = 23;
+            this.rbXAML.Text = "XAML (solidworks)";
+            this.rbXAML.UseVisualStyleBackColor = true;
+            this.rbXAML.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
-            // openFileDialog3
+            // buttonGo
             // 
-            this.openFileDialog3.FileName = "openFileDialog1";
-            this.openFileDialog3.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog3_FileOk);
+            this.buttonGo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonGo.Enabled = false;
+            this.buttonGo.Location = new System.Drawing.Point(572, 218);
+            this.buttonGo.Name = "buttonGo";
+            this.buttonGo.Size = new System.Drawing.Size(100, 28);
+            this.buttonGo.TabIndex = 24;
+            this.buttonGo.Text = "Go";
+            this.buttonGo.UseVisualStyleBackColor = true;
+            this.buttonGo.Click += new System.EventHandler(this.buttonGo_Click);
             // 
-            // radioButton4
+            // rbVRML
             // 
-            this.radioButton4.AutoSize = true;
-            this.radioButton4.Location = new System.Drawing.Point(12, 12);
-            this.radioButton4.Name = "radioButton4";
-            this.radioButton4.Size = new System.Drawing.Size(112, 17);
-            this.radioButton4.TabIndex = 23;
-            this.radioButton4.Text = "XAML (solidworks)";
-            this.radioButton4.UseVisualStyleBackColor = true;
-            this.radioButton4.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
+            this.rbVRML.AutoSize = true;
+            this.rbVRML.Location = new System.Drawing.Point(12, 35);
+            this.rbVRML.Name = "rbVRML";
+            this.rbVRML.Size = new System.Drawing.Size(55, 17);
+            this.rbVRML.TabIndex = 25;
+            this.rbVRML.Text = "VRML";
+            this.rbVRML.UseVisualStyleBackColor = true;
+            this.rbVRML.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
             // FormNewShape
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.ClientSize = new System.Drawing.Size(499, 357);
-            this.Controls.Add(this.radioButton4);
-            this.Controls.Add(this.button0);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(684, 258);
+            this.Controls.Add(this.rbVRML);
+            this.Controls.Add(this.buttonGo);
+            this.Controls.Add(this.rbXAML);
+            this.Controls.Add(this.buttonBrowse);
             this.Controls.Add(this.textBox1);
             this.Name = "FormNewShape";
-            this.Text = "FormNewShape";
+            this.ShowIcon = false;
+            this.Text = "Load";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -113,11 +118,10 @@
 
         #endregion
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button0;
+        private System.Windows.Forms.Button buttonBrowse;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog2;
-        private System.Windows.Forms.OpenFileDialog openFileDialog3;
-        private System.Windows.Forms.RadioButton radioButton4;
+        private System.Windows.Forms.RadioButton rbXAML;
+        private System.Windows.Forms.Button buttonGo;
+        private System.Windows.Forms.RadioButton rbVRML;
     }
 }

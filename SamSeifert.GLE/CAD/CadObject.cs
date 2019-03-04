@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using GL = SamSeifert.GLE.GLR;
-using SamSeifert.Utilities; using SamSeifert.Utilities.Maths;
+using SamSeifert.Utilities.Maths;
+using SamSeifert.Utilities.Extensions;
+using SamSeifert.GLE.Extensions;
 
 namespace SamSeifert.GLE.CAD
 {
@@ -14,8 +14,7 @@ namespace SamSeifert.GLE.CAD
     {
         public bool _BoolDisplay = true;
         public CadObject[] _Children = new CadObject[0];
-
-
+    
         public String _Name = "Untitled";
         public Matrix4 _Matrix = Matrix4.Identity;
         public ColorGL _Color = null;
@@ -24,20 +23,21 @@ namespace SamSeifert.GLE.CAD
         public uint[] _Indices;
 
         private bool _BoolUseTranslationAndRotation = false;
-        private bool _BoolSetupGL3 = false;
-        private bool _BoolSetupGL4 = false;
-        private int _IntList; // Used to support GL3
+        private bool _IsSetup = false;
         private int _IntInterleaveBufferID; // Used to support GL4
         private int _IntIndicesBufferID; // Used to support GL4
-
-        public enum GLType { GL3, GL4, UNK };
-        public GLType _GLType = GLType.UNK;
 
         private bool _BoundingSphereNeeded = true;
         private Vector3 _BoundingSphereCenter = Vector3.Zero;
         private float _BoundingSphereRadius = 0;
 
         internal Action AnonymousDraw = null;
+
+
+        /// <summary>
+        /// Null = don't cull face
+        /// </summary>
+        public CullFaceMode? _CullFaceMode = null;
 
         public CadObject(CadObject[] cos, String name = "Group")
         {
@@ -57,7 +57,7 @@ namespace SamSeifert.GLE.CAD
 
         public override string ToString()
         {
-            return this._Name + " " + this._GLType;
+            return this._Name;
         }
 
 
@@ -129,15 +129,9 @@ namespace SamSeifert.GLE.CAD
             }
             else
             {
-                if (this._BoolSetupGL3)
+                if (this._IsSetup)
                 {
-                    this._BoolSetupGL3 = false;
-                    GL.DeleteLists(this._IntList, 1);
-                }
-
-                if (this._BoolSetupGL4)
-                {
-                    this._BoolSetupGL4 = false;
+                    this._IsSetup = false;
                     GL.DeleteBuffers(1, ref this._IntIndicesBufferID);
                     GL.DeleteBuffers(1, ref this._IntInterleaveBufferID);
                     this._IntIndicesBufferID = 0;
@@ -163,8 +157,9 @@ namespace SamSeifert.GLE.CAD
         internal void InitializeWithVectorsAndNormals(Vector3[] v, Vector3[] n)
         {
             uint count;
-            if (Helpers.ConsolidateData(v, n, out count, out this._Vertices, out this._Normals, out this._Indices)) this.Initialize();
-            else this._GLType = GLType.UNK;
+            Helpers.ConsolidateData(v, n, out count, out this._Vertices, out this._Normals, out this._Indices).AssertTrue();
+            this.GLDelete();
+            this._Vertices.Length.AssertEquals(this._Normals.Length);
         }
 
         internal void InitializeWithVectorsAndNormalsSorted(Vector3[] v, Vector3[] n, uint[] ii)
@@ -172,29 +167,8 @@ namespace SamSeifert.GLE.CAD
             this._Vertices = v;
             this._Normals = n;
             this._Indices = ii;
-
-            this.Initialize();
-        }
-
-        internal void Initialize()
-        {
             this.GLDelete();
-
-            if (this._Vertices.Length != this._Normals.Length)
-            {
-                Console.WriteLine("CadObject." + System.Reflection.MethodBase.GetCurrentMethod().Name + " vertices and normals mismatch");
-                this._GLType = GLType.UNK;
-                return;
-            }
-
-            this._BoolSetupGL4 = this.SetupGL4();
-            if (this._BoolSetupGL4) this._GLType = GLType.GL4;
-            else
-            {
-                this._BoolSetupGL3 = this.SetupGL3();
-                if (this._BoolSetupGL3) this._GLType = GLType.GL3;
-                else this._GLType = GLType.UNK;
-            }
+            this._Vertices.Length.AssertEquals(this._Normals.Length);
         }
 
 
@@ -299,6 +273,7 @@ namespace SamSeifert.GLE.CAD
             }
         }
 
+
         private void Draw3(bool useColor)
         {
             if (this._Children.Length > 0)
@@ -310,31 +285,13 @@ namespace SamSeifert.GLE.CAD
             }
             else
             {
+                this._CullFaceMode?.sendToGL();
                 if (this.AnonymousDraw == null)
                 {
                     if ((useColor) && (this._Color != null)) this._Color.sendToGL();
 
-                    switch (this._GLType)
-                    {
-                        case GLType.UNK:
-                            {
-                                break;
-                            }
-                        case GLType.GL3:
-                            {
-                                if (this._BoolSetupGL3) this.DrawGL3();
-                                else if (this.SetupGL3()) this._BoolSetupGL3 = true;
-                                else this._GLType = GLType.UNK;
-                                break;
-                            }
-                        case GLType.GL4:
-                            {
-                                if (this._BoolSetupGL4) this.DrawGL4();
-                                else if (this.SetupGL4()) this._BoolSetupGL4 = true;
-                                else this._GLType = GLType.UNK;
-                                break;
-                            }
-                    }
+                    if (this._IsSetup) this.DrawGL4();
+                    else if (this.SetupGL()) this._IsSetup = true;
                 }
                 else AnonymousDraw();
             }
@@ -474,37 +431,7 @@ namespace SamSeifert.GLE.CAD
 
 
 
-
-
-
-
-
-
-        // GL Lists are Depracted in GL4
-        private bool SetupGL3()
-        {
-            this._IntList = GL.GenLists(1);
-            GL.NewList(this._IntList, ListMode.Compile);
-            {
-                GL.Begin(PrimitiveType.Triangles);
-                {
-                    foreach (var i in this._Indices)
-                    {
-                        GL.Normal3(this._Normals[i]);
-                        GL.Vertex3(this._Vertices[i]);
-                    }
-                }
-                GL.End();
-            }
-            GL.EndList();
-
-            return true;
-        }
-
-        private void DrawGL3()
-        {
-            GL.CallList(this._IntList);
-        }
+        
 
 
 
@@ -516,20 +443,7 @@ namespace SamSeifert.GLE.CAD
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        private bool SetupGL4()
+        private bool SetupGL()
         {
             var idata = new Vector3[_Vertices.Length * 2];
             for (int i = 0; i < _Vertices.Length; i ++)

@@ -214,8 +214,6 @@ namespace SamSeifert.GLE.Forms
         {
             var save = new List<String>();
 
-            if (co._GLType != CadObject.GLType.GL4) return save;
-
             const String match1 = "GeometryModel3D";
             const String match2 = "DiffuseMaterial";
             const String match3 = "SpecularMaterial";

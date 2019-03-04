@@ -47,7 +47,7 @@ namespace SamSeifert.GLE.CAD.Generator
             }
 
 
-            var co = SamSeifert.GLE.CAD.Generator.FromXaml.xamlModelVisual3D(
+            var co = xamlModelVisual3D(
                 parent,
                 xScale,
                 yScale,
@@ -65,6 +65,7 @@ namespace SamSeifert.GLE.CAD.Generator
             if (!reduceComplexity)
             {
                 co._Name = ObjectName;
+                co._CullFaceMode = OpenTK.Graphics.OpenGL.CullFaceMode.Back;
                 return co;
             }
 
@@ -117,6 +118,7 @@ namespace SamSeifert.GLE.CAD.Generator
             // Console.WriteLine("Combine Colors: " + old + " to " + all.Count);
 
             var ret = new CadObject(all.ToArray(), ObjectName);
+            ret._CullFaceMode = OpenTK.Graphics.OpenGL.CullFaceMode.Back;
             return ret;
         }
 

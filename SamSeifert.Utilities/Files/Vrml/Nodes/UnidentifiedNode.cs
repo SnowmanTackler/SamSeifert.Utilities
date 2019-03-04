@@ -2,7 +2,7 @@
 
 namespace SamSeifert.Utilities.Files.Vrml.Nodes
 {
-    internal class UnidentifiedNode : Node
+    public class UnidentifiedNode : Node
     {
         public readonly List<Node> children;
         public readonly string type;
@@ -16,6 +16,11 @@ namespace SamSeifert.Utilities.Files.Vrml.Nodes
             this.type = type;
             this.fieldNodes = fieldNodes;
             this.fieldAttributes = fieldAttributes;
+        }
+
+        public override ICollection<Node> Children()
+        {
+            return this.children;
         }
     }
 }

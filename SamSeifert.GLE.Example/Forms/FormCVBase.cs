@@ -69,8 +69,8 @@ namespace SamSeifert.GLE.Forms
                 this.glControl1.Height,
                 60,
                 true,
-                0.1f,
-                1000f,
+                ObserveDistance * 0.1f,
+                ObserveDistance * 2 + 100,
                 Matrix4.Identity).SendToGL();
 
             GL.Translate(0, 0, -ObserveDistance);

@@ -13,5 +13,13 @@ namespace SamSeifert.GLE.Extensions
         {
             return alpha * value_at_1 + (1 - alpha) * value_at_0;
         }
+
+
+        public static Vector3 NormalizedSafe(this Vector3 vec)
+        {
+            var lens = vec.Length;
+            if (lens == 0) return vec;
+            else return vec / lens;
+        }
     }
 }
