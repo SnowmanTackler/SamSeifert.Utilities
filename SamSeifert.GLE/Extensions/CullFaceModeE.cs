@@ -16,7 +16,7 @@ namespace SamSeifert.GLE.Extensions
             GL.CullFace(cfm);
         }
 
-        public static void sendToGL(this CullFaceMode? cfm)
+        public static void sendToGL(CullFaceMode? cfm)
         {
             if (cfm == null)
             {

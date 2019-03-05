@@ -105,7 +105,52 @@ namespace SamSeifert.GLE.CAD.Generator
             return co;
         }
 
+        public static CadObject CreateCylinder(Vector3 bot, Vector3 top, float radius, int section = 36)
+        {
+            var norm = (bot - top).Normalized();
 
+            Vector3 perp1, perp2;
+
+            {
+                Vector3 other = Vector3.UnitX;
+                if (Math.Abs(Vector3.Dot(other, norm)) > 0.707f)
+                    other = Vector3.UnitY;
+
+                perp1 = Vector3.Cross(other, norm).Normalized() * radius;
+                perp2 = Vector3.Cross(perp1, norm).Normalized() * radius;
+            }
+
+
+            List<Vector3> vs = new List<Vector3>();
+            List<Vector3> ns = new List<Vector3>();
+
+            for (int i = 0; i < section; i++)
+            {
+                var angle1 = (i + 0) * Math.PI * 2 / section;
+                var angle2 = (i + 1) * Math.PI * 2 / section;
+
+                var radial1 = perp1 * (float)Math.Cos(angle1) + perp2 * (float)Math.Sin(angle1);
+                var radial2 = perp1 * (float)Math.Cos(angle2) + perp2 * (float)Math.Sin(angle2);
+
+
+                vs.AddRange(new Vector3[] { bot, bot + radial2, bot + radial1 });
+                ns.AddRange(new Vector3[] { norm, norm, norm });
+                vs.AddRange(new Vector3[] { top, top + radial1, top + radial2 });
+                ns.AddRange(new Vector3[] { -norm, -norm, -norm });
+
+                vs.AddRange(new Vector3[] { bot + radial2, top + radial1, bot + radial1 });
+                ns.AddRange(new Vector3[] { radial2.Normalized(), radial1.Normalized(), radial1.Normalized() });
+
+                vs.AddRange(new Vector3[] { bot + radial2, top + radial2, top + radial1 });
+                ns.AddRange(new Vector3[] { radial2.Normalized(), radial2.Normalized(), radial1.Normalized() });
+
+
+            }
+
+            var co = new CadObject(vs.ToArray(), ns.ToArray(), "Cylinder");
+            co._CullFaceMode = OpenTK.Graphics.OpenGL.CullFaceMode.Back;
+            return co;
+        }
 
         private static void Face(
             Vector3 v1,

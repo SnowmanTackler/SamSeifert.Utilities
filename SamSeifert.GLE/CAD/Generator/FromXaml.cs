@@ -72,52 +72,7 @@ namespace SamSeifert.GLE.CAD.Generator
             co.GLDelete();
 
             // TAKE OUT TREE STRUCTURE AND MAKE SINGLE LEVEL
-            var all = co.ConsolidateMatrices();
-            int old = all.Count;
-
-            for (int i = 0; i < all.Count; i++)
-            {
-                var linq = all[i]._Vertices;
-                if ((linq == null) || (linq.Length == 0))
-                {
-                    all[i].GLDelete();
-                    all.RemoveAt(i--);
-                }
-                else all[i]._Children = new CadObject[0];
-            }
-
-            // Console.WriteLine("Removing Tree: " + old + " to " + all.Count);
-            old = all.Count;
-
-            // COMBINE COLORS
-            for (int i = 0; i < all.Count; i++)
-            {
-                ColorGL col = all[i]._Color;
-
-                var verts = new List<Vector3>();
-                var norms = new List<Vector3>();
-                var dices = new List<uint>();
-
-                for (int j = i; j < all.Count; j++)
-                {
-                    if (ColorGL.CheckMatch(all[i]._Color, all[j]._Color))
-                    {
-                        for (int dex = 0; dex < all[j]._Indices.Length; dex++)
-                            all[j]._Indices[dex] += (uint)verts.Count; // CHANGE INDICES
-
-                        verts.AddRange(all[j]._Vertices);
-                        norms.AddRange(all[j]._Normals);
-                        dices.AddRange(all[j]._Indices);
-
-                        if (i != j) all.RemoveAt(j--); // dont delete the first one!
-                    }
-                }
-
-                all[i].InitializeWithVectorsAndNormalsSorted(verts.ToArray(), norms.ToArray(), dices.ToArray());
-            }
-            // Console.WriteLine("Combine Colors: " + old + " to " + all.Count);
-
-            var ret = new CadObject(all.ToArray(), ObjectName);
+            var ret = co.ConsolidateMatrices().ConsolidateColors();
             ret._CullFaceMode = OpenTK.Graphics.OpenGL.CullFaceMode.Back;
             return ret;
         }

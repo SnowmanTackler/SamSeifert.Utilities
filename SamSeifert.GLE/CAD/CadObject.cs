@@ -297,7 +297,7 @@ namespace SamSeifert.GLE.CAD
             }
             else
             {
-                this._CullFaceMode?.sendToGL();
+                CullFaceModeE.sendToGL(this._CullFaceMode);
                 if (this.AnonymousDraw == null)
                 {
                     if ((useColor) && (this._Color != null)) this._Color.sendToGL();
@@ -512,14 +512,70 @@ namespace SamSeifert.GLE.CAD
 
 
 
-
-        
-
-        internal List<CadObject> ConsolidateMatrices()
+        public CadObject Center()
         {
+            Vector3 center;
+            float size;
+            this.GetBoundingSphere(out center, out size);
+            this.Transform(Matrix4.CreateTranslation(-center));
+            return this;
+        }
+
+        public CadObject ConsolidateColors()
+        {
+            this.GLDelete();
+
+            var all = new List<CadObject>(this._Children);
+
+            // COMBINE COLORS
+            for (int i = 0; i < all.Count; i++)
+            {
+                ColorGL col = all[i]._Color;
+
+                var verts = new List<Vector3>();
+                var norms = new List<Vector3>();
+                var dices = new List<uint>();
+
+                for (int j = i; j < all.Count; j++)
+                {
+                    if (ColorGL.CheckMatch(all[i]._Color, all[j]._Color))
+                    {
+                        for (int dex = 0; dex < all[j]._Indices.Length; dex++)
+                            all[j]._Indices[dex] += (uint)verts.Count; // CHANGE INDICES
+
+                        verts.AddRange(all[j]._Vertices);
+                        norms.AddRange(all[j]._Normals);
+                        dices.AddRange(all[j]._Indices);
+
+                        if (i != j) all.RemoveAt(j--); // dont delete the first one!
+                    }
+                }
+
+                all[i].InitializeWithVectorsAndNormalsSorted(verts.ToArray(), norms.ToArray(), dices.ToArray());
+            }
+
+            return new CadObject(all.ToArray(), this._Name);
+        }
+
+        public CadObject ConsolidateMatrices()
+        {
+            this.GLDelete();
+
             List<CadObject> all_objects = new List<CadObject>();
             this.ConsolidateMatrices(all_objects, Matrix4.Identity);
-            return all_objects;
+
+            for (int i = 0; i < all_objects.Count; i++)
+            {
+                var linq = all_objects[i]._Vertices;
+                if ((linq == null) || (linq.Length == 0))
+                {
+                    all_objects[i].GLDelete();
+                    all_objects.RemoveAt(i--);
+                }
+                else all_objects[i]._Children = new CadObject[0];
+            }
+
+            return new CadObject(all_objects.ToArray(), this._Name);
         }
 
         internal void ConsolidateMatrices(List<CadObject> all_objects, Matrix4 m4)
@@ -529,6 +585,7 @@ namespace SamSeifert.GLE.CAD
             {
                 m4 = this._Matrix * m4;
                 this._BoolUseTranslationAndRotation = false;
+                this._BoundingSphereNeeded = true;
                 this._Matrix = Matrix4.Identity;
             }
             foreach (var child in this._Children)

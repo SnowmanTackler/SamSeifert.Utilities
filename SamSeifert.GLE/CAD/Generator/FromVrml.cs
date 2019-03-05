@@ -72,13 +72,23 @@ namespace SamSeifert.GLE.CAD.Generator
 
             return mat;
         }
+        public static CadObject Create(Node node, bool simplify = true)
+        {
+            var ret = CreateP(node);
 
-        public static CadObject Create(Node node)
+            if (simplify)
+            {
+                ret = ret.Center().ConsolidateMatrices().ConsolidateColors();
+            }
+
+            return ret;
+        }
+        public static CadObject CreateP(Node node)
         {
             if (node == null)
                 return null;
 
-            var children = node.Children().Select(it => Create(it)).Where(it => it != null).ToArray();
+            var children = node.Children().Select(it => CreateP(it)).Where(it => it != null).ToArray();
             if (children.Length > 0)
             {
                 if (node is TransformNode)
@@ -125,18 +135,6 @@ namespace SamSeifert.GLE.CAD.Generator
                 if (shapeNode.Geometry is IndexedFaceSetNode)
                 {
                     var material = glColorForVrmlMaterial(shapeNode.Appearance?.Material);
-
-                    var image = shapeNode.Appearance?.Texture?.Data;
-
-                    if (image != null)
-                    {
-                        using (var bmp = BytesToBitmap(image))
-                        {
-                            var path = Path.Combine(Utilities.Misc.Util.GetExecutablePath(), "..", i++ + ".jpeg");
-                            Console.WriteLine(path);
-                            bmp.Save(path);
-                        }
-                    }
 
                     var geometry = shapeNode.Geometry as IndexedFaceSetNode;
                     
@@ -194,7 +192,7 @@ namespace SamSeifert.GLE.CAD.Generator
 
                 var norm = (c1 + c2 + c3 + c4).NormalizedSafe();
 
-                if (!geometry.CounterClockWise && geometry.Solid)
+                if (!geometry.CounterClockWise)
                 {
                     norm = -norm;
                 }
@@ -226,13 +224,13 @@ namespace SamSeifert.GLE.CAD.Generator
 
                 if (!geometry.CounterClockWise)
                 {
-                    verts.AddRange(new Vector3[] { v1, v2, v3, v1, v3, v4 });
-                    norms.AddRange(new Vector3[] { n1, n2, n3, n1, n3, n4 });
-                }
-                else // Counter clockwise
-                {
                     verts.AddRange(new Vector3[] { v1, v3, v2, v1, v4, v3 });
                     norms.AddRange(new Vector3[] { n1, n3, n2, n1, n4, n3 });
+                }
+                else // Clockwise
+                {
+                    verts.AddRange(new Vector3[] { v1, v2, v3, v1, v3, v4 });
+                    norms.AddRange(new Vector3[] { n1, n2, n3, n1, n3, n4 });
                 }
             }
 
@@ -254,22 +252,6 @@ namespace SamSeifert.GLE.CAD.Generator
             }
 
             return sum.NormalizedSafe();           
-        }
-
-        static int i = 0;
-        private static Bitmap BytesToBitmap(byte[,,] bytes)
-        {
-            bytes.GetLength(2).AssertEquals(3);
-            var width = bytes.GetLength(1);
-            var height = bytes.GetLength(0);
-
-            unsafe
-            {
-                fixed (byte* ptr = bytes)
-                {
-                    return new Bitmap(width, height, width * 3, System.Drawing.Imaging.PixelFormat.Format24bppRgb, new IntPtr(ptr));
-                }
-            }
         }
     }
 }
