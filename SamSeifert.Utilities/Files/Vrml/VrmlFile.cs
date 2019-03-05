@@ -86,6 +86,7 @@ namespace SamSeifert.Utilities.Files.Vrml
                             }
                         case ',':
                         case ' ':
+                        case '\r':
                         case '\n':
                             if (sb.Length != 0)
                             {

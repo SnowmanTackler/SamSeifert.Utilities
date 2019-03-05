@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ namespace SamSeifert.GLE
         /// </summary>
         /// <param name="vertices_loop"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Tuple<T, T>> EnumerateEdges<T>(IEnumerable<T> vertices_loop)
         {
             bool f = true;

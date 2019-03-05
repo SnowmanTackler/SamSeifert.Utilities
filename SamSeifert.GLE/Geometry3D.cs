@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,6 +19,7 @@ namespace SamSeifert.GLE
         /// <param name="p1"></param>
         /// <param name="p2"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool SameSide(Vector3 l1, Vector3 l2, Vector3 p1, Vector3 p2, Vector3 plane_normal)
         {
             p1 -= l1;
@@ -36,6 +38,7 @@ namespace SamSeifert.GLE
             /// <param name="sphere_radius"></param>
             /// <param name="polygon_vertices"></param>
             /// <returns></returns>
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static bool IntersectsPolygonConvex(Vector3 sphere_center, float sphere_radius, IEnumerable<Vector3> polygon_vertices)
             {
                 int count = 0;
@@ -99,14 +102,25 @@ namespace SamSeifert.GLE
         /// <summary>
         /// Non infinte lines
         /// </summary>
-        public static class LineSegment
+        public class LineSegment
         {
+            public readonly Vector3 _Point1;
+            public readonly Vector3 _Point2;
+
+            public LineSegment(Vector3 pt1, Vector3 pt2)
+            {
+                this._Point1 = pt1;
+                this._Point2 = pt2;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static float DistanceToPoint(Vector3 line_pt1, Vector3 line_pt2, Vector3 pt)
             {
                 Vector3 closest;
                 return DistanceToPoint(line_pt1, line_pt2, pt, out closest);
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static float DistanceToPoint(Vector3 line_pt1, Vector3 line_pt2, Vector3 pt, out Vector3 closest)
             {
                 var line_dir = line_pt2 - line_pt1;
@@ -137,6 +151,109 @@ namespace SamSeifert.GLE
                 {
                     closest = line_pt1 + dot * line_dir;
                     return (pt_dir - dot * line_dir).Length;
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public bool IntersectsTriangle(Triangle t, out Vector3 intersection)
+            {
+                return IntersectsTriangle(this._Point1, this._Point2, t._Point1, t._Point2, t._Point3, out intersection);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static bool IntersectsTriangle(Vector3 line_pt1, Vector3 line_pt2, Vector3 t1, Vector3 t2, Vector3 t3, out Vector3 intersection)
+            {
+                var triangle_norm = Vector3.Cross(t1 - t2, t3 - t2).Normalized();
+
+                var line_norm = (line_pt1 - line_pt2).Normalized();
+
+                var x = Vector3.Dot(t1 - line_pt1, triangle_norm) / Vector3.Dot(line_norm, triangle_norm);
+
+                intersection = line_pt1 + line_norm * x;
+
+                if (x <= 0) return false;
+                if (x >= (line_pt1 - line_pt2).Length) return false;
+
+                if (!SameSide(t1, t2, t3, intersection, triangle_norm)) return false;
+                if (!SameSide(t1, t3, t2, intersection, triangle_norm)) return false;
+                if (!SameSide(t2, t3, t1, intersection, triangle_norm)) return false;
+
+                return true;
+            }
+        }
+
+        public class Triangle
+        {
+            public readonly Vector3 _Point1;
+            public readonly Vector3 _Point2;
+            public readonly Vector3 _Point3;
+
+            public Triangle(Vector3 pt1, Vector3 pt2, Vector3 pt3)
+            {
+                this._Point1 = pt1;
+                this._Point2 = pt2;
+                this._Point3 = pt3;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public bool IntersectsLineSegment(LineSegment l, out Vector3 intersection)
+            {
+                return LineSegment.IntersectsTriangle(l._Point1, l._Point2, this._Point1, this._Point2, this._Point3, out intersection);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static bool IntersectsTriangle(Vector3 line_pt1, Vector3 line_pt2, Vector3 t1, Vector3 t2, Vector3 t3, out Vector3 intersection)
+            {
+                return LineSegment.IntersectsTriangle(line_pt1, line_pt2, t1, t2, t3, out intersection);
+            }
+        }
+
+        public class Cylinder
+        {
+            public readonly Vector3 _Point1;
+            public readonly Vector3 _Point2;
+            public readonly float _Radius;
+
+            public Cylinder(Vector3 pt1, Vector3 pt2, float cylinder_radius)
+            {
+                this._Point1 = pt1;
+                this._Point2 = pt2;
+                this._Radius = cylinder_radius;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public bool Contains(Vector3 pt)
+            {
+                return Contains(this._Point1, _Point2, this._Radius, pt);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static bool Contains(Vector3 cylinder_pt1, Vector3 cylinder_pt2, float cylinder_radius, Vector3 pt)
+            { 
+                var line_dir = cylinder_pt2 - cylinder_pt1;
+                var line_lens = line_dir.Length;
+                if (line_lens == 0)
+                {
+                    return false;
+                }
+
+                line_dir /= line_lens;
+
+                var pt_dir = pt - cylinder_pt1;
+
+                var dot = Vector3.Dot(line_dir, pt_dir);
+
+                if (dot < 0)
+                {
+                    return false;
+                }
+                else if (dot > line_lens)
+                {
+                    return false;
+                }
+                else
+                {
+                    return (pt_dir - dot * line_dir).Length <= cylinder_radius;
                 }
             }
         }

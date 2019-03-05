@@ -32,8 +32,7 @@ namespace SamSeifert.GLE.CAD
         private float _BoundingSphereRadius = 0;
 
         internal Action AnonymousDraw = null;
-
-
+        
         /// <summary>
         /// Null = don't cull face
         /// </summary>
@@ -90,16 +89,18 @@ namespace SamSeifert.GLE.CAD
             if (recursive) foreach (var e in this._Children) e.SetUseTranslationAndRotation(arg);
         }
 
-        public void SetAlpha(float a)
+        public CadObject SetAlpha(float a)
         {
             if (this._Color != null) this._Color.setAlpha(a);
             foreach (var e in this._Children) e.SetAlpha(a);
+            return this;
         }
 
-        public void SetColor(ColorGL c, bool recursive = true)
+        public CadObject SetColor(ColorGL c, bool recursive = true)
         {
             this._Color = c;
             if (recursive) foreach (var e in this._Children) e.SetColor(c, recursive);
+            return this;
         }
 
         public void SetBoundingSphere(Vector3 center, float radius)
@@ -124,6 +125,16 @@ namespace SamSeifert.GLE.CAD
                     yield return co;
         }
 
+        public IEnumerable<Geometry3D.Triangle> EnumerateFaces()
+        {
+            for (int i = 0; i < this._Indices.Length; i += 3)
+            {
+                yield return new Geometry3D.Triangle(
+                    this._Vertices[this._Indices[i + 0]],
+                    this._Vertices[this._Indices[i + 1]],
+                    this._Vertices[this._Indices[i + 2]]);
+            }
+        }
 
 
 
@@ -300,7 +311,29 @@ namespace SamSeifert.GLE.CAD
                 CullFaceModeE.sendToGL(this._CullFaceMode);
                 if (this.AnonymousDraw == null)
                 {
-                    if ((useColor) && (this._Color != null)) this._Color.sendToGL();
+                    if (useColor)
+                    {
+                        if (this._Color == null)
+                        {
+                            new ColorGL(System.Drawing.Color.LimeGreen).sendToGL();
+                            GL.Disable(EnableCap.Blend);
+                        }
+                        else if (this._Color.maxAlpha() < 0.001f)
+                        {
+                            return;
+                        }
+                        else if (this._Color.minAlpha() > 0.999f)
+                        {
+                            GL.Disable(EnableCap.Blend);
+                            this._Color.sendToGL();
+                        }
+                        else
+                        {
+                            GL.Enable(EnableCap.Blend);
+                            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+                            this._Color.sendToGL();
+                        }
+                    }
 
                     if (this._IsSetup) this.DrawGL4();
                     else if (this.SetupGL()) this._IsSetup = true;
