@@ -31,5 +31,15 @@ namespace SamSeifert.Utilities.Extensions
 
             return ret;
         }
+
+        public static T2 GetOrDefault<T1, T2>(this Dictionary<T1, T2> dict, T1 key, T2 defaultValue)
+        {
+            T2 def = default(T2);
+            if (dict.TryGetValue(key, out def))
+            {
+                return def;
+            }
+            else return defaultValue;
+        }
     }
 }
