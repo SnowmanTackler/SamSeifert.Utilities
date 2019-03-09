@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A52E8045-E20A-4898-8D14-44885524EA05}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SamSeifert.ComputerVision</RootNamespace>
+    <AssemblyName>SamSeifert.CSCV</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <Prefer32Bit>false</Prefer32Bit>
+    <Optimize>false</Optimize>
+    <CodeAnalysisRuleSet>..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\Team Tools\Static Analysis Tools\Rule Sets\MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MathNet.Numerics">
+      <HintPath>..\..\Mathnet.Numerics\out\lib\Net40\MathNet.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Blob.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Helpers.cs" />
+    <Compile Include="HistogramViewer.cs" />
+    <Compile Include="HoughTransform.cs" />
+    <Compile Include="MultipleImages\HeatEquation.cs" />
+    <Compile Include="MultipleImages\Sum.cs" />
+    <Compile Include="MultipleImages\Convolute.cs" />
+    <Compile Include="MultipleImages\ErodeDilate.cs" />
+    <Compile Include="MultipleImages\Helpers.cs" />
+    <Compile Include="MultipleImages\Product.cs" />
+    <Compile Include="SingleImage\Anonymous.cs" />
+    <Compile Include="SingleImage\AnonymousExtensions.cs" />
+    <Compile Include="SingleImage\BitsPerPixel.cs" />
+    <Compile Include="SingleImage\Crop.cs" />
+    <Compile Include="SingleImage\Gradient.cs" />
+    <Compile Include="SingleImage\Grayscale.cs" />
+    <Compile Include="SingleImage\HarrisCorners.cs" />
+    <Compile Include="SingleImage\Helpers.cs" />
+    <Compile Include="SingleImage\HistogramFlatten.cs" />
+    <Compile Include="SingleImage\HSL.cs" />
+    <Compile Include="SingleImage\HSV.cs" />
+    <Compile Include="SingleImage\HueFilter.cs" />
+    <Compile Include="SingleImage\KMeans.cs" />
+    <Compile Include="SingleImage\Noise.cs" />
+    <Compile Include="SingleImage\Padding.cs" />
+    <Compile Include="SingleImage\Resize.cs" />
+    <Compile Include="ImageAlgorithms.cs" />
+    <Compile Include="PointD.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Sect.cs" />
+    <Compile Include="SectArray.cs" />
+    <Compile Include="SectConstant.cs" />
+    <Compile Include="SectMask.cs" />
+    <Compile Include="Sizing.cs" />
+    <Compile Include="SectHolder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SamSeifert.Mathnet.Numerics\SamSeifert.MathNet.Numerics.Extensions.csproj">
+      <Project>{a74567df-9c75-4038-9785-cf6c0bbc17c4}</Project>
+      <Name>SamSeifert.MathNet.Numerics.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SamSeifert.Utilities\SamSeifert.Utilities.csproj">
+      <Project>{a9446cbe-818f-45f6-8894-068693da47ca}</Project>
+      <Name>SamSeifert.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

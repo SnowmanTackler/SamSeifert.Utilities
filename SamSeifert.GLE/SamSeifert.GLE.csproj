@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FB6E9B5D-7A20-45F2-9ADA-DDD12E70A967}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SamSeifert.GLE</RootNamespace>
+    <AssemblyName>SamSeifert.GLE</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="OpenTK">
+      <HintPath>..\..\OpenTK\src\OpenTK\bin\release\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CAD\CadObject.cs" />
+    <Compile Include="CAD\Generator\Anonymous.cs" />
+    <Compile Include="CAD\Generator\FromVrml.cs" />
+    <Compile Include="CAD\Generator\Generic.cs" />
+    <Compile Include="CAD\Generator\FromXaml.cs" />
+    <Compile Include="Extensions\CullFaceModeE.cs" />
+    <Compile Include="Extensions\Matrix4E.cs" />
+    <Compile Include="Extensions\Vector2E.cs" />
+    <Compile Include="Extensions\Vector3E.cs" />
+    <Compile Include="Extensions\Vector3Es.cs" />
+    <Compile Include="Geometry.cs" />
+    <Compile Include="Geometry3D.cs" />
+    <Compile Include="GLR_StaticVariables.cs" />
+    <Compile Include="CAD\Helpers.cs" />
+    <Compile Include="CameraDescriptor.cs" />
+    <Compile Include="CubeColorMap.cs" />
+    <Compile Include="CubeDepthMap.cs" />
+    <Compile Include="DeleteableObject.cs" />
+    <Compile Include="Draw.cs" />
+    <Compile Include="ColorGL.cs" />
+    <Compile Include="FrameBuffers.cs" />
+    <Compile Include="GLR.cs" />
+    <Compile Include="GLR_Matrix.cs" />
+    <Compile Include="GLR_Simple.cs" />
+    <Compile Include="IndicesBuffer.cs" />
+    <Compile Include="Geometry2D.cs" />
+    <Compile Include="Shaders.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SkyBox.cs" />
+    <Compile Include="Textures.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SamSeifert.Utilities\SamSeifert.Utilities.csproj">
+      <Project>{a9446cbe-818f-45f6-8894-068693da47ca}</Project>
+      <Name>SamSeifert.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
