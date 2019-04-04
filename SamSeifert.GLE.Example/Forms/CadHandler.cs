@@ -122,7 +122,7 @@ namespace SamSeifert.GLE.Forms
         {
             var cb = this.checkedListBox1;
 
-            foreach (var child in co.EnumerateAllChildren())
+            foreach (var child in co.EnumerateFamilyTree())
             {
                 cb.Items.Add(new CadObjectHolder(child.Item1, child.Item2));
                 cb.SetItemCheckState(cb.Items.Count - 1, CheckState.Checked);

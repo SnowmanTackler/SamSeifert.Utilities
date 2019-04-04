@@ -72,23 +72,13 @@ namespace SamSeifert.GLE.CAD.Generator
 
             return mat;
         }
-        public static CadObject Create(Node node, bool simplify = true)
-        {
-            var ret = CreateP(node);
 
-            if (simplify)
-            {
-                ret = ret.Center().ConsolidateMatrices().ConsolidateColors();
-            }
-
-            return ret;
-        }
-        public static CadObject CreateP(Node node)
+        public static CadObject Create(Node node)
         {
             if (node == null)
                 return null;
 
-            var children = node.Children().Select(it => CreateP(it)).Where(it => it != null).ToArray();
+            var children = node.Children().Select(it => Create(it)).Where(it => it != null).ToArray();
             if (children.Length > 0)
             {
                 if (node is TransformNode)

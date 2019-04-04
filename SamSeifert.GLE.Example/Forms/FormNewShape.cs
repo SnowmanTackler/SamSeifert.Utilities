@@ -83,7 +83,10 @@ namespace SamSeifert.GLE.Forms
                     }
                 case ".wrl":
                     {
-                        co = CAD.Generator.FromVrml.Create(VrmlFile.FromFile(this.textBox1.Text));
+                        co = CAD.Generator.FromVrml.Create(VrmlFile.FromFile(this.textBox1.Text))
+                            .Center()
+                            .ConsolidateMatrices()
+                            .ConsolidateColors();
                         break;
                     }
             }

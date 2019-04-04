@@ -59,7 +59,6 @@ namespace SamSeifert.GLE.CAD.Generator
                 reverseFace
                 );
 
-            co.SetUseTranslationAndRotation(true, false);
             co.Transform(Matrix4.CreateTranslation(xOff, yOff, zOff));
 
             if (!reduceComplexity)
@@ -400,7 +399,6 @@ namespace SamSeifert.GLE.CAD.Generator
                                                     if (points.Count == 16)
                                                     {
                                                         int i = 0;
-                                                        co.SetUseTranslationAndRotation(true, false);
                                                         co._Matrix.M11 = (float)points[i++];
                                                         co._Matrix.M12 = (float)points[i++];
                                                         co._Matrix.M13 = (float)points[i++];

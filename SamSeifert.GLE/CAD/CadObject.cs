@@ -22,7 +22,6 @@ namespace SamSeifert.GLE.CAD
         public Vector3[] _Normals;
         public uint[] _Indices;
 
-        private bool _BoolUseTranslationAndRotation = false;
         private bool _IsSetup = false;
         private int _IntInterleaveBufferID; // Used to support GL4
         private int _IntIndicesBufferID; // Used to support GL4
@@ -67,26 +66,23 @@ namespace SamSeifert.GLE.CAD
         {
             this._Matrix = m;
             this._BoundingSphereNeeded = true;
-            this._BoolUseTranslationAndRotation = true;
         }
 
-        public void Transform(Matrix4 m)
+        public CadObject Transform(Matrix4 m)
         {
-            this.Transform(ref m);
+            return this.Transform(ref m);
         }
 
-        public void Transform(ref Matrix4 m)
+        public CadObject Transform(ref Matrix4 m)
         {
             this._Matrix *= m;
             this._BoundingSphereNeeded = true;
-            this._BoolUseTranslationAndRotation = true;
+            return this;
         }
 
-        public void SetUseTranslationAndRotation(bool arg, bool recursive = true)
+        public void SetUseTranslationAndRotation(bool arg)
         {
             this._BoundingSphereNeeded = true;
-            this._BoolUseTranslationAndRotation = arg;
-            if (recursive) foreach (var e in this._Children) e.SetUseTranslationAndRotation(arg);
         }
 
         public CadObject SetAlpha(float a)
@@ -96,10 +92,9 @@ namespace SamSeifert.GLE.CAD
             return this;
         }
 
-        public CadObject SetColor(ColorGL c, bool recursive = true)
+        public CadObject SetColor(ColorGL c)
         {
             this._Color = c;
-            if (recursive) foreach (var e in this._Children) e.SetColor(c, recursive);
             return this;
         }
 
@@ -117,11 +112,11 @@ namespace SamSeifert.GLE.CAD
             radius = this._BoundingSphereRadius;
         }
 
-        public IEnumerable<Tuple<CadObject, int>> EnumerateAllChildren(int depth = 0)
+        public IEnumerable<Tuple<CadObject, int>> EnumerateFamilyTree(int depth = 0)
         {
             yield return new Tuple<CadObject, int>(this, depth);
             foreach (var child in this._Children)
-                foreach (var co in child.EnumerateAllChildren(depth + 1))
+                foreach (var co in child.EnumerateFamilyTree(depth + 1))
                     yield return co;
         }
 
@@ -209,14 +204,10 @@ namespace SamSeifert.GLE.CAD
         {
             if (this._BoolDisplay)
             {
-                if (this._BoolUseTranslationAndRotation)
-                {
-                    GL.PushMatrix();
-                    GL.MultMatrix(ref this._Matrix);
-                    this.Draw2(useColor);
-                    GL.PopMatrix();
-                }
-                else this.Draw2(useColor);
+                GL.PushMatrix();
+                GL.MultMatrix(ref this._Matrix);
+                this.Draw2(useColor);
+                GL.PopMatrix();
             }
         }
 
@@ -614,13 +605,9 @@ namespace SamSeifert.GLE.CAD
         internal void ConsolidateMatrices(List<CadObject> all_objects, Matrix4 m4)
         {
             all_objects.Add(this);
-            if (this._BoolUseTranslationAndRotation)
-            {
-                m4 = this._Matrix * m4;
-                this._BoolUseTranslationAndRotation = false;
-                this._BoundingSphereNeeded = true;
-                this._Matrix = Matrix4.Identity;
-            }
+            m4 = this._Matrix * m4;
+            this._BoundingSphereNeeded = true;
+            this._Matrix = Matrix4.Identity;
             foreach (var child in this._Children)
             {
                 child.ConsolidateMatrices(all_objects, m4);
@@ -657,11 +644,11 @@ namespace SamSeifert.GLE.CAD
                     t.Z = _Normals[i].Z;
                     t.W = 0;
 
-                    t = Vector4.Transform(t, m4);
+                    var n = Vector4.Transform(t, m4).Xyz.NormalizedSafe();
 
-                    _Normals[i].X = t.X;
-                    _Normals[i].Y = t.Y;
-                    _Normals[i].Z = t.Z;
+                    _Normals[i].X = n.X;
+                    _Normals[i].Y = n.Y;
+                    _Normals[i].Z = n.Z;
                 }
             }
         }
