@@ -44,5 +44,31 @@ namespace SamSeifert.Utilities.Extensions
             jd["FormWindowState"] = Convert.ToInt32((f.WindowState == FormWindowState.Minimized) ? FormWindowState.Normal : f.WindowState);
             TextSettings.Save(file_name, jd.ToString());
         }
+
+        public static void CloseWithRepeat(this Form f, int millisForRepeat) {
+
+            FormClosedEventHandler closeHandler = null;
+            EventHandler tickHandler = null;
+
+            tickHandler = (Object sender, EventArgs e) =>
+            {
+                f.Close();
+            };
+
+            Timer t = new Timer();
+
+            closeHandler = (Object sender, FormClosedEventArgs e) =>
+            {
+                f.FormClosed -= closeHandler;
+                t.Tick -= tickHandler;
+                t.Stop();
+                t.Dispose();
+            };
+
+            f.FormClosed += closeHandler;
+            t.Tick += tickHandler;
+            t.Interval = millisForRepeat;
+            t.Start();
+        }
     }
 }

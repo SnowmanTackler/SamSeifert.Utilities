@@ -49,6 +49,5 @@ namespace SamSeifert.Utilities.Extensions
             }
             else return defaultValue;
         }
-
     }
 }

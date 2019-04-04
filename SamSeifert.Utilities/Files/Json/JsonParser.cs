@@ -39,8 +39,8 @@ namespace SamSeifert.Utilities.Files.Json
             }
             cw('"');
         }
-
-        internal static String ParseString(StreamReader sr)
+        
+        public static String ParseString(StreamReader sr)
         {
             StringBuilder sb = new StringBuilder();
 

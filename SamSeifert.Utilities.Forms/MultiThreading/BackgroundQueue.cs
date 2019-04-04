@@ -10,8 +10,28 @@ namespace SamSeifert.Utilities.MultiThreading
 {
     public class BackgroundQueue
     {
+        /*
+         * Calling dispose on this item before it runs will cause it not to run.
+         * It won't cancel it if it's already running
+         */
+        private class BackgroundQueueItem : IDisposable
+        {
+            public volatile bool _Cancel = false;
+            public readonly BackgroundQueueMethod _Method;
+
+            public void Dispose()
+            {
+                this._Cancel = true;
+            }
+
+            public BackgroundQueueItem(BackgroundQueueMethod meth)
+            {
+                this._Method = meth;
+            }
+        }
+
         private readonly Thread _Thread;
-        private readonly Queue<BackgroundQueueMethod> _Queue = new Queue<BackgroundQueueMethod>();
+        private readonly Queue<BackgroundQueueItem> _Queue = new Queue<BackgroundQueueItem>();
         private bool _Queue_CurrentlyWorking = false;
 
         private volatile bool _ShouldContinue = true;
@@ -42,39 +62,41 @@ namespace SamSeifert.Utilities.MultiThreading
             }
         }
 
-        private void Enqueue(BackgroundQueueMethod meth)
+        private IDisposable Enqueue(BackgroundQueueMethod meth)
         {
+            var item = new BackgroundQueueItem(meth);
             lock (this._Queue)
             {
-                this._Queue.Enqueue(meth);
+                this._Queue.Enqueue(item);
                 Monitor.Pulse(this._Queue);
             }
+            return item;
         }
 
-        public void Enqueue(ParameterizedBackgroundThreadMethod meth, object param)
+        public IDisposable Enqueue(ParameterizedBackgroundThreadMethod meth, object param)
         {
-            this.Enqueue((Form f, ContinueCheck continue_on) =>
+            return this.Enqueue((Form f, ContinueCheck continue_on) =>
             {
                 meth(continue_on, param);
             });
         }
 
-        public void Enqueue(BackgroundThreadMethod meth)
+        public IDisposable Enqueue(BackgroundThreadMethod meth)
         {
-            this.Enqueue((Form f, ContinueCheck continue_on) =>
+            return this.Enqueue((Form f, ContinueCheck continue_on) =>
             {
                 meth(continue_on);
             });
         }
 
-        public void Enqueue(ParameterizedBackgroundThreadMethodOut meth, object param, BackgroundThreadFinisher finish)
+        public IDisposable Enqueue(ParameterizedBackgroundThreadMethodOut meth, object param, BackgroundThreadFinisher finish)
         {
-            this.Enqueue((ContinueCheck continue_on) => { return meth(continue_on, param); }, finish);
+            return this.Enqueue((ContinueCheck continue_on) => { return meth(continue_on, param); }, finish);
         }
 
-        public void Enqueue(BackgroundThreadMethodOut meth, BackgroundThreadFinisher finish)
+        public IDisposable Enqueue(BackgroundThreadMethodOut meth, BackgroundThreadFinisher finish)
         {
-            this.Enqueue((Form f, ContinueCheck continue_on) =>
+            return this.Enqueue((Form f, ContinueCheck continue_on) =>
             {
                 var ob = meth(continue_on);
                 f.Invoke(finish, ob);
@@ -93,7 +115,7 @@ namespace SamSeifert.Utilities.MultiThreading
 
             while (this._ShouldContinueMethod())
             {
-                BackgroundQueueMethod btm = null;
+                BackgroundQueueItem btm = null;
 
                 lock (this._Queue)
                 {
@@ -111,10 +133,13 @@ namespace SamSeifert.Utilities.MultiThreading
 
                 if (btm != null)
                 {
-                    btm(form, this._ShouldContinueMethod);
+                    if (!btm._Cancel)
+                    {
+                        btm._Method(form, this._ShouldContinueMethod);
 
-                    lock (this._Queue)
-                        this._Queue_CurrentlyWorking = false;
+                        lock (this._Queue)
+                            this._Queue_CurrentlyWorking = false;
+                    }
                 }
             }
 
