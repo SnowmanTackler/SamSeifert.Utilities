@@ -261,7 +261,10 @@ namespace SamSeifert.ComputerVision
         {
             var ns = Sizing.fitAinB(this.getPrefferedSize(), new Size(s.Width, s.Height));
 
-            Bitmap newB = new Bitmap(ns.Width, ns.Height, PixelFormat.Format24bppRgb);
+            Bitmap newB = new Bitmap(
+                Math.Max(1, ns.Width), 
+                Math.Max(1, ns.Height),
+                PixelFormat.Format24bppRgb);
 
             this.RefreshImage(ref newB, anonFunc);
 
@@ -418,8 +421,11 @@ namespace SamSeifert.ComputerVision
 
                             for (int y = 0; y < bmp.Height; y++)
                             {
-                                yAdj = y * (sz.Height - 1);
-                                yAdj /= (bmp.Height - 1);
+                                yAdj =  y * (sz.Height - 1);
+                                
+                                if (sz.Height > 1)
+                                    yAdj /= (bmp.Height - 1);
+
                                 yAdj2 = yAdj % 1;
 
                                 yUp = (int)Math.Ceiling((double)yAdj);
@@ -430,7 +436,10 @@ namespace SamSeifert.ComputerVision
                                 for (x = 0, xx = 0; x < bmp.Width; x++, xx += 3)
                                 {
                                     xAdj = x * (sz.Width - 1);
-                                    xAdj /= (bmp.Width - 1);
+
+                                    if (sz.Width > 1)
+                                        xAdj /= (bmp.Width - 1);
+
                                     xAdj2 = xAdj % 1;
                                     xUp = (int)Math.Ceiling((double)xAdj);
                                     xDown = (int)xAdj;
