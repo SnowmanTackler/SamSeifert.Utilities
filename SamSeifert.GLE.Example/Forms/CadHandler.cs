@@ -98,12 +98,35 @@ namespace SamSeifert.GLE.Forms
             if (co != null) new FormSaveAs(co).ShowDialog();
         }
 
-        public void addParts(CadObject[] list)
+
+        internal class CadObjectHolder
+        {
+            public readonly int indent;
+            public readonly CadObject held;
+            public readonly String name;
+
+            public CadObjectHolder(CadObject co, int indent)
+            {
+                this.indent = indent;
+                this.held = co;
+                this.name = "".PadLeft(indent * 2) + (co._Name ?? "?");
+            }
+
+            public override string ToString()
+            {
+                return this.name;
+            }
+        }
+
+        public void addParts(CadObject co)
         {
             var cb = this.checkedListBox1;
-            int cc = cb.Items.Count;
-            cb.Items.AddRange(list);
-            for (int i = 0; i < list.Length; i++) cb.SetItemCheckState(cc + i, CheckState.Checked);
+
+            foreach (var child in co.EnumerateFamilyTree())
+            {
+                cb.Items.Add(new CadObjectHolder(child.Item1, child.Item2));
+                cb.SetItemCheckState(cb.Items.Count - 1, CheckState.Checked);
+            }
         }
 
 
@@ -271,10 +294,10 @@ namespace SamSeifert.GLE.Forms
             }
             else
             {
-                var co = this.checkedListBox1.Items[e.Index] as CadObject;
-                if (co != null)
+                var co = this.checkedListBox1.Items[e.Index] as CadObjectHolder;
+                if (co?.held != null)
                 {
-                    co._BoolDisplay = e.NewValue == CheckState.Checked;
+                    co.held._BoolDisplay = e.NewValue == CheckState.Checked;
                 }
             }
         }

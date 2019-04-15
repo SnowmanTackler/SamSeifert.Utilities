@@ -61,6 +61,16 @@ namespace SamSeifert.GLE
             this._Specular[3] = alpha;
         }
 
+        public float minAlpha()
+        {
+            return new float[] { this._Ambient[3], this._Diffuse[3], this._Emission[3], this._Specular[3] }.Min();
+        }
+
+        public float maxAlpha()
+        {
+            return new float[] { this._Ambient[3], this._Diffuse[3], this._Emission[3], this._Specular[3] }.Max();
+        }
+
         public void sendToGL()
         {
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Ambient, this._Ambient);
@@ -120,7 +130,7 @@ namespace SamSeifert.GLE
             }
         }
 
-        public void setColorParams(float a = 1.75f, float d = 1.75f, float e = 0, float s = 0)
+        public void setColorParams(float a = 0.75f, float d = 0.75f, float e = 0, float s = 0)
         {
             this._Ambient[0] = a * this.r;
             this._Ambient[1] = a * this.g;

@@ -6,6 +6,8 @@ using System.Text;
 
 using SamSeifert.Utilities.Files.Json;
 using OpenTK;
+using SamSeifert.Utilities.Extensions;
+using SamSeifert.GLE.Extensions;
 
 namespace SamSeifert.GLE.CAD.Generator
 {
@@ -105,6 +107,131 @@ namespace SamSeifert.GLE.CAD.Generator
             return co;
         }
 
+
+        public static CadObject CreateCylinder(Geometry3D.Cylinder c, int section = 36)
+        {
+            return CreateCylinder(c._Point1, c._Point2, c._Radius, section);
+        }
+
+        public static CadObject CreateCylinder(Vector3 bot, Vector3 top, float radius, int section = 36)
+        {
+            var norm = (bot - top).Normalized();
+
+            Vector3 perp1, perp2;
+
+            {
+                perp1 = norm.Perpindicular() * radius;
+                perp2 = Vector3.Cross(perp1, norm).Normalized() * radius;
+            }
+
+
+            List<Vector3> vs = new List<Vector3>();
+            List<Vector3> ns = new List<Vector3>();
+
+            for (int i = 0; i < section; i++)
+            {
+                var angle1 = (i + 0) * Math.PI * 2 / section;
+                var angle2 = (i + 1) * Math.PI * 2 / section;
+
+                var radial1 = perp1 * (float)Math.Cos(angle1) + perp2 * (float)Math.Sin(angle1);
+                var radial2 = perp1 * (float)Math.Cos(angle2) + perp2 * (float)Math.Sin(angle2);
+
+                vs.AddRange(new Vector3[] { bot, bot + radial2, bot + radial1 });
+                ns.AddRange(new Vector3[] { norm, norm, norm });
+                vs.AddRange(new Vector3[] { top, top + radial1, top + radial2 });
+                ns.AddRange(new Vector3[] { -norm, -norm, -norm });
+
+                vs.AddRange(new Vector3[] { bot + radial2, top + radial1, bot + radial1 });
+                ns.AddRange(new Vector3[] { radial2.Normalized(), radial1.Normalized(), radial1.Normalized() });
+
+                vs.AddRange(new Vector3[] { bot + radial2, top + radial2, top + radial1 });
+                ns.AddRange(new Vector3[] { radial2.Normalized(), radial2.Normalized(), radial1.Normalized() });
+            }
+
+            var co = new CadObject(vs.ToArray(), ns.ToArray(), "Cylinder");
+            co._CullFaceMode = OpenTK.Graphics.OpenGL.CullFaceMode.Back;
+            return co;
+        }
+
+        public static CadObject CreateCylinders(Vector3[] fiberPath, float radius, int section = 36)
+        {
+            (fiberPath.Length > 1).AssertTrue();
+
+            var norm = (fiberPath[1] - fiberPath[0]).Normalized();
+
+            Vector3 perp_up, perp_right;
+
+            {
+                perp_up = norm.Perpindicular() * radius;
+                perp_right = Vector3.Cross(norm, perp_up).Normalized() * radius;
+            }
+
+            List<Vector3> vs = new List<Vector3>();
+            List<Vector3> ns = new List<Vector3>();
+
+
+            for (int i = 0; i < section; i++)
+            {
+                var angle1 = (i + 0) * Math.PI * 2 / section;
+                var angle2 = (i + 1) * Math.PI * 2 / section;
+
+                var radial1 = perp_up * (float)Math.Cos(angle1) + perp_right * (float)Math.Sin(angle1);
+                var radial2 = perp_up * (float)Math.Cos(angle2) + perp_right * (float)Math.Sin(angle2);
+
+                var pt = fiberPath.First();
+                vs.AddRange(new Vector3[] { pt, pt + radial2, pt + radial1 });
+                ns.AddRange(new Vector3[] { -norm, -norm, -norm });
+            }
+
+            for (int j = 0; j < fiberPath.Length - 1; j++)
+            {
+                var new_norm = (fiberPath[j+1] - fiberPath[j]).Normalized();
+                var new_perp_up = Vector3.Cross(perp_right, new_norm);
+                var new_perp_right = Vector3.Cross(new_norm, new_perp_up);
+
+                for (int i = 0; i < section; i++)
+                {
+                    var angle1 = (i + 0) * Math.PI * 2 / section;
+                    var angle2 = (i + 1) * Math.PI * 2 / section;
+
+                    var radial1_at_j0 = perp_up * (float)Math.Cos(angle1) + perp_right * (float)Math.Sin(angle1);
+                    var radial2_at_j0 = perp_up * (float)Math.Cos(angle2) + perp_right * (float)Math.Sin(angle2);
+                    var radial1_at_j1 = new_perp_up * (float)Math.Cos(angle1) + new_perp_right * (float)Math.Sin(angle1);
+                    var radial2_at_j1 = new_perp_up * (float)Math.Cos(angle2) + new_perp_right * (float)Math.Sin(angle2);
+
+                    var j0 = fiberPath[j + 0];
+                    var j1 = fiberPath[j + 1];
+
+                    vs.AddRange(new Vector3[] { j0 + radial2_at_j0, j1 + radial1_at_j1, j0 + radial1_at_j0 });
+                    ns.AddRange(new Vector3[] { radial2_at_j0.Normalized(), radial1_at_j1.Normalized(), radial1_at_j0.Normalized() });
+
+                    vs.AddRange(new Vector3[] { j0 + radial2_at_j0, j1 + radial2_at_j1, j1 + radial1_at_j1 });
+                    ns.AddRange(new Vector3[] { radial2_at_j0.Normalized(), radial2_at_j1.Normalized(), radial1_at_j1.Normalized() });
+                }
+
+                norm = new_norm;
+                perp_up = new_perp_up;
+                perp_right = new_perp_right;           
+            }
+
+            for (int i = 0; i < section; i++)
+            {
+                var angle1 = (i + 0) * Math.PI * 2 / section;
+                var angle2 = (i + 1) * Math.PI * 2 / section;
+
+                var radial1 = perp_up * (float)Math.Cos(angle1) + perp_right * (float)Math.Sin(angle1);
+                var radial2 = perp_up * (float)Math.Cos(angle2) + perp_right * (float)Math.Sin(angle2);
+
+                var pt = fiberPath.Last();
+                vs.AddRange(new Vector3[] { pt, pt + radial1, pt + radial2 });
+                ns.AddRange(new Vector3[] { norm, norm, norm });
+            }
+
+
+            var co = new CadObject(vs.ToArray(), ns.ToArray(), "Cylinder");
+            co._CullFaceMode = OpenTK.Graphics.OpenGL.CullFaceMode.Back;
+            return co;
+        }
 
 
         private static void Face(

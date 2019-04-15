@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using GL = SamSeifert.GLE.GLR;
-using SamSeifert.Utilities; using SamSeifert.Utilities.Maths;
+using SamSeifert.Utilities.Maths;
+using SamSeifert.Utilities.Extensions;
+using SamSeifert.GLE.Extensions;
 
 namespace SamSeifert.GLE.CAD
 {
@@ -15,7 +15,6 @@ namespace SamSeifert.GLE.CAD
         public bool _BoolDisplay = true;
         public CadObject[] _Children = new CadObject[0];
 
-
         public String _Name = "Untitled";
         public Matrix4 _Matrix = Matrix4.Identity;
         public ColorGL _Color = null;
@@ -23,21 +22,20 @@ namespace SamSeifert.GLE.CAD
         public Vector3[] _Normals;
         public uint[] _Indices;
 
-        private bool _BoolUseTranslationAndRotation = false;
-        private bool _BoolSetupGL3 = false;
-        private bool _BoolSetupGL4 = false;
-        private int _IntList; // Used to support GL3
+        private bool _IsSetup = false;
         private int _IntInterleaveBufferID; // Used to support GL4
         private int _IntIndicesBufferID; // Used to support GL4
-
-        public enum GLType { GL3, GL4, UNK };
-        public GLType _GLType = GLType.UNK;
 
         private bool _BoundingSphereNeeded = true;
         private Vector3 _BoundingSphereCenter = Vector3.Zero;
         private float _BoundingSphereRadius = 0;
 
         internal Action AnonymousDraw = null;
+        
+        /// <summary>
+        /// Null = don't cull face
+        /// </summary>
+        public CullFaceMode? _CullFaceMode = null;
 
         public CadObject(CadObject[] cos, String name = "Group")
         {
@@ -57,7 +55,7 @@ namespace SamSeifert.GLE.CAD
 
         public override string ToString()
         {
-            return this._Name + " " + this._GLType;
+            return this._Name;
         }
 
 
@@ -67,36 +65,37 @@ namespace SamSeifert.GLE.CAD
         public void SetMatrix(Matrix4 m)
         {
             this._Matrix = m;
-            this._BoolUseTranslationAndRotation = true;
+            this._BoundingSphereNeeded = true;
         }
 
-        public void Transform(Matrix4 m)
+        public CadObject Transform(Matrix4 m)
         {
-            this.Transform(ref m);
+            return this.Transform(ref m);
         }
 
-        public void Transform(ref Matrix4 m)
+        public CadObject Transform(ref Matrix4 m)
         {
             this._Matrix *= m;
-            this._BoolUseTranslationAndRotation = true;
+            this._BoundingSphereNeeded = true;
+            return this;
         }
 
-        public void SetUseTranslationAndRotation(bool arg, bool recursive = true)
+        public void SetUseTranslationAndRotation(bool arg)
         {
-            this._BoolUseTranslationAndRotation = arg;
-            if (recursive) foreach (var e in this._Children) e.SetUseTranslationAndRotation(arg);
+            this._BoundingSphereNeeded = true;
         }
 
-        public void SetAlpha(float a)
+        public CadObject SetAlpha(float a)
         {
             if (this._Color != null) this._Color.setAlpha(a);
             foreach (var e in this._Children) e.SetAlpha(a);
+            return this;
         }
 
-        public void SetColor(ColorGL c, bool recursive = true)
+        public CadObject SetColor(ColorGL c)
         {
             this._Color = c;
-            if (recursive) foreach (var e in this._Children) e.SetColor(c, recursive);
+            return this;
         }
 
         public void SetBoundingSphere(Vector3 center, float radius)
@@ -111,6 +110,25 @@ namespace SamSeifert.GLE.CAD
             this.UpdateBoundingSphere();
             center =  (this._Matrix * new Vector4(this._BoundingSphereCenter, 1)).Xyz;
             radius = this._BoundingSphereRadius;
+        }
+
+        public IEnumerable<Tuple<CadObject, int>> EnumerateFamilyTree(int depth = 0)
+        {
+            yield return new Tuple<CadObject, int>(this, depth);
+            foreach (var child in this._Children)
+                foreach (var co in child.EnumerateFamilyTree(depth + 1))
+                    yield return co;
+        }
+
+        public IEnumerable<Geometry3D.Triangle> EnumerateFaces()
+        {
+            for (int i = 0; i < this._Indices.Length; i += 3)
+            {
+                yield return new Geometry3D.Triangle(
+                    this._Vertices[this._Indices[i + 0]],
+                    this._Vertices[this._Indices[i + 1]],
+                    this._Vertices[this._Indices[i + 2]]);
+            }
         }
 
 
@@ -129,15 +147,9 @@ namespace SamSeifert.GLE.CAD
             }
             else
             {
-                if (this._BoolSetupGL3)
+                if (this._IsSetup)
                 {
-                    this._BoolSetupGL3 = false;
-                    GL.DeleteLists(this._IntList, 1);
-                }
-
-                if (this._BoolSetupGL4)
-                {
-                    this._BoolSetupGL4 = false;
+                    this._IsSetup = false;
                     GL.DeleteBuffers(1, ref this._IntIndicesBufferID);
                     GL.DeleteBuffers(1, ref this._IntInterleaveBufferID);
                     this._IntIndicesBufferID = 0;
@@ -163,8 +175,9 @@ namespace SamSeifert.GLE.CAD
         internal void InitializeWithVectorsAndNormals(Vector3[] v, Vector3[] n)
         {
             uint count;
-            if (Helpers.ConsolidateData(v, n, out count, out this._Vertices, out this._Normals, out this._Indices)) this.Initialize();
-            else this._GLType = GLType.UNK;
+            Helpers.ConsolidateData(v, n, out count, out this._Vertices, out this._Normals, out this._Indices).AssertTrue();
+            this.GLDelete();
+            this._Vertices.Length.AssertEquals(this._Normals.Length);
         }
 
         internal void InitializeWithVectorsAndNormalsSorted(Vector3[] v, Vector3[] n, uint[] ii)
@@ -172,29 +185,8 @@ namespace SamSeifert.GLE.CAD
             this._Vertices = v;
             this._Normals = n;
             this._Indices = ii;
-
-            this.Initialize();
-        }
-
-        internal void Initialize()
-        {
             this.GLDelete();
-
-            if (this._Vertices.Length != this._Normals.Length)
-            {
-                Console.WriteLine("CadObject." + System.Reflection.MethodBase.GetCurrentMethod().Name + " vertices and normals mismatch");
-                this._GLType = GLType.UNK;
-                return;
-            }
-
-            this._BoolSetupGL4 = this.SetupGL4();
-            if (this._BoolSetupGL4) this._GLType = GLType.GL4;
-            else
-            {
-                this._BoolSetupGL3 = this.SetupGL3();
-                if (this._BoolSetupGL3) this._GLType = GLType.GL3;
-                else this._GLType = GLType.UNK;
-            }
+            this._Vertices.Length.AssertEquals(this._Normals.Length);
         }
 
 
@@ -212,14 +204,10 @@ namespace SamSeifert.GLE.CAD
         {
             if (this._BoolDisplay)
             {
-                if (this._BoolUseTranslationAndRotation)
-                {
-                    GL.PushMatrix();
-                    GL.MultMatrix(ref this._Matrix);
-                    this.Draw2(useColor);
-                    GL.PopMatrix();
-                }
-                else this.Draw2(useColor);
+                GL.PushMatrix();
+                GL.MultMatrix(ref this._Matrix);
+                this.Draw2(useColor);
+                GL.PopMatrix();
             }
         }
 
@@ -299,6 +287,7 @@ namespace SamSeifert.GLE.CAD
             }
         }
 
+
         private void Draw3(bool useColor)
         {
             if (this._Children.Length > 0)
@@ -310,31 +299,35 @@ namespace SamSeifert.GLE.CAD
             }
             else
             {
+                CullFaceModeE.sendToGL(this._CullFaceMode);
                 if (this.AnonymousDraw == null)
                 {
-                    if ((useColor) && (this._Color != null)) this._Color.sendToGL();
-
-                    switch (this._GLType)
+                    if (useColor)
                     {
-                        case GLType.UNK:
-                            {
-                                break;
-                            }
-                        case GLType.GL3:
-                            {
-                                if (this._BoolSetupGL3) this.DrawGL3();
-                                else if (this.SetupGL3()) this._BoolSetupGL3 = true;
-                                else this._GLType = GLType.UNK;
-                                break;
-                            }
-                        case GLType.GL4:
-                            {
-                                if (this._BoolSetupGL4) this.DrawGL4();
-                                else if (this.SetupGL4()) this._BoolSetupGL4 = true;
-                                else this._GLType = GLType.UNK;
-                                break;
-                            }
+                        if (this._Color == null)
+                        {
+                            new ColorGL(System.Drawing.Color.LimeGreen).sendToGL();
+                            GL.Disable(EnableCap.Blend);
+                        }
+                        else if (this._Color.maxAlpha() < 0.001f)
+                        {
+                            return;
+                        }
+                        else if (this._Color.minAlpha() > 0.999f)
+                        {
+                            GL.Disable(EnableCap.Blend);
+                            this._Color.sendToGL();
+                        }
+                        else
+                        {
+                            GL.Enable(EnableCap.Blend);
+                            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+                            this._Color.sendToGL();
+                        }
                     }
+
+                    if (this._IsSetup) this.DrawGL4();
+                    else if (this.SetupGL()) this._IsSetup = true;
                 }
                 else AnonymousDraw();
             }
@@ -474,37 +467,7 @@ namespace SamSeifert.GLE.CAD
 
 
 
-
-
-
-
-
-
-        // GL Lists are Depracted in GL4
-        private bool SetupGL3()
-        {
-            this._IntList = GL.GenLists(1);
-            GL.NewList(this._IntList, ListMode.Compile);
-            {
-                GL.Begin(PrimitiveType.Triangles);
-                {
-                    foreach (var i in this._Indices)
-                    {
-                        GL.Normal3(this._Normals[i]);
-                        GL.Vertex3(this._Vertices[i]);
-                    }
-                }
-                GL.End();
-            }
-            GL.EndList();
-
-            return true;
-        }
-
-        private void DrawGL3()
-        {
-            GL.CallList(this._IntList);
-        }
+        
 
 
 
@@ -516,20 +479,7 @@ namespace SamSeifert.GLE.CAD
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        private bool SetupGL4()
+        private bool SetupGL()
         {
             var idata = new Vector3[_Vertices.Length * 2];
             for (int i = 0; i < _Vertices.Length; i ++)
@@ -586,25 +536,78 @@ namespace SamSeifert.GLE.CAD
 
 
 
-
-        
-
-        internal List<CadObject> ConsolidateMatrices()
+        public CadObject Center()
         {
+            Vector3 center;
+            float size;
+            this.GetBoundingSphere(out center, out size);
+            this.Transform(Matrix4.CreateTranslation(-center));
+            return this;
+        }
+
+        public CadObject ConsolidateColors()
+        {
+            this.GLDelete();
+
+            var all = new List<CadObject>(this._Children);
+
+            // COMBINE COLORS
+            for (int i = 0; i < all.Count; i++)
+            {
+                ColorGL col = all[i]._Color;
+
+                var verts = new List<Vector3>();
+                var norms = new List<Vector3>();
+                var dices = new List<uint>();
+
+                for (int j = i; j < all.Count; j++)
+                {
+                    if (ColorGL.CheckMatch(all[i]._Color, all[j]._Color))
+                    {
+                        for (int dex = 0; dex < all[j]._Indices.Length; dex++)
+                            all[j]._Indices[dex] += (uint)verts.Count; // CHANGE INDICES
+
+                        verts.AddRange(all[j]._Vertices);
+                        norms.AddRange(all[j]._Normals);
+                        dices.AddRange(all[j]._Indices);
+
+                        if (i != j) all.RemoveAt(j--); // dont delete the first one!
+                    }
+                }
+
+                all[i].InitializeWithVectorsAndNormalsSorted(verts.ToArray(), norms.ToArray(), dices.ToArray());
+            }
+
+            return new CadObject(all.ToArray(), this._Name);
+        }
+
+        public CadObject ConsolidateMatrices()
+        {
+            this.GLDelete();
+
             List<CadObject> all_objects = new List<CadObject>();
             this.ConsolidateMatrices(all_objects, Matrix4.Identity);
-            return all_objects;
+
+            for (int i = 0; i < all_objects.Count; i++)
+            {
+                var linq = all_objects[i]._Vertices;
+                if ((linq == null) || (linq.Length == 0))
+                {
+                    all_objects[i].GLDelete();
+                    all_objects.RemoveAt(i--);
+                }
+                else all_objects[i]._Children = new CadObject[0];
+            }
+
+            return new CadObject(all_objects.ToArray(), this._Name);
         }
 
         internal void ConsolidateMatrices(List<CadObject> all_objects, Matrix4 m4)
         {
             all_objects.Add(this);
-            if (this._BoolUseTranslationAndRotation)
-            {
-                m4 = this._Matrix * m4;
-                this._BoolUseTranslationAndRotation = false;
-                this._Matrix = Matrix4.Identity;
-            }
+            m4 = this._Matrix * m4;
+            this._BoundingSphereNeeded = true;
+            this._Matrix = Matrix4.Identity;
             foreach (var child in this._Children)
             {
                 child.ConsolidateMatrices(all_objects, m4);
@@ -641,11 +644,11 @@ namespace SamSeifert.GLE.CAD
                     t.Z = _Normals[i].Z;
                     t.W = 0;
 
-                    t = Vector4.Transform(t, m4);
+                    var n = Vector4.Transform(t, m4).Xyz.NormalizedSafe();
 
-                    _Normals[i].X = t.X;
-                    _Normals[i].Y = t.Y;
-                    _Normals[i].Z = t.Z;
+                    _Normals[i].X = n.X;
+                    _Normals[i].Y = n.Y;
+                    _Normals[i].Z = n.Z;
                 }
             }
         }

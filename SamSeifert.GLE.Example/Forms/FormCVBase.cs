@@ -69,8 +69,8 @@ namespace SamSeifert.GLE.Forms
                 this.glControl1.Height,
                 60,
                 true,
-                0.1f,
-                1000f,
+                ObserveDistance * 0.1f,
+                ObserveDistance * 2 + 100,
                 Matrix4.Identity).SendToGL();
 
             GL.Translate(0, 0, -ObserveDistance);
@@ -88,8 +88,14 @@ namespace SamSeifert.GLE.Forms
 
                 foreach (var o in this.cadHandler1.checkedListBox1.Items)
                 {
-                    var co = o as CadObject;
-                    if (co != null) co.Draw(true);
+                    var co = o as CadHandler.CadObjectHolder;
+                    if (co != null)
+                    {
+                        if (co.indent == 0)
+                        {
+                            co.held.Draw(true);
+                        }
+                    }
                 }
 
                 GL.Enable(EnableCap.ColorMaterial);

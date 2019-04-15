@@ -38,10 +38,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenTK">
-      <HintPath>..\..\OpenTK\bin\OpenTK\OpenTK.dll</HintPath>
+      <HintPath>..\..\OpenTK\src\OpenTK\bin\release\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK.GLControl">
-      <HintPath>..\..\OpenTK\bin\OpenTK.GLControl\OpenTK.GLControl.dll</HintPath>
+      <HintPath>..\..\OpenTK\src\OpenTK.GLControl\bin\release\OpenTK.GLControl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -121,6 +121,10 @@
     <ProjectReference Include="..\SamSeifert.GLE\SamSeifert.GLE.csproj">
       <Project>{fb6e9b5d-7a20-45f2-9ada-ddd12e70a967}</Project>
       <Name>SamSeifert.GLE</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SamSeifert.Utilities\SamSeifert.Utilities.csproj">
+      <Project>{a9446cbe-818f-45f6-8894-068693da47ca}</Project>
+      <Name>SamSeifert.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
