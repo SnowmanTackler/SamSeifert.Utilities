@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using SamSeifert.Utilities.Maths;
 using GL = SamSeifert.GLE.GLR;
 
 namespace SamSeifert.GLE
@@ -75,6 +76,20 @@ namespace SamSeifert.GLE
         public void Bind()
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, this._Int);
+        }
+
+        public static Vector3[] Interleave(Vector3[] first, Vector3[] second)
+        {
+            int lens = first.Length;
+            lens.AssertEquals(second.Length);        
+            var ret = new Vector3[lens * 2];
+            int index = 0;
+            for (int i = 0; i < lens; i++)
+            {
+                ret[index++] = first[i];
+                ret[index++] = second[i];
+            }
+            return ret;
         }
     }
 }
