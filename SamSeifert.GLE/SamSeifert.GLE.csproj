@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="CAD\CadObject.cs" />
     <Compile Include="CAD\Generator\Anonymous.cs" />
+    <Compile Include="CAD\Generator\FromStl.cs" />
     <Compile Include="CAD\Generator\FromVrml.cs" />
     <Compile Include="CAD\Generator\Generic.cs" />
     <Compile Include="CAD\Generator\FromXaml.cs" />

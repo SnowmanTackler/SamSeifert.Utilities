@@ -38,6 +38,7 @@ namespace SamSeifert.GLE.Forms
                 {
                     if (r == this.rbXAML) this.openFileDialog1.Filter = "XAML File|*.XAML";
                     else if (r == this.rbVRML) this.openFileDialog1.Filter = "VRML File|*.WRL";
+                    else if (r == this.rbSTL) this.openFileDialog1.Filter = "STL File|*.STL";
 
                     this.buttonBrowse.Enabled = true;
                 }
@@ -84,6 +85,14 @@ namespace SamSeifert.GLE.Forms
                 case ".wrl":
                     {
                         co = CAD.Generator.FromVrml.Create(VrmlFile.FromFile(this.textBox1.Text))
+                            .Center()
+                            .ConsolidateMatrices()
+                            .ConsolidateColors();
+                        break;
+                    }
+                case ".stl":
+                    {
+                        co = CAD.Generator.FromStl.Create(File.ReadAllText(this.textBox1.Text))
                             .Center()
                             .ConsolidateMatrices()
                             .ConsolidateColors();

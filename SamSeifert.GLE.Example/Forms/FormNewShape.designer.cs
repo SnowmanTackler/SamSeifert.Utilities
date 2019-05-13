@@ -34,6 +34,7 @@
             this.rbXAML = new System.Windows.Forms.RadioButton();
             this.buttonGo = new System.Windows.Forms.Button();
             this.rbVRML = new System.Windows.Forms.RadioButton();
+            this.rbSTL = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
             // textBox1
@@ -97,12 +98,24 @@
             this.rbVRML.UseVisualStyleBackColor = true;
             this.rbVRML.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
             // 
+            // rbSTL
+            // 
+            this.rbSTL.AutoSize = true;
+            this.rbSTL.Location = new System.Drawing.Point(12, 58);
+            this.rbSTL.Name = "rbSTL";
+            this.rbSTL.Size = new System.Drawing.Size(45, 17);
+            this.rbSTL.TabIndex = 26;
+            this.rbSTL.Text = "STL";
+            this.rbSTL.UseVisualStyleBackColor = true;
+            this.rbSTL.CheckedChanged += new System.EventHandler(this.radioButton_CheckedChanged);
+            // 
             // FormNewShape
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(684, 258);
+            this.Controls.Add(this.rbSTL);
             this.Controls.Add(this.rbVRML);
             this.Controls.Add(this.buttonGo);
             this.Controls.Add(this.rbXAML);
@@ -123,5 +136,6 @@
         private System.Windows.Forms.RadioButton rbXAML;
         private System.Windows.Forms.Button buttonGo;
         private System.Windows.Forms.RadioButton rbVRML;
+        private System.Windows.Forms.RadioButton rbSTL;
     }
 }
