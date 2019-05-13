@@ -49,7 +49,7 @@ namespace SamSeifert.GLE.CAD.Generator
             }
         }
 
-        private static CadObject CreateAscii(IEnumerator<String> FileLines, double scale = 1.0)
+        public static CadObject CreateAscii(IEnumerator<String> FileLines, double scale = 1.0)
         {
             String name = null;
 
@@ -62,10 +62,14 @@ namespace SamSeifert.GLE.CAD.Generator
                     return null;
                 }
 
-                return new CadObject(
+                var co = new CadObject(
                     temp.Select((it) => it.Vertex).ToArray(),
                     temp.Select((it) => it.Normal).ToArray(),
                     name);
+
+                co._CullFaceMode = OpenTK.Graphics.OpenGL.CullFaceMode.Back;
+                        
+                return co;
             }
             catch (Exception exc)
             {

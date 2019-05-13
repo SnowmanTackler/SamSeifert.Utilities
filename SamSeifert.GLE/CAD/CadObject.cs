@@ -599,7 +599,15 @@ namespace SamSeifert.GLE.CAD
                 else all_objects[i]._Children = new CadObject[0];
             }
 
-            return new CadObject(all_objects.ToArray(), this._Name);
+            if (all_objects.Count == 1)
+            {
+                all_objects[0]._Name = this._Name;
+                return all_objects[0];
+            }
+            else
+            {
+                return new CadObject(all_objects.ToArray(), this._Name);
+            }
         }
 
         internal void ConsolidateMatrices(List<CadObject> all_objects, Matrix4 m4)
