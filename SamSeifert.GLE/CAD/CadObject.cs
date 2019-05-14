@@ -43,7 +43,7 @@ namespace SamSeifert.GLE.CAD
             this._Name = name;
         }
 
-        internal CadObject(Vector3[] verts, Vector3[] norms, String name)
+        public CadObject(Vector3[] verts, Vector3[] norms, String name)
         {
             this._Name = name;
             this.InitializeWithVectorsAndNormals(verts, norms);
