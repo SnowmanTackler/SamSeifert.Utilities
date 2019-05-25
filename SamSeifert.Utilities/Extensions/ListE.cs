@@ -26,6 +26,18 @@ namespace SamSeifert.Utilities.Extensions
             return ret;
         }
 
+        public static bool AddIfNotNull<T>(this List<T> data, T item)
+        {
+            if (item == null)
+            {
+                return false;
+            }
+            else {
+                data.Add(item);
+                return true;
+            }
+        }
+
         public static void Shuffle<T>(this List<T> array, Random rand)
         {
             int n = array.Count;
