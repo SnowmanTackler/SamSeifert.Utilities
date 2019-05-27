@@ -186,8 +186,8 @@ namespace SamSeifert.GLE.CAD.Generator
             for (int j = 0; j < fiberPath.Length - 1; j++)
             {
                 var new_norm = (fiberPath[j+1] - fiberPath[j]).Normalized();
-                var new_perp_up = Vector3.Cross(perp_right, new_norm);
-                var new_perp_right = Vector3.Cross(new_norm, new_perp_up);
+                var new_perp_up = Vector3.Cross(perp_right, new_norm).Normalized() * radius;
+                var new_perp_right = Vector3.Cross(new_norm, new_perp_up).Normalized() * radius;
 
                 for (int i = 0; i < section; i++)
                 {
