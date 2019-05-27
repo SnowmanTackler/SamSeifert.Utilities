@@ -14,5 +14,9 @@ namespace SamSeifert.GLE.Extensions
             return alpha * value_at_1 + (1 - alpha) * value_at_0;
         }
 
+        public static float Cross(Vector2 a, Vector2 b)
+        {
+            return a.X * b.Y - a.Y * b.X;
+        }
     }
 }

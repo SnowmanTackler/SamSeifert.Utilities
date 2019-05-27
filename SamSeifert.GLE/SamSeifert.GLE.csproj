@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\EnclosingCircle.cs" />
     <Compile Include="CAD\CadObject.cs" />
     <Compile Include="CAD\Generator\Anonymous.cs" />
     <Compile Include="CAD\Generator\FromStl.cs" />
