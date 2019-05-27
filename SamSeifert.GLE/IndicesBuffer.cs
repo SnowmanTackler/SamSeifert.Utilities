@@ -78,10 +78,10 @@ namespace SamSeifert.GLE
             GL.BindBuffer(BufferTarget.ArrayBuffer, this._Int);
         }
 
-        public static Vector3[] Interleave(Vector3[] first, Vector3[] second)
+        public static Vector3[] Interleave(IList<Vector3> first, IList<Vector3> second)
         {
-            int lens = first.Length;
-            lens.AssertEquals(second.Length);        
+            int lens = first.Count;
+            lens.AssertEquals(second.Count);        
             var ret = new Vector3[lens * 2];
             int index = 0;
             for (int i = 0; i < lens; i++)

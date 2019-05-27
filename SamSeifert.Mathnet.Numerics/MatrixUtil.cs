@@ -11,10 +11,13 @@ namespace SamSeifert.MathNet.Numerics.Extensions
     {
         public static Matrix<float> Covariance(this Matrix<float> m)
         {
+            return m.Covariance(m.MeanRow());
+        }
+
+        public static Matrix<float> Covariance(this Matrix<float> m, Vector<float> meanRow)
+        {
             int rows = m.RowCount;
             int cols = m.ColumnCount;
-
-            var means = m.MeanRow();
 
             var of_the_king = Matrix<float>.Build.Dense(cols, cols, 0);
 
@@ -25,7 +28,7 @@ namespace SamSeifert.MathNet.Numerics.Extensions
                     float sum = 0;
 
                     for (int r = 0; r < rows; r++)
-                        sum += (m[r, c1] - means[c1]) * (m[r, c2] - means[c2]);
+                        sum += (m[r, c1] - meanRow[c1]) * (m[r, c2] - meanRow[c2]);
 
                     sum /= (rows - 1);
 
