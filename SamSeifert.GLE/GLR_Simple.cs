@@ -555,6 +555,23 @@ namespace SamSeifert.GLE
             GL.ClearColor(color.X, color.Y, color.Z, 0);
         }
 
+        public static void DrawAxis(float v)
+        {
+            GL.Begin(PrimitiveType.Lines);
+            {
+                GL.Color3(1f, 0, 0);
+                GL.Vertex3(0, 0, 0);
+                GL.Vertex3(v, 0, 0);
 
+                GL.Color3(0, 1f, 0);
+                GL.Vertex3(0, 0, 0);
+                GL.Vertex3(0, v, 0);
+
+                GL.Color3(0, 0, 1f);
+                GL.Vertex3(0, 0, 0);
+                GL.Vertex3(0, 0, v);
+            }
+            GL.End();
+        }
     }
 }

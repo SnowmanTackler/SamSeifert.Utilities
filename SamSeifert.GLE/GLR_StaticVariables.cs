@@ -22,6 +22,5 @@ namespace SamSeifert.GLE
                 GLR.__ClippingPlane0 = value;
             }
         }
-
     }
 }
