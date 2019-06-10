@@ -13,36 +13,51 @@ namespace SamSeifert.GLE
 {
     public class IndicesBuffer : DeleteableObject
     {
-        private int _Int = 0;
-        public readonly int _Count = 0;
+        private int BufferID = 0;
+        private int Length = 0;
 
-        public IndicesBuffer(out bool success, uint[] indices)
+        public IndicesBuffer(uint[] indices)
         {
             int bufferSize;
             int bufferSizeE = indices.Length * sizeof(uint);
-            GL.GenBuffers(1, out this._Int);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, this._Int);
+            GL.GenBuffers(1, out this.BufferID);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.BufferID);
             GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(bufferSizeE), indices, BufferUsageHint.StaticDraw);
             GL.GetBufferParameter(BufferTarget.ElementArrayBuffer, BufferParameterName.BufferSize, out bufferSize);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
-            success = bufferSizeE == bufferSize;
-            this._Count = indices.Length;
+            if (bufferSizeE == bufferSize)
+            {
+                this.Length = indices.Length;
+            }
+            else
+            {
+                this.GLDelete();
+            }
         }
 
         public void GLDelete()
         {
-            if (this._Int != 0)
+            if (this.BufferID != 0)
             {
-                GL.DeleteBuffer(this._Int);
-                this._Int = 0;
+                GL.DeleteBuffer(this.BufferID);
+                this.BufferID = 0;
+                this.Length = 0;
             }
         }
 
         public void Draw(PrimitiveType pt)
         {
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, this._Int);
-            GL.DrawElements(pt, this._Count, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.BufferID);
+            GL.DrawElements(pt, this.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
+        }
+
+        public bool IsSetup
+        {
+            get
+            {
+                return this.BufferID != 0;
+            }
         }
     }
 
