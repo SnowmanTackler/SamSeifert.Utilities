@@ -10,8 +10,8 @@ namespace SamSeifert.Utilities.Maths
     {
         protected readonly float _Increment;
 
-        public float _StartingAngle { get; private set; }
-        private float _Angle = 0;
+        public float _StartingAngle { get; private set; } = 0;
+        public float _Angle { get; private set; } = 0;
         private int _TurnCount = 0;
 
         protected Continuous360(float inc, float starting_angle)
