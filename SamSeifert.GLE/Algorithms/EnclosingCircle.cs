@@ -1,5 +1,6 @@
 ﻿using OpenTK;
 using SamSeifert.GLE.Extensions;
+using SamSeifert.GLE.Shapes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace SamSeifert.GLE.Algorithms
          * Note: If 0 points are given, a circle of radius -1 is returned. If 1 point is given, a circle of radius 0 is returned.
          */
         // Initially: No boundary points known
-        public static Circle MakeCircle(IList<Vector2> points)
+        public static Circle2 MakeCircle(IList<Vector2> points)
         {
             // Clone list to preserve the caller's data, do Durstenfeld shuffle
             List<Vector2> shuffled = new List<Vector2>(points);
@@ -29,26 +30,26 @@ namespace SamSeifert.GLE.Algorithms
             }
 
             // Progressively add points to circle or recompute circle
-            Circle c = Circle.INVALID;
+            Circle2 c = null;
             for (int i = 0; i < shuffled.Count; i++)
             {
                 Vector2 p = shuffled[i];
-                if (c.r < 0 || !c.Contains(p))
+                if (c == null || !c.Contains(p))
                     c = MakeCircleOnePoint(shuffled.GetRange(0, i + 1), p);
             }
             return c;
         }
 
         // One boundary point known
-        private static Circle MakeCircleOnePoint(List<Vector2> points, Vector2 p)
+        private static Circle2 MakeCircleOnePoint(List<Vector2> points, Vector2 p)
         {
-            Circle c = new Circle(p, 0);
+            Circle2 c = new Circle2(p, 0);
             for (int i = 0; i < points.Count; i++)
             {
                 Vector2 q = points[i];
                 if (!c.Contains(q))
                 {
-                    if (c.r == 0)
+                    if (c.Radius == 0)
                         c = MakeDiameter(p, q);
                     else
                         c = MakeCircleTwoPoints(points.GetRange(0, i + 1), p, q);
@@ -59,11 +60,11 @@ namespace SamSeifert.GLE.Algorithms
 
 
         // Two boundary points known
-        private static Circle MakeCircleTwoPoints(List<Vector2> points, Vector2 p, Vector2 q)
+        private static Circle2 MakeCircleTwoPoints(List<Vector2> points, Vector2 p, Vector2 q)
         {
-            Circle circ = MakeDiameter(p, q);
-            Circle left = Circle.INVALID;
-            Circle right = Circle.INVALID;
+            Circle2 circ = MakeDiameter(p, q);
+            Circle2 left = null;
+            Circle2 right = null;
 
             // For each point not in the two-point circle
             Vector2 pq = q - p;
@@ -74,35 +75,35 @@ namespace SamSeifert.GLE.Algorithms
 
                 // Form a circumcircle and classify it on left or right side
                 float cross = Vector2E.Cross(pq, r - p);
-                Circle c = MakeCircumcircle(p, q, r);
-                if (c.r < 0)
+                Circle2 c = MakeCircumcircle(p, q, r);
+                if (c == null)
                     continue;
-                else if (cross > 0 && (left.r < 0 || Vector2E.Cross(pq, c.c - p) > Vector2E.Cross(pq, left.c - p)))
+                else if (cross > 0 && (left == null || Vector2E.Cross(pq, c.Center - p) > Vector2E.Cross(pq, left.Center - p)))
                     left = c;
-                else if (cross < 0 && (right.r < 0 || Vector2E.Cross(pq, c.c - p) < Vector2E.Cross(pq, right.c - p)))
+                else if (cross < 0 && (right == null || Vector2E.Cross(pq, c.Center - p) < Vector2E.Cross(pq, right.Center - p)))
                     right = c;
             }
 
             // Select which circle to return
-            if (left.r < 0 && right.r < 0)
+            if (left == null && right == null)
                 return circ;
-            else if (left.r < 0)
+            else if (left == null)
                 return right;
-            else if (right.r < 0)
+            else if (right == null)
                 return left;
             else
-                return left.r <= right.r ? left : right;
+                return left.Radius <= right.Radius ? left : right;
         }
 
 
-        public static Circle MakeDiameter(Vector2 a, Vector2 b)
+        public static Circle2 MakeDiameter(Vector2 a, Vector2 b)
         {
             Vector2 c = new Vector2((a.X + b.X) / 2, (a.Y + b.Y) / 2);
-            return new Circle(c, Math.Max((c - a).Length, (c - b).Length));
+            return new Circle2(c, Math.Max((c - a).Length, (c - b).Length));
         }
 
 
-        public static Circle MakeCircumcircle(Vector2 a, Vector2 b, Vector2 c)
+        public static Circle2 MakeCircumcircle(Vector2 a, Vector2 b, Vector2 c)
         {
             // Mathematical algorithm from Wikipedia: Circumscribed circle
             float ox = (Math.Min(Math.Min(a.X, b.X), c.X) + Math.Max(Math.Min(a.X, b.X), c.X)) / 2;
@@ -112,47 +113,16 @@ namespace SamSeifert.GLE.Algorithms
             float cx = c.X - ox, cy = c.Y - oy;
             float d = (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by)) * 2;
             if (d == 0)
-                return Circle.INVALID;
+                return null;
             float x = ((ax * ax + ay * ay) * (by - cy) + (bx * bx + by * by) * (cy - ay) + (cx * cx + cy * cy) * (ay - by)) / d;
             float y = ((ax * ax + ay * ay) * (cx - bx) + (bx * bx + by * by) * (ax - cx) + (cx * cx + cy * cy) * (bx - ax)) / d;
             Vector2 p = new Vector2(ox + x, oy + y);
             float r = new Vector2[] { a, b, c }.Select(it => (p - it).Length).Max();
-            return new Circle(p, r);
+            return new Circle2(p, r);
         }
 
     }
 
 
 
-    public struct Circle
-    {
-        public static readonly Circle INVALID = new Circle(new Vector2(0, 0), -1);
-
-        public Vector2 c;   // Center
-        public float r;  // Radius
-
-
-        public Circle(Vector2 c, float r)
-        {
-            this.c = c;
-            this.r = r;
-        }
-
-
-        public bool Contains(Vector2 p)
-        {
-            return (c - p).Length <= r * 1.000001f;
-        }
-
-
-        public bool Contains(ICollection<Vector2> ps)
-        {
-            foreach (Vector2 p in ps)
-            {
-                if (!Contains(p))
-                    return false;
-            }
-            return true;
-        }
-    }
 }
