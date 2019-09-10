@@ -19,7 +19,15 @@ namespace SamSeifert.Utilities.CustomControls
         private static JsonDict _Values = null;
         static FilePicker()
         {
-            FilePicker._Values = JsonDict.FromString(TextSettings.Read(default_save_name));
+            var read = TextSettings.Read(default_save_name);
+            if (read == null)
+            {
+                FilePicker._Values = new JsonDict();
+            }
+            else
+            {
+                FilePicker._Values = JsonDict.FromString(read);
+            }
         }
 
         /// <summary>
