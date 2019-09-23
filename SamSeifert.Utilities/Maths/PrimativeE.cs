@@ -37,6 +37,10 @@ namespace SamSeifert.Utilities.Maths
         {
             return min + ModGuaranteePositive(x - min, max - min);
         }
+        public static double ModGuaranteeRange(this double x, double min, double max)
+        {
+            return min + ModGuaranteePositive(x - min, max - min);
+        }
 
         /// <summary>
         /// Returns mod X between +/- lim.  Helpful for convertering any angle to +- 180 degrees
@@ -48,7 +52,10 @@ namespace SamSeifert.Utilities.Maths
         {
             return ModGuaranteeRange(x, -lim, lim);
         }
-
+        public static double ModGuaranteeRangeAbs(this double x, double lim)
+        {
+            return ModGuaranteeRange(x, -lim, lim);
+        }
 
 
 

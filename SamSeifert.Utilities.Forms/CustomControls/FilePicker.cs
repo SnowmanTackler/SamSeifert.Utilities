@@ -16,7 +16,9 @@ namespace SamSeifert.Utilities.CustomControls
     public partial class FilePicker : TextBox
     {
         const string default_save_name = "default_file_pickers.local.json";
+
         private static JsonDict _Values = null;
+
         static FilePicker()
         {
             var read = TextSettings.Read(default_save_name);
@@ -51,7 +53,19 @@ namespace SamSeifert.Utilities.CustomControls
 
         private readonly OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
-        public String _SaveIdentifier { get; set; } = "Default";
+        private String __SaveIdentifer = "Default";
+        public String _SaveIdentifier
+        {
+            get
+            {
+                return this.__SaveIdentifer;
+            }
+            set
+            {
+                this.__SaveIdentifer = value;
+                this.loadFromFileSystem();
+            }
+        }
 
         public String _Filter
         {
@@ -72,10 +86,7 @@ namespace SamSeifert.Utilities.CustomControls
 
             this.openFileDialog1.FileOk += this.openFileDialog1_FileOk;
 
-            object outo;
-            if (FilePicker._Values.TryGetValue(this._SaveIdentifier, out outo))
-                if (outo is String)
-                    this.Text = outo as String;
+            this.loadFromFileSystem();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -84,18 +95,21 @@ namespace SamSeifert.Utilities.CustomControls
 
             if (File.Exists(fn))
             {
+                Logger.WriteLine("FilePicker file { " + fn + " }");
                 this.ForeColor = Color.Green;
                 this._ValidFile?.Invoke(this, EventArgs.Empty);
                 this._Changed?.Invoke(this, FileType.File);
             }
             else if (Directory.Exists(fn))
             {
+                Logger.WriteLine("FilePicker directory { " + fn + " }");
                 this.ForeColor = Color.Blue;
                 this._ValidFolder?.Invoke(this, EventArgs.Empty);
                 this._Changed?.Invoke(this, FileType.Directory);
             }
             else
             {
+                Logger.WriteLine("FilePicker invalid { " + fn + " }");
                 this.ForeColor = Color.Red;
                 this._Changed?.Invoke(this, FileType.Invalid);
                 return;
@@ -115,6 +129,23 @@ namespace SamSeifert.Utilities.CustomControls
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
             this.Text = this.openFileDialog1.FileName;
+        }
+
+        private void loadFromFileSystem()
+        {
+            if (this.DesignMode)
+            {
+                return;
+            }
+
+            var identifier = this._SaveIdentifier;
+            object outo;
+            if (FilePicker._Values.TryGetValue(identifier, out outo))
+                if (outo is String)
+                {
+                    Logger.WriteLine("FilePicker loaded { " + outo + " } for { " + identifier + " }");
+                    this.Text = outo as String;
+                }
         }
     }
 }
