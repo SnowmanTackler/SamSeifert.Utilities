@@ -52,6 +52,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interpolate\Interpolator.cs" />
+    <Compile Include="Interpolate\LinearInterpolator.cs" />
     <Compile Include="Extensions\BooleanE.cs" />
     <Compile Include="Extensions\ObjectE.cs" />
     <Compile Include="Files\Vrml\Node.cs" />
