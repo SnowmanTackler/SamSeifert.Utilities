@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SamSeifert.Utilities.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,28 +31,36 @@ namespace SamSeifert.Utilities.MultiThreading
             }
         }
 
-        private readonly Thread _Thread;
+        private readonly Thread[] _Threads;
         private readonly Queue<BackgroundQueueItem> _Queue = new Queue<BackgroundQueueItem>();
         private bool _Queue_CurrentlyWorking = false;
 
         private volatile bool _ShouldContinue = true;
-        private volatile bool _Working = true;
 
-        public BackgroundQueue(Form f, String name, ThreadPriority tp = ThreadPriority.Normal)
+        private volatile int _Working;
+
+        public BackgroundQueue(Form f, String name, ThreadPriority tp = ThreadPriority.Normal, int threads = 1)
         {
             if (f == null)
                 throw new ArgumentNullException();
 
             f.FormClosing += this.FormClosing;
 
-            this._Thread = new Thread(this._BackgroundThread);
-            this._Thread.Start(
-                new object[]
-                {
-                    f,
-                    name,
-                    tp
-                });
+            this._Working = threads;
+            this._Threads = new Thread[threads];
+            this._Threads.Fill(i => new Thread(this._BackgroundThread));
+
+            for (int i = 0; i < threads; i++)
+            {
+                this._Threads[i].Start(
+                    new object[]
+                    {
+                        f,
+                        (name ?? "Queue")  + " " + i,
+                        tp
+                    });
+
+            }
         }
 
         public void Clear()
@@ -110,7 +119,7 @@ namespace SamSeifert.Utilities.MultiThreading
             var args = oargs as object[];
 
             var form = args[0] as Form;
-            Thread.CurrentThread.Name = (args[1] == null) ? "Background Thread" : args[1] as String;
+            Thread.CurrentThread.Name = args[1] as String;
             Thread.CurrentThread.Priority = (ThreadPriority)args[2];
 
             while (this._ShouldContinueMethod())
@@ -143,12 +152,20 @@ namespace SamSeifert.Utilities.MultiThreading
                 }
             }
 
-            form.BeginInvoke(
-                (Action)(() => {
-                    form.FormClosing -= this.FormClosing;
-                }));
+            bool lastThread = false;
+            lock (this._Queue)
+            {
+                lastThread = this._Working == 1;
+                this._Working--;
+            }
 
-            this._Working = false;
+            if (lastThread)
+            {
+                form.BeginInvoke(
+                    (Action)(() => {
+                        form.FormClosing -= this.FormClosing;
+                    }));
+            }
         }
 
         private bool _ShouldContinueMethod()
@@ -178,7 +195,10 @@ namespace SamSeifert.Utilities.MultiThreading
         {
             get
             {
-                return this._Working;
+                lock (this._Queue)
+                {
+                    return this._Working > 0;
+                }
             }
         }
 
@@ -202,7 +222,10 @@ namespace SamSeifert.Utilities.MultiThreading
         /// </summary>
         public void _ThreadSafe_Join()
         {
-            this._Thread?.Join();
+            foreach (var thread in this._Threads)
+            {
+                thread.Join();
+            }
         }
     }
 }
