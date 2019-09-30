@@ -99,6 +99,7 @@
     <Compile Include="Extensions\ComboBoxE.cs" />
     <Compile Include="Extensions\ControlE.cs" />
     <Compile Include="Extensions\FormE.cs" />
+    <Compile Include="Extensions\KeysE.cs" />
     <Compile Include="Extensions\LabelE.cs" />
     <Compile Include="Extensions\NumericUpDownE.cs" />
     <Compile Include="Extensions\RichTextBoxE.cs" />

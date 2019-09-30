@@ -89,6 +89,7 @@
     <Compile Include="Shapes\Plane3.cs" />
     <Compile Include="SkyBox.cs" />
     <Compile Include="Textures.cs" />
+    <Compile Include="VerticesBuffer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SamSeifert.Utilities\SamSeifert.Utilities.csproj">

@@ -11,12 +11,12 @@ using GL = SamSeifert.GLE.GLR;
 
 namespace SamSeifert.GLE
 {
-    public class IndicesBuffer : DeleteableObject
+    public class IndexBuffer : DeleteableObject
     {
         private int BufferID = 0;
         private int Length = 0;
 
-        public IndicesBuffer(uint[] indices)
+        public IndexBuffer(uint[] indices)
         {
             int bufferSize;
             int bufferSizeE = indices.Length * sizeof(uint);
@@ -58,53 +58,6 @@ namespace SamSeifert.GLE
             {
                 return this.BufferID != 0;
             }
-        }
-    }
-
-    public class VerticesBuffer : DeleteableObject
-    {
-        private int _Int = 0;
-        public readonly int _Count = 0;
-
-        public VerticesBuffer(out bool success, Vector3[] vertices)
-        {
-            int bufferSize;
-            int bufferSizeE = vertices.Length * Vector3.SizeInBytes;
-            GL.GenBuffers(1, out this._Int);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, this._Int);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(bufferSizeE), vertices, BufferUsageHint.StaticDraw);
-            GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out bufferSize);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            success = bufferSizeE == bufferSize;
-            this._Count = vertices.Length;
-        }
-
-        public void GLDelete()
-        {
-            if (this._Int != 0)
-            {
-                GL.DeleteBuffer(this._Int);
-                this._Int = 0;
-            }
-        }
-
-        public void Bind()
-        {
-            GL.BindBuffer(BufferTarget.ArrayBuffer, this._Int);
-        }
-
-        public static Vector3[] Interleave(IList<Vector3> first, IList<Vector3> second)
-        {
-            int lens = first.Count;
-            lens.AssertEquals(second.Count);        
-            var ret = new Vector3[lens * 2];
-            int index = 0;
-            for (int i = 0; i < lens; i++)
-            {
-                ret[index++] = first[i];
-                ret[index++] = second[i];
-            }
-            return ret;
         }
     }
 }
