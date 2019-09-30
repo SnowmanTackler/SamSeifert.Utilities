@@ -81,7 +81,7 @@
     <Compile Include="GLR.cs" />
     <Compile Include="GLR_Matrix.cs" />
     <Compile Include="GLR_Simple.cs" />
-    <Compile Include="IndicesBuffer.cs" />
+    <Compile Include="IndexBuffer.cs" />
     <Compile Include="Geometry2D.cs" />
     <Compile Include="Shaders.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
