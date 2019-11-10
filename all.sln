@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamSeifert.GLE.Forms", "Sam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamSeifert.Utilities.Forms", "SamSeifert.Utilities.Forms\SamSeifert.Utilities.Forms.csproj", "{A40930FA-AF7B-4017-852D-A14370C7C9B1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamSeifert.Tests", "SamSeifert.Tests\SamSeifert.Tests.csproj", "{673A62F1-0C29-421E-88D2-6235372A9ADD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,18 @@ Global
 		{A40930FA-AF7B-4017-852D-A14370C7C9B1}.Release-Signed|Any CPU.Build.0 = Release|Any CPU
 		{A40930FA-AF7B-4017-852D-A14370C7C9B1}.Release-Signed|x86.ActiveCfg = Release|Any CPU
 		{A40930FA-AF7B-4017-852D-A14370C7C9B1}.Release-Signed|x86.Build.0 = Release|Any CPU
+		{673A62F1-0C29-421E-88D2-6235372A9ADD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{673A62F1-0C29-421E-88D2-6235372A9ADD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{673A62F1-0C29-421E-88D2-6235372A9ADD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{673A62F1-0C29-421E-88D2-6235372A9ADD}.Debug|x86.Build.0 = Debug|Any CPU
+		{673A62F1-0C29-421E-88D2-6235372A9ADD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{673A62F1-0C29-421E-88D2-6235372A9ADD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{673A62F1-0C29-421E-88D2-6235372A9ADD}.Release|x86.ActiveCfg = Release|Any CPU
+		{673A62F1-0C29-421E-88D2-6235372A9ADD}.Release|x86.Build.0 = Release|Any CPU
+		{673A62F1-0C29-421E-88D2-6235372A9ADD}.Release-Signed|Any CPU.ActiveCfg = Release|Any CPU
+		{673A62F1-0C29-421E-88D2-6235372A9ADD}.Release-Signed|Any CPU.Build.0 = Release|Any CPU
+		{673A62F1-0C29-421E-88D2-6235372A9ADD}.Release-Signed|x86.ActiveCfg = Release|Any CPU
+		{673A62F1-0C29-421E-88D2-6235372A9ADD}.Release-Signed|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

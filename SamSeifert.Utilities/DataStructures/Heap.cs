@@ -7,13 +7,18 @@ using System.Threading.Tasks;
 
 namespace SamSeifert.Utilities.DataStructures
 {
-    public class Heap<T> : IEnumerable<T>
+    /// <summary>
+    /// By default, lowest value items will pop off the top.  You can
+    /// use the inverse flag to flip.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class Heap<T> : IEnumerable<T> where T : IComparable
     {
+        private readonly bool _Inverse;
         private int _Capacity = 10;
         public int _Size { get; private set; } = 0;
 
         T[] _Items;
-        private Func<T, T, bool> _Func;
 
         private int getLeftChildIndex(int parentIndex) { return 2 * parentIndex + 1; }
         private int getRightChildIndex(int parentIndex) { return 2 * parentIndex + 2; }
@@ -27,9 +32,9 @@ namespace SamSeifert.Utilities.DataStructures
         private T rightChild(int index) { return this._Items[getRightChildIndex(index)]; }
         private T parent(int index) { return this._Items[this.getParentIndex(index)]; }
 
-        public Heap(Func<T, T, bool> true_if_left_entry_should_be_above_right_entry_in_heap)
+        public Heap(bool inverse = false)
         {
-            this._Func = true_if_left_entry_should_be_above_right_entry_in_heap;
+            this._Inverse = inverse;
             this._Items = new T[_Capacity];
         }
 
@@ -70,6 +75,11 @@ namespace SamSeifert.Utilities.DataStructures
             this._Items[_Size] = item;
             this._Size++;
             heapifyUp();
+        }
+
+        private bool _Func(T t1, T t2)
+        {
+            return (this._Inverse ? 1 : -1) * t1.CompareTo(t2) > 0;
         }
 
         private void heapifyUp()
