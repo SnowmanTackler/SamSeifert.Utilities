@@ -95,6 +95,9 @@
     <Compile Include="CustomControls\ListBoxUpDown.Designer.cs">
       <DependentUpon>ListBoxUpDown.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\TextBoxHint.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Extensions\CheckBoxE.cs" />
     <Compile Include="Extensions\ComboBoxE.cs" />
     <Compile Include="Extensions\ControlE.cs" />

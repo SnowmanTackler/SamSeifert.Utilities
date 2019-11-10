@@ -13,7 +13,7 @@ using SamSeifert.Utilities.Files.Json;
 
 namespace SamSeifert.Utilities.CustomControls
 {
-    public partial class FilePicker : TextBox
+    public partial class FilePicker : TextBoxHint
     {
         const string default_save_name = "default_file_pickers.local.json";
 
@@ -86,12 +86,20 @@ namespace SamSeifert.Utilities.CustomControls
 
             this.openFileDialog1.FileOk += this.openFileDialog1_FileOk;
 
+            this.WatermarkText = "C:\\Path\\To\\File";
+            this.ApplyWatermark();
+
             this.loadFromFileSystem();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             String fn = this.Text;
+
+            if (this.WatermarkText == fn)
+            {
+                return;
+            }
 
             if (File.Exists(fn))
             {
