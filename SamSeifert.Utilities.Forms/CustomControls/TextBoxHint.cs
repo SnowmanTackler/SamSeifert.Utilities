@@ -14,6 +14,7 @@ namespace SamSeifert.Utilities.CustomControls
     /// </summary>
     public class TextBoxHint : TextBox
     {
+        // Will be valid during constructor, unlike normal DesignMode
         new readonly bool DesignMode = (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
 
         /// <summary>
