@@ -52,6 +52,7 @@ namespace SamSeifert.Utilities.CustomControls
         public event FileTypeEventHandler _Changed;
 
         private readonly OpenFileDialog openFileDialog1 = new OpenFileDialog();
+        private readonly Timer timer1 = new Timer();
 
         private String __SaveIdentifer = "Default";
         public String _SaveIdentifier
@@ -81,19 +82,30 @@ namespace SamSeifert.Utilities.CustomControls
         
         public FilePicker() : base()
         {
-            this.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            this.DoubleClick += new System.EventHandler(this.textBox1_DoubleClick);
-
             this.openFileDialog1.FileOk += this.openFileDialog1_FileOk;
+            this.timer1.Interval = 500;
+            this.timer1.Tick += this.timer1_Tick;
 
-            this.WatermarkText = "C:\\Path\\To\\File";
-            this.ApplyWatermark();
+            this.ApplyWatermark("C:\\Path\\To\\File");
+
+            this.DoubleClick += new System.EventHandler(this.textBox1_DoubleClick);
+            this.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
 
             this.loadFromFileSystem();
         }
-
+        
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+            this.ForeColor = Color.Gray;
+            this.timer1.Stop();
+            this.timer1.Enabled = true;
+            this.timer1.Start();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            this.timer1.Enabled = false;
+
             String fn = this.Text;
 
             if (this.WatermarkText == fn)

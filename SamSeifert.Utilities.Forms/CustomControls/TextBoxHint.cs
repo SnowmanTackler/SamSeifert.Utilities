@@ -19,11 +19,6 @@ namespace SamSeifert.Utilities.CustomControls
         public string WatermarkText { get; set; } = "Type here";
 
         /// <summary>
-        /// Whether watermark effect is enabled or not
-        /// </summary>
-        public bool WatermarkActive { get; set; } = true;
-
-        /// <summary>
         /// Create a new TextBox that supports watermak hint
         /// </summary>
         public TextBoxHint()
@@ -46,11 +41,10 @@ namespace SamSeifert.Utilities.CustomControls
         /// <summary>
         /// Remove watermark from the textbox
         /// </summary>
-        public void RemoveWatermak()
+        private void RemoveWatermak()
         {
-            if (this.WatermarkActive)
+            if (this.Text == this.WatermarkText)
             {
-                this.WatermarkActive = false;
                 this.Text = "";
                 this.ForeColor = Color.Black;
             }
@@ -59,12 +53,10 @@ namespace SamSeifert.Utilities.CustomControls
         /// <summary>
         /// Applywatermak immediately
         /// </summary>
-        public void ApplyWatermark()
+        private void ApplyWatermark()
         {
-            if (!this.WatermarkActive && string.IsNullOrEmpty(this.Text)
-                || ForeColor == Color.Gray)
+            if (string.IsNullOrEmpty(this.Text))
             {
-                this.WatermarkActive = true;
                 this.Text = WatermarkText;
                 this.ForeColor = Color.Gray;
             }
