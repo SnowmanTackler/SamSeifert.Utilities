@@ -82,6 +82,8 @@ namespace SamSeifert.Utilities.CustomControls
         
         public FilePicker() : base()
         {
+            if (this.DesignMode) return;
+
             this.openFileDialog1.FileOk += this.openFileDialog1_FileOk;
             this.timer1.Interval = 500;
             this.timer1.Tick += this.timer1_Tick;
