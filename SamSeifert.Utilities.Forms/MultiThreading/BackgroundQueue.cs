@@ -39,7 +39,11 @@ namespace SamSeifert.Utilities.MultiThreading
 
         private volatile int _Working;
 
-        public BackgroundQueue(Form f, String name, ThreadPriority tp = ThreadPriority.Normal, int threads = 1)
+        public BackgroundQueue(
+            Form f, 
+            String name, 
+            ThreadPriority tp = ThreadPriority.Normal,
+            int threads = 1)
         {
             if (f == null)
                 throw new ArgumentNullException();
@@ -103,12 +107,19 @@ namespace SamSeifert.Utilities.MultiThreading
             return this.Enqueue((ContinueCheck continue_on) => { return meth(continue_on, param); }, finish);
         }
 
-        public IDisposable Enqueue(BackgroundThreadMethodOut meth, BackgroundThreadFinisher finish)
+        public IDisposable Enqueue(BackgroundThreadMethodOut meth, BackgroundThreadFinisher finish, bool beginInvoke = false)
         {
             return this.Enqueue((Form f, ContinueCheck continue_on) =>
             {
                 var ob = meth(continue_on);
-                f.Invoke(finish, ob);
+                if (beginInvoke)
+                {
+                    f.BeginInvoke(finish, ob);
+                }
+                else
+                {
+                    f.Invoke(finish, ob);
+                }
             });
         }
 
@@ -213,6 +224,17 @@ namespace SamSeifert.Utilities.MultiThreading
                 {
                     if (this._Queue_CurrentlyWorking) return false;
                     else return this._Queue.Count == 0;
+                }
+            }
+        }
+
+        public int _Count
+        {
+            get
+            {
+                lock (this._Queue)
+                {
+                    return this._Queue.Count;
                 }
             }
         }
