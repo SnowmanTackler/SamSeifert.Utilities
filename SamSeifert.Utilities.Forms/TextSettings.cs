@@ -37,12 +37,12 @@ namespace SamSeifert.Utilities
 
                     return Path.Combine(ls.ToArray());
                 }
-                else return Path.GetFullPath(Path.Combine(
-                        exe_path,
-                        "..",
-                        "..",
-                        "..",
-                        "Resources Generated"));
+                else
+                {
+                    int index = exe_path.IndexOf(Path.DirectorySeparatorChar + "bin" + Path.DirectorySeparatorChar);
+                    if (index < 0) return exe_path;
+                    return Path.Combine(exe_path.Substring(0, index), "Resources Generated");
+                }
             }
         }
 
