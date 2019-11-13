@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -19,18 +19,6 @@
     <ProjectReference Include="..\SamSeifert.Mathnet.Numerics\SamSeifert.MathNet.Numerics.Extensions.csproj" />
     <ProjectReference Include="..\SamSeifert.Utilities.Forms\SamSeifert.Utilities.Forms.csproj" />
     <ProjectReference Include="..\SamSeifert.Utilities\SamSeifert.Utilities.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="MathNet.Numerics">
-      <HintPath>..\..\Mathnet.Numerics\out\lib\Net40\MathNet.Numerics.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK">
-      <HintPath>..\..\OpenTK\bin\OpenTK\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK.GLControl">
-      <HintPath>..\..\OpenTK\bin\OpenTK.GLControl\OpenTK.GLControl.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
