@@ -8,13 +8,6 @@ namespace SamSeifert.Utilities.Extensions
 {
     public static class ArrayE
     {
-        public static T[] Sorted<T>(this IEnumerable<T> ie)
-        {
-            var arg = ie.ToArray();
-            Array.Sort(arg);
-            return arg;
-        }
-
         public static void Fill<T>(this T[] ie, T t)
         {
             for (int i = 0; i < ie.Length; i++)

@@ -52,6 +52,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Concurrent\BackgroundQueue.cs" />
+    <Compile Include="Concurrent\BackgroundTaskManager.cs" />
+    <Compile Include="Concurrent\LockWrapper.cs" />
+    <Compile Include="Concurrent\ReadWriteWrapper.cs" />
+    <Compile Include="Extensions\IEnumerableE.cs" />
     <Compile Include="Holder.cs" />
     <Compile Include="Interpolate\Interpolator.cs" />
     <Compile Include="Interpolate\LinearInterpolator.cs" />

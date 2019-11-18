@@ -111,9 +111,7 @@
     <Compile Include="Extensions\TimerE.cs" />
     <Compile Include="Forms\Program.cs" />
     <Compile Include="GlobalEvents.cs" />
-    <Compile Include="MultiThreading\BackgroundQueue.cs" />
-    <Compile Include="MultiThreading\BackgroundThread.cs" />
-    <Compile Include="MultiThreading\Delegates.cs" />
+    <Compile Include="MultiThreading\BackgroundQueueForm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\ScreenShotSaverForm.cs">
       <SubType>Form</SubType>
