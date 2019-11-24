@@ -24,24 +24,21 @@ namespace SamSeifert.Utilities.Concurrent
         private class BackgroundQueueItem : IDisposable, BackgroundTaskManager
         {
             private readonly BackgroundTask Method;
-            private volatile bool IsDisposed = false;
+            public volatile bool IsDisposed = false;
             private BackgroundToMainManager Manager;
             
             /// <summary>
             /// Will pulse when the count changes from 1 -> 0
             /// </summary>
             private readonly LockWrapper<IntHolder> ActiveMainThreadTasks = new LockWrapper<IntHolder>(new IntHolder());
-
-            public void Dispose()
-            {
-                this.IsDisposed = true;
-            }
-
             public BackgroundQueueItem(BackgroundTask meth)
             {
                 this.Method = meth;
             }
-
+            public void Dispose()
+            {
+                this.IsDisposed = true;
+            }
             public void Run(BackgroundToMainManager manager)
             {
                 if (this.IsDisposed) return;
@@ -110,6 +107,17 @@ namespace SamSeifert.Utilities.Concurrent
             }
         }
 
+        private class PostProcessingTracker
+        {
+            public readonly bool[] Entered;
+            public readonly BackgroundQueueItem[] Items;
+            public PostProcessingTracker(int threadCount)
+            {
+                this.Entered = new bool[threadCount];
+                this.Items = new BackgroundQueueItem[threadCount];
+            }
+        }
+
         private class ThreadData
         {
             public BackgroundQueueItem ActiveTask = null;
@@ -130,12 +138,15 @@ namespace SamSeifert.Utilities.Concurrent
         /// Will get pulsed whenever a thread terminates.
         /// </summary>
         private LockWrapper<SharedData> LockedSharedData = new LockWrapper<SharedData>(new SharedData());
+        private readonly int ThreadCount;
 
         public BackgroundQueue(
             String name,
             ThreadPriority tp = ThreadPriority.Normal,
             int threads = 1)
         {
+            this.ThreadCount = threads;
+
             this.LockedSharedData.Access((data, locked) =>
             {
                 data.ThreadData = new ThreadData[threads];
@@ -204,7 +215,129 @@ namespace SamSeifert.Utilities.Concurrent
                     data.Queue.Enqueue(item);
                     locked.Pulse();
                     return item;
-                } 
+                }
+                else
+                {
+                    return null;
+                }
+            });
+        }
+        public IEnumerable<IDisposable> EnqueueAll(IEnumerable<BackgroundTask> meths)
+        {
+            return this.LockedSharedData.Access((data, locked) =>
+            {
+                if (!data.IsDisposed)
+                {
+                    var items = meths.Select(it => new BackgroundQueueItem(it));
+                    items.ForEach(item => { data.Queue.Enqueue(item); }) ;                    
+                    locked.PulseAll();
+                    return items;
+                }
+                else
+                {
+                    return null;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Use this method to run something once all other currently enqueued tasks have finished.
+        /// You can just use enqueue for this case, as when there is more than 3 worker threads 
+        /// tasks might get completed out of order.
+        /// </summary>
+        /// <param name="task"></param>
+        public IDisposable EnqueuePostProcessingTask(BackgroundTask task)
+        {
+            // Create a data structure that will be track progress of n tasks, where
+            // n is the number of worker threads we have.
+            var lockedObject = new LockWrapper<PostProcessingTracker>(new PostProcessingTracker(this.ThreadCount));
+            
+            // Function for creating a task that will block until all it's sisters have entered.
+            Func<int, BackgroundQueueItem> blockTask = index =>
+            {
+                return new BackgroundQueueItem(manager =>
+                {
+                    // Tell other threads we made it here.
+                    lockedObject.Access((data, locked) => { data.Entered[index] = true; });
+
+                    // Block indefinitely.
+                    while (true)
+                    {
+                        // Check if all other threads either made it here, or died trying.
+                        int enteredOrDisposed = lockedObject.Access((data, locked) =>
+                        {
+                            var count = 0;
+                            for (int tc = 0; tc < this.ThreadCount; tc++)
+                            {
+                                if (data.Entered[tc] || data.Items[tc].IsDisposed)
+                                {
+                                    count++;
+                                }
+                            }
+                            return count++;
+                        });
+
+                        if (enteredOrDisposed == this.ThreadCount)
+                        {
+                            // If everyone is accounted for, stop the blocking.
+                            break;
+                        } 
+                        else
+                        {
+                            // This is a bit sloppy.  It would be pretty easy
+                            // to tell when a task is entered using lock / pulse,
+                            // but hard to tell when a task is disposed.
+                            Thread.Sleep(100);
+                        }
+                    }
+                });
+            };
+
+            // Create a blocking task for each thread, and store it in our data structure.
+            var items = lockedObject.Access((data, locked) => {
+                for (int i = 0; i < this.ThreadCount; i++)
+                {
+                    data.Entered[i] = false;
+                    data.Items[i] = blockTask(i);
+                }
+                var its = new List<BackgroundQueueItem>();
+                its.AddRange(data.Items);
+                return its;
+            });
+
+            // The above tasks will each block a worker thread until all of them
+            // have either been entered, or disposed.  After those tasks complete,
+            // we complete the assigned task IF none of the prior tasks were disposed.
+            items.Add(new BackgroundQueueItem(manager =>
+            {
+                int entered = lockedObject.Access((data, locked) =>
+                {
+                    var count = 0;
+                    for (int tc = 0; tc < this.ThreadCount; tc++)
+                    {
+                        if (data.Entered[tc])
+                        {
+                            count++;
+                        }
+                    }
+                    return count++;
+                });
+                
+                if (entered == this.ThreadCount)
+                { 
+                    task(manager);
+                }
+            }));
+
+            // Add all the background task items to the queue.
+            return this.LockedSharedData.Access((data, locked) =>
+            {
+                if (!data.IsDisposed)
+                {
+                    items.ForEach(item => { data.Queue.Enqueue(item); });
+                    locked.PulseAll();
+                    return items.Last();
+                }
                 else
                 {
                     return null;

@@ -54,6 +54,7 @@ namespace SamSeifert.Utilities.Extensions
         public static void ArgMax<T>(this T[] array, out int index, out float value, Func<T, float> f)
         {
             array.ArgMin(out index, out value, (nf) => -f(nf));
+            value = -value;
         }
 
         public static void ArgMin<T>(this T[] array, out int index, out float value, Func<T, float> f)
@@ -74,6 +75,7 @@ namespace SamSeifert.Utilities.Extensions
         public static void ArgMax<T>(this T[] array, out int index, out double value, Func<T, double> f)
         {
             array.ArgMin(out index, out value, (nf) => -f(nf));
+            value = -value;
         }
 
         public static void ArgMin<T>(this T[] array, out int index, out double value, Func<T, double> f)
