@@ -15,12 +15,10 @@ namespace SamSeifert.Utilities.Maths
         {
             return (x % mod + mod) % mod;
         }
-
         public static float ModGuaranteePositive(this float x, float mod)
         {
             return (x % mod + mod) % mod;
         }
-
         public static double ModGuaranteePositive(this double x, double mod)
         {
             return (x % mod + mod) % mod;
@@ -33,6 +31,10 @@ namespace SamSeifert.Utilities.Maths
         /// <param name="min"></param>
         /// <param name="max"></param>
         /// <returns></returns>
+        public static int ModGuaranteeRange(this int x, int min, int max)
+        {
+            return min + ModGuaranteePositive(x - min, max - min);
+        }
         public static float ModGuaranteeRange(this float x, float min, float max)
         {
             return min + ModGuaranteePositive(x - min, max - min);
@@ -48,6 +50,10 @@ namespace SamSeifert.Utilities.Maths
         /// <param name="x"></param>
         /// <param name="lim"></param>
         /// <returns></returns>
+        public static int ModGuaranteeRangeAbs(this int x, int lim)
+        {
+            return ModGuaranteeRange(x, -lim, lim);
+        }
         public static float ModGuaranteeRangeAbs(this float x, float lim)
         {
             return ModGuaranteeRange(x, -lim, lim);

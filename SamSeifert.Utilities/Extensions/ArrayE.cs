@@ -8,22 +8,25 @@ namespace SamSeifert.Utilities.Extensions
 {
     public static class ArrayE
     {
-        public static void Fill<T>(this T[] ie, T t)
+        public static T[] Fill<T>(this T[] ie, T t)
         {
             for (int i = 0; i < ie.Length; i++)
                 ie[i] = t;
+            return ie;
         }
 
-        public static void Fill<T>(this T[] ie, Func<T> t)
+        public static T[] Fill<T>(this T[] ie, Func<T> t)
         {
             for (int i = 0; i < ie.Length; i++)
                 ie[i] = t();
+            return ie;
         }
 
-        public static void Fill<T>(this T[] ie, Func<int, T> t)
+        public static T[] Fill<T>(this T[] ie, Func<int, T> t)
         {
             for (int i = 0; i < ie.Length; i++)
                 ie[i] = t(i);
+            return ie;
         }
 
         public static T[] SubArray<T>(this T[] data, int index, int length)
@@ -85,6 +88,26 @@ namespace SamSeifert.Utilities.Extensions
             for (int j = 0; j < array.Length; j++)
             {
                 double dist = f(array[j]);
+                if (dist < value)
+                {
+                    index = j;
+                    value = dist;
+                }
+            }
+        }
+        public static void ArgMax<T>(this T[] array, out int index, out long value, Func<T, long> f)
+        {
+            array.ArgMin(out index, out value, (nf) => -f(nf));
+            value = -value;
+        }
+
+        public static void ArgMin<T>(this T[] array, out int index, out long value, Func<T, long> f)
+        {
+            value = long.MaxValue;
+            index = -1;
+            for (int j = 0; j < array.Length; j++)
+            {
+                long dist = f(array[j]);
                 if (dist < value)
                 {
                     index = j;
