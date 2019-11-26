@@ -257,6 +257,9 @@ namespace SamSeifert.Utilities.Concurrent
             {
                 return new BackgroundQueueItem(manager =>
                 {
+                    // Make sure all old tasks are finished (and dead).
+                    manager.WaitForMainThreadTasks();
+
                     // Tell other threads we made it here.
                     lockedObject.Access((data, locked) => { data.Entered[index] = true; });
 
