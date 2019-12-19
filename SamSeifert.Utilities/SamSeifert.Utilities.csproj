@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assert.cs" />
     <Compile Include="Concurrent\BackgroundQueue.cs" />
     <Compile Include="Concurrent\BackgroundTaskManager.cs" />
     <Compile Include="Concurrent\LockWrapper.cs" />
@@ -60,8 +61,6 @@
     <Compile Include="Holder.cs" />
     <Compile Include="Interpolate\Interpolator.cs" />
     <Compile Include="Interpolate\LinearInterpolator.cs" />
-    <Compile Include="Extensions\BooleanE.cs" />
-    <Compile Include="Extensions\ObjectE.cs" />
     <Compile Include="Files\Vrml\Node.cs" />
     <Compile Include="Files\Vrml\Nodes\TransformNode.cs" />
     <Compile Include="Files\Xml\TagItem.cs" />

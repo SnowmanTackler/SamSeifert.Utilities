@@ -8,6 +8,7 @@ using SamSeifert.Utilities.Files.Json;
 using OpenTK;
 using SamSeifert.Utilities.Extensions;
 using SamSeifert.GLE.Extensions;
+using SamSeifert.Utilities;
 
 namespace SamSeifert.GLE.CAD.Generator
 {
@@ -212,7 +213,7 @@ namespace SamSeifert.GLE.CAD.Generator
 
         public static CadObject CreateCylinders(Vector3[] fiberPath, float radius, int section = 36)
         {
-            (fiberPath.Length > 1).AssertTrue();
+            Assert.IsTrue(fiberPath.Length > 1);
 
             var norm = (fiberPath[1] - fiberPath[0]).Normalized();
 

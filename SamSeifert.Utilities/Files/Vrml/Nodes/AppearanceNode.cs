@@ -23,14 +23,14 @@ namespace SamSeifert.Utilities.Files.Vrml.Nodes
             if (material != null)
             {
                 this.Material = material as MaterialNode;
-                this.Material.AssertNotNull();
+                Assert.IsNotNull(this.Material);
             }
 
             var texture = fieldNodes.GetAndRemoveOrDefault("texture", null);
             if (texture != null)
             {
                 this.Texture = texture as PixelTextureNode;
-                this.Texture.AssertNotNull();
+                Assert.IsNotNull(this.Texture);
             }
 
             fieldAttributes.Count.AssertEquals(0);

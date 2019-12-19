@@ -7,6 +7,7 @@ using GL = SamSeifert.GLE.GLR;
 using SamSeifert.Utilities.Maths;
 using SamSeifert.Utilities.Extensions;
 using SamSeifert.GLE.Extensions;
+using SamSeifert.Utilities;
 
 namespace SamSeifert.GLE.CAD
 {
@@ -175,7 +176,8 @@ namespace SamSeifert.GLE.CAD
         internal void InitializeWithVectorsAndNormals(Vector3[] v, Vector3[] n)
         {
             uint count;
-            Helpers.ConsolidateData(v, n, out count, out this._Vertices, out this._Normals, out this._Indices).AssertTrue();
+            var consolidated = Helpers.ConsolidateData(v, n, out count, out this._Vertices, out this._Normals, out this._Indices);
+            Assert.IsTrue(consolidated);
             this.GLDelete();
             this._Vertices.Length.AssertEquals(this._Normals.Length);
         }

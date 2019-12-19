@@ -30,22 +30,22 @@ namespace SamSeifert.Utilities.Files.Vrml.Nodes
         {
 
             this.Coordinates = unpackTwoDimensionalDoubleArray((fieldNodes.GetAndRemoveOrDefault("coord", null) as PointNode).Points, 3);
-            this.Coordinates.AssertNotNull();
+            Assert.IsNotNull(this.Coordinates);
 
             this.CoordinatesIndicies = unpackOneDimensionalIntArray(fieldAttributes.GetAndRemoveOrDefault("coordIndex", null));
-            this.CoordinatesIndicies.AssertNotNull();
+            Assert.IsNotNull(this.CoordinatesIndicies);
 
             var texCoord = fieldNodes.GetAndRemoveOrDefault("texCoord", null);
             if (texCoord != null) {
                 this.TexCoordinates = unpackTwoDimensionalDoubleArray((texCoord as PointNode).Points, 2);
-                this.TexCoordinates.AssertNotNull();
+                Assert.IsNotNull(this.TexCoordinates);
             }
 
             var texCoordIndex = fieldAttributes.GetAndRemoveOrDefault("texCoordIndex", null);
             if (texCoordIndex != null)
             {
                 this.TexCoordinatesIndicies = unpackOneDimensionalIntArray(texCoordIndex);
-                this.TexCoordinatesIndicies.AssertNotNull();
+                Assert.IsNotNull(this.TexCoordinatesIndicies);
             }
 
             switch ((this.TexCoordinates == null ? 0 : 1) + (this.TexCoordinatesIndicies == null ? 0 : 1))

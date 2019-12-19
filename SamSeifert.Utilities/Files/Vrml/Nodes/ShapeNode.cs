@@ -19,11 +19,11 @@ namespace SamSeifert.Utilities.Files.Vrml.Nodes
             if (appearance != null)
             {
                 this.Appearance = appearance as AppearanceNode;
-                this.Appearance.AssertNotNull();
+                Assert.IsNotNull(this.Appearance);
             }
 
             this.Geometry = fieldNodes.GetAndRemoveOrDefault("geometry", null);
-            this.Geometry.AssertNotNull();
+            Assert.IsNotNull(this.Geometry);
 
             fieldAttributes.Count.AssertEquals(0);
             fieldNodes.Count.AssertEquals(0);

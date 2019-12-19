@@ -142,7 +142,7 @@ namespace SamSeifert.Utilities.Files.Vrml
                         var node = From(name, type, children, fieldNodes, fieldAttributes);
                         if (name != null)
                         {
-                            namedNodes.ContainsKey(name).AssertFalse();
+                            Assert.IsFalse(namedNodes.ContainsKey(name));
                             namedNodes[name] = node;
                         }
                         return node;
@@ -184,7 +184,7 @@ namespace SamSeifert.Utilities.Files.Vrml
                             {
                                 var matchedNodeName = reader.nextToken(); // USE AT SOME POINT;
                                 var matchedNode = namedNodes.GetOrDefault(matchedNodeName, null);
-                                matchedNode.AssertNotNull();
+                                Assert.IsNotNull(matchedNode);
                                 fieldNodes[firstToken] = matchedNode;
                             }
                             else if ((secondValue = getValueForToken(secondToken)) == null)
