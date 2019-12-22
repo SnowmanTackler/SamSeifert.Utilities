@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SamSeifert.Utilities.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -68,7 +69,7 @@ namespace SamSeifert.Utilities.Files.Json
                             case 'u': sb.Append("\\u"); break; // Unicode
                             case '\\': sb.Append('\\'); break;
                             default:
-                                Logger.WriteError(typeof(JsonParser), "Unsupported Char After Escape Char: *" + temper + "*");
+                                Logger.Default.Error("Unsupported Char After Escape Char: [" + temper + "]");
                                 throw new NotImplementedException();
                         }
                         break;

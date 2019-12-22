@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using SamSeifert.Utilities.Files.Json;
+using SamSeifert.Utilities.Logging;
 
 namespace SamSeifert.Utilities.CustomControls
 {
@@ -117,21 +118,21 @@ namespace SamSeifert.Utilities.CustomControls
 
             if (File.Exists(fn))
             {
-                Logger.WriteLine("FilePicker file { " + fn + " }");
+                Logger.Default.Debug("FilePicker file { " + fn + " }");
                 this.ForeColor = Color.Green;
                 this._ValidFile?.Invoke(this, EventArgs.Empty);
                 this._Changed?.Invoke(this, FileType.File);
             }
             else if (Directory.Exists(fn))
             {
-                Logger.WriteLine("FilePicker directory { " + fn + " }");
+                Logger.Default.Debug("FilePicker directory { " + fn + " }");
                 this.ForeColor = Color.Blue;
                 this._ValidFolder?.Invoke(this, EventArgs.Empty);
                 this._Changed?.Invoke(this, FileType.Directory);
             }
             else
             {
-                Logger.WriteLine("FilePicker invalid { " + fn + " }");
+                Logger.Default.Debug("FilePicker invalid { " + fn + " }");
                 this.ForeColor = Color.Red;
                 this._Changed?.Invoke(this, FileType.Invalid);
                 return;
@@ -165,7 +166,7 @@ namespace SamSeifert.Utilities.CustomControls
             if (FilePicker._Values.TryGetValue(identifier, out outo))
                 if (outo is String)
                 {
-                    Logger.WriteLine("FilePicker loaded { " + outo + " } for { " + identifier + " }");
+                    Logger.Default.Debug("FilePicker loaded { " + outo + " } for { " + identifier + " }");
                     this.Text = outo as String;
                 }
         }

@@ -1,5 +1,6 @@
 ﻿using OpenTK;
 using SamSeifert.Utilities;
+using SamSeifert.Utilities.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace SamSeifert.GLE.CAD.Generator
             }
             else
             {
-                Logger.WriteLine("Binary STL");
+                Logger.Default.Warn("Binary STL");
                 return null;
             }
         }
@@ -73,7 +74,7 @@ namespace SamSeifert.GLE.CAD.Generator
             }
             catch (Exception exc)
             {
-                Logger.WriteLine("FromStl.CreateAscii " + exc.ToString());
+                Logger.Default.Warn("Parser Error", exc);
                 return null;
             }
         }

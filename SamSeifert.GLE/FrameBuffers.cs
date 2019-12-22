@@ -9,6 +9,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using GL = SamSeifert.GLE.GLR;
 using SamSeifert.Utilities; using SamSeifert.Utilities.Maths;
+using SamSeifert.Utilities.Logging;
 
 namespace SamSeifert.GLE
 {
@@ -89,7 +90,7 @@ namespace SamSeifert.GLE
                         success = true;
                         break;
                     default:
-                        Logger.WriteError(this, "Initialization");
+                        Logger.Default.Error("Initialization");
                         success = false;
                         break;
                 }

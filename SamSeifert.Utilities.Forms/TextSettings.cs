@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SamSeifert.Utilities.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -48,7 +49,7 @@ namespace SamSeifert.Utilities
 
         public static void Save(string file_name, string text)
         {
-            Logger.WriteLine("File Saved: " + file_name);
+            Logger.Default.Debug("File Saved: " + file_name);
 
             var path = Path.Combine(Folder, file_name);
 

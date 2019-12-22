@@ -9,6 +9,7 @@ using GLO = OpenTK.Graphics.OpenGL.GL;
 using GL = SamSeifert.GLE.GLR;
 using SamSeifert.Utilities; using SamSeifert.Utilities.Maths;
 using SamSeifert.Utilities.Extensions;
+using SamSeifert.Utilities.Logging;
 
 namespace SamSeifert.GLE
 {
@@ -52,7 +53,7 @@ namespace SamSeifert.GLE
             }
             else
             {
-                Logger.WriteError(this, "no uniform for key:" + key);
+                Logger.Default.Error("No uniform for {" + key + "}");
                 return 0;
             }
         }
@@ -64,8 +65,7 @@ namespace SamSeifert.GLE
             GL.GetProgram(this._GL_Program, GetProgramParameterName.ValidateStatus, out param);
             if (param == 0)
             {
-                Logger.WriteError(this, "Validate");
-                Logger.WriteLine(GLO.GetProgramInfoLog(this._GL_Program));
+                Logger.Default.Error("Validate", new Exception(GLO.GetProgramInfoLog(this._GL_Program)));
                 return false;
             }
             return true;
@@ -91,10 +91,7 @@ namespace SamSeifert.GLE
                     GL.GetProgram(shader, GetProgramParameterName.LinkStatus, out param);
                     if (param == 0)
                     {
-                        Logger.WriteError(this, "Compiling Shaders");
-                        Logger.WriteLine(GLO.GetProgramInfoLog(shader));
-                        Logger.WriteLine("********" + Environment.NewLine + vertexShader);
-                        Logger.WriteLine("********" + Environment.NewLine + fragmentShader);
+                        Logger.Default.Error("Compiling Shaders", new Exception(GLO.GetProgramInfoLog(shader)));
                         success = false;
                         return;
                     }
@@ -435,15 +432,7 @@ namespace SamSeifert.GLE
             GL.GetShader(vertShader, ShaderParameter.CompileStatus, out param);
             if (param == 0)
             {
-                Logger.WriteLine("*****************************************");
-                Logger.WriteError(typeof(Shaders), "Vert Shader Compile");
-                Logger.WriteLine("*****************************************");
-                Logger.WriteLine();
-                Logger.WriteLine(vertexCode);
-                Logger.WriteLine();
-                Logger.WriteLine(GLO.GetShaderInfoLog(vertShader));
-                Logger.WriteLine();
-                Logger.WriteLine("*****************************************");
+                Logger.Default.Error("Vert Shader Compile", new Exception(GLO.GetShaderInfoLog(vertShader)));
                 return 0;
             }
             return vertShader;
@@ -462,15 +451,7 @@ namespace SamSeifert.GLE
 
             if (param == 0)
             {
-                Logger.WriteLine("*****************************************");
-                Logger.WriteError(typeof(Shaders), "Frag Shader Compile");
-                Logger.WriteLine("*****************************************");
-                Logger.WriteLine();
-                Logger.WriteLine(fragCode);
-                Logger.WriteLine();
-                Logger.WriteLine(GLO.GetShaderInfoLog(fragShader));
-                Logger.WriteLine();
-                Logger.WriteLine("*****************************************");
+                Logger.Default.Error("Frag Shader Compile", new Exception(GLO.GetShaderInfoLog(fragShader)));
                 return 0;
             }
             return fragShader;

@@ -1,4 +1,5 @@
 ﻿using SamSeifert.Utilities.Extensions;
+using SamSeifert.Utilities.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -236,18 +237,21 @@ namespace SamSeifert.Utilities.Files.Vrml
         #region HelperFunctionsForDevelopingNewNodes
         private static HashSet<String> fieldNodesKeys = new HashSet<string>();
         private static HashSet<String> fieldAttributesKeys = new HashSet<string>();    
-        protected void PrintUniqueKeys(Dictionary<string, Node> fieldNodes, Dictionary<string, List<double>> fieldAttributes)
+        protected void PrintUniqueKeys(
+            Dictionary<string, Node> fieldNodes, 
+            Dictionary<string,
+            List<double>> fieldAttributes)
         {
             foreach (var key in fieldNodes.Keys)
                 if (!fieldNodesKeys.Contains(key))
                 {
-                    Logger.WriteLine("fieldNodes " + key);
+                    Logger.Default.Debug("fieldNodes " + key);
                     fieldNodesKeys.Add(key);
                 }
             foreach (var key in fieldAttributes.Keys)
                 if (!fieldAttributesKeys.Contains(key))
                 {
-                    Logger.WriteLine("fieldAttributes " + key);
+                    Logger.Default.Debug("fieldAttributes " + key);
                     fieldAttributesKeys.Add(key);
                 }
         }

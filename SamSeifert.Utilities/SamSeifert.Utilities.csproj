@@ -65,6 +65,10 @@
     <Compile Include="Files\Vrml\Nodes\TransformNode.cs" />
     <Compile Include="Files\Xml\TagItem.cs" />
     <Compile Include="Files\Xml\TagText.cs" />
+    <Compile Include="Logging\BaseLogger.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
+    <Compile Include="Logging\IndentLogger.cs" />
+    <Compile Include="Logging\TimeLogger.cs" />
     <Compile Include="Maths\Combinatorics\Merge.cs" />
     <Compile Include="Maths\Continuous360.cs" />
     <Compile Include="DataStructures\DefaultDict.cs" />
@@ -89,7 +93,7 @@
     <Compile Include="Files\Json\JsonDict.cs" />
     <Compile Include="Files\Json\JsonPackable.cs" />
     <Compile Include="Files\Json\JsonParser.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="Maths\LowPassFilter.cs" />
     <Compile Include="Maths\MinMax.cs" />
     <Compile Include="Maths\PrimativesE.cs" />

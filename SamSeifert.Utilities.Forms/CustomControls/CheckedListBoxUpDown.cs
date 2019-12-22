@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using SamSeifert.Utilities.Logging;
 
 namespace SamSeifert.Utilities.CustomControls
 {
@@ -48,7 +49,7 @@ namespace SamSeifert.Utilities.CustomControls
             {
                 if (this.InvokeRequired)
                 {
-                    Logger.WriteLine("OH NO: CLBUP Not thread safe yet");
+                    Logger.Default.Error("CLBUP Not thread safe yet");
                     yield break;
                 }
                 else
@@ -66,16 +67,8 @@ namespace SamSeifert.Utilities.CustomControls
         {
             get
             {
-                if (this.InvokeRequired)
-                {
-                    Logger.WriteLine("OH NO: CLBUP Not thread safe yet");
-                    yield break;
-                }
-                else
-                {
-                    foreach (var ob in this.checkedListBox1.Items)
-                        yield return ob;
-                }
+                foreach (var ob in this.checkedListBox1.Items)
+                    yield return ob;
             }
         }
 
@@ -261,7 +254,7 @@ namespace SamSeifert.Utilities.CustomControls
             }
             else
             {
-                Logger.WriteError(this, "Down Click With DataSource");
+                Logger.Default.Warn("No DataSource");
             }
         }
 
@@ -288,7 +281,7 @@ namespace SamSeifert.Utilities.CustomControls
             }
             else
             {
-                Logger.WriteError(this, "Down Click With DataSource");
+                Logger.Default.Warn("No DataSource");
             }
         }
 
@@ -306,7 +299,7 @@ namespace SamSeifert.Utilities.CustomControls
                     else
                     {
                         if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
-                        else Logger.WriteLine("CheckedListBoxUpDown with DataSource needs to implement _ObjectRemoved");
+                        else Logger.Default.Warn("Needs to implement _ObjectRemoved");
                     }
                 }
             }
@@ -349,7 +342,7 @@ namespace SamSeifert.Utilities.CustomControls
                     else
                     {
                         if (this._ObjectRemoved != null) this._ObjectRemoved(this, si);
-                        else Logger.WriteLine("ListBoxUpDown with DataSource needs to implement _ObjectRemoved");
+                        else Logger.Default.Warn("Needs to implement _ObjectRemoved");
                     }
                 }
             }

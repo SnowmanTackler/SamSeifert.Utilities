@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SamSeifert.Utilities.Files.Json;
+using SamSeifert.Utilities.Logging;
 
 namespace SamSeifert.Utilities.Extensions
 {
@@ -32,7 +33,7 @@ namespace SamSeifert.Utilities.Extensions
             }
             catch (Exception exc)
             {
-                Logger.WriteException(f, "LoadFormState", exc);
+                Logger.Default.Debug("Load Form State", exc);
             }
         }
 

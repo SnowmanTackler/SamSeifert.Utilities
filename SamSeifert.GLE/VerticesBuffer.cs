@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using SamSeifert.Utilities;
+using SamSeifert.Utilities.Logging;
 using SamSeifert.Utilities.Maths;
 using GL = SamSeifert.GLE.GLR;
 
@@ -32,7 +33,7 @@ namespace SamSeifert.GLE
             }
             else
             {
-                Logger.WriteLine("VertexBuffer allocation error");
+                Logger.Default.Error("Allocation error");
             }
         }
 

@@ -11,6 +11,7 @@ using GLO = OpenTK.Graphics.OpenGL.GL;
 using GL = SamSeifert.GLE.GLR;
 using SamSeifert.Utilities; using SamSeifert.Utilities.Maths;
 using SamSeifert.GLE.Extensions;
+using SamSeifert.Utilities.Logging;
 
 namespace SamSeifert.GLE
 {
@@ -119,7 +120,7 @@ namespace SamSeifert.GLE
                         success = true;
                         break;
                     default:
-                        Logger.WriteError(this, "Initialization");
+                        Logger.Default.Error("Initialization");
                         success = false;
                         break;
                 }
