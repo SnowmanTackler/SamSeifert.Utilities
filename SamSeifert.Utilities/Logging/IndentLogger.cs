@@ -11,6 +11,7 @@ namespace SamSeifert.Utilities.Logging
     {
 
         private readonly BaseLogger WrappedLogger;
+        public int IndentLength = 0;
 
         public IndentLogger()
         {
@@ -21,8 +22,6 @@ namespace SamSeifert.Utilities.Logging
         {
             this.WrappedLogger = baseLogger;
         }
-
-        private int _AddedIndentLength;
 
         private class Indenter : IDisposable
         {
@@ -43,20 +42,20 @@ namespace SamSeifert.Utilities.Logging
         public IDisposable Time(String message)
         {
             this.Info(message);
-            this._AddedIndentLength++;
+            this.IndentLength++;
             var stp = new Stopwatch();
             stp.Start();
             return new Indenter(() =>
             {
                 var elapsed = stp.Elapsed;
-                this._AddedIndentLength--;
+                this.IndentLength--;
                 this.Info(message + " ... " + elapsed.TotalSeconds.ToString("0.00") + " seconds");
             });
         }
 
         public override string Write(DateTime time, LogLevel level, string message, Exception exc)
         {
-            var tabbedMessage = new string(' ', this._AddedIndentLength * 4) + message;
+            var tabbedMessage = new string(' ', this.IndentLength * 4) + message;
             return this.WrappedLogger.Write(time, level, tabbedMessage, exc);
         }
     }
