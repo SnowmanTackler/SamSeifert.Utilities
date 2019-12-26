@@ -130,17 +130,17 @@ namespace SamSeifert.Utilities.Maths
 
         public static int Squared(this int f)
         {
-            return f.ToThe(2);
+            return f * f;
         }
 
         public static float Squared(this float f)
         {
-            return f.ToThe(2);
+            return f * f;
         }
 
         public static double Squared(this double f)
         {
-            return f.ToThe(2);
+            return f * f;
         }
 
 
