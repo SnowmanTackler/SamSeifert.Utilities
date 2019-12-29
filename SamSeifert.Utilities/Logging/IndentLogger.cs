@@ -11,17 +11,22 @@ namespace SamSeifert.Utilities.Logging
     {
 
         private readonly BaseLogger WrappedLogger;
+        private readonly String Prefix;
+        private const String PrefixDefault = "";
         public int IndentLength = 0;
 
-        public IndentLogger()
-        {
-            this.WrappedLogger = new TimeLogger();
-        }
-
-        public IndentLogger(BaseLogger baseLogger)
+        public IndentLogger(String prefix, BaseLogger baseLogger)
         {
             this.WrappedLogger = baseLogger;
+            this.Prefix = prefix;
         }
+
+        public IndentLogger(String prefix) : this(prefix, new TimeLogger()) { }
+
+        public IndentLogger() : this(PrefixDefault) { }
+
+        public IndentLogger(BaseLogger baseLogger) : this(PrefixDefault, baseLogger) { }
+
 
         private class Indenter : IDisposable
         {
@@ -55,7 +60,7 @@ namespace SamSeifert.Utilities.Logging
 
         public override string Write(DateTime time, LogLevel level, string message, Exception exc)
         {
-            var tabbedMessage = new string(' ', this.IndentLength * 4) + message;
+            var tabbedMessage = this.Prefix + new string(' ', this.IndentLength * 4) + message;
             return this.WrappedLogger.Write(time, level, tabbedMessage, exc);
         }
     }
