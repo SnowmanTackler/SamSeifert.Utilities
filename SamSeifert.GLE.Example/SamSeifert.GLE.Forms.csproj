@@ -82,6 +82,7 @@
     </Compile>
     <Compile Include="Forms\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScreenShot.cs" />
     <EmbeddedResource Include="Forms\CadHandler.resx">
       <DependentUpon>CadHandler.cs</DependentUpon>
     </EmbeddedResource>

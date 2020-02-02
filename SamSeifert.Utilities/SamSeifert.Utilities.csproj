@@ -58,6 +58,7 @@
     <Compile Include="Concurrent\LockWrapper.cs" />
     <Compile Include="Concurrent\ReadWriteWrapper.cs" />
     <Compile Include="Extensions\IEnumerableE.cs" />
+    <Compile Include="Hacking.cs" />
     <Compile Include="Holder.cs" />
     <Compile Include="Interpolate\ConstantInterpolator.cs" />
     <Compile Include="Interpolate\Interpolator.cs" />
