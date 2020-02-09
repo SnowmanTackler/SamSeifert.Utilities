@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SamSeifert.ComputerVision\SamSeifert.ComputerVision.csproj" />
-    <ProjectReference Include="..\SamSeifert.GLE.Example\SamSeifert.GLE.Forms.csproj" />
+    <ProjectReference Include="..\SamSeifert.GLE.Forms\SamSeifert.GLE.Forms.csproj" />
     <ProjectReference Include="..\SamSeifert.GLE\SamSeifert.GLE.csproj" />
     <ProjectReference Include="..\SamSeifert.Mathnet.Numerics\SamSeifert.MathNet.Numerics.Extensions.csproj" />
     <ProjectReference Include="..\SamSeifert.Utilities.Forms\SamSeifert.Utilities.Forms.csproj" />

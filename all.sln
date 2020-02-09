@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamSeifert.GLE", "SamSeifer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamSeifert.MathNet.Numerics.Extensions", "SamSeifert.Mathnet.Numerics\SamSeifert.MathNet.Numerics.Extensions.csproj", "{A74567DF-9C75-4038-9785-CF6C0BBC17C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamSeifert.GLE.Forms", "SamSeifert.GLE.Example\SamSeifert.GLE.Forms.csproj", "{5B5A7057-0D6B-4E72-8361-A49A0F37D889}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamSeifert.GLE.Forms", "SamSeifert.GLE.Forms\SamSeifert.GLE.Forms.csproj", "{5B5A7057-0D6B-4E72-8361-A49A0F37D889}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SamSeifert.Utilities.Forms", "SamSeifert.Utilities.Forms\SamSeifert.Utilities.Forms.csproj", "{A40930FA-AF7B-4017-852D-A14370C7C9B1}"
 EndProject
