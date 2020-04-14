@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
-namespace SamSeifert.Utilities.Concurrent
-{
+namespace SamSeifert.Utilities.Concurrent {
     public delegate void BackgroundTask(BackgroundTaskManager manager);
 
-    public interface BackgroundToMainManager
-    {
+    public interface BackgroundToMainManager {
         /// <summary>
         /// </summary>
         /// <param name="a"></param>
@@ -17,9 +12,11 @@ namespace SamSeifert.Utilities.Concurrent
         bool RunOnMainThread(Action a);
     }
 
-    public interface BackgroundTaskManager : BackgroundToMainManager
-    {
+    public interface BackgroundTaskManager : BackgroundToMainManager {
+        CancellationToken GetCancellationToken();
         bool ShouldContinue();
         void WaitForMainThreadTasks();
+
+
     }
 }
